@@ -50,7 +50,7 @@
     border-radius: 50%;
     padding: 4px;
     /* Space for ring */
-    background: conic-gradient(from 180deg at 50% 50%, transparent 40%, var(--border-active) 100%);
+    background: conic-gradient(from 180deg at 50% 50%, transparent 40%, rgba(244, 218, 89, 0.5) 100%);
     animation: spinSlow 10s linear infinite forwards;
     position: relative;
 }
@@ -59,7 +59,7 @@
 @media (prefers-reduced-motion: reduce) {
     .bubble {
         animation: none;
-        background: var(--border-active);
+        background: rgba(244, 218, 89, 0.2);
     }
 }
 

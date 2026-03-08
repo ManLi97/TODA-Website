@@ -3,9 +3,9 @@ import { motion, useReducedMotion } from 'framer-motion';
 import styles from './Testimonials.module.css';
 
 const TESTIMONIALS = [
-    { id: 1, name: 'Alex T.', role: 'Studio Owner', text: '"I stopped answering DMs at 11 PM. TODA handles my entire schedule now."', rotation: -4, offsetY: 10 },
-    { id: 2, name: 'Jamie K.', role: 'Tattoo Artist', text: '"The deposits feature alone saved me hundreds of dollars in no-shows this month."', rotation: 2, offsetY: -5 },
-    { id: 3, name: 'Morgan S.', role: 'Independent Artist', text: '"Premium from end to end. My clients love the booking experience."', rotation: -2, offsetY: 15 },
+    { id: 1, name: 'Alex T.', role: 'Studio Owner', text: '"I stopped answering DMs at 11 PM. TODA handles my entire schedule now."', rotation: -6, offsetY: 15 },
+    { id: 2, name: 'Jamie K.', role: 'Tattoo Artist', text: '"The deposits feature alone saved me hundreds of dollars in no-shows this month."', rotation: 5, offsetY: -10 },
+    { id: 3, name: 'Morgan S.', role: 'Independent Artist', text: '"Premium from end to end. My clients love the booking experience."', rotation: -4, offsetY: 20 },
 ];
 
 export default function Testimonials() {
@@ -35,7 +35,8 @@ export default function Testimonials() {
                                     className={styles.polaroid}
                                     style={shouldReduceMotion ? {} : {
                                         '--desk-rot': `${testi.rotation}deg`,
-                                        '--desk-y': `${testi.offsetY}px`
+                                        '--desk-y': `${testi.offsetY}px`,
+                                        '--mob-rot': `${testi.rotation * 0.4}deg`
                                     }}
                                 >
                                     <div className={styles.polaroidPhoto}>

@@ -40,6 +40,21 @@
     flex-direction: column;
 }
 
+/* Mobile staggered variety */
+@media (max-width: 767px) {
+    .card {
+        width: 92%;
+    }
+
+    .card:nth-child(even) {
+        margin-left: auto;
+    }
+
+    .card:nth-child(odd) {
+        margin-right: auto;
+    }
+}
+
 /* Glow effect behind content */
 .cardGlow {
     position: absolute;
@@ -69,6 +84,8 @@
 .cardFeatured {
     padding: 3rem 2rem;
     background: linear-gradient(to bottom, var(--bg-2) 0%, var(--bg-1) 100%);
+    min-height: 260px;
+    justify-content: flex-end;
 }
 
 .cardFeatured .cardTitle {
@@ -85,6 +102,7 @@
  */
 .cardStandard {
     padding: 1.5rem;
+    min-height: 160px;
 }
 
 .cardStandard .cardTitle {

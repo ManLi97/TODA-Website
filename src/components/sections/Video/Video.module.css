@@ -8,7 +8,8 @@
     flex-direction: column;
     align-items: center;
     gap: 3rem;
-    max-width: 1000px;
+    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     position: relative;
     z-index: 2;
@@ -55,13 +56,19 @@
 .videoFrame {
     position: relative;
     width: 100%;
-    aspect-ratio: 16/9;
+    aspect-ratio: 4/5;
     background: var(--bg-1);
     border-radius: 12px;
     border: 1px solid var(--border-subtle);
     box-shadow: 0 32px 64px auto rgba(0, 0, 0, 0.6);
     z-index: 2;
     overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .videoFrame {
+        aspect-ratio: 16/9;
+    }
 }
 
 .posterContainer {
@@ -89,37 +96,38 @@
 .playButton {
     position: relative;
     z-index: 3;
-    width: 72px;
-    height: 72px;
-    background-color: var(--bg-0);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 80px;
+    height: 80px;
+    background-color: var(--accent-yellow);
+    border: none;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 24px rgba(244, 218, 89, 0.25);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .playButton:hover {
-    border-color: var(--accent-yellow);
-    box-shadow: 0 0 20px rgba(244, 218, 89, 0.2);
+    background-color: var(--accent-yellow-deep);
+    box-shadow: 0 12px 32px rgba(244, 218, 89, 0.4);
 }
 
 .playIcon {
     width: 0;
     height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 16px solid var(--text-main);
-    margin-left: 4px;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 18px solid var(--bg-0);
+    margin-left: 6px;
     /* Optical center fix */
     transition: border-left-color 0.3s ease;
 }
 
 .playButton:hover .playIcon {
-    border-left-color: var(--accent-yellow);
+    border-left-color: var(--bg-0);
 }
 
 .playerPlaceholder {
