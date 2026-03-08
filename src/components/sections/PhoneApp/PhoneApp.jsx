@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styles from './PhoneApp.module.css';
+import calendarImg from '../../../assets/phone/Kalender.PNG';
+import newAppointmentImg from '../../../assets/phone/Neuer Termin.PNG';
+import detailsImg from '../../../assets/phone/Terminkarte.PNG';
 
 const PHONE_FEATURES = [
-    { id: 'calendar', label: 'Calendar', title: 'Smart Booking' },
-    { id: 'chat', label: 'Client Chat', title: 'Seamless Comms' },
-    { id: 'portfolio', label: 'Portfolio', title: 'Showcase Craft' },
-    { id: 'payments', label: 'Payments', title: 'Instant Payouts' },
+    { id: 'calendar', label: 'Kalender', title: 'Termin Manager', image: calendarImg },
+    { id: 'booking', label: 'Termin', title: 'Neuer Termin', image: newAppointmentImg },
+    { id: 'management', label: 'Karte', title: 'Kundendetails', image: detailsImg },
 ];
 
 export default function PhoneApp() {
@@ -49,9 +51,13 @@ export default function PhoneApp() {
                         <div className={styles.screenScroll} ref={scrollRef}>
                             {PHONE_FEATURES.map((feat, i) => (
                                 <div key={feat.id} className={styles.screenSlide}>
-                                    {/* Placeholder for actual screenshots from src/assets/phone/ */}
-                                    <div className={styles.mockScreen}>
-                                        {feat.title} <br /> (App UI)
+                                    <div className={styles.screenWrapper}>
+                                        <img
+                                            src={feat.image}
+                                            alt={feat.label}
+                                            className={styles.screenImage}
+                                            draggable="false"
+                                        />
                                     </div>
                                 </div>
                             ))}
