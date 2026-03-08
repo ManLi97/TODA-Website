@@ -1,0 +1,136 @@
+.testiSection {
+    background-color: transparent;
+    padding: 6rem 0;
+    overflow: hidden;
+    /* Avoid horizontal scrollbar for tilted items */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.deckContainer {
+    width: 100%;
+}
+
+.deckScroll {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem 5%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.deckScroll::-webkit-scrollbar {
+    display: none;
+}
+
+.polaroidWrapper {
+    flex: 0 0 85%;
+    max-width: 380px;
+    scroll-snap-align: center;
+    perspective: 1000px;
+}
+
+/* Base polaroid style */
+.polaroid {
+    background-color: #fafafa;
+    border-radius: 8px;
+    /* Slightly rounded, premium */
+    padding: 16px 16px 36px 16px;
+    /* Thick bottom border */
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transform-style: preserve-3d;
+}
+
+.polaroidPhoto {
+    width: 100%;
+    aspect-ratio: 1;
+    /* Square photo area */
+    background-color: var(--bg-2);
+    border-radius: 4px;
+    /* Inner photo roundedness */
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.mockImg {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+}
+
+.polaroidText {
+    color: #1a1a1a;
+    text-align: center;
+    font-family: inherit;
+    /* modern sans, not handwriting script to stay premium */
+}
+
+.quote {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+
+.author {
+    font-size: 0.85rem;
+    color: #333;
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+/* Desktop Stacked & Tilted Look Enhancement */
+@media (min-width: 900px) {
+    .deckScroll {
+        justify-content: center;
+        overflow-x: visible;
+        padding: 2rem 0;
+        margin-left: -5%;
+        /* Pull back slightly to center cluster */
+    }
+
+    .polaroidWrapper {
+        flex: 0 0 auto;
+        width: 340px;
+        margin-right: -100px;
+        /* Overlap them */
+    }
+
+    /* Transform them using inline variables set in JSX */
+    .polaroid {
+        transform: rotate(var(--desk-rot, 0deg)) translateY(var(--desk-y, 0px));
+    }
+
+    .polaroid:hover {
+        /* Lift up and remove rotation slightly on hover for premium interaction */
+        transform: rotate(0deg) translateY(-20px) scale(1.02);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        z-index: 10;
+        position: relative;
+    }
+}

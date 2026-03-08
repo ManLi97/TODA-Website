@@ -1,0 +1,33 @@
+.wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 0 4px;
+}
+
+.text {
+    position: relative;
+    z-index: 2;
+}
+
+.pass {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    border-radius: 4px;
+    /* subtle roundness to marker ends */
+}
+
+/* Reduced motion static state */
+.finalState {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    border-radius: 4px;
+    opacity: 0.8;
+}

@@ -1,0 +1,121 @@
+.faqSection {
+    background-color: transparent;
+    padding: 6rem 5%;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.header {
+    text-align: center;
+}
+
+.accordionList {
+    display: flex;
+    flex-direction: column;
+}
+
+.accordionItem {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: background-color 0.3s ease;
+    border-radius: 8px;
+    /* For hover context */
+}
+
+/* Very subtle yellow text glow when active to respect premium aesthetic */
+.itemOpen .questionText {
+    color: var(--accent-yellow);
+    text-shadow: 0 0 12px rgba(244, 218, 89, 0.2);
+}
+
+.questionBtn {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 1.5rem 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-main);
+    outline: none;
+    transition: padding 0.3s ease;
+}
+
+.questionBtn:hover {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 1.5rem 1rem;
+}
+
+.questionText {
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    max-width: 85%;
+}
+
+.iconIndicator {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.iconLine {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--text-main);
+    transform: translateY(-50%);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.iconLineV {
+    transform: translateY(-50%) rotate(90deg);
+}
+
+.itemOpen .iconLineV.rotated {
+    transform: translateY(-50%) rotate(0deg);
+    /* Turn into a minus by clearing rotation */
+}
+
+.itemOpen .iconLine {
+    background-color: var(--accent-yellow);
+}
+
+.answerWrapper {
+    overflow: hidden;
+}
+
+.answerInner {
+    padding: 0 0.5rem 1.5rem 0.5rem;
+}
+
+.answerText {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Custom premium divider: solid in center, fading at edges */
+.dividerLine {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 15%, rgba(255, 255, 255, 0.1) 85%, transparent 100%);
+    margin-top: 0.5rem;
+}
+
+.accordionItem:last-child .dividerLine {
+    display: none;
+}

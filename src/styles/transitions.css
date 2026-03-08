@@ -1,0 +1,57 @@
+/* transitions.css - Feathered Section Overlaps */
+
+/* 
+ * Instead of sharp dividers or blocks of background colors, 
+ * we use large gradient overlays (::before/::after) to feather
+ * between sections softly.
+ */
+
+.section-container {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Base bg2 soft transition overlay */
+/* This can be attached to any component to feather its start/end into bg1 or bg0 */
+.feather-y {
+    position: relative;
+}
+
+.feather-y::before,
+.feather-y::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 250px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Feather top edges (fade into background above) */
+.feather-y::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--bg-0) 0%, transparent 100%);
+}
+
+/* Feather bottom edges (fade into background below) */
+.feather-y::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--bg-0) 0%, transparent 100%);
+}
+
+/* Alternative softer gradients for bg1 -> bg2 -> bg1 etc */
+.gradient-fade-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30svh;
+    background: linear-gradient(to top, var(--bg-1) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 10;
+}

@@ -1,0 +1,110 @@
+.painSection {
+    background-color: transparent;
+    padding: 6rem 5%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    max-width: 600px;
+}
+
+.headline {
+    color: var(--text-main);
+}
+
+.masonryGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Base Card structure with soft styling */
+.card {
+    position: relative;
+    background-color: var(--bg-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 1.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Glow effect behind content */
+.cardGlow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(120% 120% at 50% -20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.cardContent {
+    position: relative;
+    z-index: 1;
+}
+
+.cardTitle {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+/* 
+ * 2+ Distinct templates for mobile variety!
+ * Template 1: Featured (larger text, more padding, distinctive layout)
+ */
+.cardFeatured {
+    padding: 3rem 2rem;
+    background: linear-gradient(to bottom, var(--bg-2) 0%, var(--bg-1) 100%);
+}
+
+.cardFeatured .cardTitle {
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.cardFeatured .cardDesc {
+    font-size: 1rem;
+}
+
+/* 
+ * Template 2: Standard (compact, horizontal focus if space permits, smaller text)
+ */
+.cardStandard {
+    padding: 1.5rem;
+}
+
+.cardStandard .cardTitle {
+    font-size: 1.1rem;
+}
+
+.cardStandard .cardDesc {
+    font-size: 0.9rem;
+}
+
+/* Desktop Masonry Enhancement */
+@media (min-width: 768px) {
+    .masonryGrid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: minmax(150px, auto);
+        align-items: start;
+    }
+
+    /* Place featured cards effectively to simulate staggered masonry */
+    .cardFeatured:nth-child(odd) {
+        grid-row: span 2;
+    }
+}

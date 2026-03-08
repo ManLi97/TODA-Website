@@ -1,0 +1,132 @@
+.videoSection {
+    background-color: transparent;
+    padding: 8rem 5%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    /* Sit cleanly above gradients */
+}
+
+.toddOverlay {
+    position: absolute;
+    top: -40px;
+    right: -20px;
+    pointer-events: none;
+    z-index: 1;
+    /* Behind frame */
+    transform-origin: bottom right;
+}
+
+@media (max-width: 768px) {
+    .toddOverlay {
+        transform: scale(0.6);
+        top: -30px;
+        right: 0;
+    }
+}
+
+.toddMock {
+    width: 120px;
+    height: 120px;
+    background-color: var(--bg-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50% 50% 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.header {
+    text-align: center;
+}
+
+.videoFrame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--bg-1);
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 32px 64px auto rgba(0, 0, 0, 0.6);
+    z-index: 2;
+    overflow: hidden;
+}
+
+.posterContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.posterImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-2) 0%, var(--bg-1) 100%);
+    opacity: 0.6;
+}
+
+.playButton {
+    position: relative;
+    z-index: 3;
+    width: 72px;
+    height: 72px;
+    background-color: var(--bg-0);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.playButton:hover {
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 20px rgba(244, 218, 89, 0.2);
+}
+
+.playIcon {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 16px solid var(--text-main);
+    margin-left: 4px;
+    /* Optical center fix */
+    transition: border-left-color 0.3s ease;
+}
+
+.playButton:hover .playIcon {
+    border-left-color: var(--accent-yellow);
+}
+
+.playerPlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+}

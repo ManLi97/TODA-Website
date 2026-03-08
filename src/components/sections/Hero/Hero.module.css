@@ -1,0 +1,47 @@
+.heroSection {
+    background-color: transparent;
+    /* rely on global background, we'll fade in bg1 in PhoneApp section */
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.driftContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 900px;
+    padding: 0 5%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.subline {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.indicatorWrapper {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.fadeBottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20svh;
+    background: linear-gradient(to top, var(--bg-1) 0%, transparent 100%);
+    z-index: 10;
+    pointer-events: none;
+}
