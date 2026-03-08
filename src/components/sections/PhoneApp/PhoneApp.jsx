@@ -42,7 +42,7 @@ export default function PhoneApp() {
     };
 
     return (
-        <section className={`section-container ${styles.phoneSection}`}>
+        <section id="app" className={`section-container ${styles.phoneSection}`}>
             <div className={styles.container}>
 
                 {/* Phone Mockup Canvas */}

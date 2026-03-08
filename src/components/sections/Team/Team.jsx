@@ -30,8 +30,8 @@ export default function Team() {
         <section className={`section-container ${styles.teamSection}`}>
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h2 className="h2-large text-main">The Team</h2>
-                    <p className="text-muted">Built by artists, for artists.</p>
+                    <h2 className="h2-large text-main">Das Team</h2>
+                    <p className="text-muted">Aus dem Studio. Für das Studio.</p>
                 </div>
 
                 <motion.div

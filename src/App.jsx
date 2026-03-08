@@ -1,4 +1,5 @@
 import React from 'react';
+import FloatingNav from './components/ui/FloatingNav';
 import Hero from './components/sections/Hero/Hero';
 import PhoneApp from './components/sections/PhoneApp/PhoneApp';
 import PainPoints from './components/sections/PainPoints/PainPoints';
@@ -11,6 +12,7 @@ import Footer from './components/sections/Footer/Footer';
 function App() {
   return (
     <>
+      <FloatingNav />
       <Hero />
       <PhoneApp />
       <PainPoints />

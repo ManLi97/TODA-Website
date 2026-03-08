@@ -11,7 +11,7 @@ export default function VideoSection() {
     };
 
     return (
-        <section className={`section-container ${styles.videoSection}`}>
+        <section id="demo" className={`section-container ${styles.videoSection}`}>
             <div className={styles.container}>
 
                 {/* The Todd Peeking Layer */}
@@ -27,7 +27,7 @@ export default function VideoSection() {
                 </motion.div>
 
                 <div className={styles.header}>
-                    <h2 className="h2-large text-main">See the flow</h2>
+                    <h2 className="h2-large text-main">Abläufe, die Sinn machen</h2>
                 </div>
 
                 <div className={styles.videoFrame}>

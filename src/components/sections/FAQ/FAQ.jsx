@@ -3,10 +3,10 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import styles from './FAQ.module.css';
 
 const FAQS = [
-    { question: "How does the waiting list work?", answer: "Clients join your list seamlessly via your profile. When you open books, they get notified instantly without manual DMs." },
-    { question: "Can I manage multiple deposits?", answer: "Yes. Our automated system handles partial and full deposits securely so you never have to chase invoices again." },
-    { question: "Does TODA replace my calendar app?", answer: "Absolutely. TODA syncs 2-way with Google & Apple calendars, keeping your entire schedule unified in one beautiful interface." },
-    { question: "Do you take a cut of my bookings?", answer: "TODA is a flat monthly subscription. Zero hidden fees, zero commission on your hard-earned work." },
+    { question: "Wie funktioniert das mit der Warteliste?", answer: "Kunden tragen sich einfach über dein Profil ein. Wenn du deine Termine wieder öffnest, werden sie informiert – ganz ohne manuelle Nachrichten." },
+    { question: "Wie werden Anzahlungen abgewickelt?", answer: "Wirklich einfach. Das System sichert deine Termine durch automatische Anzahlungen ab, bevor der Termin fest eingebucht wird." },
+    { question: "Ersetzt TODA meine Kalender-App?", answer: "Absolut. TODA synchronisiert sich in beide Richtungen mit Google & Apple Kalendern. Du hast deinen ganzen Alltag in einer klaren Übersicht." },
+    { question: "Nehmt ihr eine Provision von meinen Einnahmen?", answer: "Nein. TODA funktioniert mit einem festen monatlichen Modell. Keine versteckten Gebühren, keine Kommission auf deine Arbeit." },
 ];
 
 export default function FAQ() {
@@ -18,11 +18,11 @@ export default function FAQ() {
     };
 
     return (
-        <section className={`section-container ${styles.faqSection}`}>
+        <section id="faq" className={`section-container ${styles.faqSection}`}>
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h2 className="h2-large text-main">Questions?</h2>
-                    <p className="h3-medium text-muted">We've got you.</p>
+                    <h2 className="h2-large text-main">Noch Fragen?</h2>
+                    <p className="h3-medium text-muted">Hier sind die Antworten.</p>
                 </div>
 
                 <div className={styles.accordionList}>

@@ -5,26 +5,26 @@ import styles from './PainPoints.module.css';
 const PAIN_POINTS = [
     {
         id: 'lost-deposits',
-        title: 'Chasing Deposits',
-        desc: 'Stop messaging clients for cash. Integrated payments do it automatically.',
+        title: 'Anzahlungen sicher haben',
+        desc: 'Schluss mit lästigem Nachfragen. Anzahlungen werden bei der Buchung automatisch abgewickelt.',
         type: 'featured'
     },
     {
         id: 'dm-clutter',
-        title: 'DM Chaos',
-        desc: 'DMs scattered across Insta, WhatsApp, and Mail. Unify it all.',
+        title: 'DM Chaos beenden',
+        desc: 'Terminanfragen über drei Kanäle verstreut? Sammle alle Anfragen sicher an einem zentralen Ort.',
         type: 'standard'
     },
     {
         id: 'no-shows',
-        title: 'No Shows',
-        desc: 'Automated reminders drop no-shows to near zero.',
+        title: 'Keine No-Shows mehr',
+        desc: 'Automatische Terminerinnerungen reduzieren Ausfälle auf ein absolutes Minimum.',
         type: 'featured'
     },
     {
         id: 'rescheduling',
-        title: 'Endless Back & Forth',
-        desc: 'Finding a new date takes 1 tap instead of 10 messages.',
+        title: 'Termine verschieben',
+        desc: 'Die Terminfindung dauert 1 Klick statt 10 Nachrichten. Spar dir das ewige Hin und Her.',
         type: 'standard'
     },
 ];
@@ -39,7 +39,7 @@ export default function PainPoints() {
     };
 
     return (
-        <section className={`section-container ${styles.painSection}`}>
+        <section id="vorteile" className={`section-container ${styles.painSection}`}>
             <div className={styles.container}>
 
                 <motion.div
@@ -50,7 +50,7 @@ export default function PainPoints() {
                     variants={revealVar}
                 >
                     <h2 className={`h2-large ${styles.headline}`}>
-                        The hustle <br /> <span className="text-acc">without the headache.</span>
+                        Das Studio <br /> <span className="text-acc">ohne das Chaos.</span>
                     </h2>
                 </motion.div>
 

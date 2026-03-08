@@ -1,0 +1,54 @@
+.navWrapper {
+    position: fixed;
+    bottom: 2rem;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    /* Highest above everything except noise/cursor */
+    pointer-events: none;
+    /* Wrapper shouldn't catch clicks */
+    display: flex;
+    justify-content: center;
+}
+
+.pillBackdrop {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.5rem;
+    background-color: rgba(20, 20, 20, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    pointer-events: auto;
+    /* Re-enable clicks for the pill itself */
+}
+
+.navLink {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.navLink:hover {
+    color: var(--accent-yellow);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Subtle active active state if clicked */
+.navLink:active {
+    color: var(--accent-yellow-deep);
+}
+
+@media (max-width: 480px) {
+    .navLink {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+    }
+}

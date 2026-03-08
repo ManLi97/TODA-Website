@@ -18,7 +18,7 @@ export default function Footer() {
                         viewport={{ once: true, margin: '-5%' }}
                     >
                         <h3 className={styles.logo}>TODA</h3>
-                        <p className="text-muted">The premium platform elevating tattoo workflows.</p>
+                        <p className="text-muted">Struktur und Klarheit für den professionellen Studioalltag.</p>
                     </motion.div>
 
                     {/* Links - We use placeholder anchors to avoid actual routing unless asked */}
@@ -31,16 +31,16 @@ export default function Footer() {
                         </div>
 
                         <div className={styles.linkGroup}>
-                            <h4 className={styles.colTitle}>Legal</h4>
-                            <a href="#" className={`text-muted ${styles.link}`}>Privacy</a>
-                            <a href="#" className={`text-muted ${styles.link}`}>Terms</a>
-                            <a href="#" className={`text-muted ${styles.link}`}>Imprint</a>
+                            <h4 className={styles.colTitle}>Rechtliches</h4>
+                            <a href="#" className={`text-muted ${styles.link}`}>Datenschutz</a>
+                            <a href="#" className={`text-muted ${styles.link}`}>AGB</a>
+                            <a href="#" className={`text-muted ${styles.link}`}>Impressum</a>
                         </div>
                     </div>
                 </div>
 
                 <div className={styles.bottomRow}>
-                    <p className={styles.copyright}>&copy; {currentYear} TODA Technologies. All Rights Reserved.</p>
+                    <p className={styles.copyright}>&copy; {currentYear} TODA Technologies. Alle Rechte vorbehalten.</p>
                 </div>
             </div>
         </footer>

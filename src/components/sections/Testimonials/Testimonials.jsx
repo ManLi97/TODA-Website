@@ -3,9 +3,9 @@ import { motion, useReducedMotion } from 'framer-motion';
 import styles from './Testimonials.module.css';
 
 const TESTIMONIALS = [
-    { id: 1, name: 'Alex T.', role: 'Studio Owner', text: '"I stopped answering DMs at 11 PM. TODA handles my entire schedule now."', rotation: -6, offsetY: 15 },
-    { id: 2, name: 'Jamie K.', role: 'Tattoo Artist', text: '"The deposits feature alone saved me hundreds of dollars in no-shows this month."', rotation: 5, offsetY: -10 },
-    { id: 3, name: 'Morgan S.', role: 'Independent Artist', text: '"Premium from end to end. My clients love the booking experience."', rotation: -4, offsetY: 20 },
+    { id: 1, name: 'Alex T.', role: 'Studio Owner', text: '"Ich beantworte abends keine DMs mehr. TODA übernimmt meinen kompletten Terminkalender."', rotation: -6, offsetY: 15 },
+    { id: 2, name: 'Jamie K.', role: 'Tattoo Artist', text: '"Allein die automatischen Anzahlungen haben mir diesen Monat extrem viel Zeit und Nerven gespart."', rotation: 5, offsetY: -10 },
+    { id: 3, name: 'Morgan S.', role: 'Independent Artist', text: '"Professionell von Anfang bis Ende. Meine Kunden sind vom Buchungsablauf begeistert."', rotation: -4, offsetY: 20 },
 ];
 
 export default function Testimonials() {
@@ -16,8 +16,8 @@ export default function Testimonials() {
             <div className={styles.container}>
 
                 <div className={styles.header}>
-                    <h2 className="h2-large text-main">Trusted by the best</h2>
-                    <p className="h3-medium text-muted">Join the movement.</p>
+                    <h2 className="h2-large text-main">Aus dem echten Studioalltag</h2>
+                    <p className="h3-medium text-muted">Entwickelt, um zu entlasten.</p>
                 </div>
 
                 <div className={styles.deckContainer}>

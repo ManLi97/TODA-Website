@@ -31,7 +31,7 @@ export default function Hero() {
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                         className="h1-mega"
                     >
-                        Crafted for <MarkerHighlight passes={3} delay={0.6}>Artists</MarkerHighlight>
+                        Gemacht für <MarkerHighlight passes={3} delay={0.6}>Artists</MarkerHighlight>
                     </motion.h1>
 
                     <motion.p
@@ -40,8 +40,8 @@ export default function Hero() {
                         transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         className={`h3-medium text-muted ${styles.subline}`}
                     >
-                        The premium platform elevating tattoo workflows. <br />
-                        <ScribbleUnderline passes={3} delay={1.4}>No distractions</ScribbleUnderline>, just craft.
+                        Bringt Ordnung in den Studioalltag. <br />
+                        <ScribbleUnderline passes={3} delay={1.4}>Mehr Fokus</ScribbleUnderline>, weniger Chaos.
                     </motion.p>
                 </div>
             </motion.div>
