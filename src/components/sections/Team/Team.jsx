@@ -3,9 +3,11 @@ import { motion, useReducedMotion } from 'framer-motion';
 import styles from './Team.module.css';
 
 const TEAM = [
-    { id: 1, name: "Manu", role: "Co-Founder / Product", thumb: null },
-    { id: 2, name: "Markus", role: "Co-Founder / Design", thumb: null },
-    { id: 3, name: "Todd", role: "Mascot / Moral Support", thumb: null },
+    { id: 1, name: "Manuel Lindner", role: "Geschäftsführer", thumb: null },
+    { id: 2, name: "Tom Symantzyk", role: "Lead Developer", thumb: null },
+    { id: 3, name: "Dana Plietker", role: "Marketing", thumb: null },
+    { id: 4, name: "Sandra Draht", role: "Design and Corporate Identity", thumb: null },
+    { id: 5, name: "Lucas Draht", role: "Social Media", thumb: null },
 ];
 
 export default function Team() {

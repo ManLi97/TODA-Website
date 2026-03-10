@@ -2,10 +2,15 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import styles from './Testimonials.module.css';
 
+import testi1 from '../../../assets/testimonials/testimonial1.jpg';
+import testi2 from '../../../assets/testimonials/testimonial2.jpg';
+import testi3 from '../../../assets/testimonials/testimonial3.jpg';
+
+
 const TESTIMONIALS = [
-    { id: 1, name: 'Alex T.', role: 'Studio Owner', text: '"Ich beantworte abends keine DMs mehr. TODA übernimmt meinen kompletten Terminkalender."', rotation: -6, offsetY: 15 },
-    { id: 2, name: 'Jamie K.', role: 'Tattoo Artist', text: '"Allein die automatischen Anzahlungen haben mir diesen Monat extrem viel Zeit und Nerven gespart."', rotation: 5, offsetY: -10 },
-    { id: 3, name: 'Morgan S.', role: 'Independent Artist', text: '"Professionell von Anfang bis Ende. Meine Kunden sind vom Buchungsablauf begeistert."', rotation: -4, offsetY: 20 },
+    { id: 1, name: 'Alex T.', role: 'Studio Owner', text: '"Ich beantworte abends keine DMs mehr. TODA übernimmt meinen kompletten Terminkalender."', rotation: -6, offsetY: 15, image: testi3 },
+    { id: 2, name: 'Jamie K.', role: 'Tattoo Artist', text: '"Allein die automatischen Anzahlungen haben mir diesen Monat extrem viel Zeit und Nerven gespart."', rotation: 5, offsetY: -10, image: testi2 },
+    { id: 3, name: 'Morgan S.', role: 'Independent Artist', text: '"Professionell von Anfang bis Ende. Meine Kunden sind vom Buchungsablauf begeistert."', rotation: -4, offsetY: 20, image: testi1 },
 ];
 
 export default function Testimonials() {
@@ -40,8 +45,7 @@ export default function Testimonials() {
                                     }}
                                 >
                                     <div className={styles.polaroidPhoto}>
-                                        {/* Placeholder image */}
-                                        <div className={styles.mockImg} />
+                                        <img src={testi.image} alt={testi.name} className={styles.photo} />
                                     </div>
                                     <div className={styles.polaroidText}>
                                         <p className={styles.quote}>{testi.text}</p>
