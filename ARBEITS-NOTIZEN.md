@@ -137,3 +137,77 @@ Build-Scripts für `@swc/core`, `@parcel/watcher`, `sharp`, `unrs-resolver` wurd
    git commit -m "chore: phase 1 foundation setup"
    ```
    Dann Remote verbinden und auf Vercel deployen.
+
+---
+
+# ARBEITS-NOTIZEN — Phase 2: Design System Foundation
+
+## Was wurde gebaut
+
+Vier Foundation-Dokumente + Tailwind v4 Token-Konfiguration + Font-Setup + Design-System-Testseite.
+
+```
+Website/
+├── DESIGN.md           # Vollständiges Design-System (Farben, Typo, Komponenten, Do/Don't)
+├── MOTION.md           # Motion-Richtlinien (Easing, Dauer, Scroll, GPU-Regeln)
+├── BRAND.md            # Brand-Guidelines (Farbpalette, Typografie, Tone of Voice, Anti-Patterns)
+├── CLAUDE.md           # Projekt-Constraints für Claude Code (Stack, Regeln, Checkliste)
+├── app/[locale]/
+│   ├── globals.css     # Tailwind v4 @theme mit 14 Farbtokens + 2 Font-Tokens
+│   ├── layout.tsx      # Inter + Playfair Display Italic via next/font/google
+│   └── page.tsx        # Design-System-Testseite (Swatches, Typo-Scale, Button)
+```
+
+---
+
+## Key Decisions
+
+### `getdesign` CLI hat funktioniert
+
+`npx getdesign@latest add apple` war ein echtes npm-Paket (v0.6.12) und hat eine vollständige DESIGN.md generiert. Diese wurde als Basis verwendet und komplett für TODA adaptiert: Apple Blue → TODA Gold, Light Theme → Dark Theme, SF Pro → Inter.
+
+### Font-Variable-Naming: `--font-inter-var` / `--font-playfair-var`
+
+In Tailwind v4 + next/font gibt es einen potenziellen Namenskonflikt: Wenn next/font `variable: "--font-inter"` setzt UND `@theme { --font-inter: ... }` definiert ist, würde entweder eine zirkuläre Referenz oder ein Überschreiben entstehen.
+
+**Lösung:** next/font verwendet eindeutige interne Namen (`--font-inter-var`, `--font-playfair-var`), die auf dem `<html>`-Element injiziert werden. `@theme` referenziert diese dann: `--font-inter: var(--font-inter-var)`. Das erzeugt die Tailwind-Utilities `font-inter` und `font-playfair` ohne Konflikt.
+
+### Playfair Display: Nur Italic, nur Weight 400
+
+Setup verlangt Playfair Display Italic für emotionale Akzente (max 2–4 Wörter, immer gold-500). Kein Regular, kein Bold geladen — minimiert den Font-Download. `style: ['italic']` + `weight: ['400']` in der next/font-Konfiguration.
+
+### Tailwind v4 CSS-Native Config: `@theme` in globals.css
+
+Tailwind v4 hat keine `tailwind.config.js`. Alle Design-Tokens sind als CSS Custom Properties im `@theme`-Block in `globals.css` definiert. Das generiert Utilities wie `bg-surface-base`, `text-gold-500`, `font-inter` direkt aus den Token-Namen.
+
+Namensschema:
+- `--color-{name}` → `bg-{name}`, `text-{name}`, `border-{name}`
+- `--font-{name}` → `font-{name}`
+
+### Testseite: Server Component, keine Übersetzungen
+
+`page.tsx` wurde vollständig ersetzt. Die alte Seite nutzte `useTranslations` (korrekt für eine echte Seite), aber die Testseite ist statischer Inhalt zur Verifikation. Kein `"use client"`, kein next-intl-Import. Sauberer Server Component.
+
+### Inline Styles nur für dynamische Swatch-Farben
+
+Die Farbswatches in der Testseite benötigen `style={{ backgroundColor: token.hex }}` weil Tailwind-Klassen für dynamische Werte zur Laufzeit nicht generiert werden können. Das ist die einzige Ausnahme — alle anderen Stile verwenden Token-basierte Utilities.
+
+### `active:scale-[0.97]` auf dem Button
+
+Setup.md spezifiziert den Button-Stil aber nicht den Active-State. Laut MOTION.md ist `transform: scale(0.97-0.98)` der Standard-Active-State für Buttons. Konsistent mit dem Design-System implementiert.
+
+---
+
+## Abweichungen vom Plan
+
+### Keine Abweichungen
+
+Alle 6 Tasks wurden wie spezifiziert umgesetzt. `getdesign` CLI hat funktioniert (geplante Fallback-Implementierung war nicht nötig). TypeScript und ESLint sind grün.
+
+---
+
+## Was der Entwickler manuell erledigen muss
+
+1. **Testseite visuell prüfen:** `pnpm dev` starten → `http://localhost:3000/de/` öffnen → Alle Tokens, Typo-Scale und Button visuell verifizieren.
+2. **Gold 500 kalibrieren:** `#C8941A` ist ein Working Default. Wenn finale Logo-Assets vorhanden sind, diesen Wert gegen das physische TODA-Logo abgleichen und in `globals.css` + `BRAND.md` + `DESIGN.md` aktualisieren.
+3. **WCAG-Audit:** `text-tertiary` (#6B6B6B auf #000000) hat 3.6:1 Kontrast — unter WCAG AA. Nur für non-essenziellen Text verwenden. Ggf. auf `#737373` erhöhen (~4.5:1) wenn zugänglicherer Wert benötigt wird.

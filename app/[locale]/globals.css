@@ -1,1 +1,35 @@
 @import "tailwindcss";
+
+@theme {
+  /* Anthrazit scale — surfaces */
+  --color-surface-base: #000000;
+  --color-surface-raised: #0a0a0a;
+  --color-surface-alt: #141414;
+  --color-surface-elevated: #1d1d1d;
+  --color-border-subtle: #262626;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a3a3a3;
+  --color-text-tertiary: #6b6b6b;
+
+  /* Gold scale — accent */
+  --color-gold-50: #fff8e5;
+  --color-gold-200: #fce49b;
+  --color-gold-400: #e8b73d;
+  --color-gold-500: #c8941a;
+  --color-gold-600: #9c7314;
+  --color-gold-800: #5c420a;
+
+  /* Font families — reference next/font CSS variables injected on <html> */
+  --font-inter: var(--font-inter-var);
+  --font-playfair: var(--font-playfair-var);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface-base);
+    color: var(--color-text-primary);
+    font-family: var(--font-inter), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
