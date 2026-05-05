@@ -1,67 +1,78 @@
-# TODA Marketing Website — Phase 1: Foundation Setup
+Read the following files completely before doing anything else:
+CLAUDE.md, DESIGN.md, MOTION.md, BRAND.md, ARBEITS-NOTIZEN.md
 
-## Project context
+Confirm that you have read all five files and summarize the current
+project state in 3–4 sentences before proceeding.
 
-You are initializing the marketing website for TODA Solutions (todasolutions.com).
-This is a multi-phase project. Phase 1 goal: a running Next.js skeleton,
-Supabase connected, i18n routing active for /de/. No UI, no design, no content yet.
+---
 
-Read this carefully before touching anything:
+We are now starting Phase 4 — Core Components. The goal of this phase
+is to build all reusable UI building blocks so that the landing page in
+Phase 5 can be assembled from finished parts.
 
-## Fixed tech stack (non-negotiable)
+**The 9 tasks of this phase:**
 
-- Next.js 15 with App Router
-- TypeScript
-- Tailwind CSS v4
-- next-intl for i18n
-- Supabase with @supabase/ssr (existing project, credentials via .env.local)
-- Hosting: Vercel
+1. Integrate Lenis as a smooth-scroll wrapper in the root layout
+2. Header component with glass-blur (backdrop-filter), scroll-aware
+   (hides on scroll down, reappears on scroll up)
+3. Footer component with sitemap links, language switcher (prepared but
+   not yet functional), social links, imprint/privacy links
+4. Button component with pill shape (border-radius: 980px), variants:
+   Primary (Gold), Secondary (Outline), Ghost — all in multiple sizes
+5. Section wrapper component that alternates between surface-base and
+   surface-alt backgrounds
+6. Hero component with large Inter headline, optional italic accent in
+   Gold (Playfair Display Italic), sub-headline, CTA button group
+7. Card component for listing items (blog listing, product overview)
+8. VideoLoop component: `<video autoplay loop muted playsinline>` with
+   Intersection Observer-based lazy play — no real videos exist yet,
+   work with structurally correct placeholders
+9. One example scroll animation with GSAP + ScrollTrigger to validate
+   the pattern — choose the specific use case freely, justify your choice
 
-## Requirements for this phase
+The phase ends with a Storybook-style test page (e.g.
+`/de/test/components`) where all components are visible and verifiable.
 
-### i18n
+---
 
-- Supported locales: de (launch), es and en will follow later — structure must support expansion
-- Default locale: de
-- Locale always in URL: /de/, never at root
-- Set up next-intl correctly for Next.js 15 App Router conventions
+**How we work in this phase:**
 
-### Supabase
+Do not implement all tasks in one shot. Instead, follow this structure:
 
-- Set up browser client and server client using @supabase/ssr
-- No DB queries or schema yet — connection only
+**Step 1 — Analyze first:** Before touching any task, read the existing
+project structure. Read the relevant files: `layout.tsx`, `globals.css`,
+`page.tsx`, everything in `lib/`, `middleware.ts`. Build a complete
+picture of what exists and how it is structured.
 
-### Environment
+**Step 2 — Present architecture decisions:** Two tasks have open
+implementation questions. Analyze both, present your options, and wait
+for my confirmation before writing any code:
 
-- .env.local with Supabase credentials (placeholders, not committed)
-- .env.example committed with empty values
+- **Task 1 (Lenis):** How do you integrate Lenis into the root layout —
+  directly inside `layout.tsx` or as a separate Client Component wrapper?
+  Show both options with a short pro/con and tell me which you recommend
+  and why.
+- **Task 5 (Section Wrapper):** How do you control the alternation
+  between `surface-base` and `surface-alt` — via an `index` prop or a
+  different pattern? Justify your decision.
 
-### Code quality
+Wait for my go before implementing either of these.
 
-- Prettier configured
-- ESLint configured
-- Build must pass without errors or warnings
+**Step 3 — Implement in blocks:** After my confirmation, work in three
+blocks:
 
-### Placeholder page
+- Block A: Tasks 1–3 (Lenis, Header, Footer)
+- Block B: Tasks 4–8 (Button, Section Wrapper, Hero, Card, VideoLoop)
+- Block C: Task 9 + test page (GSAP/ScrollTrigger + `/de/test/components`)
 
-- /de/ renders a minimal placeholder — just enough to confirm routing works
+After each block: brief report of what you built, what decisions you
+made and why, and what the next block contains. Then wait for my go.
 
-## Your responsibilities
+**General rules:**
+- No implementation without prior analysis
+- All constraints in CLAUDE.md apply without exception
+- Quality check after Phase 4 is complete: `pnpm build`, `pnpm lint`,
+  `npx tsc --noEmit` — all three must pass clean
+- Update ARBEITS-NOTIZEN.md at the end of the phase
 
-1. Make all structural and implementation decisions yourself — folder structure,
-   file conventions, configuration approach. Choose what is correct for
-   Next.js 15 + next-intl current best practices.
-
-2. After completing the setup, write ARBEITS-NOTIZEN.md in the project root.
-   Document: what was built, every structural decision you made and why,
-   versions of key dependencies installed, anything that deviated from
-   straightforward setup and why.
-
-3. Output an investigation report with:
-   - Full folder structure as a tree
-   - Key decisions and rationale
-   - Any issues encountered
-   - What the developer needs to do manually after this prompt
-     (Vercel deployment, DNS, env credentials)
-
-Do not implement Vercel deployment. Do not touch DNS. Do not build any UI components.
+Start now by reading the foundation files and the project structure.

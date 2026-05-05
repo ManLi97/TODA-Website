@@ -574,3 +574,129 @@ freigeben oder das Card-Layout-Pattern in Phase 5 standardisieren (z.B. immer 3-
 Auch bei `prefers-reduced-motion: reduce` ruft der IntersectionObserver `video.play()` auf.
 **Fix für Phase 9:** `window.matchMedia("(prefers-reduced-motion: reduce)").matches` prüfen
 und `play()` überspringen — stattdessen den Poster-Frame stehenlassen.
+
+### Hero: `pt-32/pt-40` setzt First-on-Page-Kontext voraus ⚠️
+
+`Hero` hat `pt-32 pb-20 md:pt-40 md:pb-32` hardcodiert — gedacht, um die 56px Fixed-Nav
+plus Atemraum zu absorbieren, wenn Hero die erste Section auf einer Seite ist.
+
+In anderen Kontexten (z.B. Test-Seite, eine Seite mit Breadcrumb/Subnav oberhalb,
+oder eine Seite, die Hero nicht an erster Stelle platziert) entsteht übermäßiges
+Top-Padding, das visuell falsch aussieht.
+
+**Fix für Phase 5:** `topOffset?: boolean`-Prop ergänzen (Default `true`).
+- `topOffset={true}`: aktuelles Verhalten — `pt-32 md:pt-40` (nav + breathing room)
+- `topOffset={false}`: nur `pt-20` (reguläres Section-Padding ohne Header-Offset),
+  für Kontexte, in denen Hero nicht die erste Section ist.
+
+Auf der `/de/test/components`-Seite fällt das überschüssige Padding auf — ist
+für diese interne Test-Seite akzeptiert und dokumentiert.
+
+---
+
+# ARBEITS-NOTIZEN — Phase 4: Core Components (Block C)
+
+## Was wurde gebaut
+
+GSAP ScrollTrigger-Animation und interne Komponenten-Testseite.
+
+```
+components/
+└── scroll-reveal.tsx              # Task 9: Client Component, GSAP + ScrollTrigger + CustomEase
+
+app/[locale]/test/components/
+└── page.tsx                       # Storybook-artige Testseite für alle Phase-4-Komponenten
+```
+
+**Installiertes Paket:** `gsap@3.15.0` (inkl. ScrollTrigger, CustomEase — kein @gsap/react nötig)
+
+---
+
+## Key Decisions
+
+### Animation-Use-Case: Section Reveal mit Stagger
+
+Gewählt gegenüber Hero-Reveal (kein ScrollTrigger nötig), Parallax-Layer
+(weniger wiederverwendbar) und gepinnter Scrub-Section (zu komplex für eine
+Pattern-Validierung). Der Section-Reveal mit gestaggerten Cards ist das Muster,
+das in Phase 5 für jede Content-Section repliziert wird — damit ist der
+Pattern-Nachweis direkt produktiv.
+
+### Plugins innerhalb `useEffect` registrieren
+
+`gsap.registerPlugin(ScrollTrigger, CustomEase)` läuft im `useEffect`, nicht auf
+Modul-Ebene. Obwohl GSAP v3 SSR-sicher ist (`typeof window !== "undefined"`-Guards
+intern), garantiert die `useEffect`-Platzierung browser-only Ausführung ohne
+Annahmen über Next.js' SSR-Verhalten. Mehrfache Registrierung durch mehrere
+`ScrollReveal`-Instanzen ist sicher — GSAP dedupliziert.
+
+### `toda-enter` CustomEase
+
+`CustomEase.create("toda-enter", "M0,0 C0,0 0.2,1 1,1")` bildet exakt
+`cubic-bezier(0, 0, 0.2, 1)` aus MOTION.md ab — der "enter"-Ease für alle
+Content-Reveals. Projektspezifischer Name verhindert Kollision mit GSAP-Builtins.
+
+### Stagger-Formel: `(i) => Math.min(i * 0.06, 0.24)`
+
+60ms pro Kind, Deckel bei 240ms (ab 5. Kind starten alle gleichzeitig bei 240ms).
+Exakt nach MOTION.md-Spec. Die Stagger-Funktion greift GSAP's Index-Parameter ab
+und gibt eine Delay-Zeit in Sekunden zurück.
+
+### `gsap.context()` für Cleanup
+
+`ctx.revert()` im Cleanup-Return entfernt alle GSAP-Tweens und ScrollTrigger-
+Instanzen, die in dem Kontext erstellt wurden. Sicher unter React Strict Mode
+(doppeltes Effect-Firing) — kein Tween-Leak.
+
+### Testseite: keine i18n-Strings, keine externen Bilder
+
+Die Testseite nutzt hardcodierte deutsche Labels und ausschließlich text-only
+Cards (kein `imageSrc`). Externe Bild-URLs würden `next.config.ts`-Änderungen
+(Allowed Domains) erfordern — unnötiger Scope für eine interne Seite.
+
+### Testseite: `SectionWrapper` als eigene Demo-Section
+
+Die Testseite verwendet selbst `SectionWrapper` mit alternierenden Varianten —
+die Komponente demonstriert sich durch ihren eigenen Einsatz. Zusätzlich wird
+eine Farbswatch-Übersicht mit Token-Klassen (`bg-surface-base` etc.) gezeigt,
+ohne inline-Styles.
+
+---
+
+## Bekannte Einschränkungen / Offene Punkte
+
+### ScrollReveal: FOUC vor GSAP-Initialisierung ⚠️
+
+Zwischen Server-Render (Elemente sichtbar, opacity: 1) und GSAP-Initialisierung
+(useEffect setzt opacity: 0) gibt es einen kurzen Flash of Unstyled Content.
+In der Praxis kaum wahrnehmbar (<100ms Hydration-Gap), aber vorhanden.
+
+**Fix für Phase 5:** CSS-Initial-State auf den Kindern setzen (z.B. über ein
+`data-reveal`-Attribut mit CSS: `[data-reveal] { opacity: 0; transform: translateY(32px); }`),
+das GSAP dann übernimmt und zurücksetzt. Vermeidet den Flash vollständig.
+
+### ScrollReveal: `toda-enter`-Ease wird pro Mount neu erstellt ⚠️
+
+Jede `ScrollReveal`-Instanz ruft `CustomEase.create("toda-enter", ...)` auf.
+GSAP überschreibt den gleichen Namen still — kein Bug, aber redundante Arbeit.
+**Fix (optional):** Einmalige Registrierung in einem globalen Init-Modul oder
+einem `useGsapInit()`-Hook, der via Ref-Count nur einmal ausgeführt wird.
+
+## Phase 4 — Abschluss
+
+Alle 9 Tasks erledigt:
+
+| Task | Komponente | Status |
+|---|---|---|
+| 1 | LenisProvider | ✅ Block A |
+| 2 | Header | ✅ Block A |
+| 3 | Footer | ✅ Block A |
+| 4 | Button + buttonVariants() | ✅ Block B |
+| 5 | SectionWrapper | ✅ Block B |
+| 6 | Hero | ✅ Block B |
+| 7 | Card | ✅ Block B |
+| 8 | VideoLoop | ✅ Block B |
+| 9 | ScrollReveal (GSAP + ScrollTrigger) | ✅ Block C |
+| — | /de/test/components Testseite | ✅ Block C |
+
+**Quality Gates:** `tsc --noEmit` ✓ · `pnpm lint` ✓ · `pnpm build` ✓ (nach jedem Block)
