@@ -4,6 +4,20 @@ Read this file at the start of every session. It is the single source of constra
 
 ---
 
+## Session Start — Required Reading
+
+At the beginning of every session, before writing any code:
+
+1. Read CLAUDE.md (this file) completely
+2. Read DESIGN.md
+3. Read MOTION.md
+4. Read BRAND.md
+5. Read ARBEITS-NOTIZEN.md — understand the current project state
+
+Then briefly confirm your understanding before starting.
+
+---
+
 ## Design Sources of Truth
 
 Before writing any UI code, read these files:
