@@ -1,5 +1,48 @@
 {
   "home": {
     "placeholder": "TODA Solutions — Website coming soon."
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "about": "About",
+    "cta": "Start for free",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "footer": {
+    "tagline": "The complete solution for professional tattoo studios.",
+    "product": {
+      "heading": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "changelog": "Changelog",
+      "roadmap": "Roadmap"
+    },
+    "company": {
+      "heading": "Company",
+      "about": "About",
+      "blog": "Blog",
+      "careers": "Careers",
+      "contact": "Contact"
+    },
+    "legal": {
+      "heading": "Legal",
+      "imprint": "Imprint",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "language": {
+      "heading": "Language",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español"
+    },
+    "copyright": "© {year} TODA Solutions. All rights reserved.",
+    "social": {
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn"
+    }
   }
 }

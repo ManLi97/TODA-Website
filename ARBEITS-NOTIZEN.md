@@ -130,13 +130,8 @@ Build-Scripts für `@swc/core`, `@parcel/watcher`, `sharp`, `unrs-resolver` wurd
    - Custom Domain `todasolutions.com` in Vercel hinzufügen
    - DNS-Records beim Domain-Provider setzen (A/CNAME per Vercel-Anweisung)
 
-4. **Git Repository initialisieren**
-   ```bash
-   git init
-   git add .
-   git commit -m "chore: phase 1 foundation setup"
-   ```
-   Dann Remote verbinden und auf Vercel deployen.
+4. **Git Repository** — ✅ Erledigt. Repo existiert unter GitHub `TODA-Website`, Branch `main`,
+   Remote `origin` konfiguriert. Kein `git init` mehr nötig.
 
 ---
 
@@ -444,3 +439,63 @@ Best Practice für Supabase-Projekte: Extensions landen im `extensions` Schema, 
    ALTER DATABASE postgres SET app.revalidate_secret = '<geheimes-token>';
    ```
 3. **`NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY`** in `.env.local` und Vercel Environment Variables eintragen (aus Phase 1 offen).
+
+---
+
+# ARBEITS-NOTIZEN — Phase 4: Core Components (Block A)
+
+## Was wurde gebaut
+
+Lenis Smooth Scroll, globaler Header und Footer als wiederverwendbare Komponenten.
+
+```
+components/
+├── lenis-provider.tsx   # Task 1: Client Component, lerp 0.1, prefers-reduced-motion-aware
+├── header.tsx           # Task 2: Client Component, sticky glass-blur, scroll-aware
+└── footer.tsx           # Task 3: Server Component, 4-spaltige Sitemap, Sprachumschalter
+
+i18n/
+└── navigation.ts        # createNavigation(routing) — locale-aware Link/useRouter/usePathname
+
+messages/
+├── de.json              # nav + footer Namespaces ergänzt
+├── en.json              # nav + footer Namespaces ergänzt
+└── es.json              # nav + footer Namespaces ergänzt
+
+app/[locale]/layout.tsx  # LenisProvider + Header + Footer eingebunden
+```
+
+---
+
+## Key Decisions
+
+### LenisProvider als separater Client Component
+
+`layout.tsx` ist ein async Server Component (`await params`, `getMessages()`). Lenis benötigt DOM-Zugriff → muss in `"use client"` leben. Separater Wrapper hält das Layout sauber als Server Component.
+
+### Header: native scroll events statt Lenis-API
+
+Der Header hört auf native `window.scroll`-Events (passive). Lenis feuert diese weiterhin — keine Lenis-Context-Referenz nötig. Hält den Header unabhängig vom Scroll-Provider.
+
+### Footer: getLocale() für aktiven Sprach-State
+
+`getLocale()` aus `next-intl/server` liefert die aktive Locale im Server Component, ohne dass ein Client-Hook nötig ist. Aktive Sprache wird im Footer-Sprachumschalter hervorgehoben.
+
+### Footer Sprachumschalter: Link to Locale-Home
+
+Footer ist Server Component → kein `usePathname`. Sprachumschalter verlinkt auf die Home-Page der jeweiligen Locale (`href="/" locale="de"` etc.). Pfad-bewusster Wechsel (aktueller Pfad beibehalten) wird in **Phase 9** nachgerüstet.
+
+---
+
+## Bekannte Einschränkungen / Phase-9-Todos
+
+### Footer Copyright Jahr — Build-Time-Rendering ⚠️
+
+`new Date().getFullYear()` wird zur Build-Zeit ausgewertet, da `Footer` ein Server Component ist.
+Das Jahr stimmt nur bis zum nächsten Build/Deployment. Für eine Marketing-Website mit regelmäßigen
+Deploys ist das unkritisch — bei seltenen Deploys kann es passieren, dass das Footer-Jahr veraltet ist.
+
+**Fix-Option für Phase 9:** Footer-Copyright als eigenes `"use client"` Subcomponent
+auslagern, das `new Date().getFullYear()` zur Laufzeit berechnet. Alternativ: Route Segment Config
+`export const dynamic = "force-dynamic"` auf der Root-Layout-Ebene (teuer — nicht empfohlen).
+Einfachste Lösung: jährlicher Deploy oder das Jahr manuell hardcoden.

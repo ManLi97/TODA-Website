@@ -1,5 +1,48 @@
 {
   "home": {
     "placeholder": "TODA Solutions — Sitio web próximamente."
+  },
+  "nav": {
+    "features": "Funciones",
+    "pricing": "Precios",
+    "blog": "Blog",
+    "about": "Nosotros",
+    "cta": "Comenzar gratis",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "footer": {
+    "tagline": "La solución completa para estudios de tatuaje profesionales.",
+    "product": {
+      "heading": "Producto",
+      "features": "Funciones",
+      "pricing": "Precios",
+      "changelog": "Cambios",
+      "roadmap": "Hoja de ruta"
+    },
+    "company": {
+      "heading": "Empresa",
+      "about": "Nosotros",
+      "blog": "Blog",
+      "careers": "Empleos",
+      "contact": "Contacto"
+    },
+    "legal": {
+      "heading": "Legal",
+      "imprint": "Aviso legal",
+      "privacy": "Privacidad",
+      "terms": "Términos"
+    },
+    "language": {
+      "heading": "Idioma",
+      "de": "Deutsch",
+      "en": "English",
+      "es": "Español"
+    },
+    "copyright": "© {year} TODA Solutions. Todos los derechos reservados.",
+    "social": {
+      "instagram": "Instagram",
+      "linkedin": "LinkedIn"
+    }
   }
 }
