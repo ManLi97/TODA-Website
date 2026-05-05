@@ -499,3 +499,78 @@ Deploys ist das unkritisch — bei seltenen Deploys kann es passieren, dass das 
 auslagern, das `new Date().getFullYear()` zur Laufzeit berechnet. Alternativ: Route Segment Config
 `export const dynamic = "force-dynamic"` auf der Root-Layout-Ebene (teuer — nicht empfohlen).
 Einfachste Lösung: jährlicher Deploy oder das Jahr manuell hardcoden.
+
+---
+
+# ARBEITS-NOTIZEN — Phase 4: Core Components (Block B)
+
+## Was wurde gebaut
+
+Button-System, Section-Wrapper, Hero, Card und VideoLoop als wiederverwendbare Komponenten.
+
+```
+components/
+├── button.tsx          # Task 4: Button + buttonVariants(), 3 Varianten × 3 Größen
+├── section-wrapper.tsx # Task 5: Server Component, variant-prop, Anthrazit-Surfaces
+├── hero.tsx            # Task 6: Server Component, responsive Headline, Playfair Accent, CTA-Gruppe
+├── card.tsx            # Task 7: Server Component, next/image fill, hover-lift, label-slot
+└── video-loop.tsx      # Task 8: Client Component, IntersectionObserver lazy-play, Placeholder
+```
+
+---
+
+## Key Decisions
+
+### Button: `buttonVariants()` als reine Funktion neben dem `Button`-Component
+
+Der `Button` rendert `<button>`. Für Link-CTAs (Hero, Header) braucht man jedoch `<Link className={...}>`.
+Lösung: `buttonVariants({ variant, size })` gibt einen reinen className-String zurück — keine JSX,
+kein Router-Import. Damit ist die Funktion in Server Components und Client Components gleichermaßen
+nutzbar, ohne Coupling. Das shadcn-Muster ohne shadcn-Overhead.
+
+### `font-normal` auf dem Playfair-Accent-Span im Hero
+
+Das `<h1>` hat `font-semibold` (600). Da Playfair Display nur in weight 400 geladen ist, würde
+der Browser bei Vererbung faux-bold erzeugen. Explizites `font-normal` auf dem `<span>` verhindert das.
+
+### Card: Einzelner `label`-Prop statt `date` + `category`
+
+Der gleiche Card-Component wird für Blog-Listing (Datum) und Produkt-Übersicht (Kategorie) genutzt.
+Ein generischer String-Slot hält den Component schmal und vermeidet Prop-Proliferation. Formatierung
+obliegt dem Aufrufer.
+
+### Card: Hover-Transition auf `transform` + `border-color`, nicht `transition-all`
+
+`transition-all` würde auch Opacity, Background etc. einschließen — unnötig. Explizites
+`transition-[transform,border-color]` ist präziser und GPU-freundlicher.
+
+### VideoLoop: IntersectionObserver statt `autoPlay` als primärer Play-Controller
+
+`autoPlay` ist auf dem Element gesetzt (per spec), aber der IntersectionObserver ist der eigentliche
+Controller: Er spielt ab, wenn 25 % des Videos sichtbar sind, und pausiert beim Rausscrollen.
+`play().catch(() => {})` schluckt Autoplay-Policy-Ablehnungen des Browsers geräuschlos.
+
+---
+
+## Bekannte Einschränkungen / Offene Punkte
+
+### Header-CTA nutzt noch keine `buttonVariants()` ⚠️
+
+Der Header wurde in Block A mit inline-Klassen gebaut, bevor `buttonVariants()` existierte.
+Die Klassen sind inhaltlich identisch — kein Bug, nur doppelter Code.
+**Aufräumen:** In Phase 5, wenn der Header in die echte Landing Page eingebettet wird,
+`buttonVariants({ variant: "primary", size: "md" })` für den Desktop-CTA und
+`buttonVariants({ variant: "primary", size: "sm" })` für den Mobile-CTA einsetzen.
+
+### Card `sizes`-Prop geht von Grid-Kontext aus ⚠️
+
+`sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"` ist auf ein 3-Spalten-Grid
+ausgelegt. In einer Single-Column-Ansicht würde Next.js ein zu kleines Bild laden.
+**Fix:** Aufrufer kann mit `className` das Bild-Rendering nicht beeinflussen — ggf. `sizes`-Prop
+freigeben oder das Card-Layout-Pattern in Phase 5 standardisieren (z.B. immer 3-col grid).
+
+### VideoLoop: kein `prefers-reduced-motion`-Handling ⚠️
+
+Auch bei `prefers-reduced-motion: reduce` ruft der IntersectionObserver `video.play()` auf.
+**Fix für Phase 9:** `window.matchMedia("(prefers-reduced-motion: reduce)").matches` prüfen
+und `play()` überspringen — stattdessen den Poster-Frame stehenlassen.
