@@ -12,7 +12,8 @@ At the beginning of every session, before writing any code:
 2. Read DESIGN.md
 3. Read MOTION.md
 4. Read BRAND.md
-5. Read ARBEITS-NOTIZEN.md — understand the current project state
+5. Read BRAND-CONTEXT.md — origin story, real customer problems, tone of voice examples, and placeholder copy direction for Phase 5
+6. Read ARBEITS-NOTIZEN.md — understand the current project state
 
 Then briefly confirm your understanding before starting.
 
