@@ -14,6 +14,9 @@ out/
 build
 dist
 
+# Claude Code — local machine config, never commit
+.claude/settings.local.json
+
 # Misc
 .DS_Store
 *.pem
