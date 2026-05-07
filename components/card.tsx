@@ -1,7 +1,7 @@
-// Card component — used for blog listing and product overview grids.
-// Styling follows DESIGN.md card-elevated: surface-elevated background, border-subtle border,
-// rounded-lg (16px), 24px padding. No box-shadow — elevation via surface color.
-// Hover: 2px lift (translateY) + border lightens, per MOTION.md.
+// Card component — used for blog listing, product overview grids, and static feature items.
+// When href is provided: renders as <Link> with hover lift + line-clamp — use for navigable cards.
+// When href is omitted: renders as <div> without hover states + full excerpt — use for static items.
+// Elevation via surface color, never box-shadow (DESIGN.md).
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 
@@ -10,32 +10,29 @@ interface CardProps {
   excerpt?: string;
   // Flexible single label: date, category, or any short metadata string
   label?: string;
-  href: string;
+  href?: string;
   imageSrc?: string;
   imageAlt?: string;
   className?: string;
 }
 
-export function Card({
-  title,
-  excerpt,
-  label,
-  href,
-  imageSrc,
-  imageAlt,
-  className,
-}: CardProps) {
-  const wrapperClasses = [
-    "group block bg-surface-elevated border border-border-subtle rounded-lg overflow-hidden",
-    "transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]",
-    "hover:-translate-y-0.5 hover:border-text-tertiary",
+export function Card({ title, excerpt, label, href, imageSrc, imageAlt, className }: CardProps) {
+  const baseClasses = [
+    "bg-surface-elevated border border-border-subtle rounded-lg overflow-hidden",
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
-  return (
-    <Link href={href} className={wrapperClasses}>
+  // Interactive classes applied only when the card is a link
+  const linkClasses = [
+    baseClasses,
+    "group block transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]",
+    "hover:-translate-y-0.5 hover:border-text-tertiary",
+  ].join(" ");
+
+  const content = (
+    <>
       {/* Cover image — omitted when no imageSrc, no placeholder */}
       {imageSrc && (
         <div className="relative aspect-[16/9] w-full overflow-hidden">
@@ -49,7 +46,6 @@ export function Card({
         </div>
       )}
 
-      {/* Content */}
       <div className="p-6">
         {label && (
           <p className="text-[12px] font-normal leading-none tracking-[-0.05px] text-text-tertiary mb-3">
@@ -60,11 +56,30 @@ export function Card({
           {title}
         </h3>
         {excerpt && (
-          <p className="mt-2 text-[14px] font-normal leading-[1.43] tracking-[-0.1px] text-text-secondary line-clamp-3">
+          <p
+            className={[
+              "mt-2 text-[14px] font-normal leading-[1.43] tracking-[-0.1px] text-text-secondary",
+              // Clamp only for link cards — destination holds the full content.
+              // Static feature cards show the full excerpt since there is no "read more" target.
+              href ? "line-clamp-3" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
             {excerpt}
           </p>
         )}
       </div>
-    </Link>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className={linkClasses}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={baseClasses}>{content}</div>;
 }

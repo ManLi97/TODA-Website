@@ -1,6 +1,41 @@
 {
   "home": {
-    "placeholder": "TODA Solutions — Website coming soon."
+    "hero": {
+      "headline": "More Art.",
+      "accentText": "Less Chaos.",
+      "subHeadline": "Your studio runs. You tattoo.",
+      "ctaPrimary": "Start for free",
+      "ctaSecondary": "Learn more"
+    },
+    "origin": {
+      "label": "About TODA",
+      "headline": "By tattoo artists. For tattoo artists.",
+      "body1": "Dana is a tattoo artist. Tomek watched her come home — exhausted, not from tattooing itself, but from everything around it. Two clients at the same time. Two no-shows. Forty unread messages.",
+      "body2": "He spent two months building. The result was TODA — a platform built from the real day-to-day of a studio, not from an office."
+    },
+    "features": {
+      "label": "Features",
+      "headline": "Everything your studio needs.",
+      "feature1Title": "One request. All the info.",
+      "feature1Excerpt": "No more back-and-forth. Your client fills out a structured form once — motif, placement, references, contact details. You immediately see everything you need to give a price estimate.",
+      "feature2Title": "Your calendar works. You tattoo.",
+      "feature2Excerpt": "You set your working hours. Your client picks a free slot themselves. Double bookings are structurally impossible — no paper calendar, no chaos.",
+      "feature3Title": "Your website. Without a developer.",
+      "feature3Excerpt": "Gallery, about section, booking form — all in one link. Whether Instagram, WhatsApp, or Facebook: always the same link, always the same structured result."
+    },
+    "manifest": {
+      "label": "Why TODA",
+      "accentText": "Your art.",
+      "headline": "You should be tattooing. Not managing.",
+      "body": "You are an artist. Not an accountant, not a secretary, not customer service all in one. TODA takes care of everything else — so you can focus on what you chose this profession for."
+    },
+    "cta": {
+      "headline": "Ready for less chaos?",
+      "price": "€24.99",
+      "pricePeriod": "per month",
+      "priceNote": "Cancel monthly. No contract.",
+      "ctaPrimary": "Start for free"
+    }
   },
   "nav": {
     "features": "Features",

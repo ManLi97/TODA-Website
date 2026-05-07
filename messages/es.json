@@ -1,6 +1,41 @@
 {
   "home": {
-    "placeholder": "TODA Solutions — Sitio web próximamente."
+    "hero": {
+      "headline": "Más arte.",
+      "accentText": "Menos caos.",
+      "subHeadline": "Tu estudio funciona. Tú tatúas.",
+      "ctaPrimary": "Empezar gratis",
+      "ctaSecondary": "Saber más"
+    },
+    "origin": {
+      "label": "Sobre TODA",
+      "headline": "Por tatuadores. Para tatuadores.",
+      "body1": "Dana es tatuadora. Tomek la observó llegar a casa — agotada, no por tatuar en sí, sino por todo lo que lo rodea. Dos clientes al mismo tiempo. Dos no-shows. Cuarenta mensajes sin leer.",
+      "body2": "Pasó dos meses construyendo. El resultado fue TODA — una plataforma nacida del día a día real de un estudio, no de una oficina."
+    },
+    "features": {
+      "label": "Funciones",
+      "headline": "Todo lo que tu estudio necesita.",
+      "feature1Title": "Una solicitud. Toda la información.",
+      "feature1Excerpt": "Sin más mensajes de ida y vuelta. Tu cliente rellena un formulario estructurado una sola vez — motivo, zona, referencias, datos de contacto. Ves al instante todo lo que necesitas para dar un presupuesto.",
+      "feature2Title": "Tu calendario trabaja. Tú tatúas.",
+      "feature2Excerpt": "Tú defines tu horario. Tu cliente elige un hueco libre. Las reservas dobles son estructuralmente imposibles — sin agenda de papel, sin caos.",
+      "feature3Title": "Tu web. Sin desarrollador.",
+      "feature3Excerpt": "Galería, sección sobre ti, formulario de reserva — todo en un enlace. Ya sea Instagram, WhatsApp o Facebook: siempre el mismo enlace, siempre el mismo resultado estructurado."
+    },
+    "manifest": {
+      "label": "Por qué TODA",
+      "accentText": "Tu arte.",
+      "headline": "Deberías estar tatuando. No gestionando.",
+      "body": "Eres artista. No contable, no secretario, no servicio al cliente todo en uno. TODA se encarga del resto — para que puedas centrarte en aquello para lo que elegiste esta profesión."
+    },
+    "cta": {
+      "headline": "¿Listo para menos caos?",
+      "price": "24,99 €",
+      "pricePeriod": "al mes",
+      "priceNote": "Cancelación mensual. Sin permanencia.",
+      "ctaPrimary": "Empezar gratis"
+    }
   },
   "nav": {
     "features": "Funciones",

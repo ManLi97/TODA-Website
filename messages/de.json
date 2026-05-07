@@ -1,6 +1,41 @@
 {
   "home": {
-    "placeholder": "TODA Solutions — Website kommt bald."
+    "hero": {
+      "headline": "Mehr Kunst.",
+      "accentText": "Weniger Chaos.",
+      "subHeadline": "Dein Studio läuft. Du tätowierst.",
+      "ctaPrimary": "Kostenlos starten",
+      "ctaSecondary": "Mehr erfahren"
+    },
+    "origin": {
+      "label": "Über TODA",
+      "headline": "Von Tätowierern. Für Tätowierer.",
+      "body1": "Dana ist Tätowiererin. Tomek hat beobachtet, wie sie nach Hause kommt — erschöpft, nicht vom Tätowieren selbst, sondern vom Drumherum. Zwei Kunden auf einmal. Zwei No-Shows. Vierzig ungelesene Nachrichten.",
+      "body2": "Er hat zwei Monate gebaut. Das Ergebnis war TODA — eine Plattform, die aus dem echten Alltag eines Studios entstanden ist, nicht aus einem Büro."
+    },
+    "features": {
+      "label": "Funktionen",
+      "headline": "Alles, was dein Studio braucht.",
+      "feature1Title": "Eine Anfrage. Alle Infos.",
+      "feature1Excerpt": "Kein Hin und Her mehr. Dein Kunde füllt einmalig ein strukturiertes Formular aus — Motiv, Platzierung, Referenzen, Kontaktdaten. Du siehst sofort alles, was du für eine Preisschätzung brauchst.",
+      "feature2Title": "Dein Kalender arbeitet. Du tätowierst.",
+      "feature2Excerpt": "Du setzt deine Arbeitszeiten. Dein Kunde bucht selbst einen freien Slot. Doppelbuchungen sind strukturell unmöglich — kein Papierkalender, kein Chaos.",
+      "feature3Title": "Deine Webseite. Ohne Webentwickler.",
+      "feature3Excerpt": "Galerie, Über-mich-Bereich, Buchungsformular — alles in einem Link. Egal ob Instagram, WhatsApp oder Facebook: immer derselbe Link, immer dasselbe strukturierte Ergebnis."
+    },
+    "manifest": {
+      "label": "Warum TODA",
+      "accentText": "Deine Kunst.",
+      "headline": "Du solltest tätowieren. Nicht verwalten.",
+      "body": "Du bist Künstler. Nicht Buchhalter, nicht Sekretär, nicht Kundenservice in einer Person. TODA übernimmt das Drumherum — damit du dich auf das konzentrieren kannst, wofür du diesen Beruf gewählt hast."
+    },
+    "cta": {
+      "headline": "Bereit für weniger Chaos?",
+      "price": "24,99 €",
+      "pricePeriod": "pro Monat",
+      "priceNote": "Monatlich kündbar. Keine Vertragsbindung.",
+      "ctaPrimary": "Kostenlos starten"
+    }
   },
   "nav": {
     "features": "Funktionen",
