@@ -26,11 +26,11 @@ export function Hero({ headline, accentText, subHeadline, ctaPrimary, ctaSeconda
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="max-w-3xl text-center md:text-left">
           {/* Headline — Inter semibold at display size with responsive scaling */}
-          <h1 className="text-[34px] sm:text-[40px] lg:text-[56px] font-semibold leading-[1.1] lg:leading-[1.07] tracking-[-0.5px] text-text-primary">
+          <h1 className="text-[40px] sm:text-[56px] lg:text-[80px] font-semibold leading-[1.07] tracking-[-0.5px] lg:tracking-[-1px] text-text-primary">
             {headline}
             {accentText && (
               <>
-                {" "}
+                <br />
                 {/* Playfair italic accent — font-normal prevents inheriting the h1's semibold
                     (we only load Playfair at weight 400) */}
                 <span className="font-playfair italic font-normal text-gold-500">
