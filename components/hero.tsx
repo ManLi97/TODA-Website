@@ -22,9 +22,9 @@ export function Hero({ headline, accentText, subHeadline, ctaPrimary, ctaSeconda
   const hasCtas = ctaPrimary || ctaSecondary;
 
   return (
-    <section className="bg-surface-base pt-32 pb-20 md:pt-40 md:pb-32">
+    <section className="bg-surface-base min-h-dvh flex flex-col justify-center pt-14">
       <div className="max-w-[1200px] mx-auto px-6">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl text-center md:text-left">
           {/* Headline — Inter semibold at display size with responsive scaling */}
           <h1 className="text-[34px] sm:text-[40px] lg:text-[56px] font-semibold leading-[1.1] lg:leading-[1.07] tracking-[-0.5px] text-text-primary">
             {headline}
@@ -49,7 +49,7 @@ export function Hero({ headline, accentText, subHeadline, ctaPrimary, ctaSeconda
 
           {/* CTA group */}
           {hasCtas && (
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-3 justify-center md:justify-start">
               {ctaPrimary && (
                 <Link href={ctaPrimary.href} className={buttonVariants({ variant: "primary", size: "md" })}>
                   {ctaPrimary.label}

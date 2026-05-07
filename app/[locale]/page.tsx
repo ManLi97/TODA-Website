@@ -26,7 +26,7 @@ export default async function HomePage() {
       />
 
       {/* ── 2. Origin — surface-raised ── */}
-      <SectionWrapper variant="raised" id="about">
+      <SectionWrapper variant="raised" id="about" className="sticky top-0 min-h-dvh z-[10]">
         {/* Four children cascade: label → headline → body1 → body2 */}
         <ScrollReveal className="max-w-2xl">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -45,7 +45,7 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* ── 3. Features — surface-alt ── */}
-      <SectionWrapper variant="alt" id="features">
+      <SectionWrapper variant="alt" id="features" className="sticky top-0 z-[20]">
         {/* Label + headline in first reveal group */}
         <ScrollReveal className="mb-12">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -73,7 +73,7 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* ── 4. Manifest — surface-raised ── */}
-      <SectionWrapper variant="raised" id="manifest">
+      <SectionWrapper variant="raised" id="manifest" className="sticky top-0 z-[30]">
         {/* Four children cascade: label → Playfair accent → headline → body */}
         <ScrollReveal className="max-w-2xl">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -99,7 +99,7 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* ── 5. CTA — surface-base ── */}
-      <SectionWrapper variant="base" id="contact">
+      <SectionWrapper variant="base" id="contact" className="sticky top-0 min-h-dvh z-[40]">
         {/* Four children cascade: headline → price row → note → button */}
         <ScrollReveal className="max-w-xl">
           <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary mb-8">
