@@ -29,6 +29,13 @@
       "headline": "Deberías estar tatuando. No gestionando.",
       "body": "Eres artista. No contable, no secretario, no servicio al cliente todo en uno. TODA se encarga del resto — para que puedas centrarte en aquello para lo que elegiste esta profesión."
     },
+    "caseStudy": {
+      "label": "De la práctica",
+      "statement": "30 años autónoma. Semanas de 60 horas. ¿Qué la ayudó? Menos caos.",
+      "quote1": "Lo que más me molesta de esta profesión es la comunicación con los clientes.",
+      "quote2": "Precisamente ahora, cuando tengo exactamente este problema, alguien aparece con la solución.",
+      "attribution": "Sandra · Nacht und Nebel Tattoo"
+    },
     "cta": {
       "headline": "¿Listo para menos caos?",
       "price": "24,99 €",

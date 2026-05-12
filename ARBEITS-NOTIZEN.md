@@ -700,3 +700,100 @@ Alle 9 Tasks erledigt:
 | — | /de/test/components Testseite | ✅ Block C |
 
 **Quality Gates:** `tsc --noEmit` ✓ · `pnpm lint` ✓ · `pnpm build` ✓ (nach jedem Block)
+
+---
+
+# ARBEITS-NOTIZEN — Phase 5: Landing Page (IN PROGRESS)
+
+## Ziel
+
+Die vollständige `/de/`-Landing-Page mit allen 9 Sections. Phase 5 gilt erst als
+abgeschlossen, wenn **alle** Sections gebaut, reviewed und abgenommen sind.
+
+---
+
+## Ziel-Architektur — Section-Reihenfolge
+
+| # | Section | Status | Surface | z-index |
+|---|---|---|---|---|
+| 1 | **Hero** | EXISTS — keine Änderungen | `surface-base` | z-0 |
+| 2 | **Case Study** | NEW — wird zuerst gebaut | `surface-alt` | z-10 |
+| 3 | **Origin** (ehem. `#about`) | EXISTS — bleibt unverändert | `surface-base` | z-20 |
+| 4 | **Features** (ehem. `#features`) | EXISTS — bleibt unverändert | `surface-alt` | z-30 |
+| 5 | **Manifest** (ehem. `#manifest`) | EXISTS — bleibt unverändert | `surface-base` | z-40 |
+| 6 | **Testimonials** | NEW — Layout-Brief folgt separat | `surface-raised` | z-50 |
+| 7 | **FAQ** | NEW — nach Testimonials | `surface-alt` | z-60 |
+| 8 | **Team Teaser** | NEW — nach FAQ | `surface-raised` | z-70 |
+| 9 | **CTA** (ehem. `#contact`) | EXISTS — bleibt unverändert | `surface-base` | z-80 |
+
+---
+
+## Section-Specs (Neue Sections)
+
+### Section 2 — Case Study
+
+**Konzept:** Sandra von "Nacht und Nebel" Tattoo-Studio. Reale Kundenstory.
+60–70h Woche, Burnout, Bottleneck war Client-Kommunikation. TODA kam zum richtigen Zeitpunkt.
+
+**Struktur:**
+1. Label
+2. Kurzes emotionales Statement
+3. 1–2 Pull-Quotes (Sandras Worte)
+4. `<VideoLoop>` Placeholder — 16:9, leere `src`, Poster-Placeholder
+5. Name / Studio-Credit
+
+**Copy:** Placeholder der den Ton trifft — roh, ehrlich, kein poliertes Marketing.
+Tonführung: BRAND-CONTEXT.md
+
+---
+
+### Section 6 — Testimonials
+
+**Status:** Design-Brief wird vor dem Build separat geliefert.
+Keine Annahmen über Layout oder Struktur. Warten auf explizite Design-Direction.
+
+---
+
+### Section 7 — FAQ
+
+**Struktur:**
+1. Label
+2. H2
+3. Accordion-FAQ (4–6 Fragen, Placeholder-Content der realistische TODA-Kundenbedenken trifft)
+
+---
+
+### Section 8 — Team Teaser
+
+**Konzept:** Minimal. 4 Team-Karten (Foto-Placeholder + Name + 1-Zeiler Rolle).
+Link zu `/de/about` für die vollständige Geschichte.
+
+**Struktur:**
+1. Label
+2. H2
+3. 4-Spalten-Grid mit Team-Karten
+4. Text-Link zu `/de/about`
+
+---
+
+## Bestehende Sections — z-index-Updates
+
+Die bestehenden Sections müssen ihre z-index-Werte an die neue Reihenfolge anpassen:
+
+| Section | Alter z-index | Neuer z-index |
+|---|---|---|
+| Origin (`#about`) | — | z-20 |
+| Features (`#features`) | — | z-30 |
+| Manifest (`#manifest`) | — | z-40 |
+| CTA (`#contact`) | — | z-80 |
+
+---
+
+## Build-Reihenfolge
+
+1. Case Study (Section 2) — nächste Session
+2. z-index-Updates auf bestehenden Sections
+3. Testimonials — nach Design-Brief
+4. FAQ (Section 7)
+5. Team Teaser (Section 8)
+6. Finale Abnahme aller 9 Sections → Phase 5 complete

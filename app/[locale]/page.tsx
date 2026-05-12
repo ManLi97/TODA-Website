@@ -1,9 +1,10 @@
-// Landing page — Phase 5.
-// Five sections: Hero → Origin → Features → Manifest → CTA.
-// Surface rhythm: base → raised → alt → raised → base.
+// Landing page — Phase 5 (in progress).
+// Nine sections: Hero → Case Study → Origin → Features → Manifest → Testimonials → FAQ → Team → CTA.
+// Surface rhythm: base → alt → raised → alt → raised → raised → alt → raised → base.
 // Copy from messages/{locale}.json "home" namespace.
 import { getTranslations } from "next-intl/server";
 import { Hero } from "@/components/hero";
+import { CaseStudySection } from "@/components/case-study-section";
 import { SectionWrapper } from "@/components/section-wrapper";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { Card } from "@/components/card";
@@ -25,8 +26,19 @@ export default async function HomePage() {
         ctaSecondary={{ label: t("hero.ctaSecondary"), href: "#features" }}
       />
 
-      {/* ── 2. Origin — surface-raised ── */}
-      <SectionWrapper variant="raised" id="about" className="sticky top-0 min-h-dvh z-[10]">
+      {/* ── 2. Case Study — surface-alt ── */}
+      <SectionWrapper variant="alt" id="case-study" className="sticky top-0 z-[10]">
+        <CaseStudySection
+          label={t("caseStudy.label")}
+          statement={t("caseStudy.statement")}
+          quote1={t("caseStudy.quote1")}
+          quote2={t("caseStudy.quote2")}
+          attribution={t("caseStudy.attribution")}
+        />
+      </SectionWrapper>
+
+      {/* ── 3. Origin — surface-raised ── */}
+      <SectionWrapper variant="raised" id="about" className="sticky top-0 min-h-dvh z-[20]">
         {/* Four children cascade: label → headline → body1 → body2 */}
         <ScrollReveal className="max-w-2xl">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -44,8 +56,8 @@ export default async function HomePage() {
         </ScrollReveal>
       </SectionWrapper>
 
-      {/* ── 3. Features — surface-alt ── */}
-      <SectionWrapper variant="alt" id="features" className="sticky top-0 z-[20]">
+      {/* ── 4. Features — surface-alt ── */}
+      <SectionWrapper variant="alt" id="features" className="sticky top-0 z-[30]">
         {/* Label + headline in first reveal group */}
         <ScrollReveal className="mb-12">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -72,8 +84,8 @@ export default async function HomePage() {
         </ScrollReveal>
       </SectionWrapper>
 
-      {/* ── 4. Manifest — surface-raised ── */}
-      <SectionWrapper variant="raised" id="manifest" className="sticky top-0 z-[30]">
+      {/* ── 5. Manifest — surface-raised ── */}
+      <SectionWrapper variant="raised" id="manifest" className="sticky top-0 z-[40]">
         {/* Four children cascade: label → Playfair accent → headline → body */}
         <ScrollReveal className="max-w-2xl">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -98,8 +110,8 @@ export default async function HomePage() {
         </ScrollReveal>
       </SectionWrapper>
 
-      {/* ── 5. CTA — surface-base ── */}
-      <SectionWrapper variant="base" id="contact" className="sticky top-0 min-h-dvh z-[40]">
+      {/* ── 9. CTA — surface-base ── */}
+      <SectionWrapper variant="base" id="contact" className="sticky top-0 min-h-dvh z-[80]">
         {/* Four children cascade: headline → price row → note → button */}
         <ScrollReveal className="max-w-xl">
           <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary mb-8">
