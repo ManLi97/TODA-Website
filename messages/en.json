@@ -29,6 +29,19 @@
       "headline": "You should be tattooing. Not managing.",
       "body": "You are an artist. Not an accountant, not a secretary, not customer service all in one. TODA takes care of everything else — so you can focus on what you chose this profession for."
     },
+    "testimonials": {
+      "label": "Voices from the community",
+      "headline": "What other studios say.",
+      "quote1": "My requests come in organised now. No WhatsApp chaos, no missing references. I know immediately whether a request is worth taking.",
+      "author1": "Mia",
+      "studio1": "Studio Kollektiv, Munich",
+      "quote2": "I used to spend whole evenings just on messages. Now I check in once and I'm done.",
+      "author2": "Jonas",
+      "studio2": "Rote Schwalbe, Hamburg",
+      "quote3": "Clients already know what to expect before the first conversation. It saves more time than I thought.",
+      "author3": "Lena",
+      "studio3": "Black Lotus, Vienna"
+    },
     "caseStudy": {
       "label": "From the field",
       "statement": "30 years self-employed. 60-hour weeks. What helped her? Less chaos.",

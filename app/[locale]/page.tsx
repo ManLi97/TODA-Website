@@ -5,6 +5,7 @@
 import { getTranslations } from "next-intl/server";
 import { Hero } from "@/components/hero";
 import { CaseStudySection } from "@/components/case-study-section";
+import { TestimonialsSection } from "@/components/testimonials-section";
 import { SectionWrapper } from "@/components/section-wrapper";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { Card } from "@/components/card";
@@ -108,6 +109,23 @@ export default async function HomePage() {
             <VideoLoop src="" className="w-full h-full" />
           </div>
         </ScrollReveal>
+      </SectionWrapper>
+
+      {/* ── 6. Testimonials — surface-raised ── */}
+      <SectionWrapper variant="raised" id="testimonials" className="sticky top-0 z-[50]">
+        <TestimonialsSection
+          label={t("testimonials.label")}
+          headline={t("testimonials.headline")}
+          quote1={t("testimonials.quote1")}
+          author1={t("testimonials.author1")}
+          studio1={t("testimonials.studio1")}
+          quote2={t("testimonials.quote2")}
+          author2={t("testimonials.author2")}
+          studio2={t("testimonials.studio2")}
+          quote3={t("testimonials.quote3")}
+          author3={t("testimonials.author3")}
+          studio3={t("testimonials.studio3")}
+        />
       </SectionWrapper>
 
       {/* ── 9. CTA — surface-base ── */}

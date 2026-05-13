@@ -29,6 +29,19 @@
       "headline": "Deberías estar tatuando. No gestionando.",
       "body": "Eres artista. No contable, no secretario, no servicio al cliente todo en uno. TODA se encarga del resto — para que puedas centrarte en aquello para lo que elegiste esta profesión."
     },
+    "testimonials": {
+      "label": "Voces de la comunidad",
+      "headline": "Lo que dicen otros estudios.",
+      "quote1": "Mis solicitudes llegan ahora ordenadas. Sin caos de WhatsApp, sin referencias que faltan. Sé de inmediato si vale la pena aceptar una solicitud.",
+      "author1": "Mia",
+      "studio1": "Studio Kollektiv, Múnich",
+      "quote2": "Antes pasaba algunas tardes enteras respondiendo mensajes. Ahora entro una vez y ya está.",
+      "author2": "Jonas",
+      "studio2": "Rote Schwalbe, Hamburgo",
+      "quote3": "Los clientes ya saben qué esperar antes de la primera conversación. Me ahorra más tiempo del que pensaba.",
+      "author3": "Lena",
+      "studio3": "Black Lotus, Viena"
+    },
     "caseStudy": {
       "label": "De la práctica",
       "statement": "30 años autónoma. Semanas de 60 horas. ¿Qué la ayudó? Menos caos.",

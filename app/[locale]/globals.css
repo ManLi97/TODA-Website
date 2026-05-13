@@ -22,6 +22,11 @@
   /* Font families — reference next/font CSS variables injected on <html> */
   --font-inter: var(--font-inter-var);
   --font-playfair: var(--font-playfair-var);
+
+  /* Polaroid card surface — white card on dark background for testimonials */
+  --color-polaroid: #fafafa;
+  --color-polaroid-text: #1a1a1a;
+  --color-polaroid-text-secondary: #555555;
 }
 
 @layer base {
@@ -32,4 +37,33 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* Hide scrollbar on the mobile testimonials scroll track */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Cellulose tape strip above polaroid cards */
+.polaroid-tape {
+  position: relative;
+}
+.polaroid-tape::before {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(2px);
+  border-radius: 2px;
+  transform: rotate(-3deg);
+  top: -12px;
+  left: 50%;
+  translate: -50% 0;
+  pointer-events: none;
+  z-index: 1;
 }

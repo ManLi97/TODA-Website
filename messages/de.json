@@ -29,6 +29,19 @@
       "headline": "Du solltest tätowieren. Nicht verwalten.",
       "body": "Du bist Künstler. Nicht Buchhalter, nicht Sekretär, nicht Kundenservice in einer Person. TODA übernimmt das Drumherum — damit du dich auf das konzentrieren kannst, wofür du diesen Beruf gewählt hast."
     },
+    "testimonials": {
+      "label": "Stimmen aus der Community",
+      "headline": "Was andere Studios sagen.",
+      "quote1": "Meine Anfragen kommen jetzt geordnet an. Kein WhatsApp-Durcheinander, keine fehlenden Referenzen. Ich weiss sofort, was eine Anfrage wert ist.",
+      "author1": "Mia",
+      "studio1": "Studio Kollektiv, München",
+      "quote2": "Früher hab ich manche Abende nur mit Nachrichten verbracht. Jetzt schaue ich einmal rein und bin fertig.",
+      "author2": "Jonas",
+      "studio2": "Rote Schwalbe, Hamburg",
+      "quote3": "Kunden wissen jetzt schon vor dem ersten Gespräch, was sie erwartet. Das spart mir mehr Zeit als ich dachte.",
+      "author3": "Lena",
+      "studio3": "Black Lotus, Wien"
+    },
     "caseStudy": {
       "label": "Aus der Praxis",
       "statement": "30 Jahre selbständig. 60-Stunden-Wochen. Was ihr geholfen hat? Weniger Chaos.",
