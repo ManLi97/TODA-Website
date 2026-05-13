@@ -49,6 +49,35 @@
       "quote2": "Of all times, now that I have exactly this problem, someone comes around the corner with the solution.",
       "attribution": "Sandra · Nacht und Nebel Tattoo"
     },
+    "faq": {
+      "label": "FAQ",
+      "headline": "Frequently asked questions.",
+      "q1": "Do I need my own website?",
+      "a1": "No. TODA is your booking page. One link — and clients see your gallery, your info, and can request directly. No developer, no hosting.",
+      "q2": "What if a client does not show up?",
+      "a2": "Deposit handling is our next feature release. For now, the structured intake form already helps: clients who are serious enough to fill it out tend to show up.",
+      "q3": "Can I use TODA on my phone?",
+      "a3": "Yes. TODA runs as a web app on iPhone, Android, iPad, and desktop. No app install needed.",
+      "q4": "How long does setup take?",
+      "a4": "A few minutes. Set up your profile, set your working hours, share your link. Done.",
+      "q5": "Can I cancel monthly?",
+      "a5": "Yes. No contract, no minimum term. Cancel any time — with one click in settings."
+    },
+    "team": {
+      "label": "The team",
+      "headline": "Built by people who know it from the inside.",
+      "name1": "Tomek",
+      "role1": "Co-Founder & Developer",
+      "name2": "Dana",
+      "role2": "Co-Founder & Tattoo Artist",
+      "name3": "Sandra",
+      "role3": "Studio Partner & Community",
+      "name4": "Manuel",
+      "role4": "Developer",
+      "name5": "Lucas",
+      "role5": "Social Media",
+      "cta": "The full story"
+    },
     "cta": {
       "headline": "Ready for less chaos?",
       "price": "€24.99",

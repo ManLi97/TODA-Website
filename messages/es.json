@@ -49,6 +49,35 @@
       "quote2": "Precisamente ahora, cuando tengo exactamente este problema, alguien aparece con la solución.",
       "attribution": "Sandra · Nacht und Nebel Tattoo"
     },
+    "faq": {
+      "label": "FAQ",
+      "headline": "Preguntas frecuentes.",
+      "q1": "¿Necesito tener mi propia web?",
+      "a1": "No. TODA es tu página de reservas. Un enlace — y los clientes ven tu galería, tu información y pueden solicitar directamente. Sin desarrollador, sin hosting.",
+      "q2": "¿Qué pasa si un cliente no aparece?",
+      "a2": "Los anticipos son nuestro próximo lanzamiento de función. Por ahora, el formulario estructurado ya ayuda: quien lo rellena suele aparecer.",
+      "q3": "¿Puedo usar TODA en el móvil?",
+      "a3": "Sí. TODA funciona como web app en iPhone, Android, iPad y escritorio. Sin instalación de app.",
+      "q4": "¿Cuánto tarda la configuración?",
+      "a4": "Unos minutos. Crea tu perfil, establece tu horario, comparte tu enlace. Listo.",
+      "q5": "¿Puedo cancelar mensualmente?",
+      "a5": "Sí. Sin contrato, sin permanencia. Cancelación mensual — con un clic en la configuración."
+    },
+    "team": {
+      "label": "El equipo",
+      "headline": "Construido por personas que lo conocen por dentro.",
+      "name1": "Tomek",
+      "role1": "Co-Fundador y Desarrollador",
+      "name2": "Dana",
+      "role2": "Co-Fundadora y Tatuadora",
+      "name3": "Sandra",
+      "role3": "Socia de Estudio y Comunidad",
+      "name4": "Manuel",
+      "role4": "Desarrollador",
+      "name5": "Lucas",
+      "role5": "Redes Sociales",
+      "cta": "La historia completa"
+    },
     "cta": {
       "headline": "¿Listo para menos caos?",
       "price": "24,99 €",

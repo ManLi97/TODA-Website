@@ -23,7 +23,9 @@ export function SectionWrapper({
   className,
   id,
 }: SectionWrapperProps) {
-  const sectionClasses = [BG[variant], "py-20", className].filter(Boolean).join(" ");
+  // overflow-x-hidden clips any horizontal visual overflow from child elements
+  // (rotated cards, transforms, compositing layers) without affecting body/html scroll.
+  const sectionClasses = [BG[variant], "py-20", "overflow-x-hidden", className].filter(Boolean).join(" ");
 
   return (
     <section id={id} className={sectionClasses}>

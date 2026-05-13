@@ -6,6 +6,8 @@ import { getTranslations } from "next-intl/server";
 import { Hero } from "@/components/hero";
 import { CaseStudySection } from "@/components/case-study-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
+import { FaqSection } from "@/components/faq-section";
+import { TeamSection } from "@/components/team-section";
 import { SectionWrapper } from "@/components/section-wrapper";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { Card } from "@/components/card";
@@ -125,6 +127,33 @@ export default async function HomePage() {
           quote3={t("testimonials.quote3")}
           author3={t("testimonials.author3")}
           studio3={t("testimonials.studio3")}
+        />
+      </SectionWrapper>
+
+      {/* ── 7. FAQ — surface-alt ── */}
+      <SectionWrapper variant="alt" id="faq" className="sticky top-0 z-[60]">
+        <FaqSection
+          label={t("faq.label")}
+          headline={t("faq.headline")}
+          q1={t("faq.q1")} a1={t("faq.a1")}
+          q2={t("faq.q2")} a2={t("faq.a2")}
+          q3={t("faq.q3")} a3={t("faq.a3")}
+          q4={t("faq.q4")} a4={t("faq.a4")}
+          q5={t("faq.q5")} a5={t("faq.a5")}
+        />
+      </SectionWrapper>
+
+      {/* ── 8. Team Teaser — surface-raised ── */}
+      <SectionWrapper variant="raised" id="team" className="sticky top-0 z-[70]">
+        <TeamSection
+          label={t("team.label")}
+          headline={t("team.headline")}
+          name1={t("team.name1")} role1={t("team.role1")}
+          name2={t("team.name2")} role2={t("team.role2")}
+          name3={t("team.name3")} role3={t("team.role3")}
+          name4={t("team.name4")} role4={t("team.role4")}
+          name5={t("team.name5")} role5={t("team.role5")}
+          cta={t("team.cta")}
         />
       </SectionWrapper>
 
