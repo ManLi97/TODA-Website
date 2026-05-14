@@ -1,14 +1,15 @@
 // Landing page — Phase 5 (in progress).
 // Nine sections: Hero → Case Study → Origin → Features → Manifest → Testimonials → FAQ → Team → CTA.
-// Surface rhythm: base → alt → raised → alt → raised → raised → alt → raised → base.
+// Surface rhythm: base → alt → raised → alt → raised → base → alt → raised → base.
 // Copy from messages/{locale}.json "home" namespace.
+// StickySection replaces SectionWrapper for all sticky slots — handles overflow content pan.
 import { getTranslations } from "next-intl/server";
 import { Hero } from "@/components/hero";
 import { CaseStudySection } from "@/components/case-study-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { FaqSection } from "@/components/faq-section";
 import { TeamSection } from "@/components/team-section";
-import { SectionWrapper } from "@/components/section-wrapper";
+import { StickySection } from "@/components/sticky-section";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { Card } from "@/components/card";
 import { VideoLoop } from "@/components/video-loop";
@@ -30,7 +31,7 @@ export default async function HomePage() {
       />
 
       {/* ── 2. Case Study — surface-alt ── */}
-      <SectionWrapper variant="alt" id="case-study" className="sticky top-0 z-[10] min-h-dvh">
+      <StickySection variant="alt" id="case-study" zIndex={10}>
         <CaseStudySection
           label={t("caseStudy.label")}
           statement={t("caseStudy.statement")}
@@ -38,10 +39,10 @@ export default async function HomePage() {
           quote2={t("caseStudy.quote2")}
           attribution={t("caseStudy.attribution")}
         />
-      </SectionWrapper>
+      </StickySection>
 
       {/* ── 3. Origin — surface-raised ── */}
-      <SectionWrapper variant="raised" id="about" className="sticky top-0 min-h-dvh z-[20]">
+      <StickySection variant="raised" id="about" zIndex={20}>
         {/* Four children cascade: label → headline → body1 → body2 */}
         <ScrollReveal className="max-w-2xl">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -57,10 +58,10 @@ export default async function HomePage() {
             {t("origin.body2")}
           </p>
         </ScrollReveal>
-      </SectionWrapper>
+      </StickySection>
 
       {/* ── 4. Features — surface-alt ── */}
-      <SectionWrapper variant="alt" id="features" className="sticky top-0 z-[30] min-h-dvh">
+      <StickySection variant="alt" id="features" zIndex={30}>
         {/* Label + headline in first reveal group */}
         <ScrollReveal className="mb-12">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -85,10 +86,10 @@ export default async function HomePage() {
             excerpt={t("features.feature3Excerpt")}
           />
         </ScrollReveal>
-      </SectionWrapper>
+      </StickySection>
 
       {/* ── 5. Manifest — surface-raised ── */}
-      <SectionWrapper variant="raised" id="manifest" className="sticky top-0 z-[40] min-h-dvh">
+      <StickySection variant="raised" id="manifest" zIndex={40}>
         {/* Four children cascade: label → Playfair accent → headline → body */}
         <ScrollReveal className="max-w-2xl">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -111,10 +112,10 @@ export default async function HomePage() {
             <VideoLoop src="" className="w-full h-full" />
           </div>
         </ScrollReveal>
-      </SectionWrapper>
+      </StickySection>
 
-      {/* ── 6. Testimonials — surface-raised ── */}
-      <SectionWrapper variant="base" id="testimonials" className="sticky top-0 z-[50] min-h-dvh">
+      {/* ── 6. Testimonials — surface-base ── */}
+      <StickySection variant="base" id="testimonials" zIndex={50}>
         <TestimonialsSection
           label={t("testimonials.label")}
           headline={t("testimonials.headline")}
@@ -128,10 +129,10 @@ export default async function HomePage() {
           author3={t("testimonials.author3")}
           studio3={t("testimonials.studio3")}
         />
-      </SectionWrapper>
+      </StickySection>
 
       {/* ── 7. FAQ — surface-alt ── */}
-      <SectionWrapper variant="alt" id="faq" className="sticky top-0 z-[60] min-h-dvh">
+      <StickySection variant="alt" id="faq" zIndex={60}>
         <FaqSection
           label={t("faq.label")}
           headline={t("faq.headline")}
@@ -141,10 +142,10 @@ export default async function HomePage() {
           q4={t("faq.q4")} a4={t("faq.a4")}
           q5={t("faq.q5")} a5={t("faq.a5")}
         />
-      </SectionWrapper>
+      </StickySection>
 
       {/* ── 8. Team Teaser — surface-raised ── */}
-      <SectionWrapper variant="raised" id="team" className="sticky top-0 z-[70] min-h-dvh">
+      <StickySection variant="raised" id="team" zIndex={70}>
         <TeamSection
           label={t("team.label")}
           headline={t("team.headline")}
@@ -155,10 +156,10 @@ export default async function HomePage() {
           name5={t("team.name5")} role5={t("team.role5")}
           cta={t("team.cta")}
         />
-      </SectionWrapper>
+      </StickySection>
 
       {/* ── 9. CTA — surface-base ── */}
-      <SectionWrapper variant="base" id="contact" className="sticky top-0 min-h-dvh z-[80]">
+      <StickySection variant="base" id="contact" zIndex={80}>
         {/* Four children cascade: headline → price row → note → button */}
         <ScrollReveal className="max-w-xl">
           <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary mb-8">
@@ -179,7 +180,7 @@ export default async function HomePage() {
             {t("cta.ctaPrimary")}
           </Link>
         </ScrollReveal>
-      </SectionWrapper>
+      </StickySection>
     </>
   );
 }

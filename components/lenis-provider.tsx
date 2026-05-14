@@ -1,25 +1,34 @@
 "use client";
 
 // Wraps the app in Lenis smooth scroll. Skipped entirely when prefers-reduced-motion is set.
-// All scroll-driven animations should listen to Lenis events, not native scroll.
+// GSAP's ticker drives Lenis (replaces manual RAF) so ScrollTrigger reads Lenis's
+// smoothed scroll position — required for StickySection's scrub-based content pan.
 import { useEffect } from "react";
 import Lenis from "lenis";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    gsap.registerPlugin(ScrollTrigger);
+
     const lenis = new Lenis({ lerp: 0.1 });
 
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
+    // Feed Lenis's smoothed position to ScrollTrigger on every scroll tick
+    lenis.on("scroll", ScrollTrigger.update);
+
+    // GSAP ticker drives Lenis — no manual RAF loop needed
+    const tickerFn = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(tickerFn);
+
+    // Disable GSAP lag-smoothing so it doesn't fight Lenis's own lerp
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      lenis.off("scroll", ScrollTrigger.update);
+      gsap.ticker.remove(tickerFn);
       lenis.destroy();
     };
   }, []);
