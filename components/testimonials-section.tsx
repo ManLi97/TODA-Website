@@ -103,8 +103,7 @@ export function TestimonialsSection({
                 initial={
                   shouldReduceMotion ? false : { opacity: 0, y: yOffset + 48, rotate: tilt }
                 }
-                whileInView={{ opacity: 1, y: yOffset, rotate: tilt }}
-                viewport={{ once: true, amount: 0.3 }}
+                animate={{ opacity: 1, y: yOffset, rotate: tilt }}
                 transition={
                   shouldReduceMotion
                     ? { duration: 0 }
