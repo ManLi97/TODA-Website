@@ -55,7 +55,7 @@ export function TeamSection({
   ];
 
   return (
-    <div className="pb-32">
+    <div>
       {/* Section header — GSAP scroll reveal (same pattern as other sections) */}
       <ScrollReveal className="mb-12">
         <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">

@@ -91,7 +91,7 @@ export function TestimonialsSection({
       <div
         ref={trackRef}
         onScroll={handleScroll}
-        className="overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-6 md:mx-0 md:overflow-x-hidden"
+        className="overflow-x-auto snap-x snap-mandatory no-scrollbar touch-pan-x -mx-6 md:mx-0 md:overflow-x-hidden"
       >
         <div className="flex flex-row pl-6 pr-4 py-4 gap-6 md:gap-0 md:px-0 md:py-8 md:justify-center">
           {cards.map((card, i) => {

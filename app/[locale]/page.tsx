@@ -30,7 +30,7 @@ export default async function HomePage() {
       />
 
       {/* ── 2. Case Study — surface-alt ── */}
-      <SectionWrapper variant="alt" id="case-study" className="sticky top-0 z-[10]">
+      <SectionWrapper variant="alt" id="case-study" className="sticky top-0 z-[10] min-h-dvh">
         <CaseStudySection
           label={t("caseStudy.label")}
           statement={t("caseStudy.statement")}
@@ -60,7 +60,7 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* ── 4. Features — surface-alt ── */}
-      <SectionWrapper variant="alt" id="features" className="sticky top-0 z-[30]">
+      <SectionWrapper variant="alt" id="features" className="sticky top-0 z-[30] min-h-dvh">
         {/* Label + headline in first reveal group */}
         <ScrollReveal className="mb-12">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -88,7 +88,7 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* ── 5. Manifest — surface-raised ── */}
-      <SectionWrapper variant="raised" id="manifest" className="sticky top-0 z-[40]">
+      <SectionWrapper variant="raised" id="manifest" className="sticky top-0 z-[40] min-h-dvh">
         {/* Four children cascade: label → Playfair accent → headline → body */}
         <ScrollReveal className="max-w-2xl">
           <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -114,7 +114,7 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* ── 6. Testimonials — surface-raised ── */}
-      <SectionWrapper variant="raised" id="testimonials" className="sticky top-0 z-[50]">
+      <SectionWrapper variant="base" id="testimonials" className="sticky top-0 z-[50] min-h-dvh">
         <TestimonialsSection
           label={t("testimonials.label")}
           headline={t("testimonials.headline")}
@@ -131,7 +131,7 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* ── 7. FAQ — surface-alt ── */}
-      <SectionWrapper variant="alt" id="faq" className="sticky top-0 z-[60]">
+      <SectionWrapper variant="alt" id="faq" className="sticky top-0 z-[60] min-h-dvh">
         <FaqSection
           label={t("faq.label")}
           headline={t("faq.headline")}
@@ -144,7 +144,7 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* ── 8. Team Teaser — surface-raised ── */}
-      <SectionWrapper variant="raised" id="team" className="sticky top-0 z-[70]">
+      <SectionWrapper variant="raised" id="team" className="sticky top-0 z-[70] min-h-dvh">
         <TeamSection
           label={t("team.label")}
           headline={t("team.headline")}
