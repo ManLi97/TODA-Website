@@ -15,7 +15,7 @@ export async function Footer() {
     <footer className="bg-surface-raised border-t border-border-subtle">
       <div className="max-w-[1440px] mx-auto px-6 py-16">
         {/* Top row: brand + link columns */}
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_repeat(4,auto)] md:gap-16">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_repeat(4,auto)] lg:gap-16">
           {/* Brand block */}
           <div className="flex flex-col gap-4 max-w-xs">
             <Link

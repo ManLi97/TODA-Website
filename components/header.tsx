@@ -77,7 +77,7 @@ export function Header() {
           {/* Desktop nav — centered via absolute positioning */}
           <nav
             aria-label="Main navigation"
-            className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2"
+            className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2"
           >
             {NAV_LINKS.map(({ key, href }) => (
               <Link
@@ -91,7 +91,7 @@ export function Header() {
           </nav>
 
           {/* Desktop right cluster */}
-          <div className="hidden md:flex items-center gap-5">
+          <div className="hidden lg:flex items-center gap-5">
             {/* Locale switcher */}
             <div className="flex items-center gap-2" aria-label="Language switcher">
               {LOCALES.map((loc, i) => (
@@ -123,7 +123,7 @@ export function Header() {
           </div>
 
           {/* Mobile right cluster */}
-          <div className="flex md:hidden items-center gap-3">
+          <div className="flex lg:hidden items-center gap-3">
             <Link
               href="/#contact"
               className="bg-gold-500 text-surface-base font-semibold text-[14px] px-5 py-2 rounded-[980px] transition-colors duration-150 hover:bg-gold-400 active:scale-[0.97] active:bg-gold-600"
@@ -170,7 +170,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-surface-base/95 backdrop-blur-md border-b border-border-subtle">
+        <div className="lg:hidden bg-surface-base/95 backdrop-blur-md border-b border-border-subtle">
           <nav
             aria-label="Mobile navigation"
             className="max-w-[1440px] mx-auto px-6 py-5 flex flex-col gap-1"

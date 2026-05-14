@@ -39,19 +39,31 @@ export function TestimonialsSection({
 }: TestimonialsSectionProps) {
   const shouldReduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
+  // snapCount drives dot rendering — sourced from Embla so it reflects actual
+  // scrollable positions, not hardcoded card count. Hides dots when ≤1 snap
+  // (all cards already visible, e.g. iPad landscape).
+  const [snapCount, setSnapCount] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     align: "start",
-    containScroll: "trimSnaps",
+    containScroll: "keepSnaps",
+    dragFree: true,
+    duration: 35,
   });
 
-  // Sync dot indicators with Embla's selected slide
+  // Sync dot indicators and snap count with Embla state
   useEffect(() => {
     if (!emblaApi) return;
     const api = emblaApi;
+    setSnapCount(api.scrollSnapList().length);
     const onSelect = () => setActiveIndex(api.selectedScrollSnap());
+    const onReInit = () => setSnapCount(api.scrollSnapList().length);
     api.on("select", onSelect);
-    return () => { api.off("select", onSelect); };
+    api.on("reInit", onReInit);
+    return () => {
+      api.off("select", onSelect);
+      api.off("reInit", onReInit);
+    };
   }, [emblaApi]);
 
   const cards = [
@@ -83,7 +95,7 @@ export function TestimonialsSection({
       {/* ── Mobile: Embla Carousel ──────────────────────────────────────────────
           -mx-6 extends viewport to screen edge; pl-6 aligns slides with section
           header. Embla applies overflow:hidden and handles touch via PointerEvents. */}
-      <div className="-mx-6 pl-6 md:hidden" ref={emblaRef}>
+      <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef}>
         <div className="flex gap-6 py-4 pr-4">
           {cards.map((card, i) => {
             const config = CARD_CONFIGS[i] ?? { tilt: 0, yOffset: 0 };
@@ -94,7 +106,7 @@ export function TestimonialsSection({
             return (
               <motion.div
                 key={i}
-                className="polaroid-tape flex-none w-[280px] bg-polaroid rounded-[2px]"
+                className="polaroid-tape flex-none w-[280px] md:w-[310px] bg-polaroid rounded-[2px]"
                 style={{
                   padding: "16px 16px 56px 16px",
                   boxShadow: POLAROID_SHADOW,
@@ -127,21 +139,23 @@ export function TestimonialsSection({
         </div>
       </div>
 
-      {/* Dot indicators — mobile only */}
-      <div className="flex justify-center gap-2 mt-6 md:hidden">
-        {CARD_CONFIGS.map((_, i) => (
-          <div
-            key={i}
-            className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-              i === activeIndex ? "bg-gold-500" : "bg-border-subtle"
-            }`}
-          />
-        ))}
-      </div>
+      {/* Dot indicators — phone only, always hidden on tablet+ */}
+      {snapCount > 1 && (
+        <div className="flex justify-center gap-2 mt-6 md:hidden">
+          {Array.from({ length: snapCount }).map((_, i) => (
+            <div
+              key={i}
+              className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                i === activeIndex ? "bg-gold-500" : "bg-border-subtle"
+              }`}
+            />
+          ))}
+        </div>
+      )}
 
       {/* ── Desktop: static overlapping row ────────────────────────────────────
           Full tilt, hover lift, negative margin overlap — unchanged from original. */}
-      <div className="hidden md:flex md:flex-row md:justify-center md:py-8">
+      <div className="hidden lg:flex lg:flex-row lg:justify-center lg:py-8">
         {cards.map((card, i) => {
           const config = CARD_CONFIGS[i] ?? { tilt: 0, yOffset: 0 };
 

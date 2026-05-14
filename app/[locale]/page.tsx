@@ -72,7 +72,7 @@ export default async function HomePage() {
           </h2>
         </ScrollReveal>
         {/* Cards are direct children of ScrollReveal — each staggers individually */}
-        <ScrollReveal className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <ScrollReveal className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card
             title={t("features.feature1Title")}
             excerpt={t("features.feature1Excerpt")}

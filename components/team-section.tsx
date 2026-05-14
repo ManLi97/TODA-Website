@@ -49,19 +49,31 @@ export function TeamSection({
 }: TeamSectionProps) {
   const shouldReduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
+  // snapCount drives dot rendering — sourced from Embla so it reflects actual
+  // scrollable positions, not hardcoded card count. Hides dots when ≤1 snap
+  // (all cards already visible, e.g. iPad landscape).
+  const [snapCount, setSnapCount] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     align: "start",
-    containScroll: "trimSnaps",
+    containScroll: "keepSnaps",
+    dragFree: true,
+    duration: 35,
   });
 
-  // Sync dot indicators with Embla's selected slide
+  // Sync dot indicators and snap count with Embla state
   useEffect(() => {
     if (!emblaApi) return;
     const api = emblaApi;
+    setSnapCount(api.scrollSnapList().length);
     const onSelect = () => setActiveIndex(api.selectedScrollSnap());
+    const onReInit = () => setSnapCount(api.scrollSnapList().length);
     api.on("select", onSelect);
-    return () => { api.off("select", onSelect); };
+    api.on("reInit", onReInit);
+    return () => {
+      api.off("select", onSelect);
+      api.off("reInit", onReInit);
+    };
   }, [emblaApi]);
 
   const members = [
@@ -87,15 +99,14 @@ export function TeamSection({
       {/* ── Mobile: Embla Carousel ──────────────────────────────────────────────
           200px slides: on a 375px viewport, ~1.6 members visible — strong peek
           signal. Same -mx-6 / pl-6 pattern as the Testimonials carousel. */}
-      <div className="-mx-6 pl-6 md:hidden" ref={emblaRef}>
+      <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef}>
         <div className="flex gap-6 py-4 pr-4">
           {members.map(({ name, role }, i) => (
             <motion.div
               key={name}
-              className="flex-none w-[200px]"
+              className="flex-none w-[200px] md:w-[215px]"
               initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={
                 shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: EASE_ENTER }
               }
@@ -116,22 +127,24 @@ export function TeamSection({
         </div>
       </div>
 
-      {/* Dot indicators — mobile only */}
-      <div className="flex justify-center gap-2 mt-4 mb-10 md:hidden">
-        {members.map((_, i) => (
-          <div
-            key={i}
-            className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-              i === activeIndex ? "bg-gold-500" : "bg-border-subtle"
-            }`}
-          />
-        ))}
-      </div>
+      {/* Dot indicators — phone only, always hidden on tablet+ */}
+      {snapCount > 1 && (
+        <div className="flex justify-center gap-2 mt-4 mb-10 md:hidden">
+          {Array.from({ length: snapCount }).map((_, i) => (
+            <div
+              key={i}
+              className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                i === activeIndex ? "bg-gold-500" : "bg-border-subtle"
+              }`}
+            />
+          ))}
+        </div>
+      )}
 
       {/* ── Desktop: 5-column grid with stagger ────────────────────────────────
           All 5 members visible simultaneously; motion/react scale-in stagger. */}
       <motion.div
-        className="hidden md:grid md:grid-cols-5 gap-6 mb-10"
+        className="hidden lg:grid lg:grid-cols-5 gap-6 mb-10"
         variants={shouldReduceMotion ? undefined : containerVariants}
         initial={shouldReduceMotion ? undefined : "hidden"}
         whileInView={shouldReduceMotion ? undefined : "show"}

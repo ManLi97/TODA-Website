@@ -99,7 +99,7 @@ export function StickySection({
       style={{ zIndex }}
     >
       {/* translateY target — shifts upward as user scrolls through overflow content */}
-      <div ref={innerRef} className="py-20">
+      <div ref={innerRef} className="py-20 lg:py-32">
         <div className="max-w-[1200px] mx-auto px-6">{children}</div>
       </div>
     </section>
