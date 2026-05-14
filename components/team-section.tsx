@@ -1,15 +1,16 @@
 "use client";
 
-// Team teaser — circular spinning-ring avatars, motion/react stagger on scroll entry.
-// Ring animation: CSS keyframe in globals.css. Counter-spin keeps photo upright.
-// 5-member layout: grid-cols-2 md:grid-cols-5. Last card (when count is odd) gets
-// col-span-2 + constrained width so it centers on mobile like 2+2+1 symmetry.
-
+// Team teaser — circular spinning-ring avatars.
+// Mobile: Embla Carousel with 200px slides (~1.6 visible on 375px viewport).
+// Desktop: 5-column grid with motion/react stagger (original design, unchanged).
+// Ring animation: CSS keyframes in globals.css. Counter-spin keeps photo upright.
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Link } from "@/i18n/navigation";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import useEmblaCarousel from "embla-carousel-react";
 
-// Stagger container: children animate in sequence
+// Desktop stagger — mobile carousel uses per-slide whileInView instead
 const containerVariants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.15 } },
@@ -23,6 +24,8 @@ const itemVariants = {
     transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
   },
 };
+
+const EASE_ENTER: [number, number, number, number] = [0, 0, 0.2, 1];
 
 interface TeamSectionProps {
   label: string;
@@ -45,6 +48,21 @@ export function TeamSection({
   cta,
 }: TeamSectionProps) {
   const shouldReduceMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+    containScroll: "trimSnaps",
+  });
+
+  // Sync dot indicators with Embla's selected slide
+  useEffect(() => {
+    if (!emblaApi) return;
+    const api = emblaApi;
+    const onSelect = () => setActiveIndex(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    return () => { api.off("select", onSelect); };
+  }, [emblaApi]);
 
   const members = [
     { name: name1, role: role1 },
@@ -56,7 +74,7 @@ export function TeamSection({
 
   return (
     <div>
-      {/* Section header — GSAP scroll reveal (same pattern as other sections) */}
+      {/* Section header — GSAP scroll reveal */}
       <ScrollReveal className="mb-12">
         <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
           {label}
@@ -66,44 +84,75 @@ export function TeamSection({
         </h2>
       </ScrollReveal>
 
-      {/* Team grid — motion/react stagger with scale entry */}
+      {/* ── Mobile: Embla Carousel ──────────────────────────────────────────────
+          200px slides: on a 375px viewport, ~1.6 members visible — strong peek
+          signal. Same -mx-6 / pl-6 pattern as the Testimonials carousel. */}
+      <div className="-mx-6 pl-6 md:hidden" ref={emblaRef}>
+        <div className="flex gap-6 py-4 pr-4">
+          {members.map(({ name, role }, i) => (
+            <motion.div
+              key={name}
+              className="flex-none w-[200px]"
+              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={
+                shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: EASE_ENTER }
+              }
+            >
+              {/* Spinning ring — outer spins, inner counter-spins to keep photo upright */}
+              <div className="team-avatar-ring mb-4">
+                <div className="team-avatar-inner aspect-square">
+                  {/* Photo placeholder — replace with next/image when portrait is available */}
+                  <div className="w-full h-full bg-surface-elevated" />
+                </div>
+              </div>
+              <p className="text-[15px] font-semibold leading-[1.3] tracking-[-0.1px] text-text-primary mb-1">
+                {name}
+              </p>
+              <p className="text-[13px] font-normal leading-none text-text-tertiary">{role}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Dot indicators — mobile only */}
+      <div className="flex justify-center gap-2 mt-4 mb-10 md:hidden">
+        {members.map((_, i) => (
+          <div
+            key={i}
+            className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+              i === activeIndex ? "bg-gold-500" : "bg-border-subtle"
+            }`}
+          />
+        ))}
+      </div>
+
+      {/* ── Desktop: 5-column grid with stagger ────────────────────────────────
+          All 5 members visible simultaneously; motion/react scale-in stagger. */}
       <motion.div
-        className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-10"
+        className="hidden md:grid md:grid-cols-5 gap-6 mb-10"
         variants={shouldReduceMotion ? undefined : containerVariants}
         initial={shouldReduceMotion ? undefined : "hidden"}
         whileInView={shouldReduceMotion ? undefined : "show"}
         viewport={{ once: true, amount: 0.2 }}
       >
-        {members.map(({ name, role }, i) => {
-          // Last item when count is odd: span 2 cols and constrain width to match one column.
-          // calc(50% - 12px) = one column width in a 2-col grid with gap-6 (24px gap / 2 = 12px).
-          const isOddLast = i === members.length - 1 && members.length % 2 !== 0;
-
-          return (
-            <motion.div
-              key={name}
-              variants={shouldReduceMotion ? undefined : itemVariants}
-              className={isOddLast ? "col-span-2 md:col-span-1 flex md:block justify-center" : ""}
-            >
-              <div className={isOddLast ? "w-[calc(50%-12px)] md:w-full" : ""}>
-                {/* Spinning ring — outer spins, inner counter-spins to keep photo upright */}
-                <div className="team-avatar-ring mb-4">
-                  <div className="team-avatar-inner aspect-square">
-                    {/* Photo placeholder — replace with next/image when portrait is available */}
-                    <div className="w-full h-full bg-surface-elevated" />
-                  </div>
-                </div>
-
-                <p className="text-[15px] font-semibold leading-[1.3] tracking-[-0.1px] text-text-primary mb-1">
-                  {name}
-                </p>
-                <p className="text-[13px] font-normal leading-none text-text-tertiary">
-                  {role}
-                </p>
+        {members.map(({ name, role }) => (
+          <motion.div
+            key={name}
+            variants={shouldReduceMotion ? undefined : itemVariants}
+          >
+            <div className="team-avatar-ring mb-4">
+              <div className="team-avatar-inner aspect-square">
+                <div className="w-full h-full bg-surface-elevated" />
               </div>
-            </motion.div>
-          );
-        })}
+            </div>
+            <p className="text-[15px] font-semibold leading-[1.3] tracking-[-0.1px] text-text-primary mb-1">
+              {name}
+            </p>
+            <p className="text-[13px] font-normal leading-none text-text-tertiary">{role}</p>
+          </motion.div>
+        ))}
       </motion.div>
 
       {/* Link to full about page */}

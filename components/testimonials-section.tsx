@@ -1,11 +1,11 @@
 "use client";
 
 // Testimonials — polaroid-style cards with scroll-entry and hover animations.
-// Motion (motion/react) handles entry reveal, card tilt, and hover lift.
-// Mobile: horizontal scroll + snap-center. Desktop: overlapping row via negative margin.
-
+// Mobile: Embla Carousel (pointer-event-based — no competing scroll context with Lenis).
+// Desktop: static overlapping row via negative margin (original design, unchanged).
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 
 // Visual layout constants — not translatable content
 const CARD_CONFIGS: Array<{ tilt: number; yOffset: number }> = [
@@ -15,14 +15,13 @@ const CARD_CONFIGS: Array<{ tilt: number; yOffset: number }> = [
 ];
 
 // Three-layer shadow simulates a physical photograph print.
-// Documented exception to the no-box-shadow rule: this is skeuomorphic, not a UI
-// elevation token. Without it a white card on near-black reads as a broken UI element.
+// Documented exception to the no-box-shadow rule: skeuomorphic, not a UI elevation token.
+// Without it a white card on near-black reads as a broken UI element.
 const POLAROID_SHADOW =
   "0 24px 48px rgba(0,0,0,0.8), 0 4px 12px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(0,0,0,0.05)";
 
 // toda-enter easing from MOTION.md — cubic-bezier(0, 0, 0.2, 1)
 const EASE_ENTER: [number, number, number, number] = [0, 0, 0.2, 1];
-const EASE_STANDARD: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
 interface TestimonialsSectionProps {
   label: string;
@@ -39,23 +38,21 @@ export function TestimonialsSection({
   quote3, author3, studio3,
 }: TestimonialsSectionProps) {
   const shouldReduceMotion = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+    containScroll: "trimSnaps",
+  });
 
+  // Sync dot indicators with Embla's selected slide
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  const handleScroll = () => {
-    if (!trackRef.current) return;
-    // card width (280) + gap (24) = 304px stride between snap points
-    const index = Math.round(trackRef.current.scrollLeft / 304);
-    setActiveIndex(Math.min(Math.max(index, 0), CARD_CONFIGS.length - 1));
-  };
+    if (!emblaApi) return;
+    const api = emblaApi;
+    const onSelect = () => setActiveIndex(api.selectedScrollSnap());
+    api.on("select", onSelect);
+    return () => { api.off("select", onSelect); };
+  }, [emblaApi]);
 
   const cards = [
     { quote: quote1, author: author1, studio: studio1 },
@@ -72,9 +69,7 @@ export function TestimonialsSection({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={
-          shouldReduceMotion
-            ? { duration: 0 }
-            : { duration: 0.6, ease: EASE_ENTER }
+          shouldReduceMotion ? { duration: 0 } : { duration: 0.6, ease: EASE_ENTER }
         }
       >
         <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
@@ -85,65 +80,42 @@ export function TestimonialsSection({
         </h2>
       </motion.div>
 
-      {/* Scroll track — overflow+snap on mobile, plain flex on desktop.
-          -mx-6 breaks out of SectionWrapper's px-6 so cards reach the viewport edge;
-          pl-6 restores left alignment with the headline, pr-4 leaves ~47px of card 2 peeking. */}
-      <div
-        ref={trackRef}
-        onScroll={handleScroll}
-        className="overflow-x-auto snap-x snap-mandatory no-scrollbar touch-pan-x -mx-6 md:mx-0 md:overflow-x-hidden"
-      >
-        <div className="flex flex-row pl-6 pr-4 py-4 gap-6 md:gap-0 md:px-0 md:py-8 md:justify-center">
+      {/* ── Mobile: Embla Carousel ──────────────────────────────────────────────
+          -mx-6 extends viewport to screen edge; pl-6 aligns slides with section
+          header. Embla applies overflow:hidden and handles touch via PointerEvents. */}
+      <div className="-mx-6 pl-6 md:hidden" ref={emblaRef}>
+        <div className="flex gap-6 py-4 pr-4">
           {cards.map((card, i) => {
             const config = CARD_CONFIGS[i] ?? { tilt: 0, yOffset: 0 };
-            const activeTilt = isMobile ? config.tilt * 0.4 : config.tilt;
-            const activeYOffset = isMobile ? config.yOffset * 0.4 : config.yOffset;
+            // Reduced tilt on mobile — narrower cards benefit from subtler rotation
+            const tilt = config.tilt * 0.4;
+            const yOffset = config.yOffset * 0.4;
 
             return (
               <motion.div
                 key={i}
-                className={[
-                  "polaroid-tape flex-none w-[280px] md:w-[300px] snap-center bg-polaroid rounded-[2px]",
-                  i > 0 ? "md:-ml-[100px]" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                className="polaroid-tape flex-none w-[280px] bg-polaroid rounded-[2px]"
                 style={{
                   padding: "16px 16px 56px 16px",
                   boxShadow: POLAROID_SHADOW,
                   zIndex: i + 1,
                 }}
                 initial={
-                  shouldReduceMotion
-                    ? false
-                    : { opacity: 0, y: activeYOffset + 48, rotate: activeTilt }
+                  shouldReduceMotion ? false : { opacity: 0, y: yOffset + 48, rotate: tilt }
                 }
-                whileInView={{ opacity: 1, y: activeYOffset, rotate: activeTilt }}
+                whileInView={{ opacity: 1, y: yOffset, rotate: tilt }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={
                   shouldReduceMotion
                     ? { duration: 0 }
                     : { duration: 0.6, delay: i * 0.12, ease: EASE_ENTER }
                 }
-                whileHover={
-                  !shouldReduceMotion && !isMobile
-                    ? { y: activeYOffset - 8, rotate: 0, scale: 1.03, zIndex: 10 }
-                    : undefined
-                }
-                // whileHover uses a faster ease for the lift/straighten feel
-                {...(!shouldReduceMotion && !isMobile
-                  ? { whileTap: { scale: 0.99 } }
-                  : {})}
               >
                 {/* Photo placeholder — real portrait replaces this */}
                 <div className="aspect-square w-full bg-surface-elevated mb-4 overflow-hidden" />
-
-                {/* Quote */}
                 <p className="text-[14px] font-normal leading-[1.6] tracking-[-0.1px] text-polaroid-text mb-4">
                   {card.quote}
                 </p>
-
-                {/* Attribution */}
                 <p className="text-[12px] font-normal text-polaroid-text leading-none">
                   {card.author}
                 </p>
@@ -156,7 +128,7 @@ export function TestimonialsSection({
         </div>
       </div>
 
-      {/* Dot indicators — mobile only, show active card position */}
+      {/* Dot indicators — mobile only */}
       <div className="flex justify-center gap-2 mt-6 md:hidden">
         {CARD_CONFIGS.map((_, i) => (
           <div
@@ -166,6 +138,60 @@ export function TestimonialsSection({
             }`}
           />
         ))}
+      </div>
+
+      {/* ── Desktop: static overlapping row ────────────────────────────────────
+          Full tilt, hover lift, negative margin overlap — unchanged from original. */}
+      <div className="hidden md:flex md:flex-row md:justify-center md:py-8">
+        {cards.map((card, i) => {
+          const config = CARD_CONFIGS[i] ?? { tilt: 0, yOffset: 0 };
+
+          return (
+            <motion.div
+              key={i}
+              className={[
+                "polaroid-tape flex-none w-[300px] bg-polaroid rounded-[2px]",
+                i > 0 ? "-ml-[100px]" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              style={{
+                padding: "16px 16px 56px 16px",
+                boxShadow: POLAROID_SHADOW,
+                zIndex: i + 1,
+              }}
+              initial={
+                shouldReduceMotion
+                  ? false
+                  : { opacity: 0, y: config.yOffset + 48, rotate: config.tilt }
+              }
+              whileInView={{ opacity: 1, y: config.yOffset, rotate: config.tilt }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={
+                shouldReduceMotion
+                  ? { duration: 0 }
+                  : { duration: 0.6, delay: i * 0.12, ease: EASE_ENTER }
+              }
+              whileHover={
+                !shouldReduceMotion
+                  ? { y: config.yOffset - 8, rotate: 0, scale: 1.03, zIndex: 10 }
+                  : undefined
+              }
+              whileTap={!shouldReduceMotion ? { scale: 0.99 } : undefined}
+            >
+              <div className="aspect-square w-full bg-surface-elevated mb-4 overflow-hidden" />
+              <p className="text-[14px] font-normal leading-[1.6] tracking-[-0.1px] text-polaroid-text mb-4">
+                {card.quote}
+              </p>
+              <p className="text-[12px] font-normal text-polaroid-text leading-none">
+                {card.author}
+              </p>
+              <p className="text-[11px] font-normal text-polaroid-text-secondary mt-1 leading-none">
+                {card.studio}
+              </p>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

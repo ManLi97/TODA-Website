@@ -39,15 +39,6 @@
   }
 }
 
-/* Hide scrollbar on the mobile testimonials scroll track */
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
 /* Team avatar — spinning gold ring orbiting a circular photo.
    color-mix() requires Chrome 111+ / FF 113+ / Safari 16.2+ (TODA targets modern browsers).
    Inner border color matches surface-raised — update if section moves to a different surface. */
