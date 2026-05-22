@@ -293,6 +293,25 @@ html {
   .shimmer-active {
     animation: grad-flow var(--t-flow-slow) var(--ease-loop) infinite;
   }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     FAQ ICON — + rotates to × on open via .is-open class toggle.
+     CSS transition owns the rotation; JS only toggles the class.
+     ───────────────────────────────────────────────────────────────────────── */
+  .faq-icon {
+    display: inline-block;
+    transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+  }
+  .faq-icon.is-open {
+    transform: rotate(45deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-icon {
+      transition: none;
+    }
+  }
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
