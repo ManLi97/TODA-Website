@@ -9,7 +9,8 @@ import { TestimonialsSection } from "@/components/testimonials-section";
 import { FaqSection } from "@/components/faq-section";
 import { TeamSection } from "@/components/team-section";
 import { SnapSection } from "@/components/snap-section";
-import { ScrollReveal } from "@/components/scroll-reveal";
+import { Animate } from "@/components/animate";
+import { Stagger } from "@/components/stagger";
 import { Card } from "@/components/card";
 import { VideoLoop } from "@/components/video-loop";
 import { Link } from "@/i18n/navigation";
@@ -21,7 +22,7 @@ export default async function HomePage() {
   return (
     <>
       {/* ── 1. Hero — surface-base ── */}
-      <SnapSection variant="base" id="hero" triggerOnMount>
+      <SnapSection variant="base" id="hero" triggerOnMount align="center">
         <Hero
           headline={t("hero.headline")}
           accentText={t("hero.accentText")}
@@ -45,7 +46,7 @@ export default async function HomePage() {
       {/* ── 3. Origin — surface-raised ── */}
       <SnapSection variant="raised" id="about">
         {/* Four children cascade: label → headline → body1 → body2 */}
-        <ScrollReveal className="max-w-2xl">
+        <Stagger gap={150} type="fade-up" className="max-w-2xl">
           <p className="type-eyebrow text-text-tertiary mb-6">
             {t("origin.label")}
           </p>
@@ -58,22 +59,22 @@ export default async function HomePage() {
           <p className="type-lede">
             {t("origin.body2")}
           </p>
-        </ScrollReveal>
+        </Stagger>
       </SnapSection>
 
       {/* ── 4. Features — surface-alt ── */}
       <SnapSection variant="alt" id="features">
-        {/* Label + headline in first reveal group */}
-        <ScrollReveal className="mb-12">
+        {/* Header block animates as one unit */}
+        <Animate type="fade-up" className="mb-12">
           <p className="type-eyebrow text-text-tertiary mb-6">
             {t("features.label")}
           </p>
           <h2 className="type-display text-text-primary">
             {t("features.headline")}
           </h2>
-        </ScrollReveal>
-        {/* Cards are direct children of ScrollReveal — each staggers individually */}
-        <ScrollReveal className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </Animate>
+        {/* Cards stagger in after the header settles */}
+        <Stagger gap={150} type="fade-up" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card
             title={t("features.feature1Title")}
             excerpt={t("features.feature1Excerpt")}
@@ -86,13 +87,13 @@ export default async function HomePage() {
             title={t("features.feature3Title")}
             excerpt={t("features.feature3Excerpt")}
           />
-        </ScrollReveal>
+        </Stagger>
       </SnapSection>
 
       {/* ── 5. Manifest — surface-raised ── */}
       <SnapSection variant="raised" id="manifest">
         {/* Four children cascade: label → Playfair accent → headline → body */}
-        <ScrollReveal className="max-w-2xl">
+        <Stagger gap={150} type="fade-up" className="max-w-2xl">
           <p className="type-eyebrow text-text-tertiary mb-6">
             {t("manifest.label")}
           </p>
@@ -107,13 +108,14 @@ export default async function HomePage() {
           <p className="type-lede">
             {t("manifest.body")}
           </p>
-        </ScrollReveal>
-        {/* VideoLoop — cinematic full-width. Replace src="" with real studio footage when available. */}
-        <ScrollReveal className="mt-16">
+        </Stagger>
+        {/* VideoLoop — arrives after copy stagger settles (~1000ms) + 200ms breath = 1200ms delay.
+            Replace src="" with real studio footage when available. */}
+        <Animate type="fade-up" delay={1200} className="mt-16">
           <div className="aspect-[21/9] overflow-hidden rounded-sm">
             <VideoLoop src="" className="w-full h-full" />
           </div>
-        </ScrollReveal>
+        </Animate>
       </SnapSection>
 
       {/* ── 6. Testimonials — surface-base ── */}
@@ -163,7 +165,7 @@ export default async function HomePage() {
       {/* ── 9. CTA — surface-base ── */}
       <SnapSection variant="base" id="contact">
         {/* Four children cascade: headline → price row → note → button */}
-        <ScrollReveal className="max-w-xl">
+        <Stagger gap={150} type="fade-up" className="max-w-xl">
           <h2 className="type-display text-text-primary mb-8">
             {t("cta.headline")}
           </h2>
@@ -181,7 +183,7 @@ export default async function HomePage() {
           <Link href="#contact" className={buttonVariants({ variant: "primary", size: "lg" })}>
             {t("cta.ctaPrimary")}
           </Link>
-        </ScrollReveal>
+        </Stagger>
       </SnapSection>
     </>
   );

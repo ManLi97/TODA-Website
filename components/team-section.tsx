@@ -7,7 +7,7 @@
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Link } from "@/i18n/navigation";
-import { ScrollReveal } from "@/components/scroll-reveal";
+import { Animate } from "@/components/animate";
 import useEmblaCarousel from "embla-carousel-react";
 
 // Desktop stagger — mobile carousel uses per-slide whileInView instead
@@ -88,15 +88,15 @@ export function TeamSection({
 
   return (
     <div>
-      {/* Section header — GSAP scroll reveal */}
-      <ScrollReveal className="mb-12">
+      {/* Section header — animates as one unit on section settle */}
+      <Animate type="fade-up" className="mb-12">
         <p className="type-eyebrow text-text-tertiary mb-6">
           {label}
         </p>
         <h2 className="type-display text-text-primary">
           {headline}
         </h2>
-      </ScrollReveal>
+      </Animate>
 
       {/* ── Mobile: Embla Carousel ──────────────────────────────────────────────
           200px slides: on a 375px viewport, ~1.6 members visible — strong peek

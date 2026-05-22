@@ -31,6 +31,9 @@ interface SnapSectionProps {
   variant?: SectionVariant;
   id?: string;
   triggerOnMount?: boolean;
+  // "center" adds flex flex-col justify-center so content is vertically centred.
+  // "start" (default) leaves content top-weighted with py-20 lg:py-32 padding.
+  align?: "start" | "center";
   children: React.ReactNode;
 }
 
@@ -38,6 +41,7 @@ export function SnapSection({
   variant = "base",
   id,
   triggerOnMount = false,
+  align = "start",
   children,
 }: SnapSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -50,13 +54,17 @@ export function SnapSection({
     [sectionRef, triggerOnMount],
   );
 
+  const sectionClass = [
+    BG[variant],
+    "min-h-dvh overflow-x-hidden snap-start snap-always",
+    align === "center" ? "flex flex-col justify-center" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <SnapSectionContext.Provider value={ctx}>
-      <section
-        ref={sectionRef}
-        id={id}
-        className={`${BG[variant]} min-h-dvh overflow-x-hidden snap-start snap-always`}
-      >
+      <section ref={sectionRef} id={id} className={sectionClass}>
         <div className="py-20 lg:py-32">
           <div className="max-w-[1200px] mx-auto px-6">{children}</div>
         </div>

@@ -6,7 +6,8 @@ import { Button } from "@/components/button";
 import { Hero } from "@/components/hero";
 import { Card } from "@/components/card";
 import { VideoLoop } from "@/components/video-loop";
-import { ScrollReveal } from "@/components/scroll-reveal";
+import { Animate } from "@/components/animate";
+import { Stagger } from "@/components/stagger";
 
 // Section label — internal typographic marker used throughout this page
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -136,16 +137,16 @@ export default function ComponentTestPage() {
         </div>
       </SectionWrapper>
 
-      {/* ─── 6. GSAP ScrollTrigger ─── */}
-      <SectionWrapper variant="base" id="scroll-reveal">
-        <SectionLabel>GSAP · ScrollTrigger — Section Reveal Pattern</SectionLabel>
+      {/* ─── 6. Animate + Stagger ─── */}
+      <SectionWrapper variant="base" id="animate">
+        <SectionLabel>GSAP · Animate + Stagger — IO-triggered entrances</SectionLabel>
         <p className="text-text-secondary text-[17px] leading-[1.47] tracking-[-0.2px] mb-12 max-w-xl">
-          Scroll nach unten um die Animation auszulösen. Erste Gruppe: h2 + p (2 Kinder,
-          0ms / 60ms). Zweite Gruppe: 3 Cards (0ms / 60ms / 120ms). Trigger: top 85%.
+          Diese Section ist nicht in eine SnapSection eingebettet — Animate/Stagger loggen
+          eine Warnung und feuern stattdessen on-mount (Fallback-Modus).
         </p>
 
-        {/* Reveal group 1: headline + body */}
-        <ScrollReveal className="mb-12">
+        {/* Single element — Animate wraps as one unit */}
+        <Animate type="fade-up" className="mb-12">
           <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] mb-4">
             Features, die überzeugen.
           </h2>
@@ -153,10 +154,10 @@ export default function ComponentTestPage() {
             Alles, was ein professionelles Studio braucht — in einem System, das aus der
             Praxis gebaut wurde.
           </p>
-        </ScrollReveal>
+        </Animate>
 
-        {/* Reveal group 2: cards with 60ms stagger — grid applied to ScrollReveal wrapper */}
-        <ScrollReveal className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Multi-element cascade — Stagger animates container.children with gap=150ms */}
+        <Stagger gap={150} type="fade-up" className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card
             href="#"
             title="Terminplanung"
@@ -175,7 +176,7 @@ export default function ComponentTestPage() {
             excerpt="Rechnungen, Ausgaben und Steuer-Export auf Knopfdruck."
             label="Funktion"
           />
-        </ScrollReveal>
+        </Stagger>
       </SectionWrapper>
     </>
   );

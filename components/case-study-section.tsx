@@ -1,9 +1,9 @@
 // Case Study — Sandra's story. First section after Hero, lands the emotional hook.
 // Two-column on desktop (copy left / video right, top-aligned), single-column on mobile.
-// ScrollReveal staggers the two grid columns: copy at 0ms, video at 60ms.
+// Stagger staggers the two grid columns: copy at 0ms, video at 150ms.
 
 import { VideoLoop } from "@/components/video-loop";
-import { ScrollReveal } from "@/components/scroll-reveal";
+import { Stagger } from "@/components/stagger";
 
 interface CaseStudySectionProps {
   label: string;
@@ -21,7 +21,7 @@ export function CaseStudySection({
   attribution,
 }: CaseStudySectionProps) {
   return (
-    <ScrollReveal className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-start">
+    <Stagger gap={150} type="fade-up" className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-start">
       {/* Copy column — label → statement → pull-quotes → attribution */}
       <div>
         <p className="type-eyebrow text-text-tertiary mb-6">
@@ -51,6 +51,6 @@ export function CaseStudySection({
       <div className="aspect-video overflow-hidden rounded-sm">
         <VideoLoop src="" className="w-full h-full" />
       </div>
-    </ScrollReveal>
+    </Stagger>
   );
 }

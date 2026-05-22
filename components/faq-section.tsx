@@ -7,7 +7,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ScrollReveal } from "@/components/scroll-reveal";
+import { Animate } from "@/components/animate";
 
 const EASE_STANDARD: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
@@ -38,15 +38,15 @@ export function FaqSection({
 
   return (
     <div>
-      {/* Section header */}
-      <ScrollReveal className="mb-12">
+      {/* Section header — animates as one unit on section settle */}
+      <Animate type="fade-up" className="mb-12">
         <p className="type-eyebrow text-text-tertiary mb-6">
           {label}
         </p>
         <h2 className="type-display text-text-primary">
           {headline}
         </h2>
-      </ScrollReveal>
+      </Animate>
 
       {/* Accordion list — constrained to reading width */}
       <div className="max-w-2xl">
