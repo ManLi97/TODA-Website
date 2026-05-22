@@ -2,32 +2,15 @@
 
 // Team teaser — circular spinning-ring avatars.
 // Mobile: Embla Carousel with 200px slides (~1.6 visible on 375px viewport).
-// Desktop: 5-column grid with motion/react stagger (original design, unchanged).
+// Desktop: 5-column grid with <Stagger type="scale-in">.
+// Mobile: Embla Carousel with <Stagger> wrapping slides — Stagger's wrapper
+// div becomes Embla's auto-detected container.
 // Ring animation: CSS keyframes in globals.css. Counter-spin keeps photo upright.
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import { Link } from "@/i18n/navigation";
 import { Animate } from "@/components/animate";
+import { Stagger } from "@/components/stagger";
 import useEmblaCarousel from "embla-carousel-react";
-
-// Desktop stagger — mobile carousel uses per-slide whileInView instead
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.15 } },
-};
-
-// DS --ease-entry — cubic-bezier(0.16, 1, 0.3, 1). Same curve for the desktop
-// stagger entrance and the mobile carousel mount; Phase 3 ports both off motion.
-const EASE_ENTER: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-const itemVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.5, ease: EASE_ENTER },
-  },
-};
 
 interface TeamSectionProps {
   label: string;
@@ -49,7 +32,6 @@ export function TeamSection({
   name5, role5,
   cta,
 }: TeamSectionProps) {
-  const shouldReduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   // snapCount drives dot rendering — sourced from Embla so it reflects actual
   // scrollable positions, not hardcoded card count. Hides dots when ≤1 snap
@@ -102,17 +84,9 @@ export function TeamSection({
           200px slides: on a 375px viewport, ~1.6 members visible — strong peek
           signal. Same -mx-6 / pl-6 pattern as the Testimonials carousel. */}
       <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef}>
-        <div className="flex gap-6 py-4 pr-4">
-          {members.map(({ name, role }, i) => (
-            <motion.div
-              key={name}
-              className="flex-none w-[200px] md:w-[215px]"
-              initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={
-                shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: EASE_ENTER }
-              }
-            >
+        <Stagger gap={150} type="scale-in" delay={750} className="flex gap-6 py-4 pr-4">
+          {members.map(({ name, role }) => (
+            <div key={name} className="flex-none w-[200px] md:w-[215px]">
               {/* Spinning ring — outer spins, inner counter-spins to keep photo upright */}
               <div className="team-avatar-ring mb-4">
                 <div className="team-avatar-inner aspect-square">
@@ -124,9 +98,9 @@ export function TeamSection({
                 {name}
               </p>
               <p className="type-caption leading-none">{role}</p>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </Stagger>
       </div>
 
       {/* Dot indicators — phone only, always hidden on tablet+ */}
@@ -144,19 +118,15 @@ export function TeamSection({
       )}
 
       {/* ── Desktop: 5-column grid with stagger ────────────────────────────────
-          All 5 members visible simultaneously; motion/react scale-in stagger. */}
-      <motion.div
+          All 5 members visible simultaneously; both variants use the same Stagger. */}
+      <Stagger
+        gap={150}
+        type="scale-in"
+        delay={750}
         className="hidden lg:grid lg:grid-cols-5 gap-6 mb-10"
-        variants={shouldReduceMotion ? undefined : containerVariants}
-        initial={shouldReduceMotion ? undefined : "hidden"}
-        whileInView={shouldReduceMotion ? undefined : "show"}
-        viewport={{ once: true, amount: 0.2 }}
       >
         {members.map(({ name, role }) => (
-          <motion.div
-            key={name}
-            variants={shouldReduceMotion ? undefined : itemVariants}
-          >
+          <div key={name}>
             <div className="team-avatar-ring mb-4">
               <div className="team-avatar-inner aspect-square">
                 <div className="w-full h-full bg-surface-elevated" />
@@ -166,9 +136,9 @@ export function TeamSection({
               {name}
             </p>
             <p className="text-[13px] font-normal leading-none text-text-tertiary">{role}</p>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </Stagger>
 
       {/* Link to full about page */}
       <Link
