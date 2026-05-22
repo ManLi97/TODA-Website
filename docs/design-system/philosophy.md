@@ -163,9 +163,12 @@ them is a signal that the design has drifted.
   read, not poked.
 - **No spring physics, no bounce, no overshoot.** The single ease curve is
   non-negotiable. Bouncing reads as toy-like; this brand reads as instrument.
-- **No decorative parallax.** The scroll architecture is sticky stacking: sections
-  stack with `position: sticky`; when a section's content exceeds the viewport, GSAP
-  ScrollTrigger pans it upward before the next section slides in. Entrances animate on
-  section enter and reset on exit so they replay on return. That is the entire scroll
-  model — ScrollTrigger is used for layout mechanics and entrance sequencing, not for
-  decorative motion tied to scroll position.
+- **No decorative parallax.** The scroll architecture is snap-slides: each section
+  occupies exactly one viewport (`min-h-dvh` + native `scroll-snap-type: y mandatory`
+  on `html`, `scroll-snap-align: start` + `scroll-snap-stop: always` on each section).
+  The user steps between sections as in a slide deck — swipe / wheel / arrow keys
+  commit to the next section or snap back if the gesture is too short. Entrance
+  animations fire only after a section has settled into view, and reset when the
+  section leaves so they replay on re-entry. The settle signal is an
+  `IntersectionObserver(threshold: 0.95)` scoped to each section — no scroll-position
+  tweens, no parallax, no decorative motion bound to scroll progress.

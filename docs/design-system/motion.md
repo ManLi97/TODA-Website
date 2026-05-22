@@ -244,29 +244,39 @@ Phases get clearly separated, groups feel like one beat. This is the entire rhyt
 
 ---
 
-## 6) Trigger system — GSAP ScrollTrigger
+## 6) Trigger system — IntersectionObserver scoped to `<SnapSection>`
 
-> The source DS used a ~50-line vanilla JS IntersectionObserver engine (`animateSlide` /
-> `resetSlide`). This repo replaces it entirely with GSAP ScrollTrigger inside the
-> `<Animate>` component.
+The entrance trigger is an `IntersectionObserver(threshold: 0.95)` registered by the
+`<Animate>` component, scoped via React context to its nearest `<SnapSection>` ancestor.
+When the section settles into view (intersection ratio crosses 0.95), each `<Animate>`
+inside fires its GSAP `fromTo` tween. When the section leaves, each tween resets to its
+`from` state so it replays on re-entry. This matches the "State is reversible" principle
+in `philosophy.md`.
 
-**What the original engine did — preserved in our implementation:**
-- On section enter → run all entrance animations in sequence
-- On section exit → reset all animated elements to their initial state
-- Result: animations replay every time the user scrolls back into a section
+**Why IntersectionObserver, not ScrollTrigger or `scrollend`:**
+- The snap-slide layout makes "section settled" a natural binary signal — IO at a high
+  threshold reads it cleanly, with no scroll-position math.
+- `scrollend` has uneven browser support (Safari 18.2+ only); IO gives us the same signal
+  with no fallback branch.
+- GSAP ScrollTrigger remains available in the bundle but is no longer the entrance
+  engine. Reserve it for any future tween that must scrub against scroll position
+  (none planned).
 
-**How `<Animate>` + ScrollTrigger replaces it:**
-- Each `<Animate>` registers a ScrollTrigger scoped to its parent `<StickySection>`
-- `onEnter`: fires the GSAP `fromTo` tween
-- `onLeave` / `onLeaveBack`: resets the element to `from` state so it replays on return
-- `<StickySection>` and `<Animate>` each manage their own `gsap.context()` — there is no
-  shared GSAP context between them. Each `<Animate>` registers its own ScrollTrigger scoped
-  to its element; this is correct and expected, not a shared-state architecture
+**Lifecycle, per `<Animate>` instance:**
+- `onEnter` (ratio crosses 0.95 upward) → run the GSAP `fromTo` tween with the type's
+  default duration, the `delay` prop, and `ease: "entry"`.
+- `onLeave` (ratio falls below 0.95) → reset the element to its `from` state
+  instantaneously, so the next entry replays the tween.
+- `prefers-reduced-motion` → short-circuit: element jumps to its `to` state on enter
+  with zero duration, no reset on leave.
+
+**Hero is not a special case.** `<SnapSection triggerOnMount>` fires its child
+`<Animate>` instances on mount instead of waiting for an IO intersection — same
+component, same tween, different trigger source. One mental model.
 
 **Counter and progress bar patterns (not yet implemented):**
-
 The source DS included `data-count` and `data-progress` attribute patterns for animated
 numbers and fill bars. These are valid UX patterns for this website (CTA section price,
-case study stats). React equivalents are needed — dedicated components using GSAP's
-`counter` or a `useEffect` rAF loop with `easeOutQuart` (`power4.out`). Implement when
-the relevant section is built in Phase 5.
+case study stats). React equivalents — dedicated components using GSAP's `counter` or a
+`useEffect` rAF loop with `easeOutQuart` (`power4.out`). Implement when the relevant
+section is built in Phase 5.
