@@ -5,12 +5,6 @@ Single-page experience with 9 snap-slide sections (one viewport each), i18n (de/
 and GSAP entrance animations triggered on snap-settle.
 Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 
-> **Phase 3 migration in progress.** The codebase is mid-flight between a sticky-stack
-> scroll model (Lenis + `StickySection`) and a snap-slide model (native
-> `scroll-snap-type` + `<SnapSection>`). Some files described below as DEPRECATED
-> are still on disk and will be deleted during Phase 3. See
-> `docs/integration-plan.md` for current scope and phasing.
-
 ## Tech stack
 
 | Layer           | Technology                                                          |
@@ -19,7 +13,7 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 | Language        | TypeScript                                                          |
 | Styling         | Tailwind CSS v4 (CSS-first `@theme` in `globals.css`)               |
 | Scroll          | Native CSS scroll-snap (`y mandatory`)                              |
-| Animations      | GSAP + CustomEase, triggered via IntersectionObserver. Framer Motion (`motion` package) is removed at the end of Phase 3; until then it remains in `faq-section.tsx`, `testimonials-section.tsx`, `team-section.tsx`. |
+| Animations      | GSAP + CustomEase, triggered via IntersectionObserver scoped to `<SnapSection>`. |
 | Carousel        | Embla Carousel                                                      |
 | i18n            | next-intl (de / es / en, default: de)                               |
 | Database/Auth   | Supabase (wired, not yet used in UI)                                |
@@ -42,7 +36,7 @@ pnpm format       # Prettier write
 pnpm format:check # Prettier check (CI)
 ```
 
-## Architecture (target — Phase 3 is migrating here)
+## Architecture
 
 ```
 app/
@@ -73,11 +67,6 @@ lib/
     server.ts         # server-side Supabase client (SSR)
 middleware.ts         # next-intl locale routing
 ```
-
-**Currently on disk, deleted during Phase 3:**
-- `components/sticky-section.tsx` → replaced by `snap-section.tsx` (Phase 3a)
-- `components/lenis-provider.tsx` → deleted, `<LenisProvider>` removed from layout (Phase 3a)
-- `components/scroll-reveal.tsx` → replaced by `animate.tsx` + `stagger.tsx` (Phase 3b)
 
 ## Key patterns
 
@@ -112,10 +101,10 @@ Required in `.env.local`:
 
 ## Active decisions & constraints
 
-- **Phase 3 migration mid-flight:** see `docs/integration-plan.md` for the current
-  phase (3a scroll engine swap, 3b animation primitives, 3c section ports off Framer
-  Motion, 3d cleanup). Do not begin work outside the named phase without explicit
-  confirmation.
+- **Design system integration is phased:** see `docs/integration-plan.md`
+  for the current phase. Phases 1–3 are complete; Phase 4 (visual shell +
+  content-fit fixes) is next. Do not begin work outside the named phase
+  without explicit confirmation.
 - **Playfair Display:** used exactly once on the entire site — the "Weniger Chaos"
   span inside the hero headline only. Do not add any other Playfair uses anywhere.
 - **One viewport per section:** content must fit within `100dvh`. Sections that don't

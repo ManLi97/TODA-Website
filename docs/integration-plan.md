@@ -36,7 +36,7 @@ gradients), fonts (Inter via `next/font`, Playfair italic 400), type classes
 
 ---
 
-## Phase 3 — Scroll Architecture + Animation Layer
+## Phase 3 — Scroll Architecture + Animation Layer ✓ COMPLETE
 
 **The pivot.** The site moves from a sticky-stacking scroll model with Lenis smooth
 scroll, to a snap-slide model with native CSS scroll-snap. Each section is exactly
@@ -46,7 +46,7 @@ the end of the phase.
 
 Split into four PR-sized phases. Each is shippable independently.
 
-### Phase 3a — Scroll engine swap
+### Phase 3a — Scroll engine swap ✓ COMPLETE
 
 **Goal:** replace Lenis + `StickySection` with native scroll-snap + a thin
 `<SnapSection>` primitive. Page renders identically section-by-section, no animations
@@ -82,7 +82,7 @@ yet.
 **Done when:** all 9 sections render at exactly viewport height, swipe/wheel snaps
 cleanly between them, no Lenis or sticky behaviour remains.
 
-### Phase 3b — Animation primitives
+### Phase 3b — Animation primitives ✓ COMPLETE
 
 **Goal:** replace `<ScrollReveal>` with `<Animate>` + `<Stagger>`. Hero gets its
 entrance animations wired.
@@ -119,7 +119,7 @@ entrance animations wired.
 **Done when:** every section animates in on settle, animations replay on re-entry,
 `ScrollReveal` is gone, hero animates on load.
 
-### Phase 3c — Section ports (off Framer Motion)
+### Phase 3c — Section ports (off Framer Motion) ✓ COMPLETE
 
 Three independent PRs, can ship in any order. Each removes one of the three remaining
 `motion` consumers.
@@ -157,7 +157,7 @@ Three independent PRs, can ship in any order. Each removes one of the three rema
 
 **Done when:** none of the three sections import from `motion` / `motion/react`.
 
-### Phase 3d — Cleanup
+### Phase 3d — Cleanup ✓ COMPLETE
 
 - `package.json` — remove `lenis` and `motion` dependencies.
 - `pnpm-lock.yaml` — refresh via `pnpm install`.
