@@ -1,0 +1,94 @@
+# Project: TODA Website
+
+Marketing landing page for TODA Tattoo Solutions — a SaaS platform for tattoo artists.
+Single-page experience with 9 stacked sticky sections, i18n (de/es/en), and GSAP scroll animations.
+Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
+
+## Tech stack
+
+| Layer           | Technology                                     |
+|-----------------|------------------------------------------------|
+| Framework       | Next.js 15 (App Router)                        |
+| Language        | TypeScript                                     |
+| Styling         | Tailwind CSS v4                                |
+| Animations      | GSAP + ScrollTrigger, Motion (Framer), Lenis   |
+| Carousel        | Embla Carousel                                 |
+| i18n            | next-intl (de / es / en, default: de)          |
+| Database/Auth   | Supabase (wired, not yet used in UI)           |
+| Package mgr     | pnpm                                           |
+| Deployment      | Vercel (inferred)                              |
+
+## Workflow
+
+- **Session start:** run `/git-context` to recover state
+- **Before non-trivial work:** use `/ship` for Plan → Build → Review
+- **Commits:** use `/commit` — Conventional Commits with NOTE blocks
+
+## Commands
+
+```bash
+pnpm dev          # start dev server (Next.js)
+pnpm build        # production build
+pnpm lint         # ESLint via next lint
+pnpm format       # Prettier write
+pnpm format:check # Prettier check (CI)
+```
+
+## Architecture
+
+```
+app/
+  [locale]/
+    layout.tsx        # root layout, LenisProvider wraps page
+    page.tsx          # 9-section home page (Phase 5 in progress)
+    globals.css       # Tailwind base, design tokens
+components/
+  sticky-section.tsx  # sticky stack tile + overflow pan (GSAP)
+  scroll-reveal.tsx   # entrance animation wrapper
+  hero.tsx            # section 1
+  case-study-section.tsx
+  testimonials-section.tsx
+  faq-section.tsx
+  team-section.tsx
+  footer.tsx / header.tsx
+  button.tsx / card.tsx / video-loop.tsx
+  lenis-provider.tsx  # Lenis smooth scroll context
+i18n/
+  routing.ts          # defineRouting — locales, localePrefix "always"
+  navigation.ts       # typed Link/useRouter re-exports
+  request.ts          # getRequestConfig
+messages/
+  de.json / es.json / en.json   # all copy lives here, "home" namespace
+lib/
+  supabase/
+    client.ts         # browser Supabase client
+    server.ts         # server-side Supabase client (SSR)
+middleware.ts         # next-intl locale routing
+```
+
+## Key patterns
+
+- **StickySection is the layout primitive:** every section wraps in `<StickySection variant="base|alt|raised" zIndex={N}>`. Handles sticky stacking and overflow content pan via GSAP ScrollTrigger (`sticky-section.tsx`).
+- **Surface rhythm:** base → alt → raised → alt → raised → base → alt → raised → base (9 sections in order).
+- **All copy via next-intl:** no hardcoded strings in components — everything reads from `messages/{locale}.json` under the `"home"` namespace.
+- **ScrollReveal for entrances:** animate-in wrappers on content blocks; stagger is driven by child count (`scroll-reveal.tsx`).
+- **i18n-aware navigation:** always import `Link`, `useRouter`, `redirect` from `@/i18n/navigation` — never from `next/navigation` directly.
+
+## Environment variables
+
+Required in `.env.local`:
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key
+
+## Active decisions & constraints
+
+- **Phase 5 in progress:** 9-section structure is laid out; `VideoLoop src=""` is a placeholder pending real studio footage.
+- **Playfair Display accent:** used max twice per page, italic, `text-gold-500` only — do not add more uses.
+- **zIndex ladder:** each StickySection gets a fixed zIndex (10, 20, … 80) — maintain the sequence when adding sections.
+- **Tailwind v4:** uses `@tailwindcss/postcss`, not the classic `tailwind.config.js`. CSS-first config in `globals.css`.
+
+## What NOT to touch
+
+- `messages/*.json` — all locales must stay in sync when adding/changing copy keys.
+- `i18n/routing.ts` — locale list and `localePrefix` affect all URLs; coordinate with deploy config before changing.
+- `pnpm-lock.yaml` — do not edit manually.
