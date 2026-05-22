@@ -123,6 +123,7 @@ export default async function HomePage() {
         <TestimonialsSection
           label={t("testimonials.label")}
           headline={t("testimonials.headline")}
+          hint={t("testimonials.hint")}
           quote1={t("testimonials.quote1")}
           author1={t("testimonials.author1")}
           studio1={t("testimonials.studio1")}

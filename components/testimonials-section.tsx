@@ -1,18 +1,13 @@
 "use client";
 
-// Testimonials — polaroid-style cards with scroll-entry and hover animations.
-// Mobile: Embla Carousel (pointer-event-based — no competing scroll context with Lenis).
-// Desktop: static overlapping row via negative margin (original design, unchanged).
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import useEmblaCarousel from "embla-carousel-react";
-
-// Visual layout constants — not translatable content
-const CARD_CONFIGS: Array<{ tilt: number; yOffset: number }> = [
-  { tilt: -4, yOffset: 20 },
-  { tilt:  2, yOffset: -10 },
-  { tilt: -2, yOffset: 30 },
-];
+// Testimonials — polaroid deck of cards.
+// Three absolute-positioned polaroid cards stacked at the center.
+// Tapping the front card runs a GSAP fly-up timeline, cycling to the next card.
+// Identical on mobile and desktop — no carousel, no hover states, no Framer Motion.
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { CustomEase } from "gsap/CustomEase";
+import { Animate } from "@/components/animate";
 
 // Three-layer shadow simulates a physical photograph print.
 // Documented exception to the no-box-shadow rule: skeuomorphic, not a UI elevation token.
@@ -20,53 +15,85 @@ const CARD_CONFIGS: Array<{ tilt: number; yOffset: number }> = [
 const POLAROID_SHADOW =
   "0 24px 48px rgba(0,0,0,0.8), 0 4px 12px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(0,0,0,0.05)";
 
-// DS --ease-entry — cubic-bezier(0.16, 1, 0.3, 1). Sharp start, soft landing.
-// motion/react takes the curve as a 4-tuple; Phase 3 ports this off motion to
-// GSAP CustomEase("entry"), but the curve stays identical across both engines.
-const EASE_ENTER: [number, number, number, number] = [0.16, 1, 0.3, 1];
+// Stack transform per position. pos 0 = active front card.
+const STACK_POSITIONS = [
+  { scale: 1.00, rotate: 0,  x: 0,   y: 0,  zIndex: 30 },
+  { scale: 0.94, rotate: -4, x: -36, y: 18, zIndex: 20 },
+  { scale: 0.90, rotate: 5,  x: 40,  y: 32, zIndex: 10 },
+];
 
 interface TestimonialsSectionProps {
   label: string;
   headline: string;
+  hint: string;
   quote1: string; author1: string; studio1: string;
   quote2: string; author2: string; studio2: string;
   quote3: string; author3: string; studio3: string;
 }
 
 export function TestimonialsSection({
-  label, headline,
+  label, headline, hint,
   quote1, author1, studio1,
   quote2, author2, studio2,
   quote3, author3, studio3,
 }: TestimonialsSectionProps) {
-  const shouldReduceMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
-  // snapCount drives dot rendering — sourced from Embla so it reflects actual
-  // scrollable positions, not hardcoded card count. Hides dots when ≤1 snap
-  // (all cards already visible, e.g. iPad landscape).
-  const [snapCount, setSnapCount] = useState(0);
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    align: "start",
-    containScroll: "keepSnaps",
-    dragFree: true,
-    duration: 35,
-  });
+  const [hintFaded, setHintFaded] = useState(false);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isAnimatingRef = useRef(false);
 
-  // Sync dot indicators and snap count with Embla state
+  // Register CustomEase once on mount (GSAP deduplicates safely)
   useEffect(() => {
-    if (!emblaApi) return;
-    const api = emblaApi;
-    setSnapCount(api.scrollSnapList().length);
-    const onSelect = () => setActiveIndex(api.selectedScrollSnap());
-    const onReInit = () => setSnapCount(api.scrollSnapList().length);
-    api.on("select", onSelect);
-    api.on("reInit", onReInit);
-    return () => {
-      api.off("select", onSelect);
-      api.off("reInit", onReInit);
-    };
-  }, [emblaApi]);
+    gsap.registerPlugin(CustomEase);
+    CustomEase.create("entry", "0.16, 1, 0.3, 1");
+  }, []);
+
+  // Snap all cards to their correct stack positions after activeIndex changes
+  useEffect(() => {
+    cardRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const pos = (i - activeIndex + 3) % 3;
+      gsap.set(el, STACK_POSITIONS[pos]);
+    });
+  }, [activeIndex]);
+
+  const handleTap = () => {
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
+    if (!hintFaded) setHintFaded(true);
+
+    const activeEl = cardRefs.current[activeIndex];
+    const posOneEl = cardRefs.current[(activeIndex + 1) % 3];
+    const posTwoEl = cardRefs.current[(activeIndex + 2) % 3];
+    if (!activeEl || !posOneEl || !posTwoEl) {
+      isAnimatingRef.current = false;
+      return;
+    }
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      setActiveIndex((prev) => (prev + 1) % 3);
+      isAnimatingRef.current = false;
+      return;
+    }
+
+    const tl = gsap.timeline({
+      defaults: { ease: "entry" },
+      onComplete: () => {
+        setActiveIndex((prev) => (prev + 1) % 3);
+        isAnimatingRef.current = false;
+      },
+    });
+    // Active card lifts off screen
+    tl.to(activeEl,  { y: -180, rotate: 8,  scale: 1.05, opacity: 0, duration: 0.55 }, 0);
+    // Back cards advance in parallel
+    tl.to(posOneEl, { scale: 1.00, rotate: 0,  x: 0,   y: 0,  duration: 0.5 }, 0.05);
+    tl.to(posTwoEl, { scale: 0.94, rotate: -4, x: -36, y: 18, duration: 0.5 }, 0.05);
+    // Reset departed card to rearmost slot instantly (invisible behind the new stack)
+    tl.set(activeEl,  { y: 32, rotate: 5, scale: 0.90, x: 40, opacity: 1, zIndex: 10 });
+    tl.set(posOneEl,  { zIndex: 30 });
+    tl.set(posTwoEl,  { zIndex: 20 });
+  };
 
   const cards = [
     { quote: quote1, author: author1, studio: studio1 },
@@ -75,125 +102,43 @@ export function TestimonialsSection({
   ];
 
   return (
-    <div>
+    <div className="flex flex-col items-center w-full">
       {/* Section header */}
-      <motion.div
-        className="mb-16"
-        initial={shouldReduceMotion ? false : { opacity: 0, y: 32 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={
-          shouldReduceMotion ? { duration: 0 } : { duration: 0.6, ease: EASE_ENTER }
-        }
-      >
-        <p className="type-eyebrow text-text-tertiary mb-6">
-          {label}
-        </p>
-        <h2 className="type-display text-text-primary">
-          {headline}
-        </h2>
-      </motion.div>
+      <Animate type="fade-up" className="mb-6 lg:mb-10 self-start w-full">
+        <p className="type-eyebrow text-text-tertiary mb-4">{label}</p>
+        <h2 className="type-display text-text-primary">{headline}</h2>
+      </Animate>
 
-      {/* ── Mobile: Embla Carousel ──────────────────────────────────────────────
-          -mx-6 extends viewport to screen edge; pl-6 aligns slides with section
-          header. Embla applies overflow:hidden and handles touch via PointerEvents. */}
-      <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef}>
-        <div className="flex gap-6 py-4 pr-4">
-          {cards.map((card, i) => {
-            const config = CARD_CONFIGS[i] ?? { tilt: 0, yOffset: 0 };
-            // Reduced tilt on mobile — narrower cards benefit from subtler rotation
-            const tilt = config.tilt * 0.4;
-            const yOffset = config.yOffset * 0.4;
-
-            return (
-              <motion.div
-                key={i}
-                className="polaroid-tape flex-none w-[280px] md:w-[310px] bg-polaroid rounded-[2px]"
-                style={{
-                  padding: "16px 16px 56px 16px",
-                  boxShadow: POLAROID_SHADOW,
-                  zIndex: i + 1,
-                }}
-                initial={
-                  shouldReduceMotion ? false : { opacity: 0, y: yOffset + 48, rotate: tilt }
-                }
-                animate={{ opacity: 1, y: yOffset, rotate: tilt }}
-                transition={
-                  shouldReduceMotion
-                    ? { duration: 0 }
-                    : { duration: 0.6, delay: i * 0.12, ease: EASE_ENTER }
-                }
-              >
-                {/* Photo placeholder — real portrait replaces this */}
-                <div className="aspect-square w-full bg-surface-elevated mb-4 overflow-hidden" />
-                <p className="text-[14px] font-normal leading-[1.6] tracking-[-0.1px] text-polaroid-text mb-4">
-                  {card.quote}
-                </p>
-                <p className="text-[12px] font-normal text-polaroid-text leading-none">
-                  {card.author}
-                </p>
-                <p className="text-[11px] font-normal text-polaroid-text-secondary mt-1 leading-none">
-                  {card.studio}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Dot indicators — phone only, always hidden on tablet+ */}
-      {snapCount > 1 && (
-        <div className="flex justify-center gap-2 mt-6 md:hidden">
-          {Array.from({ length: snapCount }).map((_, i) => (
+      {/* Deck — fades up as one unit after the header settles */}
+      <Animate type="fade-up" delay={750} className="my-4 lg:my-8">
+        <div className="relative w-[220px] h-[260px] lg:w-[300px] lg:h-[400px]">
+          {cards.map((card, i) => (
             <div
               key={i}
-              className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                i === activeIndex ? "bg-gold-500" : "bg-border-subtle"
+              ref={(el) => { cardRefs.current[i] = el; }}
+              onClick={i === activeIndex ? handleTap : undefined}
+              onKeyDown={
+                i === activeIndex
+                  ? (e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleTap();
+                      }
+                    }
+                  : undefined
+              }
+              role={i === activeIndex ? "button" : undefined}
+              aria-label={i === activeIndex ? hint : undefined}
+              tabIndex={i === activeIndex ? 0 : -1}
+              className={`polaroid-tape absolute inset-0 bg-polaroid rounded-[2px] overflow-hidden ${
+                i === activeIndex ? "cursor-pointer" : "pointer-events-none"
               }`}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* ── Desktop: static overlapping row ────────────────────────────────────
-          Full tilt, hover lift, negative margin overlap — unchanged from original. */}
-      <div className="hidden lg:flex lg:flex-row lg:justify-center lg:py-8">
-        {cards.map((card, i) => {
-          const config = CARD_CONFIGS[i] ?? { tilt: 0, yOffset: 0 };
-
-          return (
-            <motion.div
-              key={i}
-              className={[
-                "polaroid-tape flex-none w-[300px] bg-polaroid rounded-[2px]",
-                i > 0 ? "-ml-[100px]" : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
               style={{
                 padding: "16px 16px 56px 16px",
                 boxShadow: POLAROID_SHADOW,
-                zIndex: i + 1,
               }}
-              initial={
-                shouldReduceMotion
-                  ? false
-                  : { opacity: 0, y: config.yOffset + 48, rotate: config.tilt }
-              }
-              whileInView={{ opacity: 1, y: config.yOffset, rotate: config.tilt }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={
-                shouldReduceMotion
-                  ? { duration: 0 }
-                  : { duration: 0.6, delay: i * 0.12, ease: EASE_ENTER }
-              }
-              whileHover={
-                !shouldReduceMotion
-                  ? { y: config.yOffset - 8, rotate: 0, scale: 1.03, zIndex: 10 }
-                  : undefined
-              }
-              whileTap={!shouldReduceMotion ? { scale: 0.99 } : undefined}
             >
+              {/* Photo placeholder — real portrait in Phase 5 */}
               <div className="aspect-square w-full bg-surface-elevated mb-4 overflow-hidden" />
               <p className="text-[14px] font-normal leading-[1.6] tracking-[-0.1px] text-polaroid-text mb-4">
                 {card.quote}
@@ -204,10 +149,20 @@ export function TestimonialsSection({
               <p className="text-[11px] font-normal text-polaroid-text-secondary mt-1 leading-none">
                 {card.studio}
               </p>
-            </motion.div>
-          );
-        })}
-      </div>
+            </div>
+          ))}
+        </div>
+      </Animate>
+
+      {/* Hint label — pulses until first tap, then fades out */}
+      <Animate type="fade-in" delay={1350}>
+        <p
+          aria-hidden="true"
+          className={`type-caption text-text-tertiary hint-pulse${hintFaded ? " hint-faded" : ""}`}
+        >
+          {hint}
+        </p>
+      </Animate>
     </div>
   );
 }
