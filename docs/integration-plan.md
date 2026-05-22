@@ -136,8 +136,12 @@ Three independent PRs, can ship in any order. Each removes one of the three rema
 
 **3c.2 — Team (`components/team-section.tsx`)**
 - Desktop 5-column grid wraps the items in `<Stagger gap={150} type="scale-in">`.
-- Mobile carousel slide mount animation becomes a single GSAP `fromTo` per slide on
-  Embla `init` / `reInit`.
+- Mobile Embla carousel: same `<Stagger gap={150} type="scale-in">` wraps the slides.
+  Stagger's rendered wrapper `<div>` becomes Embla's auto-detected container (it's
+  the first child of the viewport element). Stagger only animates `opacity` and
+  `scale`, which don't affect `offsetWidth`, so Embla's slide measurements stay
+  accurate. One primitive, two layouts — cleaner than per-slide GSAP boilerplate.
+- Both variants use a 750ms delay (header `<Animate>` settles at 550ms + 200ms breath).
 
 **3c.3 — Testimonials (`components/testimonials-section.tsx`)** — full redesign
 - Polaroid cards stacked in the same position (absolute), varying scale + rotation +
