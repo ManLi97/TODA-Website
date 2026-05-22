@@ -40,10 +40,10 @@ export function FaqSection({
     <div>
       {/* Section header */}
       <ScrollReveal className="mb-12">
-        <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
+        <p className="type-eyebrow text-text-tertiary mb-6">
           {label}
         </p>
-        <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary">
+        <h2 className="type-display text-text-primary">
           {headline}
         </h2>
       </ScrollReveal>
@@ -57,7 +57,8 @@ export function FaqSection({
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
               aria-expanded={openIndex === i}
             >
-              <span className="text-[17px] font-normal leading-[1.47] tracking-[-0.2px] text-text-primary">
+              {/* Question uses .type-lede with text-primary override (lede defaults to secondary). */}
+              <span className="type-lede text-text-primary">
                 {q}
               </span>
               <motion.span
@@ -83,7 +84,7 @@ export function FaqSection({
                   exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
                   transition={{ duration: 0.2, ease: EASE_STANDARD }}
                 >
-                  <p className="pb-5 text-[17px] font-normal leading-[1.47] tracking-[-0.2px] text-text-secondary">
+                  <p className="pb-5 type-lede">
                     {a}
                   </p>
                 </motion.div>

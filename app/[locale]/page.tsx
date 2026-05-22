@@ -45,16 +45,16 @@ export default async function HomePage() {
       <StickySection variant="raised" id="about" zIndex={20}>
         {/* Four children cascade: label → headline → body1 → body2 */}
         <ScrollReveal className="max-w-2xl">
-          <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
+          <p className="type-eyebrow text-text-tertiary mb-6">
             {t("origin.label")}
           </p>
-          <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary mb-8">
+          <h2 className="type-display text-text-primary mb-8">
             {t("origin.headline")}
           </h2>
-          <p className="text-[17px] font-normal leading-[1.47] tracking-[-0.2px] text-text-secondary mb-4">
+          <p className="type-lede mb-4">
             {t("origin.body1")}
           </p>
-          <p className="text-[17px] font-normal leading-[1.47] tracking-[-0.2px] text-text-secondary">
+          <p className="type-lede">
             {t("origin.body2")}
           </p>
         </ScrollReveal>
@@ -64,10 +64,10 @@ export default async function HomePage() {
       <StickySection variant="alt" id="features" zIndex={30}>
         {/* Label + headline in first reveal group */}
         <ScrollReveal className="mb-12">
-          <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
+          <p className="type-eyebrow text-text-tertiary mb-6">
             {t("features.label")}
           </p>
-          <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary">
+          <h2 className="type-display text-text-primary">
             {t("features.headline")}
           </h2>
         </ScrollReveal>
@@ -92,17 +92,18 @@ export default async function HomePage() {
       <StickySection variant="raised" id="manifest" zIndex={40}>
         {/* Four children cascade: label → Playfair accent → headline → body */}
         <ScrollReveal className="max-w-2xl">
-          <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
+          <p className="type-eyebrow text-text-tertiary mb-6">
             {t("manifest.label")}
           </p>
-          {/* Playfair accent — second and final usage on page; max 2–4 words, gold-500 only */}
+          {/* Playfair accent — second and final usage on page; max 2–4 words, gold-500 only.
+              One-off editorial flourish — does NOT use a .type-* class on purpose. */}
           <p className="font-playfair italic font-normal text-[24px] leading-[1.2] text-gold-500 mb-4">
             {t("manifest.accentText")}
           </p>
-          <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary mb-8">
+          <h2 className="type-display text-text-primary mb-8">
             {t("manifest.headline")}
           </h2>
-          <p className="text-[17px] font-normal leading-[1.47] tracking-[-0.2px] text-text-secondary">
+          <p className="type-lede">
             {t("manifest.body")}
           </p>
         </ScrollReveal>
@@ -162,14 +163,14 @@ export default async function HomePage() {
       <StickySection variant="base" id="contact" zIndex={80}>
         {/* Four children cascade: headline → price row → note → button */}
         <ScrollReveal className="max-w-xl">
-          <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary mb-8">
+          <h2 className="type-display text-text-primary mb-8">
             {t("cta.headline")}
           </h2>
           <div className="flex items-baseline gap-2 mb-2">
-            <span className="text-[56px] font-semibold leading-[1.07] tracking-[-0.5px] text-text-primary">
+            <span className="type-display text-text-primary">
               {t("cta.price")}
             </span>
-            <span className="text-[17px] font-normal leading-[1.47] tracking-[-0.2px] text-text-secondary">
+            <span className="type-lede">
               {t("cta.pricePeriod")}
             </span>
           </div>

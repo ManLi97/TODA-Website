@@ -259,8 +259,9 @@ Phases get clearly separated, groups feel like one beat. This is the entire rhyt
 - Each `<Animate>` registers a ScrollTrigger scoped to its parent `<StickySection>`
 - `onEnter`: fires the GSAP `fromTo` tween
 - `onLeave` / `onLeaveBack`: resets the element to `from` state so it replays on return
-- `<StickySection>` already has GSAP + ScrollTrigger wired up — `<Animate>` hooks into
-  the same GSAP context, it does not create a separate scroll listener
+- `<StickySection>` and `<Animate>` each manage their own `gsap.context()` — there is no
+  shared GSAP context between them. Each `<Animate>` registers its own ScrollTrigger scoped
+  to its element; this is correct and expected, not a shared-state architecture
 
 **Counter and progress bar patterns (not yet implemented):**
 

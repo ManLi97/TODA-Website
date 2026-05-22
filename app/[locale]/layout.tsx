@@ -13,18 +13,26 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
 
-// --font-inter-var is referenced by --font-inter in @theme (globals.css)
+// Inter — DS type ladder uses three weights only: 200 (thin), 400 (regular),
+// 600 (semibold). Loading them as explicit weights gives static instances
+// instead of the variable font, which is fine for this fixed palette and
+// produces a smaller total payload than the full variable axis.
+// --font-inter-var feeds --font-sans / --font-inter in @theme (globals.css).
 const inter = Inter({
   subsets: ["latin"],
+  weight: ["200", "400", "600"],
   variable: "--font-inter-var",
+  display: "swap",
 });
 
-// Italic-only load — Playfair is used exclusively for italic accents in gold-500
+// Playfair Display — italic 400 only. Used exactly once on the site: the
+// "Weniger Chaos" accent span in the Hero headline. Do not extend this load.
 const playfair = Playfair_Display({
   subsets: ["latin"],
   style: ["italic"],
   weight: ["400"],
   variable: "--font-playfair-var",
+  display: "swap",
 });
 
 export const metadata: Metadata = {

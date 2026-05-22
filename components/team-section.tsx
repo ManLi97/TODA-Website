@@ -16,16 +16,18 @@ const containerVariants = {
   show: { transition: { staggerChildren: 0.15 } },
 };
 
+// DS --ease-entry — cubic-bezier(0.16, 1, 0.3, 1). Same curve for the desktop
+// stagger entrance and the mobile carousel mount; Phase 3 ports both off motion.
+const EASE_ENTER: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
 const itemVariants = {
   hidden: { opacity: 0, scale: 0.8 },
   show: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
+    transition: { duration: 0.5, ease: EASE_ENTER },
   },
 };
-
-const EASE_ENTER: [number, number, number, number] = [0, 0, 0.2, 1];
 
 interface TeamSectionProps {
   label: string;
@@ -88,10 +90,10 @@ export function TeamSection({
     <div>
       {/* Section header — GSAP scroll reveal */}
       <ScrollReveal className="mb-12">
-        <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
+        <p className="type-eyebrow text-text-tertiary mb-6">
           {label}
         </p>
-        <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary">
+        <h2 className="type-display text-text-primary">
           {headline}
         </h2>
       </ScrollReveal>
@@ -121,7 +123,7 @@ export function TeamSection({
               <p className="text-[15px] font-semibold leading-[1.3] tracking-[-0.1px] text-text-primary mb-1">
                 {name}
               </p>
-              <p className="text-[13px] font-normal leading-none text-text-tertiary">{role}</p>
+              <p className="type-caption leading-none">{role}</p>
             </motion.div>
           ))}
         </div>

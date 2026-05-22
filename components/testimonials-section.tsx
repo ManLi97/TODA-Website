@@ -20,8 +20,10 @@ const CARD_CONFIGS: Array<{ tilt: number; yOffset: number }> = [
 const POLAROID_SHADOW =
   "0 24px 48px rgba(0,0,0,0.8), 0 4px 12px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(0,0,0,0.05)";
 
-// toda-enter easing from MOTION.md — cubic-bezier(0, 0, 0.2, 1)
-const EASE_ENTER: [number, number, number, number] = [0, 0, 0.2, 1];
+// DS --ease-entry — cubic-bezier(0.16, 1, 0.3, 1). Sharp start, soft landing.
+// motion/react takes the curve as a 4-tuple; Phase 3 ports this off motion to
+// GSAP CustomEase("entry"), but the curve stays identical across both engines.
+const EASE_ENTER: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 interface TestimonialsSectionProps {
   label: string;
@@ -84,10 +86,10 @@ export function TestimonialsSection({
           shouldReduceMotion ? { duration: 0 } : { duration: 0.6, ease: EASE_ENTER }
         }
       >
-        <p className="text-[12px] font-normal leading-none tracking-[0.1px] uppercase text-text-tertiary mb-6">
+        <p className="type-eyebrow text-text-tertiary mb-6">
           {label}
         </p>
-        <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] text-text-primary">
+        <h2 className="type-display text-text-primary">
           {headline}
         </h2>
       </motion.div>

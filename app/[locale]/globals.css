@@ -1,57 +1,305 @@
 @import "tailwindcss";
 
 @theme {
-  /* Anthrazit scale — surfaces.
-     Hex values mirror docs/design-system/hex-tables.md and css-tokens.md.
+  /* ─────────────────────────────────────────────────────────────────────────
+     COLORS — anthrazit surfaces
+     Hex values mirror docs/design-system/hex-tables.md.
      --bg is the true-black canvas, kept separate from surface tiers.
-     Elevation order (darkest → lightest): alt < base < raised < hover. */
-  --color-bg: #000000;
-  --color-surface-base: #141414;
-  --color-surface-alt: #121212;
+     Elevation order (darkest → lightest): alt < base < raised < hover.
+     ───────────────────────────────────────────────────────────────────────── */
+  --color-bg:             #000000;
+  --color-surface-base:   #141414;
+  --color-surface-alt:    #121212;
   --color-surface-raised: #292929;
-  --color-surface-hover: #333333;
+  --color-surface-hover:  #333333;
   /* Legacy alias — `bg-surface-elevated` is referenced by card/video-loop/team/testimonials.
      Mapped to the DS `surface-hover` tier (#333333). Migrate consumers to `surface-hover`. */
   --color-surface-elevated: #333333;
-  --color-border: #383838;
+  --color-border:         #383838;
   /* Legacy alias — `border-subtle` is referenced by header/footer/faq/button/team/testimonials.
      Same value as `--color-border`. Migrate consumers to `border`. */
-  --color-border-subtle: #383838;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a3a3a3;
-  --color-text-tertiary: #6b6b6b;
+  --color-border-subtle:  #383838;
 
-  /* Gold scale — accent */
-  --color-gold-50: #fff8e5;
+  /* COLORS — text tiers */
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #a3a3a3;
+  --color-text-tertiary:  #6b6b6b;
+
+  /* COLORS — gold (primary accent) */
   --color-gold-200: #fce49b;
   --color-gold-400: #e8b73d;
   --color-gold-500: #c8941a;
   --color-gold-600: #9c7314;
   --color-gold-800: #5c420a;
+  --color-on-gold:  #2b1e08;
 
-  /* Font families — reference next/font CSS variables injected on <html> */
-  --font-inter: var(--font-inter-var);
+  /* COLORS — purple (secondary accent) */
+  --color-purple-200: #d9cbef;
+  --color-purple-400: #cbb5ef;
+  --color-purple-500: #bba6e8;
+  --color-purple-600: #9d88c9;
+  --color-on-purple:  #231a33;
+
+  /* COLORS — categorical label tints */
+  --color-label-blue:  #6b8cbe;
+  --color-label-green: #5fb082;
+  --color-label-red:   #b85450;
+  --color-label-terra: #b57236;
+
+  /* COLORS — polaroid card surface (project-specific, not in DS) */
+  --color-polaroid:                 #fafafa;
+  --color-polaroid-text:            #1a1a1a;
+  --color-polaroid-text-secondary:  #555555;
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     COMPOSED RECIPES — gradients & glass
+     color-mix() and oklch are native in Tailwind v4 — no polyfill needed.
+     ───────────────────────────────────────────────────────────────────────── */
+  --glass-tint:        color-mix(in oklch, var(--color-surface-raised) 65%, transparent);
+  --glass-border-gold: 1px solid color-mix(in oklch, var(--color-gold-500) 15%, transparent);
+  --grad-brand:        linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-400) 35%, var(--color-purple-500) 100%);
+  --grad-ambient:      radial-gradient(ellipse at 15% 10%, color-mix(in oklch, var(--color-gold-500) 12%, transparent) 0%, transparent 55%);
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     FONTS
+     --font-sans is the DS stack; the Inter slot is filled by next/font/google
+     in app/[locale]/layout.tsx and exposed as --font-inter-var.
+     --font-inter / --font-playfair feed Tailwind's `font-inter` / `font-playfair`
+     utility classes — Playfair is only used for the "Weniger Chaos" accent span.
+     ───────────────────────────────────────────────────────────────────────── */
+  --font-sans:     var(--font-inter-var), "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-features: "cv11", "ss03";
+  --font-inter:    var(--font-sans);
   --font-playfair: var(--font-playfair-var);
 
-  /* Polaroid card surface — white card on dark background for testimonials */
-  --color-polaroid: #fafafa;
-  --color-polaroid-text: #1a1a1a;
-  --color-polaroid-text-secondary: #555555;
+  /* ─────────────────────────────────────────────────────────────────────────
+     TYPOGRAPHY — weights
+     --weight-bold is 600 (semibold), NOT 700. Never use Tailwind's `font-bold`
+     utility (which is 700) anywhere in the codebase — reach for `.type-*`
+     classes or `font-semibold` / the --weight-bold var instead.
+     ───────────────────────────────────────────────────────────────────────── */
+  --weight-thin:    200;
+  --weight-regular: 400;
+  --weight-bold:    600;
+
+  /* TYPOGRAPHY — fluid sizes (clamp min, preferred vw, max) */
+  --type-hero:    clamp(5rem, 16vw, 14rem);     /* 80 → 224 — giant numerals, gradient-clipped */
+  --type-display: clamp(3rem, 8vw, 6rem);       /* 48 → 96  — section headlines */
+  --type-sub:     clamp(2rem, 4vw, 3rem);       /* 32 → 48  — sub-section titles */
+  --type-lede:    clamp(1.125rem, 1.6vw, 1.5rem); /* 18 → 24 — hero/section subtitles */
+  --type-body:    1.1875rem;                    /* 19px — long-form prose */
+  --type-eyebrow: 0.75rem;                      /* 12px — section labels */
+  --type-caption: 0.8125rem;                    /* 13px — fine print */
+
+  /* TYPOGRAPHY — leading */
+  --leading-hero:    0.92;
+  --leading-display: 1.0;
+  --leading-sub:     1.1;
+  --leading-lede:    1.35;
+  --leading-body:    1.55;
+
+  /* TYPOGRAPHY — tracking */
+  --track-hero:    -0.05em;
+  --track-display: -0.04em;
+  --track-sub:     -0.025em;
+  --track-lede:    -0.015em;
+  --track-body:    -0.01em;
+  --track-eyebrow: 0.14em;
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     MOTION — easing
+     --ease-entry is the only ease curve for entrances (fade-up, scale-in, slide,
+     draw). --ease-loop is for perpetual loops (gradient shimmer). Anything else
+     is interaction state (button/header hover) and intentionally not tokenised.
+     ───────────────────────────────────────────────────────────────────────── */
+  --ease-entry: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-loop:  ease-in-out;
+
+  /* MOTION — duration */
+  --t-quick:     400ms;   /* label, caption, arrow fade */
+  --t-base:      550ms;   /* default: card, feature item, step */
+  --t-medium:    650ms;   /* display headlines, lede */
+  --t-slow:      700ms;   /* divider draw, slide-right from off-frame */
+  --t-hero:      900ms;   /* hero numeral */
+  --t-fill:      1250ms;  /* progress bar fill */
+  --t-flow-fast: 5s;      /* inline shimmer (mid-sentence emphasis) */
+  --t-flow-slow: 7s;      /* hero numeral shimmer */
+
+  /* MOTION — distance / scale */
+  --m-y-rise:   24px;       /* translateY for fade-up */
+  --m-x-near:   32px;       /* translateX for slide-left */
+  --m-x-far:    40px;       /* translateX for slide-right (off-frame) */
+  --m-scale-in: 0.93;       /* scale start for scale-in / hero-in */
+  --m-grad-bg:  300% 100%;  /* background-size for shimmer text */
 }
 
+/* ───────────────────────────────────────────────────────────────────────────
+   BASE — body
+   Per docs/design-system/typography.md.
+   --------------------------------------------------------------------------- */
 @layer base {
   body {
     background-color: var(--color-surface-base);
     color: var(--color-text-primary);
-    font-family: var(--font-inter), system-ui, sans-serif;
+    font-family: var(--font-sans);
+    font-feature-settings: var(--font-features);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 }
 
-/* Team avatar — spinning gold ring orbiting a circular photo.
-   color-mix() requires Chrome 111+ / FF 113+ / Safari 16.2+ (TODA targets modern browsers).
-   Inner border color matches surface-raised — update if section moves to a different surface. */
+/* ───────────────────────────────────────────────────────────────────────────
+   TYPE CLASSES
+   Naming decision: `.type-*` prefix instead of bare `.hero` / `.display` /
+   etc. The `.hero` class would collide visually with the <Hero> React
+   component at `components/hero.tsx` — same word, different namespace, easy
+   to confuse when scanning a tree of `className="hero ..."`. The `type-`
+   prefix mirrors Tailwind's own utility-prefix convention (`text-*`, `bg-*`)
+   and makes intent unambiguous at the call site.
+
+   Composition rule: type classes ship in @layer components so Tailwind
+   utilities (`text-text-primary`, etc.) layered in @layer utilities will
+   override the baked-in color when needed.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .type-hero {
+    font-size: var(--type-hero);
+    font-weight: var(--weight-thin);
+    line-height: var(--leading-hero);
+    letter-spacing: var(--track-hero);
+    margin: 0;
+  }
+
+  .type-display {
+    font-size: var(--type-display);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-display);
+    letter-spacing: var(--track-display);
+    margin: 0;
+  }
+
+  .type-sub-display {
+    font-size: var(--type-sub);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-sub);
+    letter-spacing: var(--track-sub);
+    margin: 0;
+  }
+
+  /* Lede ships with --color-text-secondary and max-width: 38ch baked in.
+     The narrow line length is a DS principle ("Keep paragraphs narrow — wide
+     blocks of text break the cinematic feel"), not a bug — do not strip it. */
+  .type-lede {
+    font-size: var(--type-lede);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-lede);
+    letter-spacing: var(--track-lede);
+    color: var(--color-text-secondary);
+    max-width: 38ch;
+    margin: 0;
+  }
+
+  .type-body {
+    font-size: var(--type-body);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-body);
+    letter-spacing: var(--track-body);
+    color: var(--color-text-secondary);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .type-body-strong {
+    font-size: var(--type-body);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-body);
+    letter-spacing: var(--track-body);
+    margin: 0;
+  }
+
+  .type-eyebrow {
+    font-size: var(--type-eyebrow);
+    font-weight: var(--weight-bold);
+    line-height: 1;
+    letter-spacing: var(--track-eyebrow);
+    text-transform: uppercase;
+  }
+
+  .type-caption {
+    font-size: var(--type-caption);
+    font-weight: var(--weight-regular);
+    line-height: 1.4;
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     GLASS — surface recipe
+     Use sparingly: focal elements only (hero card, featured stat, pull quote).
+     Not wallpaper.
+     ───────────────────────────────────────────────────────────────────────── */
+  .glass {
+    padding: 1.75rem 2rem;
+    background: var(--glass-tint);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border-radius: 18px;
+    border: var(--glass-border-gold);
+    max-width: 38rem;
+  }
+
+  /* Gradient-bordered glass — uses two backgrounds with padding-box / border-box
+     to paint a transparent border with the brand gradient behind it. */
+  .glass--gradient {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--color-surface-base), var(--color-surface-base)) padding-box,
+      var(--grad-brand) border-box;
+    backdrop-filter: none;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     GRADIENT TEXT — inline shimmer
+     Used for single emphasis words mid-sentence. Static gradient by default;
+     the parent's entrance onComplete callback adds `.flowing` to trigger the
+     perpetual shimmer. Phase 3's <Animate> component owns that wiring.
+     ───────────────────────────────────────────────────────────────────────── */
+  .grad-text--flow {
+    background: var(--grad-brand);
+    background-size: var(--m-grad-bg);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .grad-text--flow.flowing {
+    animation: grad-flow var(--t-flow-fast) var(--ease-loop) infinite;
+  }
+
+  /* Hero numeral shimmer — slower loop. GSAP's `hero-in` onComplete adds this
+     class to hand the perpetual animation to the compositor thread. */
+  .shimmer-active {
+    animation: grad-flow var(--t-flow-slow) var(--ease-loop) infinite;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   KEYFRAMES — gradient flow
+   The only keyframe in globals.css that exists for animation purposes.
+   GSAP owns all entrance tweens; this CSS animation handles only the
+   perpetual loop (compositor-thread cheap; rAF expensive).
+   --------------------------------------------------------------------------- */
+@keyframes grad-flow {
+  0%, 100% { background-position: 0% center; }
+  50%      { background-position: 100% center; }
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   TEAM AVATAR — spinning gold ring orbiting a circular photo.
+   Inner border color matches surface-raised — update if section moves to a
+   different surface. color-mix() requires modern browsers (Chrome 111+).
+   --------------------------------------------------------------------------- */
 @keyframes team-ring-spin {
   to { transform: rotate(360deg); }
 }
@@ -84,7 +332,9 @@
   }
 }
 
-/* Cellulose tape strip above polaroid cards */
+/* ───────────────────────────────────────────────────────────────────────────
+   POLAROID — cellulose tape strip above testimonial cards
+   --------------------------------------------------------------------------- */
 .polaroid-tape {
   position: relative;
 }

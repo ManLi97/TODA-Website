@@ -25,8 +25,8 @@ export function Hero({ headline, accentText, subHeadline, ctaPrimary, ctaSeconda
     <section className="bg-surface-base min-h-dvh flex flex-col justify-center pt-14">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="max-w-3xl text-center md:text-left">
-          {/* Headline — Inter semibold at display size with responsive scaling */}
-          <h1 className="text-[40px] sm:text-[56px] lg:text-[80px] font-semibold leading-[1.07] tracking-[-0.5px] lg:tracking-[-1px] text-text-primary">
+          {/* Headline — fluid display size via .type-display (clamp 48→96px). */}
+          <h1 className="type-display text-text-primary">
             {headline}
             {accentText && (
               <>
@@ -40,9 +40,10 @@ export function Hero({ headline, accentText, subHeadline, ctaPrimary, ctaSeconda
             )}
           </h1>
 
-          {/* Sub-headline — body copy size, secondary color, left-aligned */}
+          {/* Sub-headline — DS lede class brings size/leading/tracking and a
+              max-width: 38ch for narrow reading width. */}
           {subHeadline && (
-            <p className="mt-6 text-[17px] font-normal leading-[1.47] tracking-[-0.2px] text-text-secondary max-w-xl">
+            <p className="mt-6 type-lede">
               {subHeadline}
             </p>
           )}
