@@ -1,8 +1,8 @@
 "use client";
 
-// Global nav — sticky, glass-blur, scroll-aware (hides on scroll down, reappears on scroll up).
-// Client Component: needs scroll events, mobile menu state, locale switching, and useTranslations.
-import { useState, useEffect, useRef } from "react";
+// Global nav — fixed, always visible during snap traversal.
+// Client Component: needs mobile menu state, locale switching, and useTranslations.
+import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter, usePathname } from "@/i18n/navigation";
 
@@ -24,29 +24,7 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [visible, setVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const lastScrollY = useRef(0);
-
-  // Hide on scroll down past nav height; reveal on scroll up
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      const delta = currentY - lastScrollY.current;
-
-      if (delta > 8 && currentY > 56) {
-        setVisible(false);
-        setMenuOpen(false);
-      } else if (delta < -8) {
-        setVisible(true);
-      }
-
-      lastScrollY.current = currentY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -58,11 +36,7 @@ export function Header() {
   };
 
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-        visible ? "translate-y-0" : "-translate-y-full"
-      }`}
-    >
+    <header className="fixed top-0 inset-x-0 z-50">
       {/* Main bar */}
       <div className="h-14 bg-surface-base/80 backdrop-blur-md border-b border-border-subtle">
         <div className="max-w-[1440px] mx-auto h-full px-6 flex items-center justify-between">

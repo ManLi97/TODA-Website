@@ -1,14 +1,13 @@
 // Root layout for all locale-prefixed routes.
 // Provides NextIntlClientProvider for client-side translations.
 // Injects Inter and Playfair Display Italic via next/font as CSS variables.
-// LenisProvider wraps children for smooth scroll; Header and Footer are global chrome.
+// Scroll is handled by native CSS scroll-snap on <html> — no JS scroll provider.
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Inter, Playfair_Display } from "next/font/google";
 import { routing } from "@/i18n/routing";
-import { LenisProvider } from "@/components/lenis-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
@@ -58,11 +57,9 @@ export default async function LocaleLayout({ children, params }: Props) {
     <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <LenisProvider>
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </LenisProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
