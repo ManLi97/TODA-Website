@@ -11,7 +11,7 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 | Framework       | Next.js 15 (App Router)                        |
 | Language        | TypeScript                                     |
 | Styling         | Tailwind CSS v4                                |
-| Animations      | GSAP + ScrollTrigger, Motion (Framer), Lenis   |
+| Animations      | GSAP + ScrollTrigger, Lenis (Framer Motion removed in Phase 3) |
 | Carousel        | Embla Carousel                                 |
 | i18n            | next-intl (de / es / en, default: de)          |
 | Database/Auth   | Supabase (wired, not yet used in UI)           |
@@ -71,8 +71,13 @@ middleware.ts         # next-intl locale routing
 - **StickySection is the layout primitive:** every section wraps in `<StickySection variant="base|alt|raised" zIndex={N}>`. Handles sticky stacking and overflow content pan via GSAP ScrollTrigger (`sticky-section.tsx`).
 - **Surface rhythm:** base → alt → raised → alt → raised → base → alt → raised → base (9 sections in order).
 - **All copy via next-intl:** no hardcoded strings in components — everything reads from `messages/{locale}.json` under the `"home"` namespace.
-- **ScrollReveal for entrances:** animate-in wrappers on content blocks; stagger is driven by child count (`scroll-reveal.tsx`).
+- **ScrollReveal for entrances:** current implementation in `scroll-reveal.tsx` (Framer Motion). Replaced by `<Animate>` component (GSAP) in Phase 3 — do not extend ScrollReveal further.
 - **i18n-aware navigation:** always import `Link`, `useRouter`, `redirect` from `@/i18n/navigation` — never from `next/navigation` directly.
+
+## Project documentation
+
+- `docs/design-system/` — website-specific design system reference (philosophy, colors, tokens, typography, motion)
+- `docs/integration-plan.md` — phased plan for integrating the design system
 
 ## Environment variables
 
@@ -83,12 +88,13 @@ Required in `.env.local`:
 ## Active decisions & constraints
 
 - **Phase 5 in progress:** 9-section structure is laid out; `VideoLoop src=""` is a placeholder pending real studio footage.
-- **Playfair Display accent:** used max twice per page, italic, `text-gold-500` only — do not add more uses.
+- **Playfair Display:** used exactly once on the entire site — the "Weniger Chaos" span inside the hero headline only. Do not add any other Playfair uses anywhere.
 - **zIndex ladder:** each StickySection gets a fixed zIndex (10, 20, … 80) — maintain the sequence when adding sections.
 - **Tailwind v4:** uses `@tailwindcss/postcss`, not the classic `tailwind.config.js`. CSS-first config in `globals.css`.
 
 ## What NOT to touch
 
+- `components/sticky-section.tsx` — the sticky-stack scroll effect (card-over-card) and overflow pan live here. Structure, CSS classes (`sticky top-0 min-h-dvh`), and GSAP context must not change. This is the core UX mechanic of the site.
 - `messages/*.json` — all locales must stay in sync when adding/changing copy keys.
 - `i18n/routing.ts` — locale list and `localePrefix` affect all URLs; coordinate with deploy config before changing.
 - `pnpm-lock.yaml` — do not edit manually.
