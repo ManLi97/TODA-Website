@@ -11,7 +11,7 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 | Framework       | Next.js 15 (App Router)                        |
 | Language        | TypeScript                                     |
 | Styling         | Tailwind CSS v4                                |
-| Animations      | GSAP + ScrollTrigger, Lenis (Framer Motion removed in Phase 3) |
+| Animations      | GSAP + ScrollTrigger, Lenis; Framer Motion (`motion` package) still in use in `faq-section.tsx`, `testimonials-section.tsx`, `team-section.tsx` — slated for removal once Phase 3 ports them to GSAP/native React |
 | Carousel        | Embla Carousel                                 |
 | i18n            | next-intl (de / es / en, default: de)          |
 | Database/Auth   | Supabase (wired, not yet used in UI)           |
@@ -71,7 +71,8 @@ middleware.ts         # next-intl locale routing
 - **StickySection is the layout primitive:** every section wraps in `<StickySection variant="base|alt|raised" zIndex={N}>`. Handles sticky stacking and overflow content pan via GSAP ScrollTrigger (`sticky-section.tsx`).
 - **Surface rhythm:** base → alt → raised → alt → raised → base → alt → raised → base (9 sections in order).
 - **All copy via next-intl:** no hardcoded strings in components — everything reads from `messages/{locale}.json` under the `"home"` namespace.
-- **ScrollReveal for entrances:** current implementation in `scroll-reveal.tsx` (Framer Motion). Replaced by `<Animate>` component (GSAP) in Phase 3 — do not extend ScrollReveal further.
+- **ScrollReveal for entrances:** `scroll-reveal.tsx` is already pure GSAP (no Framer Motion). Slated for replacement by a unified `<Animate>` component (GSAP) in Phase 3 — do not extend ScrollReveal further.
+- **Framer Motion (`motion` package) still active in three sections:** `faq-section.tsx` (accordion +→× rotate and answer fade via `motion`/`AnimatePresence`/`useReducedMotion`), `testimonials-section.tsx` (mobile carousel card mount animations, desktop `whileInView` entrance, `whileHover`/`whileTap` polaroid lift), and `team-section.tsx` (mobile carousel mount, desktop `containerVariants`/`itemVariants` stagger via `whileInView`). Phase 3 ports these to GSAP / native React before `motion` can be dropped.
 - **i18n-aware navigation:** always import `Link`, `useRouter`, `redirect` from `@/i18n/navigation` — never from `next/navigation` directly.
 
 ## Project documentation

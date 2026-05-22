@@ -20,7 +20,7 @@ was reviewed, adjusted where needed, and annotated with implementation watch-out
 **Key decisions locked:**
 - Surface names: `surface-base` (#141414), `surface-alt` (#121212), `surface-raised` (#292929)
 - Playfair Display: "Weniger Chaos" hero span only — one occurrence, nowhere else
-- Framer Motion (`motion` package) removed in Phase 3; `<Animate>` + GSAP replaces it
+- Framer Motion (`motion` package) is removed in Phase 3, but only after each section's `motion` logic is ported to GSAP / native React — replacing `ScrollReveal` (already pure GSAP) with `<Animate>` does **not** by itself remove the dependency
 - `hero-in` shimmer: hybrid approach — GSAP entrance, CSS perpetual loop via `onComplete`
 
 ---
@@ -44,8 +44,32 @@ components with token-based classes.
 
 ## Phase 3 — Animation Layer
 
-Replace `ScrollReveal` + Framer Motion (`motion` package) with a GSAP-based `<Animate>` component.
-Remove `motion` from dependencies entirely.
+Unify the animation layer on GSAP and remove the `motion` package. Two distinct workstreams:
+
+1. **Replace `ScrollReveal` with `<Animate>`.** `scroll-reveal.tsx` is already pure GSAP — no
+   Framer Motion to strip out, just a thin entrance wrapper. The new `<Animate>` component
+   absorbs the same role with the richer DS vocabulary below.
+2. **Port the three Framer Motion consumer sections to GSAP / native React.** Until all three
+   are migrated, the `motion` dependency cannot be removed.
+
+**Framer Motion footprint to port (Phase 3 scope):**
+- `components/faq-section.tsx` — imports `motion`, `AnimatePresence`, `useReducedMotion`.
+  Patterns: `motion.span` rotating the `+` icon 45° to × on open; `AnimatePresence` wrapping a
+  `motion.div` for the answer fade/`y` slide (`initial`/`animate`/`exit`). Small,
+  self-contained interaction; port to a CSS transform on the icon + a GSAP
+  open/close tween (or a small height/opacity component).
+- `components/testimonials-section.tsx` — imports `motion`, `useReducedMotion`.
+  Patterns: header `motion.div` with `whileInView` entrance; mobile carousel slides as
+  `motion.div` with mount-time `initial`/`animate` (no `whileInView`, fixes earlier
+  snap-back bug); desktop polaroid row as `motion.div` with `whileInView` entrance plus
+  `whileHover` (lift + scale + zIndex) and `whileTap` (scale down). Load-bearing — hover
+  interaction logic, per-card stagger via `delay: i * 0.12`, and tilt/yOffset math all need
+  to survive the port. GSAP timelines + React hover state are the likely replacement.
+- `components/team-section.tsx` — imports `motion`, `useReducedMotion`.
+  Patterns: mobile carousel slides as `motion.div` with mount-time scale/opacity entrance;
+  desktop 5-column grid using `containerVariants` + `itemVariants` for a staggered
+  `whileInView` reveal (`staggerChildren: 0.15`). Medium complexity — variant-based
+  stagger needs a GSAP timeline equivalent.
 
 **Component API:**
 ```tsx
@@ -55,9 +79,15 @@ Types match DS vocabulary: `fade-up`, `fade-in`, `scale-in`, `slide-left`, `slid
 `draw-w`, `hero-in`. Powered by GSAP `fromTo` + ScrollTrigger under the hood.
 
 **Watch-outs:**
+- `motion` stays in `package.json` until all three sections above are ported — do not delete
+  the dependency before then or the build will break
 - `StickySection` is untouched — its ScrollTrigger setup is separate and must stay exactly as-is
 - Animations should reset on section exit so they replay when the user scrolls back (DS principle)
 - `ease: CustomEase.create("entry", "0.16,1,0.3,1")` for exact DS curve; GSAP `power4.out` as fallback
+- Preserve `useReducedMotion` parity — the GSAP replacements must short-circuit on
+  `prefers-reduced-motion` the same way the current `motion` code does
+- Testimonials desktop hover (lift + scale + zIndex elevation) is real interaction value, not
+  decoration — keep behaviour identical after the port
 
 ---
 
