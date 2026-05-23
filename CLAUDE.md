@@ -23,6 +23,8 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 ## Workflow
 
 - **Session start:** run `/git-context` to recover state
+- **Architect-loop sessions (design system integration):** read `docs/integration-plan.md`
+  § Current state, then propose the next PR prompt. Don't re-derive completed phases.
 - **Before non-trivial work:** use `/ship` for Plan → Build → Review
 - **Commits:** use `/commit` — Conventional Commits with NOTE blocks
 
@@ -102,14 +104,15 @@ Required in `.env.local`:
 ## Active decisions & constraints
 
 - **Design system integration is phased:** see `docs/integration-plan.md`
-  for the current phase. Phases 1–3 are complete; Phase 4 (visual shell +
-  content-fit fixes) is next. Do not begin work outside the named phase
-  without explicit confirmation.
+  § Current state. Plan is re-cut into Phase 4 (chrome & structure) →
+  Phase 5 (visual atmosphere & component polish) → Phase 6 (content & assets).
+  Phases 1–3 are complete. Do not begin work outside the named phase without
+  explicit confirmation.
 - **Playfair Display:** used exactly once on the entire site — the "Weniger Chaos"
   span inside the hero headline only. Do not add any other Playfair uses anywhere.
 - **One viewport per section:** content must fit within `100dvh`. Sections that don't
   fit on mobile are reshaped to fit (e.g. Features → horizontal Embla carousel in
-  Phase 4), not allowed to overflow.
+  Phase 5d), not allowed to overflow.
 - **Tailwind v4:** uses `@tailwindcss/postcss`, not the classic `tailwind.config.js`.
   CSS-first config in `globals.css`.
 
