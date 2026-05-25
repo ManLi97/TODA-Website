@@ -7,6 +7,13 @@
       "ctaPrimary": "Start for free",
       "ctaSecondary": "Learn more"
     },
+    "boldClaim": {
+      "label": "The promise",
+      "headline": "Less admin. More tattooing.",
+      "bullet1": "Structured requests — no more incomplete info.",
+      "bullet2": "Automatic scheduling — no double-booking chaos.",
+      "bullet3": "Your own booking page — live in minutes, no developer needed."
+    },
     "origin": {
       "label": "About TODA",
       "headline": "By tattoo artists. For tattoo artists.",
@@ -23,9 +30,8 @@
       "feature3Title": "Your website. Without a developer.",
       "feature3Excerpt": "Gallery, about section, booking form — all in one link. Whether Instagram, WhatsApp, or Facebook: always the same link, always the same structured result."
     },
-    "manifest": {
+    "socialProof": {
       "label": "Why TODA",
-      "accentText": "Your art.",
       "headline": "You should be tattooing. Not managing.",
       "body": "You are an artist. Not an accountant, not a secretary, not customer service all in one. TODA takes care of everything else — so you can focus on what you chose this profession for."
     },
@@ -79,12 +85,12 @@
       "role5": "Social Media",
       "cta": "The full story"
     },
-    "cta": {
+    "pricing": {
       "headline": "Ready for less chaos?",
       "price": "€24.99",
       "pricePeriod": "per month",
       "priceNote": "Cancel monthly. No contract.",
-      "ctaPrimary": "Start for free"
+      "ctaLabel": "Get Started"
     }
   },
   "nav": {

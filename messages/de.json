@@ -7,6 +7,13 @@
       "ctaPrimary": "Kostenlos starten",
       "ctaSecondary": "Mehr erfahren"
     },
+    "boldClaim": {
+      "label": "Das Versprechen",
+      "headline": "Weniger verwalten. Mehr tätowieren.",
+      "bullet1": "Strukturierte Anfragen — keine unvollständigen Infos mehr.",
+      "bullet2": "Automatische Terminverwaltung — kein Doppelbuchungs-Chaos.",
+      "bullet3": "Deine eigene Buchungsseite — in Minuten, ohne Entwickler."
+    },
     "origin": {
       "label": "Über TODA",
       "headline": "Von Tätowierern. Für Tätowierer.",
@@ -23,9 +30,8 @@
       "feature3Title": "Deine Webseite. Ohne Webentwickler.",
       "feature3Excerpt": "Galerie, Über-mich-Bereich, Buchungsformular — alles in einem Link. Egal ob Instagram, WhatsApp oder Facebook: immer derselbe Link, immer dasselbe strukturierte Ergebnis."
     },
-    "manifest": {
+    "socialProof": {
       "label": "Warum TODA",
-      "accentText": "Deine Kunst.",
       "headline": "Du solltest tätowieren. Nicht verwalten.",
       "body": "Du bist Künstler. Nicht Buchhalter, nicht Sekretär, nicht Kundenservice in einer Person. TODA übernimmt das Drumherum — damit du dich auf das konzentrieren kannst, wofür du diesen Beruf gewählt hast."
     },
@@ -79,12 +85,12 @@
       "role5": "Social Media",
       "cta": "Die ganze Geschichte"
     },
-    "cta": {
+    "pricing": {
       "headline": "Bereit für weniger Chaos?",
       "price": "24,99 €",
       "pricePeriod": "pro Monat",
       "priceNote": "Monatlich kündbar. Keine Vertragsbindung.",
-      "ctaPrimary": "Kostenlos starten"
+      "ctaLabel": "Jetzt Starten"
     }
   },
   "nav": {

@@ -7,6 +7,13 @@
       "ctaPrimary": "Empezar gratis",
       "ctaSecondary": "Saber más"
     },
+    "boldClaim": {
+      "label": "La promesa",
+      "headline": "Menos gestión. Más tatuaje.",
+      "bullet1": "Solicitudes estructuradas — sin información incompleta.",
+      "bullet2": "Gestión automática de citas — sin caos de reservas dobles.",
+      "bullet3": "Tu propia página de reservas — lista en minutos, sin desarrollador."
+    },
     "origin": {
       "label": "Sobre TODA",
       "headline": "Por tatuadores. Para tatuadores.",
@@ -23,9 +30,8 @@
       "feature3Title": "Tu web. Sin desarrollador.",
       "feature3Excerpt": "Galería, sección sobre ti, formulario de reserva — todo en un enlace. Ya sea Instagram, WhatsApp o Facebook: siempre el mismo enlace, siempre el mismo resultado estructurado."
     },
-    "manifest": {
+    "socialProof": {
       "label": "Por qué TODA",
-      "accentText": "Tu arte.",
       "headline": "Deberías estar tatuando. No gestionando.",
       "body": "Eres artista. No contable, no secretario, no servicio al cliente todo en uno. TODA se encarga del resto — para que puedas centrarte en aquello para lo que elegiste esta profesión."
     },
@@ -79,12 +85,12 @@
       "role5": "Redes Sociales",
       "cta": "La historia completa"
     },
-    "cta": {
+    "pricing": {
       "headline": "¿Listo para menos caos?",
       "price": "24,99 €",
       "pricePeriod": "al mes",
       "priceNote": "Cancelación mensual. Sin permanencia.",
-      "ctaPrimary": "Empezar gratis"
+      "ctaLabel": "Empezar"
     }
   },
   "nav": {
