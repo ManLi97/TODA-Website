@@ -11,10 +11,9 @@ import { TestimonialsSection } from "@/components/testimonials-section";
 import { TeamSection } from "@/components/team-section";
 import { PricingSection } from "@/components/pricing-section";
 import { FaqSection } from "@/components/faq-section";
+import { FeaturesSection } from "@/components/features-section";
 import { SnapSection } from "@/components/snap-section";
-import { Animate } from "@/components/animate";
 import { Stagger } from "@/components/stagger";
-import { Card } from "@/components/card";
 
 export default async function HomePage() {
   const t = await getTranslations("home");
@@ -73,30 +72,16 @@ export default async function HomePage() {
 
       {/* ── 5. Features — surface-alt ── */}
       <SnapSection variant="alt" id="features">
-        {/* Header block animates as one unit */}
-        <Animate type="fade-up" className="mb-12">
-          <p className="type-eyebrow text-text-tertiary mb-6">
-            {t("features.label")}
-          </p>
-          <h2 className="type-display text-text-primary">
-            {t("features.headline")}
-          </h2>
-        </Animate>
-        {/* Cards stagger in after the header settles */}
-        <Stagger gap={150} type="fade-up" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card
-            title={t("features.feature1Title")}
-            excerpt={t("features.feature1Excerpt")}
-          />
-          <Card
-            title={t("features.feature2Title")}
-            excerpt={t("features.feature2Excerpt")}
-          />
-          <Card
-            title={t("features.feature3Title")}
-            excerpt={t("features.feature3Excerpt")}
-          />
-        </Stagger>
+        <FeaturesSection
+          label={t("features.label")}
+          headline={t("features.headline")}
+          feature1Title={t("features.feature1Title")}
+          feature1Excerpt={t("features.feature1Excerpt")}
+          feature2Title={t("features.feature2Title")}
+          feature2Excerpt={t("features.feature2Excerpt")}
+          feature3Title={t("features.feature3Title")}
+          feature3Excerpt={t("features.feature3Excerpt")}
+        />
       </SnapSection>
 
       {/* ── 6. Social Proof — surface-raised ── */}
