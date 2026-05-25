@@ -4,6 +4,7 @@
 // Discovers sections live via querySelectorAll("section[id]") — never hardcoded.
 // IntersectionObserver (threshold 0.5) tracks the active section for arrow state.
 // aria-labels are hardcoded English for v1; i18n is a Phase 6 follow-up.
+import Image from "next/image";
 import { useEffect, useState, useCallback } from "react";
 
 function ArrowUp() {
@@ -109,15 +110,33 @@ export function BottomNav() {
           <ArrowUp />
         </button>
 
-        {/* Center — TODA app external link (text placeholder; real icon in Phase 6) */}
+        {/* Center — FAB: app icon floats above the pill via translateY */}
         <a
           href="https://app.toda.ink/onboarding"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Open TODA app"
-          className="flex items-center justify-center px-3 h-10 text-[13px] font-semibold tracking-widest text-text-primary transition-opacity duration-100 hover:opacity-70 active:opacity-100"
+          className="flex items-center justify-center transition-opacity duration-100 hover:opacity-70 active:opacity-100"
+          style={{ transform: "translateY(-20px)" }}
         >
-          TODA
+          <span
+            className="relative flex items-center justify-center w-[60px] h-[60px] rounded-full"
+            style={{
+              background: "#000",
+              boxShadow: "0 12px 40px rgba(0,0,0,0.7), 0 4px 12px rgba(0,0,0,0.4)",
+            }}
+          >
+            {/* Border ring — same style as nav pill, clipped to the arc above the nav border only */}
+            <span
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                inset: "-1px",
+                border: "var(--glass-border-gold)",
+                clipPath: "inset(0 0 65% 0)",
+              }}
+            />
+            <Image src="/toda-app-icon.svg" alt="TODA" width={40} height={40} />
+          </span>
         </a>
 
         {/* Down arrow — next section */}
