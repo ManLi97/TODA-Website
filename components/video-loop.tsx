@@ -1,19 +1,21 @@
 "use client";
 
-// VideoLoop — lazy-plays a looping muted video via IntersectionObserver.
-// The video is paused until it enters the viewport (threshold: 25%) and paused again on exit.
-// autoPlay is present per spec but IntersectionObserver is the primary play controller.
-// When src is empty, renders a styled placeholder div — structurally correct for Phase 4.
+// VideoLoop — lazy-plays a muted video via IntersectionObserver.
+// Default: loops indefinitely, pauses on exit.
+// playOnce: plays exactly once on first viewport entry, never replays.
+// When src is empty, renders a styled placeholder div.
 import { useEffect, useRef } from "react";
 
 interface VideoLoopProps {
   src: string;
   poster?: string;
   className?: string;
+  playOnce?: boolean;
 }
 
-export function VideoLoop({ src, poster, className }: VideoLoopProps) {
+export function VideoLoop({ src, poster, className, playOnce = false }: VideoLoopProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const hasPlayed = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -22,11 +24,19 @@ export function VideoLoop({ src, poster, className }: VideoLoopProps) {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            // catch() swallows autoplay-policy rejections — video stays paused gracefully
-            video.play().catch(() => {});
+          if (playOnce) {
+            if (entry.isIntersecting && !hasPlayed.current) {
+              hasPlayed.current = true;
+              video.play().catch(() => {});
+              // disconnect so scroll-back never re-triggers
+              observer.disconnect();
+            }
           } else {
-            video.pause();
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
           }
         }
       },
@@ -35,7 +45,7 @@ export function VideoLoop({ src, poster, className }: VideoLoopProps) {
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, [src]);
+  }, [src, playOnce]);
 
   if (!src) {
     return (
@@ -62,7 +72,7 @@ export function VideoLoop({ src, poster, className }: VideoLoopProps) {
       src={src}
       poster={poster}
       autoPlay
-      loop
+      loop={!playOnce}
       muted
       playsInline
       className={["w-full h-full object-cover block", className].filter(Boolean).join(" ")}
