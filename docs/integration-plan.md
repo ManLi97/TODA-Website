@@ -268,18 +268,19 @@ no dangling `#contact` reference remains.
 **Done when:** Features cards swipe horizontally on mobile, 3-up grid on desktop,
 same entrance behavior as Team.
 
-### Phase 5e — Component polish + Social Proof reshape
+### Phase 5e — Component polish
 
 **Update:**
 - `components/card.tsx` — remove `hover:-translate-y-0.5` from `linkClasses`
   (DS guardrail violation: no hover micro-animations on content cards)
-- `components/button.tsx` — audit for any final tweaks (may be a no-op)
-- `components/social-proof-section.tsx` — reshape for mobile: lean layout, podcast
-  video frame is the focal element. Specific layout decided when wiring the asset
-  slot.
+- `components/button.tsx` — audited, no-op. Its hover/active states are correct for
+  an interactive element; the no-hover guardrail targets content cards, not buttons.
 
-**Done when:** Card has no hover-lift, Button reviewed, Social Proof mobile fits one
-viewport with the video slot prominent.
+**Done when:** Card link cards no longer lift on hover; Button unchanged.
+
+> Social Proof mobile reshape moved to Phase 6 — it is asset-gated (the podcast clip
+> defines the layout), so it ships beside that asset rather than being designed
+> speculatively against an empty video slot.
 
 ---
 
@@ -306,7 +307,9 @@ piece arrives — not a single PR.
   MP4 alpha vs WebM VP9 alpha vs Lottie)
 - Case Study — real video (decision: YouTube embed vs self-hosted)
 - Origin — SVG graphic (you design, we wire + animate per DS)
-- Social Proof — 30s podcast clip loop, click → YouTube external
+- Social Proof — 30s podcast clip loop, click → YouTube external. Includes the mobile
+  reshape (lean layout, video frame as focal element) deferred from Phase 5e — the
+  asset defines the layout, so it ships here.
 - Team — real portraits replacing gray placeholders
 - TODA app icon — final asset for bottom nav center slot
 
