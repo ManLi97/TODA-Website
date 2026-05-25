@@ -110,8 +110,8 @@ export function TestimonialsSection({
       </Animate>
 
       {/* Deck — fades up as one unit after the header settles */}
-      <Animate type="fade-up" delay={750} className="my-4 lg:my-8">
-        <div className="relative w-[220px] h-[260px] lg:w-[300px] lg:h-[400px]">
+      <Animate type="fade-up" delay={750} className="mt-4 lg:mt-8 mb-16 lg:mb-20">
+        <div className="relative w-[240px] h-[360px] lg:w-[310px] lg:h-[460px]">
           {cards.map((card, i) => (
             <div
               key={i}
@@ -134,12 +134,12 @@ export function TestimonialsSection({
                 i === activeIndex ? "cursor-pointer" : "pointer-events-none"
               }`}
               style={{
-                padding: "16px 16px 56px 16px",
+                padding: "16px 16px 80px 16px",
                 boxShadow: POLAROID_SHADOW,
               }}
             >
               {/* Photo placeholder — real portrait in Phase 5 */}
-              <div className="aspect-square w-full bg-surface-elevated mb-4 overflow-hidden" />
+              <div className="h-[150px] lg:h-[210px] w-full bg-surface-elevated mb-3 overflow-hidden shrink-0" />
               <p className="text-[14px] font-normal leading-[1.6] tracking-[-0.1px] text-polaroid-text mb-4">
                 {card.quote}
               </p>

@@ -366,8 +366,8 @@ html {
 /* ───────────────────────────────────────────────────────────────────────────
    POLAROID — cellulose tape strip above testimonial cards
    --------------------------------------------------------------------------- */
+/* position comes from Tailwind `absolute` utility on each card — not set here */
 .polaroid-tape {
-  position: relative;
 }
 .polaroid-tape::before {
   content: '';
