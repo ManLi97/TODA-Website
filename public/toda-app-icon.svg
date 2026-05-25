@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- iOS Squircle clip path (superellipse n≈5) -->
+    <clipPath id="squircle">
+      <path d="
+        M 512,0
+        C 804,0 1024,0 1024,220
+        L 1024,804
+        C 1024,1024 804,1024 512,1024
+        L 512,1024
+        C 220,1024 0,1024 0,804
+        L 0,220
+        C 0,0 220,0 512,0
+        Z
+      "/>
+    </clipPath>
+
+    <!-- Gold gradient for the T letter -->
+    <linearGradient id="goldT" x1="0.1" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#F5E28A"/>
+      <stop offset="15%" stop-color="#F2D654"/>
+      <stop offset="35%" stop-color="#ECCE4C"/>
+      <stop offset="55%" stop-color="#D8AE26"/>
+      <stop offset="75%" stop-color="#CEA016"/>
+      <stop offset="100%" stop-color="#B89216"/>
+    </linearGradient>
+
+    <!-- Metallic sheen overlay -->
+    <linearGradient id="goldSheen" x1="0.3" y1="0" x2="0.5" y2="0.6">
+      <stop offset="0%" stop-color="white" stop-opacity="0.18"/>
+      <stop offset="40%" stop-color="white" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="black" stop-opacity="0.1"/>
+    </linearGradient>
+
+    <!-- Border gradient -->
+    <linearGradient id="goldBorder" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F0D452"/>
+      <stop offset="35%" stop-color="#DFBA34"/>
+      <stop offset="70%" stop-color="#CEA016"/>
+      <stop offset="100%" stop-color="#C49A14"/>
+    </linearGradient>
+
+    <!-- Top glass highlight -->
+    <linearGradient id="glassHighlight" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="white" stop-opacity="0.08"/>
+      <stop offset="40%" stop-color="white" stop-opacity="0.02"/>
+      <stop offset="60%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Subtle ambient background gradient -->
+    <radialGradient id="ambientBg" cx="0.45" cy="0.35" r="0.7">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+
+    <!-- Drop shadow filter -->
+    <filter id="dropShadow" x="-8%" y="-8%" width="116%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+
+    <!-- Inner border rounded rect squircle -->
+    <clipPath id="innerSquircle">
+      <path d="
+        M 512,50
+        C 782,50 974,50 974,200
+        L 974,824
+        C 974,974 782,974 512,974
+        L 512,974
+        C 242,974 50,974 50,824
+        L 50,200
+        C 50,50 242,50 512,50
+        Z
+      "/>
+    </clipPath>
+
+    <!-- T path definition for reuse -->
+    <path id="tShape" d="
+      M 290,115
+      L 720,115
+      L 720,215
+      L 580,215
+      L 580,940
+      L 577,941
+      L 448,730
+      L 448,215
+      L 290,215
+      Z
+    "/>
+  </defs>
+
+  <!-- === ICON BODY (clipped to squircle) === -->
+  <g clip-path="url(#squircle)">
+
+    <!-- Background with subtle radial gradient -->
+    <rect width="1024" height="1024" fill="url(#ambientBg)"/>
+
+    <!-- Inner gold border -->
+    <rect x="50" y="50" width="924" height="924" rx="155" ry="155"
+          fill="none" stroke="url(#goldBorder)" stroke-width="22"/>
+
+    <!-- The T letter - base gold -->
+    <use href="#tShape" fill="url(#goldT)"/>
+
+    <!-- The T letter - metallic sheen -->
+    <use href="#tShape" fill="url(#goldSheen)"/>
+
+    <!-- Top glass highlight overlay across entire icon -->
+    <rect width="1024" height="1024" fill="url(#glassHighlight)"/>
+
+  </g>
+</svg>

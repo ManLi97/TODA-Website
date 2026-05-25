@@ -23,13 +23,21 @@ export function BoldClaimSection({
     <Stagger gap={150} type="fade-up" className="max-w-2xl">
       <p className="type-eyebrow text-text-tertiary mb-6">{label}</p>
       <h2 className="type-display text-text-primary mb-8">{headline}</h2>
-      {/* Phone-format video slot — 9:16 portrait, snap-fits within 100dvh. */}
-      <div className="max-w-sm mx-auto aspect-[9/16] glass--gradient overflow-hidden rounded-sm">
+      {/* Phone-format video — portrait 9:16, kept compact so bullet boxes have room. */}
+      <div className="max-w-[260px] mx-auto aspect-[9/16] glass--gradient overflow-hidden rounded-sm">
         <VideoLoop src="/bold-claim-section-video.mp4" playOnce className="w-full h-full" />
       </div>
-      <p className="type-lede">{bullet1}</p>
-      <p className="type-lede">{bullet2}</p>
-      <p className="type-lede">{bullet3}</p>
+      {/* Three glass claim boxes — shimmer on number only, text at lede size. */}
+      <div className="flex flex-col gap-6 w-full mt-12">
+        {[bullet1, bullet2, bullet3].map((text, i) => (
+          <div key={i} className="glass glass--gradient flex items-center gap-6">
+            <span className="type-sub-display grad-text--flow flowing tabular-nums shrink-0">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <p className="type-lede text-text-primary m-0">{text}</p>
+          </div>
+        ))}
+      </div>
     </Stagger>
   );
 }
