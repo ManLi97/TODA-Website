@@ -20,7 +20,7 @@ export function SocialProofSection({ label, headline, body }: SocialProofSection
         <p className="type-lede">{body}</p>
       </Stagger>
       <Animate type="fade-up" delay={1200} className="mt-16">
-        <div className="aspect-[21/9] overflow-hidden rounded-sm">
+        <div className="glass--gradient aspect-[21/9] overflow-hidden rounded-sm">
           <VideoLoop src="" className="w-full h-full" />
         </div>
       </Animate>

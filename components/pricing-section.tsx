@@ -21,7 +21,7 @@ export function PricingSection({
   return (
     <Stagger gap={150} type="fade-up" className="max-w-xl">
       <h2 className="type-display text-text-primary mb-8">{headline}</h2>
-      <div className="flex items-baseline gap-2 mb-2">
+      <div className="glass glass--gradient flex items-baseline gap-2 mb-2">
         <span className="type-display text-text-primary">{price}</span>
         <span className="type-lede">{pricePeriod}</span>
       </div>

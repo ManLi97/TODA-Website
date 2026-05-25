@@ -30,15 +30,15 @@ export function CaseStudySection({
         <p className="type-sub-display text-text-primary mb-10">
           {statement}
         </p>
-        <div className="space-y-6 mb-8">
-          <blockquote className="border-l-2 border-gold-500 pl-4 py-1">
+        <div className="glass space-y-6 mb-8">
+          <blockquote>
             {/* Pull-quote uses .type-body (19px / 1.55 / -0.01em) with italic + text-primary
                 overrides — DS class brings size/leading; quote-specific colour wins via util. */}
             <p className="type-body italic text-text-primary">
               {quote1}
             </p>
           </blockquote>
-          <blockquote className="border-l-2 border-gold-500 pl-4 py-1">
+          <blockquote>
             <p className="type-body italic text-text-primary">
               {quote2}
             </p>
