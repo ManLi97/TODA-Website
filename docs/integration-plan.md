@@ -54,7 +54,9 @@ chrome changes yet.
   Server Component preferred; Client only if needed.
 - `components/social-proof-section.tsx` — extract from inline Manifest in
   `page.tsx`. Same content for now; the rename makes Phase 5b's glass-on-video-frame
-  and Phase 5e's mobile reshape easier.
+  and Phase 5e's mobile reshape easier. **Drop the Playfair accent** (`font-playfair`
+  block) during extraction — it does not carry over. Playfair stays hero-only per
+  CLAUDE.md; remove `home.socialProof.accentText` accordingly.
 - `components/pricing-section.tsx` — extract from inline CTA in `page.tsx`. Carries
   the new external href + new copy label.
 
@@ -63,9 +65,10 @@ chrome changes yet.
   `<BoldClaimSection>` at #2, move FAQ to #10, swap inline Manifest → `<SocialProofSection>`,
   swap inline CTA → `<PricingSection>`, apply new surface variants to every
   `<SnapSection variant=...>`.
-- Pricing CTA href: `#contact` → `https://app.toda.ink/onboarding` (external —
-  `target="_blank" rel="noopener noreferrer"` if new-tab; otherwise plain `<a>` not
-  `<Link>`).
+- Pricing CTA href: `#contact` → `https://app.toda.ink/onboarding`. **New tab,
+  confirmed:** plain `<a target="_blank" rel="noopener noreferrer">`, not `<Link>`.
+- Pricing section id: `contact` → `pricing`. Hero's `ctaPrimary href="#contact"`
+  dangles after this until Phase 5c removes the Hero CTAs — acceptable, flagged.
 - Pricing CTA label: "Kostenlos Starten" → "Jetzt Starten" (across all 3 locale
   files). Other Pricing copy stays as placeholder.
 - `messages/{de,en,es}.json`:
@@ -79,7 +82,7 @@ chrome changes yet.
 **Watch-outs:**
 - All three locale files must rename `manifest` and `cta` keys in lock-step or
   next-intl will throw on missing key at runtime.
-- External link to app.toda.ink: confirm same-tab vs new-tab during PR.
+- External link to app.toda.ink: resolved — new tab (`target="_blank"`).
 - Bold Claim placeholder must not leave a visibly broken viewport — empty video slot
   needs a sensible aspect-ratio box so the section still snap-fits cleanly.
 

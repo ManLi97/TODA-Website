@@ -1,7 +1,7 @@
 # Project: TODA Website
 
 Marketing landing page for TODA Tattoo Solutions — a SaaS platform for tattoo artists.
-Single-page experience with 9 snap-slide sections (one viewport each), i18n (de/es/en),
+Single-page experience with 10 snap-slide sections (one viewport each), i18n (de/es/en),
 and GSAP entrance animations triggered on snap-settle.
 Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 
@@ -44,15 +44,18 @@ pnpm format:check # Prettier check (CI)
 app/
   [locale]/
     layout.tsx        # root layout (no scroll provider — native snap handles it)
-    page.tsx          # 9-section home page using <SnapSection>
+    page.tsx          # 10-section home page using <SnapSection>
     globals.css       # Tailwind base, design tokens, scroll-snap on `html`
 components/
   snap-section.tsx    # layout primitive: min-h-dvh + scroll-snap-align/stop
   animate.tsx         # entrance wrapper — GSAP fromTo, IO-triggered, resets on leave
   stagger.tsx         # cascaded entrance for N children — same trigger model
   hero.tsx            # section 1 — uses <SnapSection triggerOnMount>
+  bold-claim-section.tsx
   case-study-section.tsx
+  social-proof-section.tsx
   testimonials-section.tsx
+  pricing-section.tsx
   faq-section.tsx
   team-section.tsx
   header.tsx / footer.tsx
@@ -77,8 +80,9 @@ middleware.ts         # next-intl locale routing
   `scroll-snap-align: start` + `scroll-snap-stop: always`. Provides a React context
   exposing its DOM node so `<Animate>` / `<Stagger>` can scope their
   IntersectionObserver to it.
-- **Surface rhythm:** base → alt → raised → alt → raised → base → alt → raised → base
-  (9 sections in order).
+- **Surface rhythm:** base → alt → raised → base → alt → raised → base → alt → raised → base
+  (10 sections in order). Canonical section list + surface map lives in
+  `docs/integration-plan.md` § Section order & surface rhythm.
 - **All copy via next-intl:** no hardcoded strings in components — everything reads
   from `messages/{locale}.json` under the `"home"` namespace.
 - **`<Animate>` and `<Stagger>` for entrances:** entrance tween runs after the section
