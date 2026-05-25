@@ -10,6 +10,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { BottomNav } from "@/components/bottom-nav";
 import "./globals.css";
 
 // Inter — DS type ladder uses three weights only: 200 (thin), 400 (regular),
@@ -60,6 +61,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Header />
           <main>{children}</main>
           <Footer />
+          <BottomNav />
         </NextIntlClientProvider>
       </body>
     </html>
