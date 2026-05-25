@@ -116,14 +116,17 @@ export function Animate({ type, delay = 0, duration, className, children }: Anim
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.intersectionRatio >= 0.95) {
+          if (entry.intersectionRatio >= 0.7) {
             fire();
           } else {
             reset();
           }
         }
       },
-      { threshold: 0.95 },
+      // 0.7: accounts for fixed header (56px) + bottom-nav pill (~72px).
+      // With ~128px of chrome, max achievable ratio on a 568px phone is ~77%.
+      // 0.95 can never fire; 0.7 reliably fires when the section is snapped to view.
+      { threshold: 0.7 },
     );
 
     observer.observe(sectionEl);

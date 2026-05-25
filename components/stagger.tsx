@@ -80,14 +80,15 @@ export function Stagger({ gap, type, delay = 0, className, children }: StaggerPr
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.intersectionRatio >= 0.95) {
+          if (entry.intersectionRatio >= 0.7) {
             fire();
           } else {
             reset();
           }
         }
       },
-      { threshold: 0.95 },
+      // 0.7: see animate.tsx for rationale (header + bottom-nav reduce max ratio to ~77%)
+      { threshold: 0.7 },
     );
 
     observer.observe(sectionEl);
