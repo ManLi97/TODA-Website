@@ -57,6 +57,7 @@
      ───────────────────────────────────────────────────────────────────────── */
   --glass-tint:        color-mix(in oklch, var(--color-surface-raised) 65%, transparent);
   --glass-border-gold: 1px solid color-mix(in oklch, var(--color-gold-500) 15%, transparent);
+  --shadow-float:      0 8px 24px rgba(0, 0, 0, 0.35);
   --grad-brand:        linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-400) 35%, var(--color-purple-500) 100%);
   --grad-ambient:      radial-gradient(ellipse at 15% 10%, color-mix(in oklch, var(--color-gold-500) 12%, transparent) 0%, transparent 55%);
 

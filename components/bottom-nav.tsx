@@ -80,17 +80,23 @@ export function BottomNav() {
     }`;
 
   return (
-    <nav
-      aria-label="Section navigation"
-      className="fixed bottom-0 inset-x-0 z-50"
-      style={{
-        background: "var(--glass-tint)",
-        backdropFilter: "blur(20px) saturate(140%)",
-        WebkitBackdropFilter: "blur(20px) saturate(140%)",
-        borderTop: "var(--glass-border-gold)",
-      }}
+    // Full-width positioner is pointer-events-none so the invisible band never
+    // blocks clicks beside the pill. The <nav> itself restores pointer events.
+    <div
+      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none"
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
     >
-      <div className="h-14 max-w-[1440px] mx-auto px-6 flex items-center justify-center gap-8">
+      <nav
+        aria-label="Section navigation"
+        className="pointer-events-auto flex items-center justify-center gap-6 h-14 px-4 rounded-full"
+        style={{
+          background: "var(--glass-tint)",
+          backdropFilter: "blur(20px) saturate(140%)",
+          WebkitBackdropFilter: "blur(20px) saturate(140%)",
+          border: "var(--glass-border-gold)",
+          boxShadow: "var(--shadow-float)",
+        }}
+      >
         {/* Up arrow — previous section */}
         <button
           aria-label="Previous section"
@@ -125,7 +131,7 @@ export function BottomNav() {
         >
           <ArrowDown />
         </button>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
