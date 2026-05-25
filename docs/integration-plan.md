@@ -135,13 +135,21 @@ files; no broken translations; no console errors.
 
 ### Phase 4c — Bottom navigation primitive
 
-**Goal:** new global chrome — glass bar fixed at viewport bottom, with up arrow /
-TODA app icon / down arrow. Snap-aware, accessible, mobile + desktop same layout.
+**Goal:** new global chrome — a **floating glass pill** detached from all screen
+edges (clearance below for the iOS home indicator), with up arrow / TODA app icon /
+down arrow. Reference feel: an app tab bar (N26-style) that floats above content and
+lets the page bleed through the blur — NOT an edge-to-edge strip like the header.
+Snap-aware, accessible, mobile + desktop same layout.
 
 **Create:**
 - `components/bottom-nav.tsx` (Client Component)
-  - Layout: fixed bottom, centered, glass surface (DS glass tokens directly, same
-    approach as header), three slots horizontally
+  - Layout: a centered, `rounded-full` pill floating above the bottom edge. Outer
+    wrapper is `fixed inset-x-0 bottom-0` + `pointer-events-none` + bottom padding
+    of `calc(env(safe-area-inset-bottom) + 1rem)`; the inner pill is
+    `pointer-events-auto` so it never blocks clicks on content beside/behind it.
+  - Glass surface uses DS tokens directly: `var(--glass-tint)`, blur+saturate
+    backdrop, **border on all sides** via `var(--glass-border-gold)`, and a soft
+    float shadow via the new `var(--shadow-float)` token. Three slots horizontally.
   - Up arrow (left): scrolls to previous SnapSection, disabled at section #1
   - TODA app icon (center): external link to `https://app.toda.ink/onboarding`
     (`target="_blank" rel="noopener noreferrer"` recommended — don't yank user out
@@ -160,9 +168,10 @@ TODA app icon / down arrow. Snap-aware, accessible, mobile + desktop same layout
   and `<Footer />`.
 
 **Watch-outs:**
-- No SnapSection padding reservation (deliberate). Glass transparency + snap-grab
-  overscroll cover the seams. Verify visually that no content sits permanently
-  occluded behind the bar.
+- New `--shadow-float` token lives in the COMPOSED RECIPES block of globals.css,
+  beside the glass recipes. Reusable — Phase 5b glass focal elements consume it too.
+- Floating pill leaves a gap below + sides, so occlusion is minimal by design. Still
+  verify no content sits permanently hidden behind the pill at the shortest section.
 - TODA app icon asset: placeholder SVG or text mark for v1, real icon arrives in
   Phase 6.
 - IntersectionObserver threshold: `0.5` so active section flips at midpoint.
@@ -170,9 +179,10 @@ TODA app icon / down arrow. Snap-aware, accessible, mobile + desktop same layout
 - Disabled arrow states: visual treatment (opacity dim) + `aria-disabled` +
   onClick guard. Don't just hide.
 
-**Done when:** bottom nav mounts globally, arrows navigate snap sections with
-correct disabled states at boundaries, TODA logo opens onboarding, no overlap
-regressions, keyboard accessible, screen reader sensible.
+**Done when:** bottom nav mounts globally as a floating glass pill (detached from
+edges, clears the home indicator, page content visibly blurs through it), arrows
+navigate snap sections with correct disabled states at boundaries, TODA logo opens
+onboarding, no overlap regressions, keyboard accessible, screen reader sensible.
 
 ---
 
