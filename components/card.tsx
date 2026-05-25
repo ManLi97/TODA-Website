@@ -1,5 +1,5 @@
 // Card component — used for blog listing, product overview grids, and static feature items.
-// When href is provided: renders as <Link> with hover lift + line-clamp — use for navigable cards.
+// When href is provided: renders as <Link> with border hover + line-clamp — use for navigable cards.
 // When href is omitted: renders as <div> without hover states + full excerpt — use for static items.
 // Elevation via surface color, never box-shadow (DESIGN.md).
 import Image from "next/image";
@@ -27,8 +27,8 @@ export function Card({ title, excerpt, label, href, imageSrc, imageAlt, classNam
   // Interactive classes applied only when the card is a link
   const linkClasses = [
     baseClasses,
-    "group block transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]",
-    "hover:-translate-y-0.5 hover:border-text-tertiary",
+    "group block transition-[border-color] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]",
+    "hover:border-text-tertiary",
   ].join(" ");
 
   const content = (
