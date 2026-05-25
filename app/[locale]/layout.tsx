@@ -57,6 +57,17 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body>
+        {/* Phase 5a — fixed ambient gold glow, sits behind all content */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: -1,
+            pointerEvents: "none",
+            background: "var(--grad-ambient)",
+          }}
+        />
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main>{children}</main>
