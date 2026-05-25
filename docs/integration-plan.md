@@ -225,20 +225,30 @@ weighted.
 
 **Update:**
 - `components/hero.tsx`:
-  - Remove primary + secondary CTA buttons (bottom nav now carries the primary path)
-  - Bump headline scale (consider `--type-hero` for primary headline, currently
-    `--type-display`)
-  - Tighten vertical rhythm — make hero feel bigger / more impactful
-  - Verify breathing with new fixed chrome (header above, bottom nav below)
+  - Remove primary + secondary CTA buttons (bottom nav now carries the primary path).
+    Also removes the now-unused `Link` + `buttonVariants` imports, the `ctaPrimary`/
+    `ctaSecondary` props, and the `hasCtas` branch.
+  - **Headline scale: keep `type-display`** (decided). `--type-hero` is rejected — it
+    is a thin-weight, numeral-semantic token (`--weight-thin`, "giant numerals,
+    gradient-clipped") and would flip the bold two-line headline to thin + overflow
+    across locales. `type-display` is the correct headline token. If display still
+    feels small after review, a dedicated mid-scale headline token is a separate DS PR.
+  - Tighten vertical rhythm — make hero feel bigger / more impactful via the freed
+    space from CTA removal, not via a larger type token.
+  - Verify breathing with new fixed chrome (header above, bottom nav below).
+- `app/[locale]/page.tsx` — drop the `ctaPrimary`/`ctaSecondary` props on `<Hero>`.
+  This finally clears the dangling `#contact` reference flagged since Phase 4a.
+- `messages/{de,en,es}.json` — remove `hero.ctaPrimary` and `hero.ctaSecondary` in
+  lock-step across all three locales.
 
 **Watch-outs:**
-- `--type-hero` is huge — clamp(80px, 16vw, 224px). May force a 1-line headline only.
-  Test wrap behavior across locales.
 - Removing CTA changes the section's `<Animate>` cascade. Hero currently has three
-  Animates (headline @ delay 0, sub @ 350, CTA cluster @ 900). Drop the CTA Animate.
+  Animates (headline @ delay 0, sub @ 350, CTA cluster @ 900). Drop the CTA Animate;
+  headline + sub-headline cascade remains.
 
-**Done when:** Hero visually commands the viewport on mount, no CTA buttons, copy
-still readable on mobile.
+**Done when:** Hero visually commands the viewport on mount via tightened rhythm, no
+CTA buttons, headline stays `type-display` and readable across all locales on mobile,
+no dangling `#contact` reference remains.
 
 ### Phase 5d — Features mobile → Embla carousel
 
