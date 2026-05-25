@@ -95,8 +95,6 @@ export default function ComponentTestPage() {
         headline="Mehr Kunst."
         accentText="Weniger Chaos."
         subHeadline="Die Komplettlösung für professionelle Tattoo-Studios. Von der Terminplanung bis zur Buchhaltung."
-        ctaPrimary={{ label: "Kostenlos starten", href: "/#contact" }}
-        ctaSecondary={{ label: "Mehr erfahren", href: "/#features" }}
       />
 
       {/* ─── 4. Card ─── */}

@@ -3,9 +3,7 @@
     "hero": {
       "headline": "Mehr Kunst.",
       "accentText": "Weniger Chaos.",
-      "subHeadline": "Dein Studio läuft. Du tätowierst.",
-      "ctaPrimary": "Kostenlos starten",
-      "ctaSecondary": "Mehr erfahren"
+      "subHeadline": "Dein Studio läuft. Du tätowierst."
     },
     "boldClaim": {
       "label": "Das Versprechen",

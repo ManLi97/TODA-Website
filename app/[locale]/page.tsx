@@ -27,8 +27,6 @@ export default async function HomePage() {
           headline={t("hero.headline")}
           accentText={t("hero.accentText")}
           subHeadline={t("hero.subHeadline")}
-          ctaPrimary={{ label: t("hero.ctaPrimary"), href: "#contact" }}
-          ctaSecondary={{ label: t("hero.ctaSecondary"), href: "#features" }}
         />
       </SnapSection>
 
