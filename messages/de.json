@@ -30,8 +30,13 @@
     },
     "socialProof": {
       "label": "Warum TODA",
-      "headline": "Du solltest tätowieren. Nicht verwalten.",
-      "body": "Du bist Künstler. Nicht Buchhalter, nicht Sekretär, nicht Kundenservice in einer Person. TODA übernimmt das Drumherum — damit du dich auf das konzentrieren kannst, wofür du diesen Beruf gewählt hast."
+      "headline": "Du bist Tätowierer.",
+      "not1": "Nicht Sekretär.",
+      "not2": "Nicht Kundenservice.",
+      "not3": "Nicht Verkäufer.",
+      "payoff": "TODA kümmert sich um das Drumherum, damit du das machst, warum du den Job liebst:",
+      "payoffAccent": "Kunst!",
+      "videoCaption": "Podcast mit unserer Moderatorin Meike Meikchen"
     },
     "testimonials": {
       "label": "Stimmen aus der Community",

@@ -30,8 +30,13 @@
     },
     "socialProof": {
       "label": "Why TODA",
-      "headline": "You should be tattooing. Not managing.",
-      "body": "You are an artist. Not an accountant, not a secretary, not customer service all in one. TODA takes care of everything else — so you can focus on what you chose this profession for."
+      "headline": "You're a tattoo artist.",
+      "not1": "Not a secretary.",
+      "not2": "Not customer service.",
+      "not3": "Not a salesperson.",
+      "payoff": "TODA handles everything else, so you can do what you love:",
+      "payoffAccent": "Art!",
+      "videoCaption": "Podcast with our host Meike Meikchen"
     },
     "testimonials": {
       "label": "Voices from the community",

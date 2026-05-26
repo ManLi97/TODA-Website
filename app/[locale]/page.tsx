@@ -92,7 +92,12 @@ export default async function HomePage() {
         <SocialProofSection
           label={t("socialProof.label")}
           headline={t("socialProof.headline")}
-          body={t("socialProof.body")}
+          not1={t("socialProof.not1")}
+          not2={t("socialProof.not2")}
+          not3={t("socialProof.not3")}
+          payoff={t("socialProof.payoff")}
+          payoffAccent={t("socialProof.payoffAccent")}
+          videoCaption={t("socialProof.videoCaption")}
         />
       </SnapSection>
 

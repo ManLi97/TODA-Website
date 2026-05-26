@@ -30,8 +30,13 @@
     },
     "socialProof": {
       "label": "Por qué TODA",
-      "headline": "Deberías estar tatuando. No gestionando.",
-      "body": "Eres artista. No contable, no secretario, no servicio al cliente todo en uno. TODA se encarga del resto — para que puedas centrarte en aquello para lo que elegiste esta profesión."
+      "headline": "Eres tatuador.",
+      "not1": "No secretario.",
+      "not2": "No atención al cliente.",
+      "not3": "No vendedor.",
+      "payoff": "TODA se encarga del resto, para que hagas lo que amas:",
+      "payoffAccent": "¡Arte!",
+      "videoCaption": "Podcast con nuestra presentadora Meike Meikchen"
     },
     "testimonials": {
       "label": "Voces de la comunidad",
