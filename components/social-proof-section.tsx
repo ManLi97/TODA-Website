@@ -39,7 +39,7 @@ export function SocialProofSection({
         {/* Payoff — resolution after the negations */}
         <p className="type-lede text-text-secondary mt-8">
           {payoff}{" "}
-          <span className="text-gold-500">{payoffAccent}</span>
+          <span className="text-gold-400">{payoffAccent}</span>
         </p>
       </Stagger>
 

@@ -57,7 +57,7 @@ export function FaqSection({
                 {q}
               </span>
               <span
-                className={`faq-icon flex-none text-[20px] leading-none select-none text-gold-500${openIndex === i ? " is-open" : ""}`}
+                className={`faq-icon flex-none text-[20px] leading-none select-none text-gold-400${openIndex === i ? " is-open" : ""}`}
                 aria-hidden="true"
               >
                 +

@@ -23,7 +23,7 @@ export function Hero({ headline, accentText, subHeadline }: HeroProps) {
               <br />
               {/* Playfair italic accent — font-normal prevents inheriting the h1's semibold
                   (we only load Playfair at weight 400) */}
-              <span className="font-playfair italic font-normal text-gold-500">
+              <span className="font-playfair italic font-normal text-gold-400">
                 {accentText}
               </span>
             </>

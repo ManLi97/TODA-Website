@@ -37,12 +37,12 @@ export function CaseStudySection({
           <ul className="space-y-4 mb-6">
             {bullets.slice(0, 3).map((item, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span className="text-gold-500 shrink-0 leading-[1.55]">—</span>
+                <span className="text-gold-400 shrink-0 leading-[1.55]">—</span>
                 <span className="type-body text-text-primary">{item}</span>
               </li>
             ))}
           </ul>
-          <p className="type-body italic text-gold-500 border-t border-gold-500/20 pt-5 text-center">"{bullet4}"</p>
+          <p className="type-body italic text-gold-400 border-t border-gold-400/20 pt-5 text-center">"{bullet4}"</p>
         </div>
       </div>
 
