@@ -158,7 +158,7 @@ export function TestimonialsSection({
       <Animate type="fade-in" delay={1350}>
         <p
           aria-hidden="true"
-          className={`type-caption text-text-tertiary hint-pulse${hintFaded ? " hint-faded" : ""}`}
+          className={`type-caption text-gold-400 hint-pulse${hintFaded ? " hint-faded" : ""}`}
         >
           {hint}
         </p>
