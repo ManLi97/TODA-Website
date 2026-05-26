@@ -48,7 +48,7 @@ export function SocialProofSection({
           <iframe
             src="https://www.youtube.com/embed/rRTBDva8kqE"
             title={videoCaption}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; compute-pressure"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
             className="w-full h-full border-0"

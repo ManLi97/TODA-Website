@@ -52,7 +52,7 @@ export function CaseStudySection({
           <iframe
             src="https://www.youtube.com/embed/rdOlY1-Bp5E"
             title={videoCaption}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; compute-pressure"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
             className="w-full h-full border-0"
