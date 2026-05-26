@@ -46,9 +46,11 @@ export default async function HomePage() {
         <CaseStudySection
           label={t("caseStudy.label")}
           statement={t("caseStudy.statement")}
-          quote1={t("caseStudy.quote1")}
-          quote2={t("caseStudy.quote2")}
-          attribution={t("caseStudy.attribution")}
+          bullet1={t("caseStudy.bullet1")}
+          bullet2={t("caseStudy.bullet2")}
+          bullet3={t("caseStudy.bullet3")}
+          bullet4={t("caseStudy.bullet4")}
+          videoCaption={t("caseStudy.videoCaption")}
         />
       </SnapSection>
 

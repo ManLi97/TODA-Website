@@ -49,10 +49,12 @@
     },
     "caseStudy": {
       "label": "From the field",
-      "statement": "30 years self-employed. 60-hour weeks. What helped her? Less chaos.",
-      "quote1": "What bothers me most about this profession is client communication.",
-      "quote2": "Of all times, now that I have exactly this problem, someone comes around the corner with the solution.",
-      "attribution": "Sandra · Nacht und Nebel Tattoo"
+      "statement": "Sandra · Nacht und Nebel Tattoo",
+      "bullet1": "60-hour weeks",
+      "bullet2": "Burnout after 30 years self-employed",
+      "bullet3": "No more energy for clients",
+      "bullet4": "And then came TODA",
+      "videoCaption": "Sandra on our Podcast"
     },
     "faq": {
       "label": "FAQ",

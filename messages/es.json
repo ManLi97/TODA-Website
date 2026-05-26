@@ -49,10 +49,12 @@
     },
     "caseStudy": {
       "label": "De la práctica",
-      "statement": "30 años autónoma. Semanas de 60 horas. ¿Qué la ayudó? Menos caos.",
-      "quote1": "Lo que más me molesta de esta profesión es la comunicación con los clientes.",
-      "quote2": "Precisamente ahora, cuando tengo exactamente este problema, alguien aparece con la solución.",
-      "attribution": "Sandra · Nacht und Nebel Tattoo"
+      "statement": "Sandra · Nacht und Nebel Tattoo",
+      "bullet1": "Semanas de 60 horas",
+      "bullet2": "Burnout tras 30 años como autónoma",
+      "bullet3": "Sin ganas de atender más clientes",
+      "bullet4": "Y entonces llegó TODA",
+      "videoCaption": "Sandra en nuestro Podcast"
     },
     "faq": {
       "label": "FAQ",
