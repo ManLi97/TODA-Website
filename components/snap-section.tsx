@@ -14,6 +14,24 @@ const BG: Record<SectionVariant, string> = {
   raised: "bg-surface-raised",
 };
 
+// Per-variant glass tint — cascades via CSS custom property so any .glass
+// descendant automatically gets the right fill for its section background.
+// base = true black (#0a0a0a): anthracite glass for contrast.
+// alt  = anthracite (#1e1e1e): black glass for contrast.
+const GLASS_TINT: Record<SectionVariant, string> = {
+  base:   "rgba(30, 30, 30, 0.9)",
+  alt:    "rgba(10, 10, 10, 0.9)",
+  raised: "rgba(41, 41, 41, 0.65)",
+};
+
+// Per-variant fill for .glass--gradient (gradient-bordered boxes and video frames).
+// Same inversion logic as GLASS_TINT — box fill contrasts with section background.
+const GLASS_GRADIENT_FILL: Record<SectionVariant, string> = {
+  base:   "#1e1e1e",
+  alt:    "#0a0a0a",
+  raised: "#0a0a0a",
+};
+
 export interface SnapSectionContextValue {
   // The section's DOM node — Phase 3b attaches IntersectionObserver here.
   sectionRef: React.RefObject<HTMLElement | null>;
@@ -68,7 +86,15 @@ export function SnapSection({
 
   return (
     <SnapSectionContext.Provider value={ctx}>
-      <section ref={sectionRef} id={id} className={`${sectionClass} relative`}>
+      <section
+        ref={sectionRef}
+        id={id}
+        className={`${sectionClass} relative`}
+        style={{
+          "--glass-tint": GLASS_TINT[variant],
+          "--glass-gradient-fill": GLASS_GRADIENT_FILL[variant],
+        } as React.CSSProperties}
+      >
         {backdrop}
         <div className={`py-20 lg:py-32${backdrop ? " relative z-10" : ""}`}>
           <div className="max-w-[1200px] mx-auto px-6">{children}</div>

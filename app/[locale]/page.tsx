@@ -42,7 +42,7 @@ export default async function HomePage() {
       </SnapSection>
 
       {/* ── 3. Case Study — surface-raised ── */}
-      <SnapSection variant="raised" id="case-study">
+      <SnapSection variant="base" id="case-study">
         <CaseStudySection
           label={t("caseStudy.label")}
           statement={t("caseStudy.statement")}
@@ -55,7 +55,7 @@ export default async function HomePage() {
       </SnapSection>
 
       {/* ── 4. Origin — surface-base ── */}
-      <SnapSection variant="base" id="about">
+      <SnapSection variant="alt" id="about">
         {/* Four children cascade: label → headline → body1 → body2 */}
         <Stagger gap={150} type="fade-up" className="max-w-2xl">
           <p className="type-eyebrow text-text-tertiary mb-6">
@@ -74,7 +74,7 @@ export default async function HomePage() {
       </SnapSection>
 
       {/* ── 5. Features — surface-alt ── */}
-      <SnapSection variant="alt" id="features">
+      <SnapSection variant="base" id="features">
         <FeaturesSection
           label={t("features.label")}
           headline={t("features.headline")}
@@ -88,7 +88,7 @@ export default async function HomePage() {
       </SnapSection>
 
       {/* ── 6. Social Proof — surface-raised ── */}
-      <SnapSection variant="raised" id="social-proof">
+      <SnapSection variant="alt" id="social-proof">
         <SocialProofSection
           label={t("socialProof.label")}
           headline={t("socialProof.headline")}
@@ -134,7 +134,7 @@ export default async function HomePage() {
       </SnapSection>
 
       {/* ── 9. Pricing — surface-raised ── */}
-      <SnapSection variant="raised" id="pricing">
+      <SnapSection variant="base" id="pricing">
         <PricingSection
           headline={t("pricing.headline")}
           price={t("pricing.price")}
@@ -145,7 +145,7 @@ export default async function HomePage() {
       </SnapSection>
 
       {/* ── 10. FAQ — surface-base ── */}
-      <SnapSection variant="base" id="faq">
+      <SnapSection variant="alt" id="faq">
         <FaqSection
           label={t("faq.label")}
           headline={t("faq.headline")}

@@ -8,8 +8,8 @@
      Elevation order (darkest → lightest): alt < base < raised < hover.
      ───────────────────────────────────────────────────────────────────────── */
   --color-bg:             #000000;
-  --color-surface-base:   #141414;
-  --color-surface-alt:    #121212;
+  --color-surface-base:   #0a0a0a;
+  --color-surface-alt:    #1e1e1e;
   --color-surface-raised: #292929;
   --color-surface-hover:  #333333;
   /* Legacy alias — `bg-surface-elevated` is referenced by card/video-loop/team/testimonials.
@@ -266,7 +266,10 @@ html {
   .glass--gradient {
     border: 1px solid transparent;
     background:
-      linear-gradient(var(--color-surface-base), var(--color-surface-base)) padding-box,
+      linear-gradient(
+        var(--glass-gradient-fill, var(--color-surface-base)),
+        var(--glass-gradient-fill, var(--color-surface-base))
+      ) padding-box,
       var(--grad-brand) border-box;
     backdrop-filter: none;
   }
