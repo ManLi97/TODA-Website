@@ -15,8 +15,12 @@
     "origin": {
       "label": "Sobre TODA",
       "headline": "Por tatuadores. Para tatuadores.",
-      "body1": "Dana es tatuadora. Tomek la observó llegar a casa — agotada, no por tatuar en sí, sino por todo lo que lo rodea. Dos clientes al mismo tiempo. Dos no-shows. Cuarenta mensajes sin leer.",
-      "body2": "Pasó dos meses construyendo. El resultado fue TODA — una plataforma nacida del día a día real de un estudio, no de una oficina."
+      "line1": "Dana llega a casa. Agotada, frustrada, 40 mensajes sin leer. El mismo caos de siempre.",
+      "line2": "Tomek investigó todo el día. Para toda una industria — casi ninguna solución.",
+      "line3": "Entonces sonó el teléfono.",
+      "bubble1": "Cariño, ¿no podrías simplemente hacerme un calendario de citas?",
+      "bubble2": "Ven a casa. Tengo algo mucho mejor.",
+      "closing": "El primer día de TODA. TODA significa Tomek y Dana."
     },
     "features": {
       "label": "Funciones",

@@ -15,8 +15,12 @@
     "origin": {
       "label": "About TODA",
       "headline": "By tattoo artists. For tattoo artists.",
-      "body1": "Dana is a tattoo artist. Tomek watched her come home — exhausted, not from tattooing itself, but from everything around it. Two clients at the same time. Two no-shows. Forty unread messages.",
-      "body2": "He spent two months building. The result was TODA — a platform built from the real day-to-day of a studio, not from an office."
+      "line1": "Dana comes home. Exhausted, frustrated, 40 unread messages. The same chaos as every day.",
+      "line2": "Tomek researched all day. For a whole industry — almost no solution.",
+      "line3": "Then the phone rang.",
+      "bubble1": "Hey, could you just build me a booking calendar?",
+      "bubble2": "Come home. I've got something much better.",
+      "closing": "The first day of TODA. TODA stands for Tomek and Dana."
     },
     "features": {
       "label": "Features",

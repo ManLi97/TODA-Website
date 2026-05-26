@@ -12,8 +12,8 @@ import { TeamSection } from "@/components/team-section";
 import { PricingSection } from "@/components/pricing-section";
 import { FaqSection } from "@/components/faq-section";
 import { FeaturesSection } from "@/components/features-section";
+import { OriginSection } from "@/components/origin-section";
 import { SnapSection } from "@/components/snap-section";
-import { Stagger } from "@/components/stagger";
 import { HeroParticles } from "@/components/hero-particles";
 
 export default async function HomePage() {
@@ -54,23 +54,18 @@ export default async function HomePage() {
         />
       </SnapSection>
 
-      {/* ── 4. Origin — surface-base ── */}
+      {/* ── 4. Origin — surface-alt ── */}
       <SnapSection variant="alt" id="about">
-        {/* Four children cascade: label → headline → body1 → body2 */}
-        <Stagger gap={150} type="fade-up" className="max-w-2xl">
-          <p className="type-eyebrow text-text-tertiary mb-6">
-            {t("origin.label")}
-          </p>
-          <h2 className="type-display text-text-primary mb-8">
-            {t("origin.headline")}
-          </h2>
-          <p className="type-lede mb-4">
-            {t("origin.body1")}
-          </p>
-          <p className="type-lede">
-            {t("origin.body2")}
-          </p>
-        </Stagger>
+        <OriginSection
+          label={t("origin.label")}
+          headline={t("origin.headline")}
+          line1={t("origin.line1")}
+          line2={t("origin.line2")}
+          line3={t("origin.line3")}
+          bubble1={t("origin.bubble1")}
+          bubble2={t("origin.bubble2")}
+          closing={t("origin.closing")}
+        />
       </SnapSection>
 
       {/* ── 5. Features — surface-alt ── */}

@@ -15,8 +15,12 @@
     "origin": {
       "label": "Über TODA",
       "headline": "Von Tattoo Artists. Für Tattoo Artists.",
-      "body1": "Dana ist Tätowiererin. Tomek hat beobachtet, wie sie nach Hause kommt — erschöpft, nicht vom Tätowieren selbst, sondern vom Drumherum. Zwei Kunden auf einmal. Zwei No-Shows. Vierzig ungelesene Nachrichten.",
-      "body2": "Er hat zwei Monate gebaut. Das Ergebnis war TODA — eine Plattform, die aus dem echten Alltag eines Studios entstanden ist, nicht aus einem Büro."
+      "line1": "Dana kommt nach Hause. Ausgelaugt, genervt, 40 ungelesene Nachrichten. Dasselbe Chaos wie jeden Tag.",
+      "line2": "Tomek recherchierte den ganzen Tag. Für eine ganze Industrie – fast keine Lösung.",
+      "line3": "Dann klingelte das Telefon.",
+      "bubble1": "Schatz, kannst du mir nicht einfach einen Terminkalender bauen?",
+      "bubble2": "Komm nach Hause. Ich hab was viel Besseres.",
+      "closing": "Der erste Tag von TODA. TODA steht für Tomek und Dana."
     },
     "features": {
       "label": "Funktionen",
