@@ -3,10 +3,7 @@
 // Team teaser — circular spinning-ring avatars.
 // Mobile: Embla Carousel with 200px slides (~1.6 visible on 375px viewport).
 // Desktop: 5-column grid with <Stagger type="scale-in">.
-// Mobile: Embla Carousel with <Stagger> wrapping slides — Stagger's wrapper
-// div becomes Embla's auto-detected container.
 // Ring animation: CSS keyframes in globals.css. Counter-spin keeps photo upright.
-import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { Animate } from "@/components/animate";
 import { Stagger } from "@/components/stagger";
@@ -32,33 +29,13 @@ export function TeamSection({
   name5, role5,
   cta,
 }: TeamSectionProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  // snapCount drives dot rendering — sourced from Embla so it reflects actual
-  // scrollable positions, not hardcoded card count. Hides dots when ≤1 snap
-  // (all cards already visible, e.g. iPad landscape).
-  const [snapCount, setSnapCount] = useState(0);
-  const [emblaRef, emblaApi] = useEmblaCarousel({
+  const [emblaRef] = useEmblaCarousel({
     loop: false,
     align: "start",
     containScroll: "keepSnaps",
     dragFree: true,
     duration: 35,
   });
-
-  // Sync dot indicators and snap count with Embla state
-  useEffect(() => {
-    if (!emblaApi) return;
-    const api = emblaApi;
-    setSnapCount(api.scrollSnapList().length);
-    const onSelect = () => setActiveIndex(api.selectedScrollSnap());
-    const onReInit = () => setSnapCount(api.scrollSnapList().length);
-    api.on("select", onSelect);
-    api.on("reInit", onReInit);
-    return () => {
-      api.off("select", onSelect);
-      api.off("reInit", onReInit);
-    };
-  }, [emblaApi]);
 
   const members = [
     { name: name1, role: role1 },
@@ -103,19 +80,16 @@ export function TeamSection({
         </Stagger>
       </div>
 
-      {/* Dot indicators — phone only, always hidden on tablet+ */}
-      {snapCount > 1 && (
-        <div className="flex justify-center gap-2 mt-4 mb-10 md:hidden">
-          {Array.from({ length: snapCount }).map((_, i) => (
-            <div
-              key={i}
-              className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                i === activeIndex ? "bg-gold-500" : "bg-border-subtle"
-              }`}
-            />
-          ))}
-        </div>
-      )}
+      {/* ── Swipe hint — pulsing ← SWIPE → , mobile/tablet only ── */}
+      <div className="animate-pulse flex items-center justify-center gap-2 mt-4 mb-10 lg:hidden text-gold-400">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span className="text-xs font-semibold tracking-widest">SWIPE</span>
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </div>
 
       {/* ── Desktop: 5-column grid with stagger ────────────────────────────────
           All 5 members visible simultaneously; both variants use the same Stagger. */}

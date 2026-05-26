@@ -84,6 +84,12 @@ export default async function HomePage() {
           feature2Excerpt={t("features.feature2Excerpt")}
           feature3Title={t("features.feature3Title")}
           feature3Excerpt={t("features.feature3Excerpt")}
+          feature4Title={t("features.feature4Title")}
+          feature4Excerpt={t("features.feature4Excerpt")}
+          feature5Title={t("features.feature5Title")}
+          feature5Excerpt={t("features.feature5Excerpt")}
+          feature6Title={t("features.feature6Title")}
+          feature6Excerpt={t("features.feature6Excerpt")}
         />
       </SnapSection>
 
