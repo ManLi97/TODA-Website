@@ -42,7 +42,7 @@ export function CaseStudySection({
               </li>
             ))}
           </ul>
-          <p className="type-body italic text-gold-400 border-t border-gold-400/20 pt-5 text-center">"{bullet4}"</p>
+          <p className="type-body italic text-gold-400 border-t border-gold-400/20 pt-5 text-center">&ldquo;{bullet4}&rdquo;</p>
         </div>
       </div>
 
