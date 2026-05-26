@@ -34,6 +34,9 @@ interface SnapSectionProps {
   // "center" adds flex flex-col justify-center so content is vertically centred.
   // "start" (default) leaves content top-weighted with py-20 lg:py-32 padding.
   align?: "start" | "center";
+  // Optional full-bleed backdrop layer (e.g. canvas particle effect).
+  // Rendered absolute inset-0 behind content; content wrapper gets relative z-10.
+  backdrop?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -42,6 +45,7 @@ export function SnapSection({
   id,
   triggerOnMount = false,
   align = "start",
+  backdrop,
   children,
 }: SnapSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -64,8 +68,9 @@ export function SnapSection({
 
   return (
     <SnapSectionContext.Provider value={ctx}>
-      <section ref={sectionRef} id={id} className={sectionClass}>
-        <div className="py-20 lg:py-32">
+      <section ref={sectionRef} id={id} className={`${sectionClass} relative`}>
+        {backdrop}
+        <div className={`py-20 lg:py-32${backdrop ? " relative z-10" : ""}`}>
           <div className="max-w-[1200px] mx-auto px-6">{children}</div>
         </div>
       </section>

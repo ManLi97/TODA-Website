@@ -14,6 +14,7 @@ import { FaqSection } from "@/components/faq-section";
 import { FeaturesSection } from "@/components/features-section";
 import { SnapSection } from "@/components/snap-section";
 import { Stagger } from "@/components/stagger";
+import { HeroParticles } from "@/components/hero-particles";
 
 export default async function HomePage() {
   const t = await getTranslations("home");
@@ -21,7 +22,7 @@ export default async function HomePage() {
   return (
     <>
       {/* ── 1. Hero — surface-base ── */}
-      <SnapSection variant="base" id="hero" triggerOnMount align="center">
+      <SnapSection variant="base" id="hero" triggerOnMount align="center" backdrop={<HeroParticles />}>
         <Hero
           headline={t("hero.headline")}
           accentText={t("hero.accentText")}

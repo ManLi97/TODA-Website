@@ -57,21 +57,6 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body>
-        {/* Phase 5a — fixed ambient gold glow, blended over content via screen mode.
-            zIndex:0 + mix-blend-mode:screen is required: zIndex:-1 paints behind the
-            opaque body background and is invisible. Screen adds the warm gold tint on
-            dark surfaces without blocking pointer events. */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 0,
-            pointerEvents: "none",
-            background: "var(--grad-ambient)",
-            mixBlendMode: "screen",
-          }}
-        />
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main>{children}</main>
