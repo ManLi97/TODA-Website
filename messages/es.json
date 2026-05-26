@@ -21,16 +21,22 @@
     "features": {
       "label": "Funciones",
       "headline": "Todo lo que tu estudio necesita.",
-      "feature1Title": "Una solicitud. Toda la información.",
-      "feature1Excerpt": "Sin más mensajes de ida y vuelta. Tu cliente rellena un formulario estructurado una sola vez — motivo, zona, referencias, datos de contacto. Ves al instante todo lo que necesitas para dar un presupuesto.",
-      "feature2Title": "Tu calendario trabaja. Tú tatúas.",
-      "feature2Excerpt": "Tú defines tu horario. Tu cliente elige un hueco libre. Las reservas dobles son estructuralmente imposibles — sin agenda de papel, sin caos.",
-      "feature3Title": "Tu web. Sin desarrollador.",
-      "feature3Excerpt": "Galería, sección sobre ti, formulario de reserva — todo en un enlace. Ya sea Instagram, WhatsApp o Facebook: siempre el mismo enlace, siempre el mismo resultado estructurado."
+      "feature1Title": "Una solicitud, toda la información",
+      "feature1Excerpt": "Motivo, tamaño, placement, referencias — todo de una vez. Sin ping-pong.",
+      "feature2Title": "Tu calendario trabaja, tú tatúas",
+      "feature2Excerpt": "Tú defines tus horarios, tu cliente reserva solo. Las dobles reservas son imposibles.",
+      "feature3Title": "Tu presencia web. Lista en minutos.",
+      "feature3Excerpt": "Sube imágenes, actualiza información, publícala. Lo haces tú mismo — sin diseñador web, sin conocimientos previos.",
+      "feature4Title": "Tu enlace de reserva. Disponible en todas partes.",
+      "feature4Excerpt": "Instagram, WhatsApp, Facebook, bio link — donde sea que te encuentren, envía tu enlace. La solicitud siempre llega a TODA.",
+      "feature5Title": "Reagendar, no cancelar.",
+      "feature5Excerpt": "Un clic, un mensaje breve — tu cliente recibe un nuevo enlace de reserva en su correo. Sin mensajes de ida y vuelta.",
+      "feature6Title": "Tu día de un vistazo.",
+      "feature6Excerpt": "Todas las citas, todas las solicitudes — accesibles al instante. Siempre sabes cómo es tu semana."
     },
     "socialProof": {
       "label": "Por qué TODA",
-      "headline": "Eres tatuador.",
+      "headline": "Eres artista.",
       "not1": "No secretario.",
       "not2": "No atención al cliente.",
       "not3": "No vendedor.",
@@ -40,7 +46,7 @@
     },
     "testimonials": {
       "label": "Voces de la comunidad",
-      "headline": "Lo que dicen otros estudios.",
+      "headline": "Lo que dicen nuestros clientes.",
       "quote1": "Mis solicitudes llegan ahora ordenadas. Sin caos de WhatsApp, sin referencias que faltan. Sé de inmediato si vale la pena aceptar una solicitud.",
       "author1": "Mia",
       "studio1": "Studio Kollektiv, Múnich",
@@ -77,7 +83,7 @@
     },
     "team": {
       "label": "El equipo",
-      "headline": "Construido por personas que lo conocen por dentro.",
+      "headline": "Tu equipo TODA.",
       "name1": "Tomek",
       "role1": "Co-Fundador y Desarrollador",
       "name2": "Dana",

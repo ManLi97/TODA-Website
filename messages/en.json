@@ -21,16 +21,22 @@
     "features": {
       "label": "Features",
       "headline": "Everything your studio needs.",
-      "feature1Title": "One request. All the info.",
-      "feature1Excerpt": "No more back-and-forth. Your client fills out a structured form once — motif, placement, references, contact details. You immediately see everything you need to give a price estimate.",
-      "feature2Title": "Your calendar works. You tattoo.",
-      "feature2Excerpt": "You set your working hours. Your client picks a free slot themselves. Double bookings are structurally impossible — no paper calendar, no chaos.",
-      "feature3Title": "Your website. Without a developer.",
-      "feature3Excerpt": "Gallery, about section, booking form — all in one link. Whether Instagram, WhatsApp, or Facebook: always the same link, always the same structured result."
+      "feature1Title": "One request, all the info",
+      "feature1Excerpt": "Motif, size, placement, references — all at once. No back-and-forth.",
+      "feature2Title": "Your calendar works, you tattoo",
+      "feature2Excerpt": "You set your hours, your client books themselves. Double bookings are impossible.",
+      "feature3Title": "Your web presence. Ready in minutes.",
+      "feature3Excerpt": "Upload images, update info, go live. You do it yourself — no web designer, no prior knowledge needed.",
+      "feature4Title": "Your booking link. Bookable everywhere.",
+      "feature4Excerpt": "Instagram, WhatsApp, Facebook, bio link — wherever your client finds you, just send your link. The request always lands in TODA.",
+      "feature5Title": "Reschedule, don't cancel.",
+      "feature5Excerpt": "One click, one short message — your client gets a new booking link straight to their inbox. No back-and-forth.",
+      "feature6Title": "Your day at a glance.",
+      "feature6Excerpt": "All appointments, all requests — instantly accessible. You always know what your week looks like."
     },
     "socialProof": {
       "label": "Why TODA",
-      "headline": "You're a tattoo artist.",
+      "headline": "You're an artist.",
       "not1": "Not a secretary.",
       "not2": "Not customer service.",
       "not3": "Not a salesperson.",
@@ -40,7 +46,7 @@
     },
     "testimonials": {
       "label": "Voices from the community",
-      "headline": "What other studios say.",
+      "headline": "What our customers say.",
       "quote1": "My requests come in organised now. No WhatsApp chaos, no missing references. I know immediately whether a request is worth taking.",
       "author1": "Mia",
       "studio1": "Studio Kollektiv, Munich",
@@ -77,7 +83,7 @@
     },
     "team": {
       "label": "The team",
-      "headline": "Built by people who know it from the inside.",
+      "headline": "Your TODA Team.",
       "name1": "Tomek",
       "role1": "Co-Founder & Developer",
       "name2": "Dana",

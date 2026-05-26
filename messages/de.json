@@ -14,23 +14,29 @@
     },
     "origin": {
       "label": "Über TODA",
-      "headline": "Von Tätowierern. Für Tätowierer.",
+      "headline": "Von Tattoo Artists. Für Tattoo Artists.",
       "body1": "Dana ist Tätowiererin. Tomek hat beobachtet, wie sie nach Hause kommt — erschöpft, nicht vom Tätowieren selbst, sondern vom Drumherum. Zwei Kunden auf einmal. Zwei No-Shows. Vierzig ungelesene Nachrichten.",
       "body2": "Er hat zwei Monate gebaut. Das Ergebnis war TODA — eine Plattform, die aus dem echten Alltag eines Studios entstanden ist, nicht aus einem Büro."
     },
     "features": {
       "label": "Funktionen",
       "headline": "Alles, was dein Studio braucht.",
-      "feature1Title": "Eine Anfrage. Alle Infos.",
-      "feature1Excerpt": "Kein Hin und Her mehr. Dein Kunde füllt einmalig ein strukturiertes Formular aus — Motiv, Platzierung, Referenzen, Kontaktdaten. Du siehst sofort alles, was du für eine Preisschätzung brauchst.",
-      "feature2Title": "Dein Kalender arbeitet. Du tätowierst.",
-      "feature2Excerpt": "Du setzt deine Arbeitszeiten. Dein Kunde bucht selbst einen freien Slot. Doppelbuchungen sind strukturell unmöglich — kein Papierkalender, kein Chaos.",
-      "feature3Title": "Deine Webseite. Ohne Webentwickler.",
-      "feature3Excerpt": "Galerie, Über-mich-Bereich, Buchungsformular — alles in einem Link. Egal ob Instagram, WhatsApp oder Facebook: immer derselbe Link, immer dasselbe strukturierte Ergebnis."
+      "feature1Title": "Eine Anfrage, alle Infos",
+      "feature1Excerpt": "Motiv, Größe, Placement, Referenzen – alles auf einmal. Kein Ping-Pong.",
+      "feature2Title": "Dein Kalender arbeitet, du tätowierst",
+      "feature2Excerpt": "Du setzt deine Zeiten, dein Kunde bucht selbst. Doppelbuchungen sind unmöglich.",
+      "feature3Title": "Dein Webauftritt. Fertig in Minuten.",
+      "feature3Excerpt": "Bilder hochladen, Infos ändern, live gehen. Das machst du selbst – kein Webdesigner, keine Vorkenntnisse nötig.",
+      "feature4Title": "Dein Anfrage-Link. Buchbar überall.",
+      "feature4Excerpt": "Instagram, WhatsApp, Facebook, Bio-Link – egal wo dein Kunde dich findet, schick ihm einfach deinen Link. Die Anfrage landet immer bei TODA.",
+      "feature5Title": "Verschieben statt streichen.",
+      "feature5Excerpt": "Ein Klick, ein kurzes Wort – dein Kunde bekommt direkt einen neuen Buchungslink per Mail. Kein Hin-und-Hergeschreibe.",
+      "feature6Title": "Dein Tag auf einen Blick.",
+      "feature6Excerpt": "Alle Termine, alle Anfragen – sofort abrufbar. Du weißt immer, wie deine Woche aussieht."
     },
     "socialProof": {
       "label": "Warum TODA",
-      "headline": "Du bist Tätowierer.",
+      "headline": "Du bist Künstler.",
       "not1": "Nicht Sekretär.",
       "not2": "Nicht Kundenservice.",
       "not3": "Nicht Verkäufer.",
@@ -40,7 +46,7 @@
     },
     "testimonials": {
       "label": "Stimmen aus der Community",
-      "headline": "Was andere Studios sagen.",
+      "headline": "Was unsere Kunden sagen.",
       "quote1": "Meine Anfragen kommen jetzt geordnet an. Kein WhatsApp-Durcheinander, keine fehlenden Referenzen. Ich weiss sofort, was eine Anfrage wert ist.",
       "author1": "Mia",
       "studio1": "Studio Kollektiv, München",
@@ -77,7 +83,7 @@
     },
     "team": {
       "label": "Das Team",
-      "headline": "Gebaut von Menschen, die es kennen.",
+      "headline": "Dein TODA Team.",
       "name1": "Tomek",
       "role1": "Co-Founder & Entwickler",
       "name2": "Dana",
