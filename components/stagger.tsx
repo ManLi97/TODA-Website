@@ -80,15 +80,17 @@ export function Stagger({ gap, type, delay = 0, className, children }: StaggerPr
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.intersectionRatio >= 0.7) {
+          if (entry.intersectionRatio >= 0.4) {
             fire();
           } else {
             reset();
           }
         }
       },
-      // 0.7: see animate.tsx for rationale (header + bottom-nav reduce max ratio to ~77%)
-      { threshold: 0.7 },
+      // 0.4: sections that overflow 100dvh (e.g. portrait video on iPhone 11) have a max
+      // achievable ratio of ~0.68. 0.7 was too high; 0.4 fires reliably once snapped in view
+      // while still being above the ~0 ratio when the section is fully off-screen.
+      { threshold: 0.4 },
     );
 
     observer.observe(sectionEl);
