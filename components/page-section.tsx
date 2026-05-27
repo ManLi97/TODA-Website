@@ -97,11 +97,8 @@ export function PageSection({
         } as React.CSSProperties}
       >
         {backdrop}
-        {/* Symmetric vertical breathing room: bottom = same padding as top PLUS the floating
-            bottom-nav clearance (see --bottom-nav-clearance in globals.css). Without the extra
-            top-matching padding, the nav sits in all the bottom space and content reads as
-            crammed against the edge. */}
-        <div className={`pt-20 lg:pt-32 pb-[calc(5rem+var(--bottom-nav-clearance))] lg:pb-[calc(8rem+var(--bottom-nav-clearance))]${backdrop ? " relative z-10" : ""}`}>
+        {/* Symmetric vertical breathing room — equal padding top and bottom. */}
+        <div className={`py-20 lg:py-32${backdrop ? " relative z-10" : ""}`}>
           <div className="max-w-[1200px] mx-auto px-6">{children}</div>
         </div>
       </section>

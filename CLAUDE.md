@@ -121,9 +121,8 @@ Required in `.env.local`:
   mandatory` "one viewport per section" model was removed (it trapped overflowing
   content and felt un-premium). Sections are `min-h-svh` — at least one viewport for the
   spotlight rhythm, but free to grow taller and scroll naturally. Spotlight feel comes
-  from viewport rhythm + surface-colour alternation + fire-once reveals. Full rationale,
-  decisions, and the open punch list (bottom-nav bugs, per-section polish) live in
-  `docs/mobile-audit.md`. Mobile is the priority device; desktop is polished afterward.
+  from viewport rhythm + surface-colour alternation + fire-once reveals. Mobile is the
+  priority device; desktop is polished afterward.
 - **Tailwind v4:** uses `@tailwindcss/postcss`, not the classic `tailwind.config.js`.
   CSS-first config in `globals.css`.
 

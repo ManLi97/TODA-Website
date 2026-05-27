@@ -2,7 +2,7 @@
 // Provides NextIntlClientProvider for client-side translations.
 // Injects Inter and Playfair Display Italic via next/font as CSS variables.
 // Scroll is plain smooth scroll on <html> — no scroll-snap, no JS scroll provider.
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -10,7 +10,6 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { BottomNav } from "@/components/bottom-nav";
 import "./globals.css";
 
 // Inter — DS type ladder uses three weights only: 200 (thin), 400 (regular),
@@ -40,17 +39,6 @@ export const metadata: Metadata = {
   description: "TODA Solutions — Marketing Website",
 };
 
-// viewport-fit=cover makes env(safe-area-inset-*) resolve to real values (they were 0
-// without it, breaking the bottom-nav clearance math). themeColor tints the browser's own
-// URL/toolbar bars to our near-black surface-base, so when iOS/Chrome show/hide their chrome
-// it reads dark-on-dark instead of gray-on-black — far less jarring on scroll.
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  viewportFit: "cover",
-  themeColor: "#0a0a0a",
-};
-
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -72,7 +60,6 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Header />
           <main>{children}</main>
           <Footer />
-          <BottomNav />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -8,25 +8,24 @@ Source of truth for the design system: `docs/design-system/` in this repo.
 > in favour of plain smooth scroll with `min-h-svh` sections and fire-once reveals — it
 > trapped overflowing content and felt un-premium on mobile. References below to scroll-snap,
 > "snap-fits," or snap-stop are historical; the section primitive was renamed `SnapSection` → `PageSection`.
-> Current scroll/animation reality + the open mobile punch list live in `docs/mobile-audit.md`.
+> Current scroll/animation reality of record: `CLAUDE.md` + the project source.
 
 ## Current state
 
 Phases 1-3 complete: design system reference reconstructed (`docs/design-system/`),
 CSS tokens migrated to Tailwind v4 `@theme`, animation primitives + section ports off
-Framer Motion landed. Scroll model pivoted from snap-slides to plain smooth scroll (see
-`docs/mobile-audit.md`). Run `git log --oneline` for the full history.
+Framer Motion landed. Scroll model pivoted from snap-slides to plain smooth scroll.
+Run `git log --oneline` for the full history.
 
-**Next:** mobile-first polish per `docs/mobile-audit.md` (bottom-nav fixes, per-section device pass).
+**Next:** mobile-first polish (per-section device pass).
 
 ---
 
 ## Phase 4 — Chrome & Structure
 
-**The shape pass.** Three PRs reshape the page's structural skeleton — section order,
-chrome demolition, and the new bottom-navigation primitive. No content or asset
-dependencies; no visual atmosphere work. Lands a stable form before Phase 5 polishes
-against it.
+**The shape pass.** Reshapes the page's structural skeleton — section order and chrome
+demolition. No content or asset dependencies; no visual atmosphere work. Lands a stable
+form before Phase 5 polishes against it.
 
 ### Section order & surface rhythm (canonical reference)
 
@@ -139,59 +138,6 @@ Footer = legal + social + copyright.
 **Done when:** header shows only logo + language switcher with glass surface; footer
 shows only legal + social + copyright; all old nav/footer copy removed from message
 files; no broken translations; no console errors.
-
-### Phase 4c — Bottom navigation primitive
-
-**Goal:** new global chrome — a **floating glass pill** detached from all screen
-edges (clearance below for the iOS home indicator), with up arrow / TODA app icon /
-down arrow. Reference feel: an app tab bar (N26-style) that floats above content and
-lets the page bleed through the blur — NOT an edge-to-edge strip like the header.
-Snap-aware, accessible, mobile + desktop same layout.
-
-**Create:**
-- `components/bottom-nav.tsx` (Client Component)
-  - Layout: a centered, `rounded-full` pill floating above the bottom edge. Outer
-    wrapper is `fixed inset-x-0 bottom-0` + `pointer-events-none` + bottom padding
-    of `calc(env(safe-area-inset-bottom) + 1rem)`; the inner pill is
-    `pointer-events-auto` so it never blocks clicks on content beside/behind it.
-  - Glass surface uses DS tokens directly: `var(--glass-tint)`, blur+saturate
-    backdrop, **border on all sides** via `var(--glass-border-gold)`, and a soft
-    float shadow via the new `var(--shadow-float)` token. Three slots horizontally.
-  - Up arrow (left): scrolls to previous PageSection, disabled at section #1
-  - TODA app icon (center): external link to `https://app.toda.ink/onboarding`
-    (`target="_blank" rel="noopener noreferrer"` recommended — don't yank user out
-    of marketing flow)
-  - Down arrow (right): scrolls to next PageSection, disabled at section #10
-  - Snap awareness: own IntersectionObserver watching all `<section>` elements with
-    `id` attribute. Currently-visible section becomes active index. Decoupled from
-    PageSection context (no architecture churn).
-  - Smooth scroll: `element.scrollIntoView({ behavior: 'smooth', block: 'start' })`
-    — browser handles snap.
-  - Keyboard: Tab order left-to-right, Enter triggers action, ARIA labels per slot
-  - `prefers-reduced-motion`: replace smooth scroll with instant jump
-
-**Update:**
-- `app/[locale]/layout.tsx` — mount `<BottomNav />` globally alongside `<Header />`
-  and `<Footer />`.
-
-**Watch-outs:**
-- New `--shadow-float` token lives in the COMPOSED RECIPES block of globals.css,
-  beside the glass recipes. Reusable — Phase 5b glass focal elements consume it too.
-- Floating pill leaves a gap below + sides, so occlusion is minimal by design. Still
-  verify no content sits permanently hidden behind the pill at the shortest section.
-- TODA app icon asset: placeholder SVG or text mark for v1, real icon arrives in
-  Phase 6.
-- IntersectionObserver threshold: `0.5` so active section flips at midpoint.
-  Debounce if needed.
-- Disabled arrow states: visual treatment (opacity dim) + `aria-disabled` +
-  onClick guard. Don't just hide.
-
-**Done when:** bottom nav mounts globally as a floating glass pill (detached from
-edges, clears the home indicator, page content visibly blurs through it), arrows
-navigate snap sections with correct disabled states at boundaries, TODA logo opens
-onboarding, no overlap regressions, keyboard accessible, screen reader sensible.
-
----
 
 ## Phase 5 — Visual Atmosphere & Component Polish
 
