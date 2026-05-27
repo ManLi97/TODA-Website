@@ -178,6 +178,14 @@ In the `<Animate>` component: after the parent entrance completes, `onComplete` 
 
 ## 4) Sequencing principles
 
+> **⚠ Scope (2026-05-27):** This pre-timed cascade math now applies **only to the narrative
+> Origin section**, which owns a deliberate hand-authored GSAP timeline. Every other section
+> is **per-element on entry**: each element (or each child of a `<RevealGroup>`) fires its own
+> tween the moment it crosses the reveal line, with **no inter-element `delay`/`gap`** — so as
+> you scroll into a section, things animate as you reach them rather than on a pre-timed clock.
+> The math below documents the Origin timeline and the original DS rhythm; do not reintroduce
+> `delay`/`gap` cascades into scroll-triggered sections.
+
 The single most important rule, expressed as math:
 
 ```
@@ -247,7 +255,9 @@ Phases get clearly separated, groups feel like one beat. This is the entire rhyt
 ## 6) Trigger system — element-scoped IntersectionObserver, fire-once
 
 The entrance trigger is an `IntersectionObserver` registered by the `<Animate>` component
-on **its own element** (not the parent section). When the element scrolls into view
+on **its own element** (not the parent section). `<RevealGroup>` applies the same per-element
+observer to each of its N children independently — each child fires on its own entry, no
+cascade delay. When the element scrolls into view
 (`rootMargin: "0px 0px -12% 0px"`, so it reveals just after the top crosses in), it fires
 its GSAP `fromTo` tween **once** and then disconnects — no reset, no replay on scroll-back.
 A calm, single reveal reads more premium than re-animating every time you pass an element,

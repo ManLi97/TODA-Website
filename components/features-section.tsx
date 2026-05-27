@@ -6,7 +6,7 @@
 // A single pulsing ← → hint sits between the rows instead of per-row dots.
 // Desktop (lg+): two static 3-column grids.
 import { Animate } from "@/components/animate";
-import { Stagger } from "@/components/stagger";
+import { RevealGroup } from "@/components/reveal-group";
 import { Card } from "@/components/card";
 import useEmblaCarousel from "embla-carousel-react";
 
@@ -56,13 +56,13 @@ export function FeaturesSection({
 
       {/* ── Mobile/tablet: Row 1 — LTR, swipe left ── */}
       <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef1}>
-        <Stagger gap={150} type="fade-up" delay={750} className="flex gap-6 py-4 pr-4">
+        <RevealGroup type="fade-up" className="flex gap-6 py-4 pr-4">
           {row1.map(({ title, excerpt }) => (
             <div key={title} className="flex-none w-[280px] md:w-[320px]">
               <Card title={title} excerpt={excerpt} />
             </div>
           ))}
-        </Stagger>
+        </RevealGroup>
       </div>
 
       {/* ── Swipe hint — single pulsing ← SWIPE → between both rows, mobile/tablet only ── */}
@@ -79,27 +79,27 @@ export function FeaturesSection({
       {/* ── Mobile/tablet: Row 2 — RTL, swipe right ── */}
       {/* dir="rtl" makes Embla lay slides right-to-left; dir="ltr" on each slide preserves text alignment */}
       <div className="-mx-6 pr-6 lg:hidden" ref={emblaRef2} dir="rtl">
-        <Stagger gap={150} type="fade-up" delay={900} className="flex gap-6 py-4 pl-4">
+        <RevealGroup type="fade-up" className="flex gap-6 py-4 pl-4">
           {row2.map(({ title, excerpt }) => (
             <div key={title} className="flex-none w-[280px] md:w-[320px]" dir="ltr">
               <Card title={title} excerpt={excerpt} />
             </div>
           ))}
-        </Stagger>
+        </RevealGroup>
       </div>
 
       {/* ── Desktop: two static 3-column grids ── */}
       <div className="hidden lg:flex lg:flex-col lg:gap-6">
-        <Stagger gap={150} type="fade-up" delay={750} className="grid grid-cols-3 gap-6">
+        <RevealGroup type="fade-up" className="grid grid-cols-3 gap-6">
           {row1.map(({ title, excerpt }) => (
             <Card key={title} title={title} excerpt={excerpt} />
           ))}
-        </Stagger>
-        <Stagger gap={150} type="fade-up" delay={900} className="grid grid-cols-3 gap-6">
+        </RevealGroup>
+        <RevealGroup type="fade-up" className="grid grid-cols-3 gap-6">
           {row2.map(({ title, excerpt }) => (
             <Card key={title} title={title} excerpt={excerpt} />
           ))}
-        </Stagger>
+        </RevealGroup>
       </div>
     </div>
   );

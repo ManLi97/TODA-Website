@@ -2,11 +2,11 @@
 
 // Team teaser — circular spinning-ring avatars.
 // Mobile: Embla Carousel with 200px slides (~1.6 visible on 375px viewport).
-// Desktop: 5-column grid with <Stagger type="scale-in">.
+// Desktop: 5-column grid with <RevealGroup type="scale-in">.
 // Ring animation: CSS keyframes in globals.css. Counter-spin keeps photo upright.
 import { Link } from "@/i18n/navigation";
 import { Animate } from "@/components/animate";
-import { Stagger } from "@/components/stagger";
+import { RevealGroup } from "@/components/reveal-group";
 import useEmblaCarousel from "embla-carousel-react";
 
 interface TeamSectionProps {
@@ -61,7 +61,7 @@ export function TeamSection({
           200px slides: on a 375px viewport, ~1.6 members visible — strong peek
           signal. Same -mx-6 / pl-6 pattern as the Testimonials carousel. */}
       <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef}>
-        <Stagger gap={150} type="scale-in" delay={750} className="flex gap-6 py-4 pr-4">
+        <RevealGroup type="scale-in" className="flex gap-6 py-4 pr-4">
           {members.map(({ name, role }) => (
             <div key={name} className="flex-none w-[200px] md:w-[215px]">
               {/* Spinning ring — outer spins, inner counter-spins to keep photo upright */}
@@ -77,7 +77,7 @@ export function TeamSection({
               <p className="type-caption leading-none">{role}</p>
             </div>
           ))}
-        </Stagger>
+        </RevealGroup>
       </div>
 
       {/* ── Swipe hint — pulsing ← SWIPE → , mobile/tablet only ── */}
@@ -91,12 +91,10 @@ export function TeamSection({
         </svg>
       </div>
 
-      {/* ── Desktop: 5-column grid with stagger ────────────────────────────────
-          All 5 members visible simultaneously; both variants use the same Stagger. */}
-      <Stagger
-        gap={150}
+      {/* ── Desktop: 5-column grid ─────────────────────────────────────────────
+          All 5 members visible simultaneously; both variants use the same RevealGroup. */}
+      <RevealGroup
         type="scale-in"
-        delay={750}
         className="hidden lg:grid lg:grid-cols-5 gap-6 mb-10"
       >
         {members.map(({ name, role }) => (
@@ -112,7 +110,7 @@ export function TeamSection({
             <p className="text-[13px] font-normal leading-none text-text-tertiary">{role}</p>
           </div>
         ))}
-      </Stagger>
+      </RevealGroup>
 
       {/* Link to full about page */}
       <Link

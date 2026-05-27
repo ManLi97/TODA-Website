@@ -2,7 +2,7 @@
 // Headline → stacked strikethrough negations → payoff with gold accent → YouTube embed → caption.
 // Strikethrough lines are muted (text-tertiary + line-through) to visually "cross out" what the
 // artist is not, then the payoff resolves the tension with the accent word in gold.
-import { Stagger } from "@/components/stagger";
+import { RevealGroup } from "@/components/reveal-group";
 import { Animate } from "@/components/animate";
 import { StrikethroughList } from "@/components/strikethrough-list";
 
@@ -29,11 +29,11 @@ export function SocialProofSection({
 }: SocialProofSectionProps) {
   return (
     <>
-      <Stagger gap={120} type="fade-up" className="max-w-2xl">
+      <RevealGroup type="fade-up" className="max-w-2xl">
         <p className="type-eyebrow text-text-tertiary mb-6">{label}</p>
         <h2 className="type-display text-text-primary mb-8">{headline}</h2>
 
-        {/* Sequentially animated strikethrough statements */}
+        {/* Strikethrough statements — each strikes itself out as it enters view */}
         <StrikethroughList items={[not1, not2, not3]} />
 
         {/* Payoff — resolution after the negations */}
@@ -41,9 +41,9 @@ export function SocialProofSection({
           {payoff}{" "}
           <span className="text-gold-400">{payoffAccent}</span>
         </p>
-      </Stagger>
+      </RevealGroup>
 
-      <Animate type="fade-up" delay={1200} className="mt-16">
+      <Animate type="fade-up" className="mt-16">
         <div className="aspect-video glass--gradient overflow-hidden rounded-sm">
           <iframe
             src="https://www.youtube.com/embed/rRTBDva8kqE"

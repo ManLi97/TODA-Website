@@ -1,6 +1,6 @@
 // Pricing — section #9, surface-raised.
 // Extracted from inline CTA block. External link to app.toda.ink — plain <a>, new tab.
-import { Stagger } from "@/components/stagger";
+import { RevealGroup } from "@/components/reveal-group";
 import { buttonVariants } from "@/components/button";
 
 interface PricingSectionProps {
@@ -19,7 +19,7 @@ export function PricingSection({
   ctaLabel,
 }: PricingSectionProps) {
   return (
-    <Stagger gap={150} type="fade-up" className="max-w-xl">
+    <RevealGroup type="fade-up" className="max-w-xl">
       <h2 className="type-display text-text-primary mb-8">{headline}</h2>
       <div className="glass glass--gradient flex items-baseline gap-2 mb-2">
         <span className="type-display text-text-primary">{price}</span>
@@ -36,6 +36,6 @@ export function PricingSection({
       >
         {ctaLabel}
       </a>
-    </Stagger>
+    </RevealGroup>
   );
 }

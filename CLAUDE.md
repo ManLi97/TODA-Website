@@ -50,7 +50,7 @@ app/
 components/
   page-section.tsx    # layout primitive: min-h-svh + surface variant + reveal context
   animate.tsx         # entrance wrapper — GSAP fromTo, element-scoped IO, fires once
-  stagger.tsx         # cascaded entrance for N children — same trigger model
+  reveal-group.tsx    # per-element entrance for N children — each fires on its own entry
   hero.tsx            # section 1 — uses <PageSection triggerOnMount>
   bold-claim-section.tsx
   case-study-section.tsx
@@ -85,10 +85,12 @@ middleware.ts         # next-intl locale routing
   `docs/integration-plan.md` § Section order & surface rhythm.
 - **All copy via next-intl:** no hardcoded strings in components — everything reads
   from `messages/{locale}.json` under the `"home"` namespace.
-- **`<Animate>` and `<Stagger>` for entrances:** entrance tween fires **once** when the
+- **`<Animate>` and `<RevealGroup>` for entrances:** entrance tween fires **once** when the
   element itself scrolls into view (element-scoped `IntersectionObserver`, `rootMargin`
-  reveal offset); no replay on scroll-back. Works regardless of section height. Prop API
-  and timing math live in `docs/design-system/motion.md`.
+  reveal offset); no replay on scroll-back. Works regardless of section height. `<RevealGroup>`
+  applies the same per-element trigger to each of N children (no inter-element delay — each
+  child fires on its own entry). No pre-timed cascades anywhere except the narrative Origin
+  section, which owns a deliberate GSAP timeline. Prop API lives in `docs/design-system/motion.md`.
 - **Hero is the mount-fired case:** it's a `<PageSection triggerOnMount>` so its
   `<Animate>` children fire on mount instead of on scroll-in — the above-the-fold section
   animates immediately on load.

@@ -4,7 +4,7 @@
 // Copy column: eyebrow → h2 (name) → glass bullet list.
 // Caption renders below video at type-caption size.
 
-import { Stagger } from "@/components/stagger";
+import { RevealGroup } from "@/components/reveal-group";
 
 interface CaseStudySectionProps {
   label: string;
@@ -28,7 +28,7 @@ export function CaseStudySection({
   const bullets = [bullet1, bullet2, bullet3];
 
   return (
-    <Stagger gap={150} type="fade-up" className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-start">
+    <RevealGroup type="fade-up" className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-start">
       {/* Copy column — eyebrow → name headline → glass bullet list */}
       <div>
         <p className="type-eyebrow text-text-tertiary mb-6">{label}</p>
@@ -60,6 +60,6 @@ export function CaseStudySection({
         </div>
         <p className="type-caption text-text-tertiary mt-3">{videoCaption}</p>
       </div>
-    </Stagger>
+    </RevealGroup>
   );
 }

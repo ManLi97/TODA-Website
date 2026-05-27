@@ -109,8 +109,8 @@ export function TestimonialsSection({
         <h2 className="type-display text-text-primary">{headline}</h2>
       </Animate>
 
-      {/* Deck — fades up as one unit after the header settles */}
-      <Animate type="fade-up" delay={750} className="mt-4 lg:mt-8 mb-16 lg:mb-20">
+      {/* Deck — fades up on its own entry */}
+      <Animate type="fade-up" className="mt-4 lg:mt-8 mb-16 lg:mb-20">
         <div className="relative w-[240px] h-[360px] lg:w-[310px] lg:h-[460px]">
           {cards.map((card, i) => (
             <div
@@ -155,7 +155,7 @@ export function TestimonialsSection({
       </Animate>
 
       {/* Hint label — pulses until first tap, then fades out */}
-      <Animate type="fade-in" delay={1350}>
+      <Animate type="fade-in">
         <p
           aria-hidden="true"
           className={`type-caption text-gold-400 hint-pulse${hintFaded ? " hint-faded" : ""}`}

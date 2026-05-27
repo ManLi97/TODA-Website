@@ -7,7 +7,7 @@ import { Hero } from "@/components/hero";
 import { Card } from "@/components/card";
 import { VideoLoop } from "@/components/video-loop";
 import { Animate } from "@/components/animate";
-import { Stagger } from "@/components/stagger";
+import { RevealGroup } from "@/components/reveal-group";
 
 // Section label — internal typographic marker used throughout this page
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -135,11 +135,11 @@ export default function ComponentTestPage() {
         </div>
       </SectionWrapper>
 
-      {/* ─── 6. Animate + Stagger ─── */}
+      {/* ─── 6. Animate + RevealGroup ─── */}
       <SectionWrapper variant="base" id="animate">
-        <SectionLabel>GSAP · Animate + Stagger — IO-triggered entrances</SectionLabel>
+        <SectionLabel>GSAP · Animate + RevealGroup — IO-triggered entrances</SectionLabel>
         <p className="text-text-secondary text-[17px] leading-[1.47] tracking-[-0.2px] mb-12 max-w-xl">
-          Diese Section ist nicht in eine PageSection eingebettet — Animate/Stagger loggen
+          Diese Section ist nicht in eine PageSection eingebettet — Animate/RevealGroup loggen
           eine Warnung und feuern stattdessen on-mount (Fallback-Modus).
         </p>
 
@@ -154,8 +154,8 @@ export default function ComponentTestPage() {
           </p>
         </Animate>
 
-        {/* Multi-element cascade — Stagger animates container.children with gap=150ms */}
-        <Stagger gap={150} type="fade-up" className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Multi-element group — each child reveals on its own entry */}
+        <RevealGroup type="fade-up" className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card
             href="#"
             title="Terminplanung"
@@ -174,7 +174,7 @@ export default function ComponentTestPage() {
             excerpt="Rechnungen, Ausgaben und Steuer-Export auf Knopfdruck."
             label="Funktion"
           />
-        </Stagger>
+        </RevealGroup>
       </SectionWrapper>
     </>
   );

@@ -1,24 +1,23 @@
 "use client";
 
-// Cascade entrance wrapper — animates N direct children with a stagger delay.
-// Each child fires at: delay + (index * gap) ms.
-// Same trigger model as <Animate>: observes the container element entering the viewport
-// (element-scoped, survives sections taller than the viewport), fires once, no replay.
+// Per-element entrance for a group of N direct children. Each child fires its own GSAP
+// fromTo the moment IT crosses into view (its own element-scoped IntersectionObserver entry),
+// once, no replay, no inter-element delay. Children sharing a screen reveal together; a child
+// lower in a tall group (or further along a carousel) reveals as you scroll/swipe to it.
+// Use <Animate> for a single element — this is the same trigger model for many children.
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { usePageSection } from "@/components/page-section";
 import { ANIM_FROM, ANIM_TO, ANIM_DURATION, type AnimationType } from "@/components/animate";
 
-interface StaggerProps {
-  gap: number;       // ms between each child's entrance
+interface RevealGroupProps {
   type: AnimationType;
-  delay?: number;    // ms before the first child fires, default 0
   className?: string;
   children: React.ReactNode;
 }
 
-export function Stagger({ gap, type, delay = 0, className, children }: StaggerProps) {
+export function RevealGroup({ type, className, children }: RevealGroupProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const ctx = usePageSection();
 
@@ -40,51 +39,43 @@ export function Stagger({ gap, type, delay = 0, className, children }: StaggerPr
       return;
     }
 
-    // Hold all children in "from" (hidden) state before section settles
+    // Hold every child in "from" (hidden) state until it individually enters.
     items.forEach((el) => gsap.set(el, from));
 
-    const fire = () => {
-      items.forEach((el, i) => {
-        gsap.fromTo(el, from, {
-          ...to,
-          duration: durS,
-          delay: (delay + i * gap) / 1000,
-          ease: "entry",
-        });
-      });
+    const fire = (el: HTMLElement) => {
+      gsap.fromTo(el, from, { ...to, duration: durS, ease: "entry" });
     };
 
     if (!ctx) {
       if (process.env.NODE_ENV !== "production") {
-        console.warn("[Stagger] No <PageSection> context found. Firing on mount.");
+        console.warn("[RevealGroup] No <PageSection> context found. Firing on mount.");
       }
-      fire();
+      items.forEach(fire);
       return;
     }
 
     if (ctx.triggerOnMount) {
-      fire();
+      items.forEach(fire);
       return;
     }
 
-    // Observe the container entering the viewport (element-scoped, not section-ratio),
-    // fire the cascade once, then disconnect — no replay on scroll-back (calmer, more premium).
-    // rootMargin bottom -12% reveals just after the container's top crosses in.
+    // One observer; each child fires on its own entry then is unobserved (fire-once, no replay).
+    // rootMargin bottom -12% reveals just after a child's top crosses into view.
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            fire();
-            observer.disconnect();
+            fire(entry.target as HTMLElement);
+            observer.unobserve(entry.target);
           }
         }
       },
       { rootMargin: "0px 0px -12% 0px", threshold: 0 },
     );
 
-    observer.observe(container);
+    items.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [type, delay, gap, ctx]);
+  }, [type, ctx]);
 
   return (
     <div ref={containerRef} className={className}>

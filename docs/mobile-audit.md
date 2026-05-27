@@ -81,8 +81,11 @@ sections.
   B2 flicker, B3 content overlap). Permanent nav — arrows are placeholders, will become
   subpage links (e.g. blog) once subpages exist. **Still open.**
 - **D3 — `dvh` → `svh`:** ✅ adopted `svh` for stable, URL-bar-proof section heights.
-- **D4 — Animation trigger:** ✅ reworked to **element-scoped, fire-once** (observe the
-  element itself with a `rootMargin` reveal offset, fire once, no replay).
+- **D4 — Animation trigger:** ✅ reworked to **element-scoped, fire-once**, then (round 2)
+  to **per-element on entry**: every scroll-triggered element/child fires its own tween when
+  it crosses the reveal line — no pre-timed `delay`/`gap` cascades. The `Stagger` primitive
+  (which staggered children on a fixed clock — a snap-deck leftover) was renamed/rewritten to
+  `RevealGroup`. Only the narrative **Origin** section keeps a hand-authored GSAP timeline.
 - **D5 — Header:** ✅ stays fixed; `scroll-padding-top` keeps anchor/nav jumps clear of it.
 - **D6 — Lenis (later):** smooth-scroll layer only, **never** sticky/pinned sections (the
   pinning, not Lenis, caused the old cut-offs + animation breakage). Deferred — Phase E.
@@ -97,8 +100,19 @@ sections.
 - **Phase D — Chrome (open):** bottom-nav B1 (stuck active index), B2 (flicker), B3 (FAB
   overlap). B1/B2 root cause: IO `threshold: 0.5` in `bottom-nav.tsx` can't track sections
   taller than the viewport — needs a most-visible / scroll-position approach instead.
-- **Phase E — Per-section polish + Lenis (open):** device-confirm sections 1→10
-  (incl. un-hiding the BoldClaim video now that tall sections are legal), then optional Lenis.
+- **Phase E — Per-section polish + Lenis (open):** device-confirm sections 1→10, then optional Lenis.
+  - **Round 1:** un-hid the BoldClaim video (tall sections are now legal). ✅
+  - **Round 2 (2026-05-27 device feedback):**
+    - BoldClaim video autoplayed on page load → removed hardcoded `autoPlay`; the existing
+      IntersectionObserver now starts playback on viewport entry. ✅
+    - No bottom breathing room (content crammed against the floating nav) → section bottom
+      padding is now top-padding **plus** the nav clearance, so top/bottom breathe equally
+      and content still clears the nav. ✅
+    - Phantom "scroll inside a section" → caused by `overflow-x: hidden` forcing the y-axis to
+      `auto` (a scroll container); switched to `overflow-x: clip`. ✅
+    - Motion felt pre-timed (snap-deck leftover) → per-element on entry, see D4. ✅
+  - **Still open / needs-device this round:** symmetric padding feel; carousel cards
+    (Features/Team mobile) revealing correctly on swipe; whether Hero keeps its mount cascade.
 
 ---
 
