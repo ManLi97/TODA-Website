@@ -147,6 +147,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Space the floating bottom-nav occupies, reserved as section bottom-padding so the
+   pill + center FAB never cover content (esp. centered CTAs). Derived from bottom-nav.tsx:
+   pill 3.5rem (h-14) + 1rem bottom offset + 20px FAB overhang + 1rem gap + safe area. */
+:root {
+  --bottom-nav-clearance: calc(5.5rem + 20px + env(safe-area-inset-bottom));
+}
+
 /* ───────────────────────────────────────────────────────────────────────────
    BASE — body
    Per docs/design-system/typography.md.

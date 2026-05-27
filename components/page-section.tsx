@@ -93,7 +93,9 @@ export function PageSection({
         } as React.CSSProperties}
       >
         {backdrop}
-        <div className={`py-20 lg:py-32${backdrop ? " relative z-10" : ""}`}>
+        {/* Bottom padding reserves space for the floating bottom-nav (see --bottom-nav-clearance
+            in globals.css) so the pill + FAB never cover content. */}
+        <div className={`pt-20 lg:pt-32 pb-[var(--bottom-nav-clearance)]${backdrop ? " relative z-10" : ""}`}>
           <div className="max-w-[1200px] mx-auto px-6">{children}</div>
         </div>
       </section>

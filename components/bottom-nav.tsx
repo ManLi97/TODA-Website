@@ -46,6 +46,11 @@ export function BottomNav() {
     setSections(discovered);
     if (discovered.length === 0) return;
 
+    // Active section = the one crossing a thin band at the viewport's vertical centre.
+    // rootMargin -45%/-45% collapses the root to a ~10%-tall centre band, so exactly one
+    // section (each is >= 100svh) is active at a time — height-independent, unlike the old
+    // threshold:0.5 which could never be reached on sections taller than the viewport (B1)
+    // and let several sections fight for "active" at once (B2).
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -55,7 +60,7 @@ export function BottomNav() {
           }
         }
       },
-      { threshold: 0.5 }
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
     );
 
     discovered.forEach((s) => observer.observe(s));
