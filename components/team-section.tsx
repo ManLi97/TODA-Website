@@ -60,11 +60,14 @@ export function TeamSection({
         <RevealGroup type="scale-in" className="flex gap-group py-4 pr-4">
           {members.map(({ name, role }) => (
             <div key={name} className="flex-none w-[200px] md:w-[215px]">
-              {/* Spinning ring — outer spins, inner counter-spins to keep photo upright */}
-              <div className="team-avatar-ring mb-element">
-                <div className="team-avatar-inner aspect-square">
-                  {/* Photo placeholder — replace with next/image when portrait is available */}
-                  <div className="w-full h-full bg-surface-elevated" />
+              {/* Static wrapper carries the grounding shadow (.elevated); the ring inside
+                  spins, so the shadow must NOT live on it or it would orbit the circle. */}
+              <div className="rounded-full elevated mb-element">
+                <div className="team-avatar-ring">
+                  <div className="team-avatar-inner aspect-square">
+                    {/* Photo placeholder — replace with next/image when portrait is available */}
+                    <div className="w-full h-full bg-surface-elevated" />
+                  </div>
                 </div>
               </div>
               <p className="text-[15px] font-semibold leading-[1.3] tracking-[-0.1px] text-text-primary mb-1">
@@ -95,9 +98,11 @@ export function TeamSection({
       >
         {members.map(({ name, role }) => (
           <div key={name}>
-            <div className="team-avatar-ring mb-element">
-              <div className="team-avatar-inner aspect-square">
-                <div className="w-full h-full bg-surface-elevated" />
+            <div className="rounded-full elevated mb-element">
+              <div className="team-avatar-ring">
+                <div className="team-avatar-inner aspect-square">
+                  <div className="w-full h-full bg-surface-elevated" />
+                </div>
               </div>
             </div>
             <p className="text-[15px] font-semibold leading-[1.3] tracking-[-0.1px] text-text-primary mb-1">

@@ -57,7 +57,19 @@
      ───────────────────────────────────────────────────────────────────────── */
   --glass-tint:        color-mix(in oklch, var(--color-surface-raised) 65%, transparent);
   --glass-border-gold: 1px solid color-mix(in oklch, var(--color-gold-500) 15%, transparent);
-  --shadow-float:      0 8px 24px rgba(0, 0, 0, 0.35);
+
+  /* ELEVATION — surface-aware card/box depth (Apple-style, tuned for dark UI).
+     A drop shadow is invisible on true black, so depth is surface-dependent:
+       light → for boxes on BLACK sections. Depth = "light from above": a top
+               inner-highlight rim catches light; the dark drop is near-invisible
+               but kept for the near-black (#0a0a0a) case and overlaps onto media.
+       dark  → for boxes on ANTHRACITE sections. A real dark drop shadow reads here
+               because anthracite is light enough to darken beneath the box.
+     PageSection cascades `--shadow-card` to one of these per variant; consumers
+     (.elevated, plain .glass) read `--shadow-card`. Gradient-glass is the apex
+     highlight (border IS its depth) and is deliberately excluded. */
+  --shadow-card-light: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 1px rgba(0, 0, 0, 0.5), 0 12px 28px -10px rgba(0, 0, 0, 0.7);
+  --shadow-card-dark:  inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.3), 0 14px 30px -8px rgba(0, 0, 0, 0.55);
   --grad-brand:        linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-400) 35%, var(--color-purple-500) 100%);
   --grad-ambient:      radial-gradient(ellipse at 15% 10%, color-mix(in oklch, var(--color-gold-500) 12%, transparent) 0%, transparent 55%);
 
@@ -302,6 +314,19 @@ html {
       ) padding-box,
       var(--grad-brand) border-box;
     backdrop-filter: none;
+  }
+
+  /* ELEVATION — opt-in depth for non-glass cards/boxes. Reads the section's
+     cascaded `--shadow-card` so a box auto-picks the right recipe for whatever
+     surface it sits on (light rim on black, dark drop on anthracite). */
+  .elevated {
+    box-shadow: var(--shadow-card, none);
+  }
+
+  /* Plain glass (gold hairline) gets the same surface-aware depth. Gradient-glass
+     is excluded — its gold→purple border is the highlight, no shadow needed. */
+  .glass:not(.glass--gradient) {
+    box-shadow: var(--shadow-card, none);
   }
 
   /* ─────────────────────────────────────────────────────────────────────────

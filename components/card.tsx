@@ -1,7 +1,7 @@
 // Card component — used for blog listing, product overview grids, and static feature items.
 // When href is provided: renders as <Link> with border hover + line-clamp — use for navigable cards.
 // When href is omitted: renders as <div> without hover states + full excerpt — use for static items.
-// Elevation via surface color, never box-shadow (DESIGN.md).
+// Depth: surface color + the .elevated recipe (surface-aware shadow cascaded by PageSection).
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 
@@ -18,7 +18,7 @@ interface CardProps {
 
 export function Card({ title, excerpt, label, href, imageSrc, imageAlt, className }: CardProps) {
   const baseClasses = [
-    "bg-surface-elevated border border-border-subtle rounded-lg overflow-hidden",
+    "bg-surface-elevated border border-border-subtle rounded-lg overflow-hidden elevated",
     className,
   ]
     .filter(Boolean)

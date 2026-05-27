@@ -33,6 +33,15 @@ const GLASS_GRADIENT_FILL: Record<SectionVariant, string> = {
   raised: "#0a0a0a",
 };
 
+// Per-variant card/box elevation. On black surfaces a dark drop is invisible, so we
+// use the "light from above" recipe (top highlight rim); on anthracite a real dark
+// drop shadow reads. Cascades to .elevated / plain .glass descendants via --shadow-card.
+const SHADOW_CARD: Record<SectionVariant, string> = {
+  base:   "var(--shadow-card-light)",
+  alt:    "var(--shadow-card-dark)",
+  raised: "var(--shadow-card-dark)",
+};
+
 export interface PageSectionContextValue {
   // When true, entrance wrappers fire on mount instead of waiting for scroll-into-view.
   // Used by the above-the-fold hero so its content animates immediately on load.
@@ -94,6 +103,7 @@ export function PageSection({
         style={{
           "--glass-tint": GLASS_TINT[variant],
           "--glass-gradient-fill": GLASS_GRADIENT_FILL[variant],
+          "--shadow-card": SHADOW_CARD[variant],
         } as React.CSSProperties}
       >
         {backdrop}
