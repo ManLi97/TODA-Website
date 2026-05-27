@@ -2,7 +2,7 @@
 
 // Layout primitive for the page's sections. Each section is at least one viewport tall
 // (min-h-svh) with a surface-variant background. Provides a small React context so entrance
-// wrappers (<Animate>/<Stagger>/<StrikethroughList>) know whether to fire on mount
+// wrappers (<Animate>/<RevealGroup>/<StrikethroughList>) know whether to fire on mount
 // (above-the-fold hero) or on scroll-into-view (everything below the fold).
 // Plain smooth scroll — no scroll-snap (see globals.css).
 import { createContext, useContext, useMemo } from "react";
@@ -76,7 +76,11 @@ export function PageSection({
     BG[variant],
     // min-h-svh keeps each section at least one (stable, URL-bar-proof) viewport tall
     // for the "spotlight" rhythm, but lets it grow with content. No scroll-snap — see globals.css.
-    "min-h-svh overflow-x-hidden",
+    // overflow-x-clip (not -hidden): `overflow-x: hidden` forces the y-axis from `visible`
+    // to `auto`, silently making every section a vertical scroll container — that surfaced as
+    // a phantom "scroll inside the section" whenever a not-yet-revealed fade-up element sat
+    // in its translateY offset below the edge. `clip` contains x-overflow without that side effect.
+    "min-h-svh overflow-x-clip",
     align === "center" ? "flex flex-col justify-center" : "",
   ]
     .filter(Boolean)
@@ -93,9 +97,11 @@ export function PageSection({
         } as React.CSSProperties}
       >
         {backdrop}
-        {/* Bottom padding reserves space for the floating bottom-nav (see --bottom-nav-clearance
-            in globals.css) so the pill + FAB never cover content. */}
-        <div className={`pt-20 lg:pt-32 pb-[var(--bottom-nav-clearance)]${backdrop ? " relative z-10" : ""}`}>
+        {/* Symmetric vertical breathing room: bottom = same padding as top PLUS the floating
+            bottom-nav clearance (see --bottom-nav-clearance in globals.css). Without the extra
+            top-matching padding, the nav sits in all the bottom space and content reads as
+            crammed against the edge. */}
+        <div className={`pt-20 lg:pt-32 pb-[calc(5rem+var(--bottom-nav-clearance))] lg:pb-[calc(8rem+var(--bottom-nav-clearance))]${backdrop ? " relative z-10" : ""}`}>
           <div className="max-w-[1200px] mx-auto px-6">{children}</div>
         </div>
       </section>
