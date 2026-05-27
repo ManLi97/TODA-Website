@@ -78,7 +78,10 @@ export function SnapSection({
 
   const sectionClass = [
     BG[variant],
-    "min-h-dvh overflow-x-hidden snap-start snap-always",
+    // min-h-svh (small viewport): stable against mobile URL-bar show/hide, unlike dvh
+    // which recomputes and shifts snap points mid-scroll. snap-normal (not -always):
+    // lets momentum carry through tall sections instead of force-stopping at every edge.
+    "min-h-svh overflow-x-hidden snap-start snap-normal",
     align === "center" ? "flex flex-col justify-center" : "",
   ]
     .filter(Boolean)

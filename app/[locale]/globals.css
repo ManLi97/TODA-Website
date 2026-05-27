@@ -135,13 +135,16 @@
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
-   SCROLL — native snap-slide model
-   Sections snap vertically one at a time (scroll-snap-type on the viewport).
-   scroll-behavior: smooth governs browser-native transitions (keyboard nav,
-   anchor links) — the snap animation itself is always instant per-platform.
+   SCROLL — proximity snap model
+   Sections soft-snap to their top edge when the scroll settles near a boundary,
+   but the scroll is free to rest anywhere mid-section. This lets sections grow
+   taller than one viewport (common on mobile) without the content below the fold
+   becoming unreachable — the failure mode of `y mandatory`. See docs/mobile-audit.md.
+   scroll-padding-top offsets snap targets below the fixed 56px header (header.tsx).
    --------------------------------------------------------------------------- */
 html {
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 3.5rem; /* 56px — fixed header height (h-14) */
   scroll-behavior: smooth;
 }
 

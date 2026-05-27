@@ -1,7 +1,8 @@
 "use client";
 
-// Single-element entrance wrapper. Fires a GSAP fromTo tween when its nearest
-// <SnapSection> ancestor settles into view (IntersectionObserver threshold 0.95).
+// Single-element entrance wrapper. Fires a GSAP fromTo tween when THIS element scrolls
+// into view (IntersectionObserver on the element itself, with a rootMargin reveal offset).
+// Element-scoped (not section-scoped) so it works in sections taller than the viewport.
 // Resets to "from" state on leave so the animation replays on re-entry.
 // When the parent <SnapSection triggerOnMount> is true, fires on mount instead.
 import { useEffect, useRef } from "react";
@@ -108,28 +109,24 @@ export function Animate({ type, delay = 0, duration, className, children }: Anim
       return;
     }
 
-    const sectionEl = ctx.sectionRef.current;
-    if (!sectionEl) return;
-
-    // Observe the section element (not this element) — the section fills the viewport
-    // exactly, so a 0.95 threshold is a reliable "section has settled" signal.
+    // Observe THIS element entering the viewport (not the parent section). Section-ratio
+    // triggers can't fire on sections taller than the viewport — the failure mode that
+    // left tall sections blank. rootMargin bottom -12% reveals the element just after its
+    // top crosses into view; reset on leave so the entrance replays on scroll-back.
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.intersectionRatio >= 0.4) {
+          if (entry.isIntersecting) {
             fire();
           } else {
             reset();
           }
         }
       },
-      // 0.4: sections taller than 100dvh (portrait video on narrow phones) have a max
-      // achievable ratio below 0.7. 0.4 fires reliably once snapped in view while staying
-      // well above the ~0 ratio when the section is fully off-screen.
-      { threshold: 0.4 },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
     );
 
-    observer.observe(sectionEl);
+    observer.observe(el);
     return () => observer.disconnect();
   }, [type, delay, duration, ctx]);
 

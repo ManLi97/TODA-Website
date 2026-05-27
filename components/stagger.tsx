@@ -2,8 +2,8 @@
 
 // Cascade entrance wrapper — animates N direct children with a stagger delay.
 // Each child fires at: delay + (index * gap) ms.
-// Same IO trigger model as <Animate>: watches the nearest <SnapSection> ancestor,
-// fires when section reaches 0.95 intersection ratio, resets on leave.
+// Same trigger model as <Animate>: observes the container element entering the viewport
+// (element-scoped, survives sections taller than the viewport), resets on leave.
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -74,26 +74,23 @@ export function Stagger({ gap, type, delay = 0, className, children }: StaggerPr
       return;
     }
 
-    const sectionEl = ctx.sectionRef.current;
-    if (!sectionEl) return;
-
+    // Observe the container entering the viewport (element-scoped, not section-ratio),
+    // so the cascade fires reliably in sections taller than the viewport. rootMargin
+    // bottom -12% reveals just after the container's top crosses in; reset on leave.
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.intersectionRatio >= 0.4) {
+          if (entry.isIntersecting) {
             fire();
           } else {
             reset();
           }
         }
       },
-      // 0.4: sections that overflow 100dvh (e.g. portrait video on iPhone 11) have a max
-      // achievable ratio of ~0.68. 0.7 was too high; 0.4 fires reliably once snapped in view
-      // while still being above the ~0 ratio when the section is fully off-screen.
-      { threshold: 0.4 },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
     );
 
-    observer.observe(sectionEl);
+    observer.observe(container);
     return () => observer.disconnect();
   }, [type, delay, gap, ctx]);
 
