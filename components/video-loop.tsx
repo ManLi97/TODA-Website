@@ -71,7 +71,6 @@ export function VideoLoop({ src, poster, className, playOnce = false }: VideoLoo
       ref={videoRef}
       src={src}
       poster={poster}
-      autoPlay
       loop={!playOnce}
       muted
       playsInline
