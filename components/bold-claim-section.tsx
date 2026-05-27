@@ -23,13 +23,14 @@ export function BoldClaimSection({
     <Stagger gap={150} type="fade-up" className="max-w-2xl">
       <p className="type-eyebrow text-text-tertiary mb-6">{label}</p>
       <h2 className="type-display text-text-primary mb-8">{headline}</h2>
-      {/* Phone-format video — portrait 9:16. Hidden on mobile: 462px tall + bullets overflows
-          dvh on phones, ratio never reaches IO threshold and Stagger stays at opacity:0. */}
-      <div className="hidden sm:block max-w-[260px] mx-auto aspect-[9/16] glass--gradient overflow-hidden rounded-sm">
+      {/* Phone-format video — portrait 9:16. Shown on all viewports: sections are now
+          min-h-svh (grow with content) and Stagger fires once element-scoped, so the old
+          dvh-overflow / IO-ratio reasons for hiding it on mobile no longer apply. */}
+      <div className="max-w-[260px] mx-auto aspect-[9/16] glass--gradient overflow-hidden rounded-sm">
         <VideoLoop src="/bold-claim-section-video.mp4" playOnce className="w-full h-full" />
       </div>
       {/* Three glass claim boxes — shimmer on number only, text at lede size. */}
-      <div className="flex flex-col gap-6 w-full mt-2 sm:mt-12">
+      <div className="flex flex-col gap-6 w-full mt-12">
         {[bullet1, bullet2, bullet3].map((text, i) => (
           <div key={i} className="glass glass--gradient flex items-center gap-6">
             <span className="type-sub-display grad-text--flow flowing tabular-nums shrink-0">
