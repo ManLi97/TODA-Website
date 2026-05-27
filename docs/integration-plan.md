@@ -3,14 +3,21 @@
 Phases run sequentially. Each phase ends with a review gate before the next begins.
 Source of truth for the design system: `docs/design-system/` in this repo.
 
+> **⚠️ Superseded scroll model (2026-05-27):** This plan was written when the page used
+> `scroll-snap-type: mandatory` one-viewport "snap-slide" sections. That model was removed
+> in favour of plain smooth scroll with `min-h-svh` sections and fire-once reveals — it
+> trapped overflowing content and felt un-premium on mobile. References below to scroll-snap,
+> "snap-fits," or snap-stop are historical; the section primitive was renamed `SnapSection` → `PageSection`.
+> Current scroll/animation reality + the open mobile punch list live in `docs/mobile-audit.md`.
+
 ## Current state
 
 Phases 1-3 complete: design system reference reconstructed (`docs/design-system/`),
-CSS tokens migrated to Tailwind v4 `@theme`, snap-slide architecture + animation
-primitives + section ports off Framer Motion landed. Run `git log --oneline` for the
-full history.
+CSS tokens migrated to Tailwind v4 `@theme`, animation primitives + section ports off
+Framer Motion landed. Scroll model pivoted from snap-slides to plain smooth scroll (see
+`docs/mobile-audit.md`). Run `git log --oneline` for the full history.
 
-**Next:** Phase 4a — page restructure to the 10-section order (see below).
+**Next:** mobile-first polish per `docs/mobile-audit.md` (bottom-nav fixes, per-section device pass).
 
 ---
 
@@ -64,7 +71,7 @@ chrome changes yet.
 - `app/[locale]/page.tsx` — reorder all sections per table above, insert
   `<BoldClaimSection>` at #2, move FAQ to #10, swap inline Manifest → `<SocialProofSection>`,
   swap inline CTA → `<PricingSection>`, apply new surface variants to every
-  `<SnapSection variant=...>`.
+  `<PageSection variant=...>`.
 - Pricing CTA href: `#contact` → `https://app.toda.ink/onboarding`. **New tab,
   confirmed:** plain `<a target="_blank" rel="noopener noreferrer">`, not `<Link>`.
 - Pricing section id: `contact` → `pricing`. Hero's `ctaPrimary href="#contact"`
@@ -150,14 +157,14 @@ Snap-aware, accessible, mobile + desktop same layout.
   - Glass surface uses DS tokens directly: `var(--glass-tint)`, blur+saturate
     backdrop, **border on all sides** via `var(--glass-border-gold)`, and a soft
     float shadow via the new `var(--shadow-float)` token. Three slots horizontally.
-  - Up arrow (left): scrolls to previous SnapSection, disabled at section #1
+  - Up arrow (left): scrolls to previous PageSection, disabled at section #1
   - TODA app icon (center): external link to `https://app.toda.ink/onboarding`
     (`target="_blank" rel="noopener noreferrer"` recommended — don't yank user out
     of marketing flow)
-  - Down arrow (right): scrolls to next SnapSection, disabled at section #10
+  - Down arrow (right): scrolls to next PageSection, disabled at section #10
   - Snap awareness: own IntersectionObserver watching all `<section>` elements with
     `id` attribute. Currently-visible section becomes active index. Decoupled from
-    SnapSection context (no architecture churn).
+    PageSection context (no architecture churn).
   - Smooth scroll: `element.scrollIntoView({ behavior: 'smooth', block: 'start' })`
     — browser handles snap.
   - Keyboard: Tab order left-to-right, Enter triggers action, ARIA labels per slot

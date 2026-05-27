@@ -244,35 +244,34 @@ Phases get clearly separated, groups feel like one beat. This is the entire rhyt
 
 ---
 
-## 6) Trigger system — IntersectionObserver scoped to `<SnapSection>`
+## 6) Trigger system — element-scoped IntersectionObserver, fire-once
 
-The entrance trigger is an `IntersectionObserver(threshold: 0.95)` registered by the
-`<Animate>` component, scoped via React context to its nearest `<SnapSection>` ancestor.
-When the section settles into view (intersection ratio crosses 0.95), each `<Animate>`
-inside fires its GSAP `fromTo` tween. When the section leaves, each tween resets to its
-`from` state so it replays on re-entry. This matches the "State is reversible" principle
-in `philosophy.md`.
+The entrance trigger is an `IntersectionObserver` registered by the `<Animate>` component
+on **its own element** (not the parent section). When the element scrolls into view
+(`rootMargin: "0px 0px -12% 0px"`, so it reveals just after the top crosses in), it fires
+its GSAP `fromTo` tween **once** and then disconnects — no reset, no replay on scroll-back.
+A calm, single reveal reads more premium than re-animating every time you pass an element,
+and element-scoping means it works regardless of section height (a section-ratio trigger
+can never fire on a section taller than the viewport — the old failure mode).
 
-**Why IntersectionObserver, not ScrollTrigger or `scrollend`:**
-- The snap-slide layout makes "section settled" a natural binary signal — IO at a high
-  threshold reads it cleanly, with no scroll-position math.
-- `scrollend` has uneven browser support (Safari 18.2+ only); IO gives us the same signal
+**Why element-scoped IntersectionObserver, not section-ratio / ScrollTrigger / `scrollend`:**
+- Observing the element itself is height-agnostic: it fires whether the section is one
+  viewport or three, on mobile or desktop.
+- `scrollend` has uneven browser support (Safari 18.2+ only); IO gives us the signal
   with no fallback branch.
-- GSAP ScrollTrigger remains available in the bundle but is no longer the entrance
-  engine. Reserve it for any future tween that must scrub against scroll position
-  (none planned).
+- GSAP ScrollTrigger remains available in the bundle but is not the entrance engine.
+  Reserve it for any future tween that must scrub against scroll position (none planned).
 
 **Lifecycle, per `<Animate>` instance:**
-- `onEnter` (ratio crosses 0.95 upward) → run the GSAP `fromTo` tween with the type's
-  default duration, the `delay` prop, and `ease: "entry"`.
-- `onLeave` (ratio falls below 0.95) → reset the element to its `from` state
-  instantaneously, so the next entry replays the tween.
-- `prefers-reduced-motion` → short-circuit: element jumps to its `to` state on enter
-  with zero duration, no reset on leave.
+- `onEnter` (element crosses the reveal line) → run the GSAP `fromTo` tween with the
+  type's default duration, the `delay` prop, and `ease: "entry"`, then disconnect.
+- `prefers-reduced-motion` → short-circuit: element jumps to its `to` state with zero
+  duration.
 
-**Hero is not a special case.** `<SnapSection triggerOnMount>` fires its child
-`<Animate>` instances on mount instead of waiting for an IO intersection — same
-component, same tween, different trigger source. One mental model.
+**Hero is the one mount-fired case.** `<PageSection triggerOnMount>` fires its child
+`<Animate>` instances on mount instead of waiting for an IO intersection — same component,
+same tween, different trigger source — so the above-the-fold hero animates immediately on
+load rather than waiting a frame for the observer.
 
 **Counter and progress bar patterns (not yet implemented):**
 The source DS included `data-count` and `data-progress` attribute patterns for animated

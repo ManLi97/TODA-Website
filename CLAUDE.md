@@ -1,8 +1,9 @@
 # Project: TODA Website
 
 Marketing landing page for TODA Tattoo Solutions — a SaaS platform for tattoo artists.
-Single-page experience with 10 snap-slide sections (one viewport each), i18n (de/es/en),
-and GSAP entrance animations triggered on snap-settle.
+Single-page experience with 10 full-height sections (`min-h-svh` each), plain smooth
+scroll (no scroll-snap), i18n (de/es/en), and GSAP entrance reveals that fire once when
+an element scrolls into view.
 Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 
 ## Tech stack
@@ -12,8 +13,8 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 | Framework       | Next.js 15 (App Router)                                             |
 | Language        | TypeScript                                                          |
 | Styling         | Tailwind CSS v4 (CSS-first `@theme` in `globals.css`)               |
-| Scroll          | Native CSS scroll-snap (`y mandatory`)                              |
-| Animations      | GSAP + CustomEase, triggered via IntersectionObserver scoped to `<SnapSection>`. |
+| Scroll          | Plain smooth scroll (no scroll-snap)                                |
+| Animations      | GSAP + CustomEase, fire-once entrances via element-scoped IntersectionObserver. |
 | Carousel        | Embla Carousel                                                      |
 | i18n            | next-intl (de / es / en, default: de)                               |
 | Database/Auth   | Supabase (wired, not yet used in UI)                                |
@@ -43,14 +44,14 @@ pnpm format:check # Prettier check (CI)
 ```
 app/
   [locale]/
-    layout.tsx        # root layout (no scroll provider — native snap handles it)
-    page.tsx          # 10-section home page using <SnapSection>
-    globals.css       # Tailwind base, design tokens, scroll-snap on `html`
+    layout.tsx        # root layout (no scroll provider — plain smooth scroll)
+    page.tsx          # 10-section home page using <PageSection>
+    globals.css       # Tailwind base, design tokens, smooth scroll on `html` (no snap)
 components/
-  snap-section.tsx    # layout primitive: min-h-dvh + scroll-snap-align/stop
-  animate.tsx         # entrance wrapper — GSAP fromTo, IO-triggered, resets on leave
+  page-section.tsx    # layout primitive: min-h-svh + surface variant + reveal context
+  animate.tsx         # entrance wrapper — GSAP fromTo, element-scoped IO, fires once
   stagger.tsx         # cascaded entrance for N children — same trigger model
-  hero.tsx            # section 1 — uses <SnapSection triggerOnMount>
+  hero.tsx            # section 1 — uses <PageSection triggerOnMount>
   bold-claim-section.tsx
   case-study-section.tsx
   social-proof-section.tsx
@@ -75,22 +76,22 @@ middleware.ts         # next-intl locale routing
 
 ## Key patterns
 
-- **`<SnapSection>` is the layout primitive:** every section wraps in
-  `<SnapSection variant="base|alt|raised" id triggerOnMount?>`. `min-h-dvh` +
-  `scroll-snap-align: start` + `scroll-snap-stop: always`. Provides a React context
-  exposing its DOM node so `<Animate>` / `<Stagger>` can scope their
-  IntersectionObserver to it.
+- **`<PageSection>` is the layout primitive:** every section wraps in
+  `<PageSection variant="base|alt|raised" id triggerOnMount?>`. `min-h-svh` (at least one
+  viewport tall, grows with content — no scroll-snap). Provides a small React context
+  carrying `triggerOnMount` so entrance wrappers know whether to fire on mount or on scroll.
 - **Surface rhythm:** base → alt → raised → base → alt → raised → base → alt → raised → base
   (10 sections in order). Canonical section list + surface map lives in
   `docs/integration-plan.md` § Section order & surface rhythm.
 - **All copy via next-intl:** no hardcoded strings in components — everything reads
   from `messages/{locale}.json` under the `"home"` namespace.
-- **`<Animate>` and `<Stagger>` for entrances:** entrance tween runs after the section
-  has settled into view (`IntersectionObserver(threshold: 0.95)` scoped to the parent
-  `<SnapSection>`); resets to `from` state on leave so replays work. Prop API and
-  timing math live in `docs/design-system/motion.md`.
-- **Hero is not a special case:** it's a `<SnapSection triggerOnMount>` so its
-  `<Animate>` children fire on mount instead of on intersection. One mental model.
+- **`<Animate>` and `<Stagger>` for entrances:** entrance tween fires **once** when the
+  element itself scrolls into view (element-scoped `IntersectionObserver`, `rootMargin`
+  reveal offset); no replay on scroll-back. Works regardless of section height. Prop API
+  and timing math live in `docs/design-system/motion.md`.
+- **Hero is the mount-fired case:** it's a `<PageSection triggerOnMount>` so its
+  `<Animate>` children fire on mount instead of on scroll-in — the above-the-fold section
+  animates immediately on load.
 - **i18n-aware navigation:** always import `Link`, `useRouter`, `redirect` from
   `@/i18n/navigation` — never from `next/navigation` directly.
 
@@ -114,9 +115,13 @@ Required in `.env.local`:
   explicit confirmation.
 - **Playfair Display:** used exactly once on the entire site — the "Weniger Chaos"
   span inside the hero headline only. Do not add any other Playfair uses anywhere.
-- **One viewport per section:** content must fit within `100dvh`. Sections that don't
-  fit on mobile are reshaped to fit (e.g. Features → horizontal Embla carousel in
-  Phase 5d), not allowed to overflow.
+- **No scroll-snap — plain smooth scroll (mobile-first):** the old `scroll-snap-type:
+  mandatory` "one viewport per section" model was removed (it trapped overflowing
+  content and felt un-premium). Sections are `min-h-svh` — at least one viewport for the
+  spotlight rhythm, but free to grow taller and scroll naturally. Spotlight feel comes
+  from viewport rhythm + surface-colour alternation + fire-once reveals. Full rationale,
+  decisions, and the open punch list (bottom-nav bugs, per-section polish) live in
+  `docs/mobile-audit.md`. Mobile is the priority device; desktop is polished afterward.
 - **Tailwind v4:** uses `@tailwindcss/postcss`, not the classic `tailwind.config.js`.
   CSS-first config in `globals.css`.
 

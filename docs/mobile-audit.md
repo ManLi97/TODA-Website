@@ -1,7 +1,11 @@
 # Mobile Audit — Bug Inventory & Triage
 
+> **⚠️ Read the Decisions + Phase status sections first.** The TL;DR and section-A/B/C
+> tables below describe the page **as it was** (a `scroll-snap` deck) — that's the diagnosis,
+> not the current state. The snap model has since been **removed entirely** (Phases A–C done).
+> Phases D (bottom-nav) and E (per-section polish + Lenis) are still open.
+>
 > **Priority:** Mobile is the #1 device category. We get mobile right first, then optimize desktop.
-> **Status:** Inventory phase — listing bugs and root causes before committing to a fix model.
 > **How to read this:** Findings marked **[code-certain]** are provable from the source.
 > Findings marked **[needs-device]** are strong inferences I could not visually confirm
 > (no browser automation installed) — Tomek to confirm "feel" on a real phone.
@@ -68,35 +72,35 @@ sections.
 
 ## Decisions (locked 2026-05-27)
 
-- **D1 — Snap model:** ✅ **(b) `proximity` snap, tall sections allowed.** Soft-snap to
-  section tops near a boundary; rest freely mid-section. `snap-stop: always` → `normal`.
+- **D1 — Snap model:** ✅ **Scroll-snap removed entirely — plain smooth scroll.** First
+  tried `proximity` snap (foundation commit), but on-device review showed snapping itself
+  was the problem, so we pivoted to no snap at all. Sections are `min-h-svh` (≥ one viewport
+  for rhythm, free to grow). Spotlight feel now comes from viewport rhythm + surface-colour
+  alternation + fire-once reveals, not snap.
 - **D2 — Bottom nav:** ✅ **Keep arrows + FAB, fix the bugs** (B1 stuck active index,
-  B2 flicker, B3 content overlap).
-- **D3 — `dvh` → `svh`:** ✅ adopt `svh` for stable mobile snap points (my call).
-- **D4 — Animation trigger:** ✅ rework to **per-element-on-enter** (observe the animated
-  element itself with a `rootMargin` reveal offset), so it survives tall sections. Must ship
-  **with** D1 or tall sections render blank. (my call)
-- **D5 — Header:** ✅ stays fixed; add `scroll-padding-top` so snapped sections clear it. (my call)
+  B2 flicker, B3 content overlap). Permanent nav — arrows are placeholders, will become
+  subpage links (e.g. blog) once subpages exist. **Still open.**
+- **D3 — `dvh` → `svh`:** ✅ adopted `svh` for stable, URL-bar-proof section heights.
+- **D4 — Animation trigger:** ✅ reworked to **element-scoped, fire-once** (observe the
+  element itself with a `rootMargin` reveal offset, fire once, no replay).
+- **D5 — Header:** ✅ stays fixed; `scroll-padding-top` keeps anchor/nav jumps clear of it.
+- **D6 — Lenis (later):** smooth-scroll layer only, **never** sticky/pinned sections (the
+  pinning, not Lenis, caused the old cut-offs + animation breakage). Deferred — Phase E.
 
 ## Phase status
 
-- **Phase 1 — Foundation (in progress):** D1 + D3 + D4 + D5. Files: `globals.css`,
-  `snap-section.tsx`, `animate.tsx`, `stagger.tsx`. Shippable substrate; nothing should render blank.
-- **Phase 2 — Chrome:** bottom-nav B1/B2/B3 fixes.
-- **Phase 3 — Per-section polish:** device-confirm sections 1→10, reshape only what's needed.
-
-> **Governance note:** D1 overrides the "One viewport per section" rule in `CLAUDE.md` and the
-> one-viewport assumption in `docs/integration-plan.md`. Update both once Phase 1 is confirmed on device.
-
-## Proposed sequencing (once D1 is decided)
-
-1. **Foundation:** D1 snap model + D3 `svh` + B4 header offset — establishes a stable scroll substrate.
-2. **Chrome:** fix bottom-nav active tracking (B1/B2) and FAB overlap (B3) / simplify per D2.
-3. **Animation model:** D4 per-element triggers; retire the threshold hack.
-4. **Per-section polish:** walk sections 1→10, confirm on device, reshape only what still needs it.
-5. Deploy → Tomek feel-check → iterate.
+- **Phase A — Spike (✅ done):** removed scroll-snap, fire-once reveals. Confirmed on device.
+- **Phase B — Cleanup (✅ done):** `SnapSection` → `PageSection`, dropped dead `sectionRef`
+  plumbing, migrated stale `strikethrough-list` trigger.
+- **Phase C — Docs (✅ done):** this file + `CLAUDE.md` + `integration-plan.md` +
+  `philosophy.md` + `motion.md` realigned to the no-snap model.
+- **Phase D — Chrome (open):** bottom-nav B1 (stuck active index), B2 (flicker), B3 (FAB
+  overlap). B1/B2 root cause: IO `threshold: 0.5` in `bottom-nav.tsx` can't track sections
+  taller than the viewport — needs a most-visible / scroll-position approach instead.
+- **Phase E — Per-section polish + Lenis (open):** device-confirm sections 1→10
+  (incl. un-hiding the BoldClaim video now that tall sections are legal), then optional Lenis.
 
 ---
 
-*Generated during mobile-first triage. I could not auto-measure viewports (no Playwright/Puppeteer
-in this repo), so [needs-device] items await a real-phone confirmation pass.*
+*Generated during mobile-first triage. No browser automation in this repo, so [needs-device]
+items in the per-section table still await a real-phone confirmation pass during Phase E.*

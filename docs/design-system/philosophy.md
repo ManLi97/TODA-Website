@@ -163,12 +163,12 @@ them is a signal that the design has drifted.
   read, not poked.
 - **No spring physics, no bounce, no overshoot.** The single ease curve is
   non-negotiable. Bouncing reads as toy-like; this brand reads as instrument.
-- **No decorative parallax.** The scroll architecture is snap-slides: each section
-  occupies exactly one viewport (`min-h-dvh` + native `scroll-snap-type: y mandatory`
-  on `html`, `scroll-snap-align: start` + `scroll-snap-stop: always` on each section).
-  The user steps between sections as in a slide deck — swipe / wheel / arrow keys
-  commit to the next section or snap back if the gesture is too short. Entrance
-  animations fire only after a section has settled into view, and reset when the
-  section leaves so they replay on re-entry. The settle signal is an
-  `IntersectionObserver(threshold: 0.95)` scoped to each section — no scroll-position
+- **No decorative parallax.** The scroll architecture is plain smooth scroll — no
+  scroll-snap. Each section is at least one viewport tall (`min-h-svh`) so it still
+  reads as a distinct "spotlight," but the page scrolls continuously like a premium
+  editorial site (Apple / Stripe / Linear), and sections taller than the viewport
+  scroll naturally instead of being trapped. The spotlight feel comes from the
+  viewport-height rhythm, the surface-colour alternation, and entrance reveals — not
+  from hijacking the scroll. Entrance animations fire **once** when an element scrolls
+  into view (element-scoped `IntersectionObserver`) and stay — no scroll-position
   tweens, no parallax, no decorative motion bound to scroll progress.
