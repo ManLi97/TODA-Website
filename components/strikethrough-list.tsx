@@ -1,9 +1,9 @@
 "use client";
 
-// Renders a list of statements; each item strikes itself out as IT scrolls into view:
-// a line draws left-to-right through the text, then the text fades to muted grey. Per-element
-// on entry (each row has its own IntersectionObserver), fires once, no replay — no predefined
-// timeline (that lives only in the narrative Origin section).
+// Renders a list of statements that strike themselves out as a deliberate cascade: once the
+// whole list scrolls into view, each item is crossed out one after another — a line draws
+// left-to-right through the text, then the text fades to muted grey. Single container-scoped
+// IntersectionObserver, fires once, no replay.
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { usePageSection } from "@/components/page-section";
@@ -17,11 +17,15 @@ interface StrikethroughListProps {
 }
 
 export function StrikethroughList({ items }: StrikethroughListProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const textRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const ctx = usePageSection();
 
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     const rows = items
       .map((_, i) => ({ textEl: textRefs.current[i], lineEl: lineRefs.current[i] }))
       .filter((r) => r.textEl && r.lineEl) as {
@@ -47,41 +51,44 @@ export function StrikethroughList({ items }: StrikethroughListProps) {
       gsap.set(lineEl, { scaleX: 0, transformOrigin: "left center" });
     });
 
-    const fire = (textEl: HTMLParagraphElement, lineEl: HTMLSpanElement) => {
+    // Cross out every row in sequence — each item starts STAGGER after the previous,
+    // giving a slow, deliberate cascade rather than three simultaneous strikes.
+    const STAGGER = 1.5;
+    const fire = () => {
       const tl = gsap.timeline();
-      // Line draws left-to-right, text colour fades to muted slightly after.
-      tl.to(lineEl, { scaleX: 1, duration: 0.65, ease: "power2.inOut" }, 0);
-      tl.to(textEl, { color: COLOR_TERTIARY, duration: 0.55, ease: "power1.out" }, 0.2);
+      rows.forEach(({ textEl, lineEl }, i) => {
+        const at = i * STAGGER;
+        // Line draws left-to-right, text colour fades to muted slightly after.
+        tl.to(lineEl, { scaleX: 1, duration: 0.65, ease: "power2.inOut" }, at);
+        tl.to(textEl, { color: COLOR_TERTIARY, duration: 0.55, ease: "power1.out" }, at + 0.2);
+      });
     };
 
     if (!ctx || ctx.triggerOnMount) {
-      rows.forEach(({ textEl, lineEl }) => fire(textEl, lineEl));
+      fire();
       return;
     }
 
-    // Each row strikes itself out when IT enters view; fire once, then unobserve.
-    const byText = new Map<Element, (typeof rows)[number]>();
-    rows.forEach((r) => byText.set(r.textEl, r));
-
+    // The whole list strikes out as a cascade once the container enters view; fires once.
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            const row = byText.get(entry.target);
-            if (row) fire(row.textEl, row.lineEl);
-            observer.unobserve(entry.target);
+            fire();
+            observer.disconnect();
+            break;
           }
         }
       },
       { rootMargin: "0px 0px -12% 0px", threshold: 0 },
     );
 
-    rows.forEach((r) => observer.observe(r.textEl));
+    observer.observe(container);
     return () => observer.disconnect();
   }, [items, ctx]);
 
   return (
-    <div className="space-y-1">
+    <div ref={containerRef} className="space-y-1">
       {items.map((item, i) => (
         <div key={i} className="relative">
           <p
