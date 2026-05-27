@@ -13,7 +13,7 @@ import { PricingSection } from "@/components/pricing-section";
 import { FaqSection } from "@/components/faq-section";
 import { FeaturesSection } from "@/components/features-section";
 import { OriginSection } from "@/components/origin-section";
-import { SnapSection } from "@/components/snap-section";
+import { PageSection } from "@/components/page-section";
 import { HeroParticles } from "@/components/hero-particles";
 
 export default async function HomePage() {
@@ -22,16 +22,16 @@ export default async function HomePage() {
   return (
     <>
       {/* ── 1. Hero — surface-base ── */}
-      <SnapSection variant="base" id="hero" triggerOnMount align="center" backdrop={<HeroParticles />}>
+      <PageSection variant="base" id="hero" triggerOnMount align="center" backdrop={<HeroParticles />}>
         <Hero
           headline={t("hero.headline")}
           accentText={t("hero.accentText")}
           subHeadline={t("hero.subHeadline")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 2. Bold Claim — surface-alt ── */}
-      <SnapSection variant="alt" id="bold-claim">
+      <PageSection variant="alt" id="bold-claim">
         <BoldClaimSection
           label={t("boldClaim.label")}
           headline={t("boldClaim.headline")}
@@ -39,10 +39,10 @@ export default async function HomePage() {
           bullet2={t("boldClaim.bullet2")}
           bullet3={t("boldClaim.bullet3")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 3. Case Study — surface-raised ── */}
-      <SnapSection variant="base" id="case-study">
+      <PageSection variant="base" id="case-study">
         <CaseStudySection
           label={t("caseStudy.label")}
           statement={t("caseStudy.statement")}
@@ -52,10 +52,10 @@ export default async function HomePage() {
           bullet4={t("caseStudy.bullet4")}
           videoCaption={t("caseStudy.videoCaption")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 4. Origin — surface-alt ── */}
-      <SnapSection variant="alt" id="about">
+      <PageSection variant="alt" id="about">
         <OriginSection
           label={t("origin.label")}
           headline={t("origin.headline")}
@@ -66,10 +66,10 @@ export default async function HomePage() {
           bubble2={t("origin.bubble2")}
           closing={t("origin.closing")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 5. Features — surface-alt ── */}
-      <SnapSection variant="base" id="features">
+      <PageSection variant="base" id="features">
         <FeaturesSection
           label={t("features.label")}
           headline={t("features.headline")}
@@ -86,10 +86,10 @@ export default async function HomePage() {
           feature6Title={t("features.feature6Title")}
           feature6Excerpt={t("features.feature6Excerpt")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 6. Social Proof — surface-raised ── */}
-      <SnapSection variant="alt" id="social-proof">
+      <PageSection variant="alt" id="social-proof">
         <SocialProofSection
           label={t("socialProof.label")}
           headline={t("socialProof.headline")}
@@ -100,10 +100,10 @@ export default async function HomePage() {
           payoffAccent={t("socialProof.payoffAccent")}
           videoCaption={t("socialProof.videoCaption")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 7. Testimonials — surface-base ── */}
-      <SnapSection variant="base" id="testimonials">
+      <PageSection variant="base" id="testimonials">
         <TestimonialsSection
           label={t("testimonials.label")}
           headline={t("testimonials.headline")}
@@ -118,10 +118,10 @@ export default async function HomePage() {
           author3={t("testimonials.author3")}
           studio3={t("testimonials.studio3")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 8. Team — surface-alt ── */}
-      <SnapSection variant="alt" id="team">
+      <PageSection variant="alt" id="team">
         <TeamSection
           label={t("team.label")}
           headline={t("team.headline")}
@@ -132,10 +132,10 @@ export default async function HomePage() {
           name5={t("team.name5")} role5={t("team.role5")}
           cta={t("team.cta")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 9. Pricing — surface-raised ── */}
-      <SnapSection variant="base" id="pricing">
+      <PageSection variant="base" id="pricing">
         <PricingSection
           headline={t("pricing.headline")}
           price={t("pricing.price")}
@@ -143,10 +143,10 @@ export default async function HomePage() {
           priceNote={t("pricing.priceNote")}
           ctaLabel={t("pricing.ctaLabel")}
         />
-      </SnapSection>
+      </PageSection>
 
       {/* ── 10. FAQ — surface-base ── */}
-      <SnapSection variant="alt" id="faq">
+      <PageSection variant="alt" id="faq">
         <FaqSection
           label={t("faq.label")}
           headline={t("faq.headline")}
@@ -156,7 +156,7 @@ export default async function HomePage() {
           q4={t("faq.q4")} a4={t("faq.a4")}
           q5={t("faq.q5")} a5={t("faq.a5")}
         />
-      </SnapSection>
+      </PageSection>
     </>
   );
 }

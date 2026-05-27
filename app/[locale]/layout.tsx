@@ -1,7 +1,7 @@
 // Root layout for all locale-prefixed routes.
 // Provides NextIntlClientProvider for client-side translations.
 // Injects Inter and Playfair Display Italic via next/font as CSS variables.
-// Scroll is handled by native CSS scroll-snap on <html> — no JS scroll provider.
+// Scroll is plain smooth scroll on <html> — no scroll-snap, no JS scroll provider.
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";

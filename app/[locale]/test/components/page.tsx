@@ -139,7 +139,7 @@ export default function ComponentTestPage() {
       <SectionWrapper variant="base" id="animate">
         <SectionLabel>GSAP · Animate + Stagger — IO-triggered entrances</SectionLabel>
         <p className="text-text-secondary text-[17px] leading-[1.47] tracking-[-0.2px] mb-12 max-w-xl">
-          Diese Section ist nicht in eine SnapSection eingebettet — Animate/Stagger loggen
+          Diese Section ist nicht in eine PageSection eingebettet — Animate/Stagger loggen
           eine Warnung und feuern stattdessen on-mount (Fallback-Modus).
         </p>
 

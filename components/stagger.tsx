@@ -7,7 +7,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
-import { useSnapSection } from "@/components/snap-section";
+import { usePageSection } from "@/components/page-section";
 import { ANIM_FROM, ANIM_TO, ANIM_DURATION, type AnimationType } from "@/components/animate";
 
 interface StaggerProps {
@@ -20,7 +20,7 @@ interface StaggerProps {
 
 export function Stagger({ gap, type, delay = 0, className, children }: StaggerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const ctx = useSnapSection();
+  const ctx = usePageSection();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -56,7 +56,7 @@ export function Stagger({ gap, type, delay = 0, className, children }: StaggerPr
 
     if (!ctx) {
       if (process.env.NODE_ENV !== "production") {
-        console.warn("[Stagger] No <SnapSection> context found. Firing on mount.");
+        console.warn("[Stagger] No <PageSection> context found. Firing on mount.");
       }
       fire();
       return;

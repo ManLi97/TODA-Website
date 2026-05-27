@@ -1,13 +1,12 @@
 "use client";
 
-// Renders a list of statements that animate sequentially on section entry:
+// Renders a list of statements that animate sequentially on entry:
 // each item starts white, a line draws left-to-right through it, then it fades
-// to muted grey. Resets when the section leaves so the animation replays.
-// Uses the same IntersectionObserver pattern as <Animate> — scoped to the
-// nearest <SnapSection> ancestor via context.
+// to muted grey. Fires once when the list scrolls into view — no replay on scroll-back.
+// Same element-scoped IntersectionObserver pattern as <Animate>/<Stagger>.
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { useSnapSection } from "@/components/snap-section";
+import { usePageSection } from "@/components/page-section";
 
 // Resolved from globals.css @theme — hex values, safe for GSAP color interpolation.
 const COLOR_PRIMARY   = "#ffffff";
@@ -15,7 +14,7 @@ const COLOR_TERTIARY  = "#6b6b6b";
 
 // Seconds between each item's strike animation starting.
 const ITEM_STAGGER_S  = 0.9;
-// Delay after section settles before the first strike fires (lets Stagger fade-up finish).
+// Delay after the list enters view before the first strike fires (lets Stagger fade-up finish).
 const INITIAL_DELAY_S = 2.2;
 
 interface StrikethroughListProps {
@@ -23,10 +22,11 @@ interface StrikethroughListProps {
 }
 
 export function StrikethroughList({ items }: StrikethroughListProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const textRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const tlRef    = useRef<gsap.core.Timeline | null>(null);
-  const ctx      = useSnapSection();
+  const ctx      = usePageSection();
 
   useEffect(() => {
     const textEls = items.map((_, i) => textRefs.current[i]).filter(Boolean) as HTMLParagraphElement[];
@@ -68,30 +68,28 @@ export function StrikethroughList({ items }: StrikethroughListProps) {
       tlRef.current = buildTimeline();
     };
 
-    const reset = () => {
-      tlRef.current?.kill();
-      setInitial();
-    };
-
     if (!ctx || ctx.triggerOnMount) {
       fire();
       return;
     }
 
-    const sectionEl = ctx.sectionRef.current;
-    if (!sectionEl) return;
+    const container = containerRef.current;
+    if (!container) return;
 
+    // Observe the list entering the viewport, fire once, then disconnect (no replay).
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.intersectionRatio >= 0.7) fire();
-          else reset();
+          if (entry.isIntersecting) {
+            fire();
+            observer.disconnect();
+          }
         }
       },
-      { threshold: 0.7 },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
     );
 
-    observer.observe(sectionEl);
+    observer.observe(container);
     return () => {
       observer.disconnect();
       tlRef.current?.kill();
@@ -99,7 +97,7 @@ export function StrikethroughList({ items }: StrikethroughListProps) {
   }, [items, ctx]);
 
   return (
-    <div className="space-y-1">
+    <div ref={containerRef} className="space-y-1">
       {items.map((item, i) => (
         <div key={i} className="relative">
           <p

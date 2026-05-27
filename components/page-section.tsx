@@ -1,10 +1,11 @@
 "use client";
 
-// Layout primitive for the snap-slide scroll model.
-// Each section snaps to exactly one viewport height. Provides a React context
-// so Phase 3b's <Animate> and <Stagger> can scope their IntersectionObserver
-// to this section's DOM node.
-import { createContext, useContext, useRef, useMemo } from "react";
+// Layout primitive for the page's sections. Each section is at least one viewport tall
+// (min-h-svh) with a surface-variant background. Provides a small React context so entrance
+// wrappers (<Animate>/<Stagger>/<StrikethroughList>) know whether to fire on mount
+// (above-the-fold hero) or on scroll-into-view (everything below the fold).
+// Plain smooth scroll — no scroll-snap (see globals.css).
+import { createContext, useContext, useMemo } from "react";
 
 type SectionVariant = "base" | "alt" | "raised";
 
@@ -32,20 +33,19 @@ const GLASS_GRADIENT_FILL: Record<SectionVariant, string> = {
   raised: "#0a0a0a",
 };
 
-export interface SnapSectionContextValue {
-  // The section's DOM node — Phase 3b attaches IntersectionObserver here.
-  sectionRef: React.RefObject<HTMLElement | null>;
-  // When true, <Animate> fires on mount instead of waiting for intersection.
+export interface PageSectionContextValue {
+  // When true, entrance wrappers fire on mount instead of waiting for scroll-into-view.
+  // Used by the above-the-fold hero so its content animates immediately on load.
   triggerOnMount: boolean;
 }
 
-export const SnapSectionContext = createContext<SnapSectionContextValue | null>(null);
+export const PageSectionContext = createContext<PageSectionContextValue | null>(null);
 
-export function useSnapSection() {
-  return useContext(SnapSectionContext);
+export function usePageSection() {
+  return useContext(PageSectionContext);
 }
 
-interface SnapSectionProps {
+interface PageSectionProps {
   variant?: SectionVariant;
   id?: string;
   triggerOnMount?: boolean;
@@ -58,22 +58,18 @@ interface SnapSectionProps {
   children: React.ReactNode;
 }
 
-export function SnapSection({
+export function PageSection({
   variant = "base",
   id,
   triggerOnMount = false,
   align = "start",
   backdrop,
   children,
-}: SnapSectionProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  // Object is memoised so consumers don't re-render on every SnapSection render.
-  // sectionRef is stable (useRef), so the dep only meaningfully changes when
-  // triggerOnMount changes (which never happens in practice — listed for lint).
-  const ctx = useMemo<SnapSectionContextValue>(
-    () => ({ sectionRef, triggerOnMount }),
-    [sectionRef, triggerOnMount],
+}: PageSectionProps) {
+  // Memoised so consumers don't re-render on every PageSection render.
+  const ctx = useMemo<PageSectionContextValue>(
+    () => ({ triggerOnMount }),
+    [triggerOnMount],
   );
 
   const sectionClass = [
@@ -87,9 +83,8 @@ export function SnapSection({
     .join(" ");
 
   return (
-    <SnapSectionContext.Provider value={ctx}>
+    <PageSectionContext.Provider value={ctx}>
       <section
-        ref={sectionRef}
         id={id}
         className={`${sectionClass} relative`}
         style={{
@@ -102,6 +97,6 @@ export function SnapSection({
           <div className="max-w-[1200px] mx-auto px-6">{children}</div>
         </div>
       </section>
-    </SnapSectionContext.Provider>
+    </PageSectionContext.Provider>
   );
 }

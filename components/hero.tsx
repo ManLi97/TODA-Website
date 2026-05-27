@@ -1,7 +1,7 @@
-// Hero content — rendered inside <SnapSection variant="base" id="hero" triggerOnMount align="center">.
+// Hero content — rendered inside <PageSection variant="base" id="hero" triggerOnMount align="center">.
 // accentText renders inline inside the h1 in Playfair Display Italic gold-500,
 // matching the BRAND.md pattern: "Mehr Kunst. [accentText: Weniger Chaos.]"
-// Layout (min-h-dvh, centering, padding, max-w container) is owned by the parent <SnapSection>.
+// Layout (min-h-svh, centering, padding, max-w container) is owned by the parent <PageSection>.
 // <Animate> children fire on mount via triggerOnMount — timing per motion.md §4.
 import { Animate } from "@/components/animate";
 
