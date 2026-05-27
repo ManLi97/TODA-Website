@@ -3,7 +3,7 @@
 // Single-element entrance wrapper. Fires a GSAP fromTo tween when THIS element scrolls
 // into view (IntersectionObserver on the element itself, with a rootMargin reveal offset).
 // Element-scoped (not section-scoped) so it works in sections taller than the viewport.
-// Resets to "from" state on leave so the animation replays on re-entry.
+// Fires once on first entry and stays — no reset/replay on scroll-back (calmer, more premium).
 // When the parent <SnapSection triggerOnMount> is true, fires on mount instead.
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
@@ -90,11 +90,6 @@ export function Animate({ type, delay = 0, duration, className, children }: Anim
       gsap.fromTo(el, from, { ...to, duration: durS, delay: delayS, ease: "entry" });
     };
 
-    const reset = () => {
-      gsap.killTweensOf(el);
-      gsap.set(el, from);
-    };
-
     if (!ctx) {
       // Outside a <SnapSection> — degrade gracefully (e.g. /test/components playground)
       if (process.env.NODE_ENV !== "production") {
@@ -109,17 +104,16 @@ export function Animate({ type, delay = 0, duration, className, children }: Anim
       return;
     }
 
-    // Observe THIS element entering the viewport (not the parent section). Section-ratio
-    // triggers can't fire on sections taller than the viewport — the failure mode that
-    // left tall sections blank. rootMargin bottom -12% reveals the element just after its
-    // top crosses into view; reset on leave so the entrance replays on scroll-back.
+    // Observe THIS element entering the viewport, fire once, then disconnect. Element-scoped
+    // (not section-ratio) so it works regardless of section height. Fire-once (no reset/replay)
+    // reads calmer and more premium than re-animating every time you scroll back past it.
+    // rootMargin bottom -12% reveals just after the element's top crosses into view.
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             fire();
-          } else {
-            reset();
+            observer.disconnect();
           }
         }
       },

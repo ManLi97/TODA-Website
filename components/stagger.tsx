@@ -3,7 +3,7 @@
 // Cascade entrance wrapper — animates N direct children with a stagger delay.
 // Each child fires at: delay + (index * gap) ms.
 // Same trigger model as <Animate>: observes the container element entering the viewport
-// (element-scoped, survives sections taller than the viewport), resets on leave.
+// (element-scoped, survives sections taller than the viewport), fires once, no replay.
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
@@ -54,13 +54,6 @@ export function Stagger({ gap, type, delay = 0, className, children }: StaggerPr
       });
     };
 
-    const reset = () => {
-      items.forEach((el) => {
-        gsap.killTweensOf(el);
-        gsap.set(el, from);
-      });
-    };
-
     if (!ctx) {
       if (process.env.NODE_ENV !== "production") {
         console.warn("[Stagger] No <SnapSection> context found. Firing on mount.");
@@ -75,15 +68,14 @@ export function Stagger({ gap, type, delay = 0, className, children }: StaggerPr
     }
 
     // Observe the container entering the viewport (element-scoped, not section-ratio),
-    // so the cascade fires reliably in sections taller than the viewport. rootMargin
-    // bottom -12% reveals just after the container's top crosses in; reset on leave.
+    // fire the cascade once, then disconnect — no replay on scroll-back (calmer, more premium).
+    // rootMargin bottom -12% reveals just after the container's top crosses in.
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             fire();
-          } else {
-            reset();
+            observer.disconnect();
           }
         }
       },

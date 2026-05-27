@@ -135,15 +135,14 @@
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
-   SCROLL — proximity snap model
-   Sections soft-snap to their top edge when the scroll settles near a boundary,
-   but the scroll is free to rest anywhere mid-section. This lets sections grow
-   taller than one viewport (common on mobile) without the content below the fold
-   becoming unreachable — the failure mode of `y mandatory`. See docs/mobile-audit.md.
-   scroll-padding-top offsets snap targets below the fixed 56px header (header.tsx).
+   SCROLL — normal smooth scroll (no snap)
+   We dropped scroll-snap: it fought the user on sections taller than the viewport
+   and broke the premium feel. The "spotlight per section" effect now comes from
+   viewport-height rhythm + scroll-triggered reveals + the surface colour alternation,
+   not from hijacking the scroll. See docs/mobile-audit.md.
+   scroll-padding-top keeps anchor / bottom-nav jumps clear of the fixed 56px header.
    --------------------------------------------------------------------------- */
 html {
-  scroll-snap-type: y proximity;
   scroll-padding-top: 3.5rem; /* 56px — fixed header height (h-14) */
   scroll-behavior: smooth;
 }
