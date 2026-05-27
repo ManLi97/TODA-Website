@@ -2,7 +2,7 @@
 // Provides NextIntlClientProvider for client-side translations.
 // Injects Inter and Playfair Display Italic via next/font as CSS variables.
 // Scroll is plain smooth scroll on <html> — no scroll-snap, no JS scroll provider.
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -38,6 +38,17 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "TODA Solutions",
   description: "TODA Solutions — Marketing Website",
+};
+
+// viewport-fit=cover makes env(safe-area-inset-*) resolve to real values (they were 0
+// without it, breaking the bottom-nav clearance math). themeColor tints the browser's own
+// URL/toolbar bars to our near-black surface-base, so when iOS/Chrome show/hide their chrome
+// it reads dark-on-dark instead of gray-on-black — far less jarring on scroll.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0a0a0a",
 };
 
 type Props = {
