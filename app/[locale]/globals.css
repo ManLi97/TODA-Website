@@ -330,10 +330,10 @@ html {
   }
 
   /* ─────────────────────────────────────────────────────────────────────────
-     GRADIENT TEXT — inline shimmer
-     Used for single emphasis words mid-sentence. Static gradient by default;
-     the parent's entrance onComplete callback adds `.flowing` to trigger the
-     perpetual shimmer. Phase 3's <Animate> component owns that wiring.
+     GRADIENT TEXT — brand-gradient fill for emphasis words/numerals.
+     Static by default — and currently stays static: no component triggers the
+     loop right now (kept calm by design). The perpetual shimmer is opt-in — add
+     `.flowing` (below) after an entrance settles to hand the loop to the compositor.
      ───────────────────────────────────────────────────────────────────────── */
   .grad-text--flow {
     background: var(--grad-brand);
@@ -347,8 +347,8 @@ html {
     animation: grad-flow var(--t-flow-fast) var(--ease-loop) infinite;
   }
 
-  /* Hero numeral shimmer — slower loop. GSAP's `hero-in` onComplete adds this
-     class to hand the perpetual animation to the compositor thread. */
+  /* Hero numeral shimmer — slower loop. Opt-in (not auto-applied today): add
+     `.shimmer-active` after an entrance to hand the loop to the compositor thread. */
   .shimmer-active {
     animation: grad-flow var(--t-flow-slow) var(--ease-loop) infinite;
   }

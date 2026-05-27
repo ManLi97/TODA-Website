@@ -1,82 +1,125 @@
 # CSS tokens
 
-> **Surface naming — read before wiring into `globals.css`**
-> `--surface-1/2/3/4` below is raw design-system notation, kept as-is in this reference doc.
-> When implementing in `globals.css`, do NOT carry these names over. Map them to the semantic
-> aliases the codebase already uses:
->
-> | DS token      | `globals.css` alias  | Hex       |
-> |---------------|----------------------|-----------|
-> | `--surface-2` | `--surface-base`     | `#141414` |
-> | `--surface-1` | `--surface-alt`      | `#121212` |
-> | `--surface-3` | `--surface-raised`   | `#292929` |
-> | `--surface-4` | `--surface-hover`    | `#333333` |
->
-> All other tokens (`--bg`, `--border`, `--text-*`, `--gold-*`, `--purple-*`, `--label-*`,
-> composed recipes) transfer directly with no renaming.
+> **Source of truth: `app/[locale]/globals.css`.** This repo uses Tailwind v4's
+> CSS-first `@theme` — there is no `tailwind.config.js`. Every `--color-*` token in
+> `@theme` automatically generates the matching utilities (`--color-surface-alt` →
+> `bg-surface-alt`, `text-surface-alt`, `border-surface-alt`, …). The block below mirrors
+> `globals.css`; if they ever disagree, the CSS wins.
 
-  :root {
-    /* — Foundation — */
-    --bg:          #000000;
-    --surface-1:   #121212;
-    --surface-2:   #141414;
-    --surface-3:   #292929;
-    --surface-4:   #333333;
-    --border:      #383838;
+## `@theme` — colors
 
-    /* — Text — */
-    --text-primary:   #FFFFFF;
-    --text-secondary: #A3A3A3;
-    --text-tertiary:  #6B6B6B;
+```css
+@theme {
+  /* Foundation — true black + anthracite. Section rhythm alternates base ↔ alt;
+     raised/hover are lighter fills for cards, glass tints, and hover states. */
+  --color-bg:             #000000;
+  --color-surface-base:   #0a0a0a;
+  --color-surface-alt:    #1e1e1e;
+  --color-surface-raised: #292929;
+  --color-surface-hover:  #333333;
+  --color-surface-elevated: #333333; /* legacy alias of surface-hover */
+  --color-border:         #383838;
+  --color-border-subtle:  #383838;   /* legacy alias of border */
 
-    /* — Gold (primary) — */
-    --gold-200: #FCE49B;
-    --gold-400: #E8B73D;
-    --gold-500: #C8941A;
-    --gold-600: #9C7314;
-    --gold-800: #5C420A;
-    --on-gold:  #2B1E08;
+  /* Text tiers */
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #a3a3a3;
+  --color-text-tertiary:  #6b6b6b;
 
-    /* — Purple (secondary) — */
-    --purple-200: #D9CBEF;
-    --purple-400: #CBB5EF;
-    --purple-500: #BBA6E8;
-    --purple-600: #9D88C9;
-    --on-purple:  #231A33;
+  /* Gold (primary accent) — gold-400 is the everyday UI gold */
+  --color-gold-200: #fce49b;
+  --color-gold-400: #e8b73d;
+  --color-gold-500: #c8941a;
+  --color-gold-600: #9c7314;
+  --color-gold-800: #5c420a;
+  --color-on-gold:  #2b1e08;
 
-    /* — Label tints — */
-    --label-blue:  #6B8CBE;
-    --label-green: #5FB082;
-    --label-red:   #B85450;
-    --label-terra: #B57236;
+  /* Purple (secondary accent) */
+  --color-purple-200: #d9cbef;
+  --color-purple-400: #cbb5ef;
+  --color-purple-500: #bba6e8;
+  --color-purple-600: #9d88c9;
+  --color-on-purple:  #231a33;
 
-    /* — Composed recipes — */
-    --glass-tint:        color-mix(in oklch, var(--surface-3) 65%, transparent);
-    --glass-border-gold: 1px solid color-mix(in oklch, var(--gold-500) 15%,
-  transparent);
-    --grad-brand:        linear-gradient(135deg, var(--gold-500) 0%,
-  var(--gold-400) 35%, var(--purple-500) 100%);
-    --grad-ambient:      radial-gradient(ellipse at 15% 10%,
-                           color-mix(in oklch, var(--gold-500) 12%, transparent)
-   0%,
-                           transparent 55%);
-  }
+  /* Categorical label tints */
+  --color-label-blue:  #6b8cbe;
+  --color-label-green: #5fb082;
+  --color-label-red:   #b85450;
+  --color-label-terra: #b57236;
 
-  /* Glass component classes */
-  .glass {
-    padding: 1.75rem 2rem;
-    background: var(--glass-tint);
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border-radius: 18px;
-    border: var(--glass-border-gold);
-    max-width: 38rem;
-  }
+  /* Polaroid testimonial cards — the one deliberately light surface */
+  --color-polaroid:                #fafafa;
+  --color-polaroid-text:           #1a1a1a;
+  --color-polaroid-text-secondary: #555555;
+}
+```
 
-  .glass--gradient {
-    border: 1px solid transparent;
-    background:
-      linear-gradient(var(--surface-2), var(--surface-2)) padding-box,
-      var(--grad-brand) border-box;
-    backdrop-filter: none;
-  }
+## `@theme` — composed recipes
+
+```css
+@theme {
+  /* Glass fill + border. --glass-tint here is a DEFAULT; PageSection overrides it
+     per section (see "per-section cascade" below) so the tint inverts against the bg. */
+  --glass-tint:        color-mix(in oklch, var(--color-surface-raised) 65%, transparent);
+  --glass-border-gold: 1px solid color-mix(in oklch, var(--color-gold-500) 15%, transparent);
+
+  /* Brand gradient — gold-dominant, traveling into purple */
+  --grad-brand:   linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-400) 35%, var(--color-purple-500) 100%);
+  --grad-ambient: radial-gradient(ellipse at 15% 10%, color-mix(in oklch, var(--color-gold-500) 12%, transparent) 0%, transparent 55%);
+
+  /* Surface-aware card/box elevation. A drop shadow is invisible on true black, so
+     depth is split by surface: light = top highlight rim (for black sections),
+     dark = real drop shadow (for anthracite). PageSection picks one per variant. */
+  --shadow-card-light: inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 1px rgba(0,0,0,0.5), 0 12px 28px -10px rgba(0,0,0,0.7);
+  --shadow-card-dark:  inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 4px rgba(0,0,0,0.3), 0 14px 30px -8px rgba(0,0,0,0.55);
+}
+```
+
+## Per-section cascade — the key mechanism
+
+`<PageSection variant>` sets three CSS variables inline on each `<section>`, so any
+descendant automatically gets values tuned for *that* section's background. This is why
+glass and depth "just work" without per-element guessing:
+
+| Variable                | `base` (near-black)        | `alt` (anthracite)       | Purpose                                      |
+|-------------------------|----------------------------|--------------------------|----------------------------------------------|
+| `--glass-tint`          | `rgba(30,30,30,0.9)`       | `rgba(10,10,10,0.9)`     | `.glass` fill — inverts to contrast with bg  |
+| `--glass-gradient-fill` | `#1e1e1e`                  | `#0a0a0a`                | `.glass--gradient` inner fill (padding-box)  |
+| `--shadow-card`         | `var(--shadow-card-light)` | `var(--shadow-card-dark)`| elevation recipe for `.elevated` / plain glass |
+
+(There is also a `raised` variant, defined but unused by the live page; it mirrors `alt`.)
+
+## Component classes (in `@layer components`)
+
+```css
+.glass {
+  padding: 1.75rem 2rem;
+  background: var(--glass-tint);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-radius: 18px;
+  border: var(--glass-border-gold);
+  max-width: 38rem;
+}
+
+/* Gradient-bordered glass: brand gradient painted on border-box, solid fill on
+   padding-box. This is the apex highlight — its border IS its depth. */
+.glass--gradient {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--glass-gradient-fill, var(--color-surface-base)),
+                    var(--glass-gradient-fill, var(--color-surface-base))) padding-box,
+    var(--grad-brand) border-box;
+  backdrop-filter: none;
+}
+
+/* Opt-in depth for non-glass cards/boxes; reads the cascaded --shadow-card. Plain
+   .glass gets it too; gradient-glass is excluded (no shadow on the apex highlight). */
+.elevated,
+.glass:not(.glass--gradient) {
+  box-shadow: var(--shadow-card, none);
+}
+```
+
+**Usage rule:** glass and `.elevated` are both applied *selectively* — focal elements
+and cards, never as wallpaper. See `philosophy.md` (Materials, Depth).

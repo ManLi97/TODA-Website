@@ -1,6 +1,6 @@
 // Landing page — Phase 4a complete.
 // Ten sections: Hero → Bold Claim → Case Study → Origin → Features → Social Proof → Testimonials → Team → Pricing → FAQ.
-// Surface rhythm: base → alt → raised → base → alt → raised → base → alt → raised → base.
+// Surface rhythm: two surfaces alternating — base (near-black) ↔ alt (anthracite), starting on base.
 // Copy from messages/{locale}.json "home" namespace.
 import { getTranslations } from "next-intl/server";
 import { Hero } from "@/components/hero";
@@ -41,7 +41,7 @@ export default async function HomePage() {
         />
       </PageSection>
 
-      {/* ── 3. Case Study — surface-raised ── */}
+      {/* ── 3. Case Study — surface-base ── */}
       <PageSection variant="base" id="case-study">
         <CaseStudySection
           label={t("caseStudy.label")}
@@ -68,7 +68,7 @@ export default async function HomePage() {
         />
       </PageSection>
 
-      {/* ── 5. Features — surface-alt ── */}
+      {/* ── 5. Features — surface-base ── */}
       <PageSection variant="base" id="features">
         <FeaturesSection
           label={t("features.label")}
@@ -88,7 +88,7 @@ export default async function HomePage() {
         />
       </PageSection>
 
-      {/* ── 6. Social Proof — surface-raised ── */}
+      {/* ── 6. Social Proof — surface-alt ── */}
       <PageSection variant="alt" id="social-proof">
         <SocialProofSection
           label={t("socialProof.label")}
@@ -134,7 +134,7 @@ export default async function HomePage() {
         />
       </PageSection>
 
-      {/* ── 9. Pricing — surface-raised ── */}
+      {/* ── 9. Pricing — surface-base ── */}
       <PageSection variant="base" id="pricing">
         <PricingSection
           headline={t("pricing.headline")}
@@ -145,7 +145,7 @@ export default async function HomePage() {
         />
       </PageSection>
 
-      {/* ── 10. FAQ — surface-base ── */}
+      {/* ── 10. FAQ — surface-alt ── */}
       <PageSection variant="alt" id="faq">
         <FaqSection
           label={t("faq.label")}

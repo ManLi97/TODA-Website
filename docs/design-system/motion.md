@@ -1,291 +1,168 @@
 # Motion & Animation
 
-Companion to colour, typography, and glass systems. The token values and sequencing principles
-transfer directly to GSAP. The vanilla JS trigger engine and `[data-anim]` CSS system do not
-exist in this repo — they are replaced by the `<Animate>` React component + GSAP ScrollTrigger.
+How motion works on this site, as built. Entrances are GSAP `fromTo` tweens fired by an
+element-scoped `IntersectionObserver`; perpetual loops are CSS `@keyframes`. The primitives
+are the `<Animate>` and `<RevealGroup>` React components; two sections own bespoke timelines.
+
+> **Source of truth:** `components/animate.tsx`, `components/reveal-group.tsx`,
+> `components/strikethrough-list.tsx`, `components/origin-section.tsx`, and the motion tokens +
+> keyframes in `app/[locale]/globals.css`.
 
 ---
 
-## 1) Token tables
+## 1) Token tables (`@theme`)
 
 ### Easing
 
 | Token | Curve | Role |
 |---|---|---|
-| `--ease-entry` | `cubic-bezier(0.16, 1, 0.3, 1)` | Every entrance (fade-up, scale-in, slide, draw) |
-| `--ease-loop` | `ease-in-out` | Continuous loops (gradient shimmer) |
-| `--ease-count` | `easeOutQuart` → GSAP `"power4.out"` | Number count-ups. JS-only — no CSS `:root` entry. |
+| `--ease-entry` | `cubic-bezier(0.16, 1, 0.3, 1)` | Every entrance. Registered with GSAP CustomEase as `"entry"`. |
+| `--ease-loop` | `ease-in-out` | Continuous CSS loops (gradient shimmer) |
 
 ### Duration
 
 | Token | ms | Role |
 |---|---|---|
-| `--t-quick` | 400ms | Small entrance: label, caption, arrow fade |
-| `--t-base` | 550ms | Default: card, feature item, step |
+| `--t-quick` | 400ms | Small entrance: label, caption, arrow fade (`fade-in` default) |
+| `--t-base` | 550ms | Default: card, feature item (`fade-up` / `slide-left` default) |
 | `--t-medium` | 650ms | Display headlines, lede |
-| `--t-slow` | 700ms | Divider draw, slide-right (cards from off-frame) |
-| `--t-hero` | 900ms | Hero numeral — gets time to breathe |
-| `--t-count` | 1000–1300ms | Number count-ups. Set per-element; no CSS `:root` entry. |
+| `--t-slow` | 700ms | Divider draw, slide-right from off-frame |
+| `--t-hero` | 900ms | Hero / scale-in |
 | `--t-fill` | 1250ms | Progress bar fill |
-| `--t-flow-fast` | 5s | Inline gradient shimmer (mid-sentence emphasis word) |
-| `--t-flow-slow` | 7s | Hero numeral gradient shimmer |
+| `--t-flow-fast` | 5s | Inline gradient shimmer loop |
+| `--t-flow-slow` | 7s | Hero-numeral gradient shimmer loop |
 
 ### Distance / scale
 
 | Token | Value | Role |
 |---|---|---|
-| `--m-y-rise` | 24px | translateY for fade-up |
-| `--m-x-near` | 32px | translateX for slide-left |
-| `--m-x-far` | 40px | translateX for slide-right (off-frame elements) |
-| `--m-scale-in` | 0.93 | scale start for scale-in and hero-in |
+| `--m-y-rise` | 24px | translateY for `fade-up` |
+| `--m-x-near` | 32px | translateX for `slide-left` |
+| `--m-x-far` | 40px | translateX for `slide-right` (off-frame) |
+| `--m-scale-in` | 0.93 | scale start for `scale-in` / `hero-in` |
 | `--m-grad-bg` | 300% 100% | background-size for gradient shimmer text |
 
 ---
 
-## 2) Keyframes — reference only
+## 2) Two animation mechanisms
 
-> **These CSS keyframes are NOT used in this repo.** GSAP handles all animation via `fromTo()`
-> tweens — no `@keyframes` are declared in `globals.css`. The definitions below are kept because
-> they precisely document what each animation type does visually, and are the most reliable
-> source for writing the correct GSAP `fromTo` equivalents in Phase 3.
+**Entrances → GSAP `fromTo`.** No `@keyframes` are involved; GSAP sets opacity/transform
+directly. The `from`/`to`/duration tables live in `animate.tsx` (`ANIM_FROM`, `ANIM_TO`,
+`ANIM_DURATION`) and are the authoritative definitions:
 
-```css
-@keyframes fade-up    { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fade-in    { from { opacity: 0; } to { opacity: 1; } }
-@keyframes scale-in   { from { opacity: 0; transform: scale(0.93); } to { opacity: 1; transform: scale(1); } }
-@keyframes slide-left { from { opacity: 0; transform: translateX(-32px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes slide-right{ from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes draw-w     { from { width: 0; opacity: 0; } to { width: 3rem; opacity: 0.4; } }
-@keyframes grad-flow  { 0%, 100% { background-position: 0% center; } 50% { background-position: 100% center; } }
-```
+| `type` | `from` | `to` | Default |
+|---|---|---|---|
+| `fade-up` | `{ opacity: 0, y: 24 }` | `{ opacity: 1, y: 0 }` | 550ms |
+| `fade-in` | `{ opacity: 0 }` | `{ opacity: 1 }` | 400ms |
+| `scale-in` | `{ opacity: 0, scale: 0.93 }` | `{ opacity: 1, scale: 1 }` | 900ms |
+| `slide-left` | `{ opacity: 0, x: -32 }` | `{ opacity: 1, x: 0 }` | 550ms |
+| `slide-right` | `{ opacity: 0, x: 40 }` | `{ opacity: 1, x: 0 }` | 700ms |
+| `draw-w` | `{ width: 0, opacity: 0 }` | `{ width: "3rem", opacity: 0.4 }` | 700ms |
+| `hero-in` | `{ opacity: 0, scale: 0.93 }` | `{ opacity: 1, scale: 1 }` | 900ms |
 
-### GSAP `fromTo` equivalents
+All use `ease: "entry"`.
 
-| Animation type | GSAP `fromTo` — `from` state | GSAP `fromTo` — `to` state |
-|---|---|---|
-| `fade-up` | `{ opacity: 0, y: 24 }` | `{ opacity: 1, y: 0 }` |
-| `fade-in` | `{ opacity: 0 }` | `{ opacity: 1 }` |
-| `scale-in` | `{ opacity: 0, scale: 0.93 }` | `{ opacity: 1, scale: 1 }` |
-| `slide-left` | `{ opacity: 0, x: -32 }` | `{ opacity: 1, x: 0 }` |
-| `slide-right` | `{ opacity: 0, x: 40 }` | `{ opacity: 1, x: 0 }` |
-| `draw-w` | `{ width: 0, opacity: 0 }` | `{ width: "3rem", opacity: 0.4 }` |
-
-All use `ease: CustomEase.create("entry", "0.16, 1, 0.3, 1")` and read duration from the
-token table. `grad-flow` is a perpetual loop — see `hero-in` below.
+**Perpetual loops → CSS `@keyframes`.** These DO exist in `globals.css` (compositor-cheap,
+unlike a GSAP rAF loop): `grad-flow` (gradient-text shimmer), `team-ring-spin` (avatar ring),
+`hint-pulse` (testimonials "tap to flip" label). Each has a `prefers-reduced-motion` off-switch.
 
 ---
 
-## 3) Animation primitives — `<Animate>` prop API
-
-> In the source DS this was the `data-anim` attribute API on raw HTML elements. In this repo
-> the same vocabulary is exposed as a `type` prop on the `<Animate>` React component.
-> The type names are identical — only the mechanism changes.
-
-| `type` prop | Used for | Default duration |
-|---|---|---|
-| `"fade-up"` | Default entrance: headlines, lede, body text, labels, cards | 550ms |
-| `"fade-in"` | Pure opacity — captions, arrows where translation would feel chatty | 400ms |
-| `"scale-in"` | Quiet entrance for hero numerals without gradient shimmer | 900ms |
-| `"slide-left"` | Sequential left-to-right reveals | 550ms |
-| `"slide-right"` | Elements arriving from off-frame | 700ms |
-| `"draw-w"` | Gold divider line drawing in from width 0 | 700ms |
-| `"hero-in"` | Composed: scale entrance + perpetual gradient shimmer | 900ms + ∞ |
-
-### Authoring
+## 3) Primitives — `<Animate>` and `<RevealGroup>`
 
 ```tsx
-// Default entrance
-<Animate type="fade-up" delay={250} duration={650}>
-  <h2 className="display">Section headline</h2>
+// Single element. delay (ms) and duration (ms) are optional; duration overrides the type default.
+<Animate type="fade-up" duration={650}>
+  <h2 className="type-display text-text-primary">Section headline</h2>
 </Animate>
 
-// Eyebrow label — quick fade, no movement
-<Animate type="fade-in" delay={0} duration={400}>
-  <span className="eyebrow">Label</span>
-</Animate>
-
-// Gold divider
-<Animate type="draw-w" delay={1500} duration={700}>
-  <div className="divider" />
-</Animate>
-
-// Hero numeral with gradient shimmer — see hero-in below
-<Animate type="hero-in" delay={0} duration={900}>
-  <h1 className="hero grad-text">87%</h1>
-</Animate>
+// N children, same trigger model — each child fires on ITS OWN entry, no inter-child delay.
+<RevealGroup type="fade-up" className="grid grid-cols-3 gap-group">
+  {cards}
+</RevealGroup>
 ```
 
-### Composed: `hero-in`
+`<Animate>` props: `type`, `delay?` (ms, default 0), `duration?` (ms), `className?`.
+`<RevealGroup>` props: `type`, `className?` — it has no delay/duration; children reveal
+independently as they cross in. Both honor `prefers-reduced-motion` (jump straight to `to`).
 
-`hero-in` is the only animation type that chains two motions on one element:
-1. **Entrance** — `scale-in` tween (opacity 0→1, scale 0.93→1), runs once
-2. **Shimmer** — perpetual `grad-flow` loop starts immediately after entrance completes
+### Gradient text & the shimmer loop
 
-The element must carry `background: var(--grad-brand); background-clip: text; color: transparent`
-(via the `.grad-text` class) for the shimmer to be visible.
+`.grad-text--flow` paints text with the brand gradient (used statically today, e.g. the
+Bold Claim `01/02/03` numerals). The perpetual shimmer is a separate, opt-in loop:
+`.grad-text--flow.flowing` and `.shimmer-active` are defined in `globals.css` but are **not
+auto-triggered by any component right now** — the gradient sits static by design, to keep
+the page calm. To animate it, a component would add `.flowing` / `.shimmer-active` after its
+entrance settles (e.g. via a GSAP `onComplete`); nothing does so currently.
 
-**GSAP implementation approach for Phase 3:**
+### `hero-in`
 
-```ts
-// Entrance via GSAP fromTo
-gsap.fromTo(el,
-  { opacity: 0, scale: 0.93 },
-  {
-    opacity: 1, scale: 1,
-    duration: 0.9,
-    ease: "entry",          // CustomEase registered as "entry"
-    delay: delaySeconds,
-    onComplete: () => el.classList.add("shimmer-active"),
-  }
-)
-
-// Shimmer — perpetual CSS animation triggered by class after entrance
-// .shimmer-active { animation: grad-flow 7s ease-in-out infinite; }
-// Defined in globals.css. GSAP adds the class via onComplete, keeping
-// background-position out of GSAP's transform pipeline entirely.
-```
-
-> **Why a CSS class for the shimmer, not a GSAP tween?**
-> Animating `backgroundPosition` with GSAP works, but creates a continuous rAF loop on
-> every shimmer element — expensive. A perpetual CSS animation hands the loop to the
-> compositor thread. The hybrid is the correct approach: GSAP owns the entrance, CSS owns
-> the loop.
-
-### Inline shimmer: `.grad-text--flow`
-
-For a single emphasized word mid-sentence. Static gradient by default; a JS call adds
-`.flowing` after the parent entrance has settled, so the shimmer doesn't compete visually
-with the parent animating in.
-
-```css
-/* globals.css */
-.grad-text--flow {
-  background: var(--grad-brand);
-  background-size: var(--m-grad-bg);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.grad-text--flow.flowing {
-  animation: grad-flow var(--t-flow-fast) var(--ease-loop) infinite;
-}
-```
-
-In the `<Animate>` component: after the parent entrance completes, `onComplete` adds
-`.flowing` to any `.grad-text--flow` children — same timing logic as the source DS.
+`hero-in` exists as a type but currently resolves to the same tween as `scale-in` (scale
+0.93→1, opacity 0→1). It is **not** wired to the shimmer loop. The live hero uses a plain
+`fade-up` headline (`type-display-hero`) with a Playfair accent span — no gradient numeral.
 
 ---
 
-## 4) Sequencing principles
+## 4) Trigger model — element-scoped IntersectionObserver, fire-once
 
-> **⚠ Scope (2026-05-27):** This pre-timed cascade math now applies **only to the narrative
-> Origin section**, which owns a deliberate hand-authored GSAP timeline. Every other section
-> is **per-element on entry**: each element (or each child of a `<RevealGroup>`) fires its own
-> tween the moment it crosses the reveal line, with **no inter-element `delay`/`gap`** — so as
-> you scroll into a section, things animate as you reach them rather than on a pre-timed clock.
-> The math below documents the Origin timeline and the original DS rhythm; do not reintroduce
-> `delay`/`gap` cascades into scroll-triggered sections.
+The default across the whole site: each `<Animate>` element (and each `<RevealGroup>` child)
+observes **itself** with `IntersectionObserver` (`rootMargin: "0px 0px -12% 0px"`, threshold
+0), fires its tween **once** on first entry, then disconnects — no reset, no replay on
+scroll-back. Element-scoping (not section-ratio) means it works regardless of section height.
 
-The single most important rule, expressed as math:
+Why this, not ScrollTrigger / `scrollend` / section-ratio: observing the element itself is
+height-agnostic (fires whether a section is one viewport or three); `scrollend` has uneven
+browser support; and re-animating on every pass reads cheaper than a single calm reveal.
+GSAP ScrollTrigger is in the bundle but reserved for scrubbed-against-scroll tweens (the
+Origin timeline uses it; nothing else needs it).
+
+**Hero is the one mount-fired case.** `<PageSection triggerOnMount>` makes its child
+`<Animate>` instances fire on mount instead of waiting for an intersection, so the
+above-the-fold hero animates immediately on load.
+
+---
+
+## 5) Deliberate sequencing — the two storytelling exceptions
+
+Everywhere else is per-element-on-entry with **no** inter-element delay. Two sections
+deliberately break that because they tell a story on a clock:
+
+### Origin section — hand-authored GSAP timeline
+
+`origin-section.tsx` owns a single `gsap.timeline()` on a `ScrollTrigger` (`start: "center
+bottom"`, `once: true`). It runs six phases in sequence — narrative lines fade up (line 3
+gets a dramatic pause), chat bubbles fade in slowly, a phone icon appears and shakes, a
+connector line draws left→right, the TODA icon scale-bounces in, then the closing glass box
+fades up. The reason it's a timeline and not per-element reveals: it's a *story being told*,
+so it must build step by step at an authored pace, not react to the scroll position of each
+fragment. Initial hidden states are also set inline on the elements to prevent an SSR flash.
+
+### StrikethroughList — container-triggered cascade
+
+`strikethrough-list.tsx` ("You're an artist — not a secretary, not customer service, not a
+salesperson"). One `IntersectionObserver` on the **container**: when the whole list enters
+view, the rows strike out one after another. Per row, a line draws across (`scaleX 0→1`,
+0.65s `power2.inOut`) and the text fades white→tertiary (0.55s, starting +0.2s into the
+draw). Rows are staggered by `STAGGER = 1.5s` so each line can be *read* before it's crossed
+out — the cascade tracks the reader's eye down the list. Fires once; reduced-motion jumps to
+the final struck-through state.
+
+**The rule:** do not reintroduce pre-timed `delay`/`gap` cascades into ordinary
+scroll-triggered sections. If a new section needs a narrative build, give it its own timeline
+(like Origin) rather than chaining delays across `<Animate>` instances.
+
+### Cascade math (for timelines only)
+
+When you *are* authoring a timeline, the rhythm is:
 
 ```
-next.delay = previous.delay + previous.duration + breath
+next.start = previous.start + previous.duration + breath
 ```
-
-Where `breath` is:
 
 | Relationship | Breath | Feels like |
 |---|---|---|
-| Same logical group (label → headline → lede; consecutive bullets) | **−150 to +150ms** (allowed to overlap) | One continuous beat |
-| Distinct phase change (bullets → card; copy block → divider) | **+200 to +400ms** | A pause before the next thing |
-| Discrete reveal (step → arrow → step) | **+150 to +250ms after previous settles** | A sequence being drawn |
+| Same logical group (label → headline → lede; consecutive items) | −150 to +150ms (may overlap) | One continuous beat |
+| Distinct phase change (copy → media; bullets → card) | +200 to +400ms | A pause before the next thing |
+| Discrete reveal (step → arrow → step) | +150 to +250ms after the previous settles | A sequence being drawn |
 
-Concrete example:
-
-```
-label    [0   → 450]
-h2       [250 → 900]    ← starts during label, same group
-lede     [750 → 1350]   ← starts as h2 settles, same group
-feat 1   [1200 → 1700]  ← 350ms breath, new phase
-feat 2   [1400 → 1900]  ← 200ms overlap, cascading group
-feat 3   [1600 → 2100]  ← 200ms overlap, cascading group
-                          ── 200ms breath ──
-card     [2300 → 3050]  ← arrives only after bullets are done
-```
-
-Phases get clearly separated, groups feel like one beat. This is the entire rhythm.
-
----
-
-## 5) CSS tokens for `globals.css`
-
-> **⚠ Only the `:root` block transfers.** The `[data-anim]` selector system and `.anim-on`
-> class toggling below it are the vanilla JS engine's CSS counterpart — they do NOT go into
-> `globals.css`. GSAP sets opacity/transform directly; no CSS selector system is needed.
-> Exception: the `grad-flow` keyframe and shimmer classes (`.grad-text--flow`, `.shimmer-active`)
-> do live in `globals.css` — see section 3.
-
-```css
-:root {
-  /* — Motion: easing — */
-  --ease-entry: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-loop:  ease-in-out;
-
-  /* — Motion: duration — */
-  --t-quick:     400ms;
-  --t-base:      550ms;
-  --t-medium:    650ms;
-  --t-slow:      700ms;
-  --t-hero:      900ms;
-  --t-fill:      1250ms;
-  --t-flow-fast: 5s;
-  --t-flow-slow: 7s;
-
-  /* — Motion: distance — */
-  --m-y-rise:    24px;
-  --m-x-near:    32px;
-  --m-x-far:     40px;
-  --m-scale-in:  0.93;
-  --m-grad-bg:   300% 100%;
-}
-```
-
----
-
-## 6) Trigger system — element-scoped IntersectionObserver, fire-once
-
-The entrance trigger is an `IntersectionObserver` registered by the `<Animate>` component
-on **its own element** (not the parent section). `<RevealGroup>` applies the same per-element
-observer to each of its N children independently — each child fires on its own entry, no
-cascade delay. When the element scrolls into view
-(`rootMargin: "0px 0px -12% 0px"`, so it reveals just after the top crosses in), it fires
-its GSAP `fromTo` tween **once** and then disconnects — no reset, no replay on scroll-back.
-A calm, single reveal reads more premium than re-animating every time you pass an element,
-and element-scoping means it works regardless of section height (a section-ratio trigger
-can never fire on a section taller than the viewport — the old failure mode).
-
-**Why element-scoped IntersectionObserver, not section-ratio / ScrollTrigger / `scrollend`:**
-- Observing the element itself is height-agnostic: it fires whether the section is one
-  viewport or three, on mobile or desktop.
-- `scrollend` has uneven browser support (Safari 18.2+ only); IO gives us the signal
-  with no fallback branch.
-- GSAP ScrollTrigger remains available in the bundle but is not the entrance engine.
-  Reserve it for any future tween that must scrub against scroll position (none planned).
-
-**Lifecycle, per `<Animate>` instance:**
-- `onEnter` (element crosses the reveal line) → run the GSAP `fromTo` tween with the
-  type's default duration, the `delay` prop, and `ease: "entry"`, then disconnect.
-- `prefers-reduced-motion` → short-circuit: element jumps to its `to` state with zero
-  duration.
-
-**Hero is the one mount-fired case.** `<PageSection triggerOnMount>` fires its child
-`<Animate>` instances on mount instead of waiting for an IO intersection — same component,
-same tween, different trigger source — so the above-the-fold hero animates immediately on
-load rather than waiting a frame for the observer.
-
-**Counter and progress bar patterns (not yet implemented):**
-The source DS included `data-count` and `data-progress` attribute patterns for animated
-numbers and fill bars. These are valid UX patterns for this website (CTA section price,
-case study stats). React equivalents — dedicated components using GSAP's `counter` or a
-`useEffect` rAF loop with `easeOutQuart` (`power4.out`). Implement when the relevant
-section is built in Phase 5.
+Phases get clearly separated; groups feel like one beat.

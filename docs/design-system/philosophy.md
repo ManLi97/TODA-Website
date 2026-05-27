@@ -8,10 +8,12 @@ else lifts off it.
 
 Anthracite is the structural counterpoint to black. Used as the material of cards,
 framed panels, code-like callouts, and internal containers. Anthracite reads as
-"object" — black reads as "space." Stack two or three anthracite values (a soft mid,
-a darker recessed, a very subtle elevated) so layouts get depth without ever needing
-a light surface. Never go above mid-grey — the moment a surface looks "light," the
-cinematic feel breaks.
+"object" — black reads as "space." The *section* rhythm is a strict two-surface
+alternation — near-black (`surface-base`) ↔ anthracite (`surface-alt`), back and forth
+down the page. The lighter tiers (`surface-raised`, `surface-hover`) are not section
+backgrounds; they are the fills for cards, glass tints, and hover states — stacked on
+top to get depth without ever needing a light surface. Never go above mid-grey — the
+moment a surface looks "light," the cinematic feel breaks.
 
 ### Materials — Black · Glass · Anthracite
 
@@ -27,6 +29,22 @@ between the two. The border is where the design system makes itself known.
 Non-focal containers are flat anthracite. The mix of flat-anthracite +
 selective-glass + true-black does the heavy lifting on hierarchy before you ever
 reach for an accent color.
+
+### Depth — surface-aware elevation
+
+Surface alternation carries the *section* rhythm; cards and boxes earn a touch of
+real depth on top of it. Because a drop shadow is invisible on true black, elevation
+is surface-dependent and cascaded automatically per section (the `.elevated` recipe
+and `--shadow-card` in `globals.css`):
+
+- **On black sections** depth is "light from above" — a 1px top inner-highlight rim
+  catches light; the dark drop stays near-invisible by design.
+- **On anthracite sections** a soft, low-opacity dark drop shadow reads, because the
+  surface is light enough to darken beneath the box.
+
+Apply it the way glass is applied — selectively, never as wallpaper. Plain cards and
+hairline `.glass` boxes get it; gradient-border glass does not — its gold→purple
+border already *is* the highlight, and stacking a shadow on it would dilute the apex.
 
 ### Color — Gold, Purple, and the Supporting Cast
 
@@ -122,16 +140,22 @@ sub-display at 1.1; body at 1.55. Display text is sculpted; body text breathes.
 
 Three principles govern every animation:
 
-**Sequence over simultaneity.** Beats land one at a time. Tight overlaps (100–200ms)
-inside a logical group; wider breaths (200–400ms) between phases. Two things animating
-at once should feel like one breath, not two.
+**Reveal on arrival, fire once.** The default is per-element: each element (or each
+child of a `<RevealGroup>`) plays its entrance the moment it crosses into view, then
+**stays** — no reset, no replay on scroll-back. A calm single reveal reads more premium
+than re-animating every time you pass. Deliberate *sequencing* (beats landing one at a
+time, tight overlaps within a group, wider breaths between phases) is reserved for the
+two places that tell a story on a clock: the Origin GSAP timeline and the
+StrikethroughList cascade. Everywhere else, things animate as you reach them — not on a
+pre-timed schedule. (See `motion.md`.)
 
 **One ease.** `cubic-bezier(0.16, 1, 0.3, 1)` — a quick start with a soft landing —
 handles every entrance. Continuous loops use `ease-in-out`. No bouncing, no
 overshoots, no spring physics.
 
-**State is reversible.** Every entrance resets cleanly when a section leaves view, so
-it replays on return. Animations are instances, not commitments.
+**Motion is a guest, not a host.** The page is read, not poked. Entrances fire once and
+get out of the way; nothing loops or pulses to draw the eye except the few deliberate
+accents (the team avatar ring, the swipe hint). When in doubt, less motion.
 
 ### The Overall Feeling
 

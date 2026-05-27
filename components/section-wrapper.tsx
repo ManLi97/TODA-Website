@@ -1,6 +1,7 @@
 // Full-bleed section tile — the primary layout primitive for page rhythm.
 // Variant controls which Anthrazit surface level is used; alternating them creates
-// section separation without borders or shadows (per DESIGN.md).
+// section-level separation without borders or shadows. (Card/box depth is a separate
+// concern — see the .elevated recipe in globals.css.)
 
 type SectionVariant = "base" | "raised" | "alt";
 
