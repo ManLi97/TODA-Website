@@ -7,6 +7,7 @@
 import { Link } from "@/i18n/navigation";
 import { Animate } from "@/components/animate";
 import { RevealGroup } from "@/components/reveal-group";
+import { SectionHeader } from "@/components/section-header";
 import useEmblaCarousel from "embla-carousel-react";
 
 interface TeamSectionProps {
@@ -48,24 +49,19 @@ export function TeamSection({
   return (
     <div>
       {/* Section header — animates as one unit on section settle */}
-      <Animate type="fade-up" className="mb-12">
-        <p className="type-eyebrow text-text-tertiary mb-6">
-          {label}
-        </p>
-        <h2 className="type-display text-text-primary">
-          {headline}
-        </h2>
+      <Animate type="fade-up" className="mb-block">
+        <SectionHeader label={label} headline={headline} />
       </Animate>
 
       {/* ── Mobile: Embla Carousel ──────────────────────────────────────────────
           200px slides: on a 375px viewport, ~1.6 members visible — strong peek
           signal. Same -mx-6 / pl-6 pattern as the Testimonials carousel. */}
       <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef}>
-        <RevealGroup type="scale-in" className="flex gap-6 py-4 pr-4">
+        <RevealGroup type="scale-in" className="flex gap-group py-4 pr-4">
           {members.map(({ name, role }) => (
             <div key={name} className="flex-none w-[200px] md:w-[215px]">
               {/* Spinning ring — outer spins, inner counter-spins to keep photo upright */}
-              <div className="team-avatar-ring mb-4">
+              <div className="team-avatar-ring mb-element">
                 <div className="team-avatar-inner aspect-square">
                   {/* Photo placeholder — replace with next/image when portrait is available */}
                   <div className="w-full h-full bg-surface-elevated" />
@@ -81,7 +77,7 @@ export function TeamSection({
       </div>
 
       {/* ── Swipe hint — pulsing ← SWIPE → , mobile/tablet only ── */}
-      <div className="animate-pulse flex items-center justify-center gap-2 mt-4 mb-10 lg:hidden text-gold-400">
+      <div className="animate-pulse flex items-center justify-center gap-2 mt-element mb-block lg:hidden text-gold-400">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M15 18l-6-6 6-6" />
         </svg>
@@ -95,11 +91,11 @@ export function TeamSection({
           All 5 members visible simultaneously; both variants use the same RevealGroup. */}
       <RevealGroup
         type="scale-in"
-        className="hidden lg:grid lg:grid-cols-5 gap-6 mb-10"
+        className="hidden lg:grid lg:grid-cols-5 gap-group mb-block"
       >
         {members.map(({ name, role }) => (
           <div key={name}>
-            <div className="team-avatar-ring mb-4">
+            <div className="team-avatar-ring mb-element">
               <div className="team-avatar-inner aspect-square">
                 <div className="w-full h-full bg-surface-elevated" />
               </div>

@@ -97,8 +97,10 @@ export function PageSection({
         } as React.CSSProperties}
       >
         {backdrop}
-        {/* Symmetric vertical breathing room — equal padding top and bottom. */}
-        <div className={`py-20 lg:py-32${backdrop ? " relative z-10" : ""}`}>
+        {/* Symmetric vertical breathing room — fluid section rhythm (compresses on mobile).
+            Space before ${} is required: Tailwind's scanner drops a class glued directly
+            to a template interpolation, so `py-section${...}` would silently emit no padding. */}
+        <div className={`py-section ${backdrop ? "relative z-10" : ""}`}>
           <div className="max-w-[1200px] mx-auto px-6">{children}</div>
         </div>
       </section>

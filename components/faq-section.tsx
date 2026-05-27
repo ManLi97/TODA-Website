@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import { Animate } from "@/components/animate";
+import { SectionHeader } from "@/components/section-header";
 
 interface FaqSectionProps {
   label: string;
@@ -34,13 +35,8 @@ export function FaqSection({
   return (
     <div>
       {/* Section header — animates as one unit on section settle */}
-      <Animate type="fade-up" className="mb-12">
-        <p className="type-eyebrow text-text-tertiary mb-6">
-          {label}
-        </p>
-        <h2 className="type-display text-text-primary">
-          {headline}
-        </h2>
+      <Animate type="fade-up" className="mb-block">
+        <SectionHeader label={label} headline={headline} />
       </Animate>
 
       {/* Accordion list — constrained to reading width */}

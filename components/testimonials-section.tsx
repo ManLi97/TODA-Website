@@ -104,13 +104,13 @@ export function TestimonialsSection({
   return (
     <div className="flex flex-col items-center w-full">
       {/* Section header */}
-      <Animate type="fade-up" className="mb-6 lg:mb-10 self-start w-full">
-        <p className="type-eyebrow text-text-tertiary mb-4">{label}</p>
+      <Animate type="fade-up" className="mb-block self-start w-full">
+        <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>
         <h2 className="type-display text-text-primary">{headline}</h2>
       </Animate>
 
       {/* Deck — fades up on its own entry */}
-      <Animate type="fade-up" className="mt-4 lg:mt-8 mb-16 lg:mb-20">
+      <Animate type="fade-up" className="mt-block mb-block">
         <div className="relative w-[240px] h-[360px] lg:w-[310px] lg:h-[460px]">
           {cards.map((card, i) => (
             <div

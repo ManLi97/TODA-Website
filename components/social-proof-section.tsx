@@ -3,6 +3,7 @@
 // Strikethrough lines are muted (text-tertiary + line-through) to visually "cross out" what the
 // artist is not, then the payoff resolves the tension with the accent word in gold.
 import { RevealGroup } from "@/components/reveal-group";
+import { SectionHeader } from "@/components/section-header";
 import { Animate } from "@/components/animate";
 import { StrikethroughList } from "@/components/strikethrough-list";
 
@@ -30,20 +31,19 @@ export function SocialProofSection({
   return (
     <>
       <RevealGroup type="fade-up" className="max-w-2xl">
-        <p className="type-eyebrow text-text-tertiary mb-6">{label}</p>
-        <h2 className="type-display text-text-primary mb-8">{headline}</h2>
+        <SectionHeader label={label} headline={headline} className="mb-block" />
 
         {/* Strikethrough statements — each strikes itself out as it enters view */}
         <StrikethroughList items={[not1, not2, not3]} />
 
         {/* Payoff — resolution after the negations */}
-        <p className="type-lede text-text-secondary mt-8">
+        <p className="type-lede text-text-secondary mt-block">
           {payoff}{" "}
           <span className="text-gold-400">{payoffAccent}</span>
         </p>
       </RevealGroup>
 
-      <Animate type="fade-up" className="mt-16">
+      <Animate type="fade-up" className="mt-block">
         <div className="aspect-video glass--gradient overflow-hidden rounded-sm">
           <iframe
             src="https://www.youtube.com/embed/rRTBDva8kqE"
@@ -54,7 +54,7 @@ export function SocialProofSection({
             className="w-full h-full border-0"
           />
         </div>
-        <p className="type-caption text-text-tertiary mt-3">{videoCaption}</p>
+        <p className="type-caption text-text-tertiary mt-element">{videoCaption}</p>
       </Animate>
     </>
   );

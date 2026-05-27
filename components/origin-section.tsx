@@ -158,11 +158,11 @@ export function OriginSection({
     <div ref={containerRef} className="max-w-2xl">
 
       {/* Section header */}
-      <p className="type-eyebrow text-text-tertiary mb-3">{label}</p>
-      <h2 className="type-display text-text-primary mb-4 lg:mb-6">{headline}</h2>
+      <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>
+      <h2 className="type-display text-text-primary mb-block">{headline}</h2>
 
       {/* Narrative lines — standard fade-up for lines 1+2, larger delay for line 3 */}
-      <div className="space-y-1 mb-10">
+      <div className="space-y-1 mb-block">
         <p
           data-fade-line
           style={{ opacity: 0, transform: "translateY(15px)" }}
@@ -187,7 +187,7 @@ export function OriginSection({
       </div>
 
       {/* Chat bubbles — Dana left, Tomek right */}
-      <div className="space-y-2 mb-8">
+      <div className="space-y-2 mb-block">
         <div
           data-bubble
           style={{ opacity: 0, transform: "translateY(15px)" }}
@@ -209,7 +209,7 @@ export function OriginSection({
       </div>
 
       {/* Visual connector: phone icon → drawing line → TODA app icon */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-block">
         <div
           data-phone
           style={{ opacity: 0, transform: "translateY(15px)" }}

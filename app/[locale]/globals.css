@@ -85,6 +85,7 @@
 
   /* TYPOGRAPHY — fluid sizes (clamp min, preferred vw, max) */
   --type-hero:    clamp(5rem, 16vw, 14rem);     /* 80 → 224 — giant numerals, gradient-clipped */
+  --type-display-hero: clamp(3rem, 9vw, 7rem);  /* 48 → 112 — hero headline only (bigger than display) */
   --type-display: clamp(3rem, 8vw, 6rem);       /* 48 → 96  — section headlines */
   --type-sub:     clamp(2rem, 4vw, 3rem);       /* 32 → 48  — sub-section titles */
   --type-lede:    clamp(1.125rem, 1.6vw, 1.5rem); /* 18 → 24 — hero/section subtitles */
@@ -132,6 +133,24 @@
   --m-x-far:    40px;       /* translateX for slide-right (off-frame) */
   --m-scale-in: 0.93;       /* scale start for scale-in / hero-in */
   --m-grad-bg:  300% 100%;  /* background-size for shimmer text */
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     SPACING — fluid vertical rhythm (mobile-first)
+     The `--spacing-*` namespace extends Tailwind v4's spacing scale, so every
+     spacing utility resolves these names: `py-section`, `mb-block`, `gap-group`,
+     `mt-element`, etc. Each is clamp()-based so gaps COMPRESS on small phones and
+     breathe on desktop — fixed gaps (e.g. 128px) waste a 667px viewport.
+     One semantic tier per intent; do not hand-pick raw `mb-6 / mb-10 / mb-12`.
+     Consumed by py/px/mt/mb/my/gap utilities (e.g. `py-section`, `gap-group`).
+       section → section top/bottom padding (replaces py-20 lg:py-32)
+       block   → between major blocks within a section (header → content, copy → media)
+       group   → within a group (eyebrow → headline, list item → list item)
+       element → tight pairs (caption gap, label → value, icon → text)
+     ───────────────────────────────────────────────────────────────────────── */
+  --spacing-section: clamp(4.5rem, 11vw, 8rem);   /* 72 → 128 */
+  --spacing-block:   clamp(2rem, 6vw, 4rem);       /* 32 → 64  */
+  --spacing-group:   clamp(1.25rem, 4vw, 2rem);    /* 20 → 32  */
+  --spacing-element: clamp(0.5rem, 2vw, 1rem);     /* 8  → 16  */
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -185,6 +204,17 @@ html {
 
   .type-display {
     font-size: var(--type-display);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-display);
+    letter-spacing: var(--track-display);
+    margin: 0;
+  }
+
+  /* Hero headline only — same weight/leading/tracking as display, larger fluid size.
+     Replaces the former inline clamp() override on the hero <h1> so the headline
+     scale lives with the other type tokens instead of escaping the system. */
+  .type-display-hero {
+    font-size: var(--type-display-hero);
     font-weight: var(--weight-bold);
     line-height: var(--leading-display);
     letter-spacing: var(--track-display);

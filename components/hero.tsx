@@ -16,7 +16,7 @@ export function Hero({ headline, accentText, subHeadline }: HeroProps) {
     <div className="max-w-3xl text-center md:text-left">
       {/* Headline — delay 0, slightly longer duration for the display element. */}
       <Animate type="fade-up" duration={650}>
-        <h1 className="type-display text-text-primary" style={{ fontSize: "clamp(3rem, 9vw, 7rem)" }}>
+        <h1 className="type-display-hero text-text-primary">
           {headline}
           {accentText && (
             <>
@@ -33,7 +33,7 @@ export function Hero({ headline, accentText, subHeadline }: HeroProps) {
 
       {/* Sub-headline — overlaps headline (same logical group), delay 350ms. */}
       {subHeadline && (
-        <Animate type="fade-up" delay={350} className="mt-6">
+        <Animate type="fade-up" delay={350} className="mt-group">
           <p className="type-lede">{subHeadline}</p>
         </Animate>
       )}

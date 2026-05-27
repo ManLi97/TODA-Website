@@ -24,8 +24,6 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 ## Workflow
 
 - **Session start:** run `/git-context` to recover state
-- **Architect-loop sessions (design system integration):** read `docs/integration-plan.md`
-  § Current state, then propose the next PR prompt. Don't re-derive completed phases.
 - **Before non-trivial work:** use `/ship` for Plan → Build → Review
 - **Commits:** use `/commit` — Conventional Commits with NOTE blocks
 
@@ -81,8 +79,15 @@ middleware.ts         # next-intl locale routing
   viewport tall, grows with content — no scroll-snap). Provides a small React context
   carrying `triggerOnMount` so entrance wrappers know whether to fire on mount or on scroll.
 - **Surface rhythm:** base → alt → raised → base → alt → raised → base → alt → raised → base
-  (10 sections in order). Canonical section list + surface map lives in
-  `docs/integration-plan.md` § Section order & surface rhythm.
+  (10 sections in order; the canonical list is `app/[locale]/page.tsx`).
+- **Spacing rhythm via tokens, not raw values:** vertical spacing uses the fluid
+  `--spacing-*` scale in `globals.css` — `section` / `block` / `group` / `element` tiers,
+  each `clamp()`-based so gaps compress on mobile and breathe on desktop. Reach for
+  `py-section`, `mb-block`, `gap-group`, etc.; don't hand-pick raw `mb-6` / `mb-10`. The
+  repeated eyebrow → headline header is the `<SectionHeader>` primitive
+  (`components/section-header.tsx`), which owns the header's content measure and internal rhythm.
+  Caveat: never glue a class directly before a `${...}` interpolation in a `className` template
+  literal — Tailwind's scanner silently drops it (put a space before the `${`).
 - **All copy via next-intl:** no hardcoded strings in components — everything reads
   from `messages/{locale}.json` under the `"home"` namespace.
 - **`<Animate>` and `<RevealGroup>` for entrances:** entrance tween fires **once** when the
@@ -100,38 +105,9 @@ middleware.ts         # next-intl locale routing
 ## Project documentation
 
 - `docs/design-system/` — website-specific design system reference (philosophy, colors, tokens, typography, motion)
-- `docs/integration-plan.md` — phased plan for integrating the design system
 
 ## Environment variables
 
 Required in `.env.local`:
 - `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key
-
-## Active decisions & constraints
-
-- **Design system integration is phased:** see `docs/integration-plan.md`
-  § Current state. Plan is re-cut into Phase 4 (chrome & structure) →
-  Phase 5 (visual atmosphere & component polish) → Phase 6 (content & assets).
-  Phases 1–3 are complete. Do not begin work outside the named phase without
-  explicit confirmation.
-- **Playfair Display:** used exactly once on the entire site — the "Weniger Chaos"
-  span inside the hero headline only. Do not add any other Playfair uses anywhere.
-- **No scroll-snap — plain smooth scroll (mobile-first):** the old `scroll-snap-type:
-  mandatory` "one viewport per section" model was removed (it trapped overflowing
-  content and felt un-premium). Sections are `min-h-svh` — at least one viewport for the
-  spotlight rhythm, but free to grow taller and scroll naturally. Spotlight feel comes
-  from viewport rhythm + surface-colour alternation + fire-once reveals. Mobile is the
-  priority device; desktop is polished afterward.
-- **Tailwind v4:** uses `@tailwindcss/postcss`, not the classic `tailwind.config.js`.
-  CSS-first config in `globals.css`.
-
-## What NOT to touch
-
-- `messages/*.json` — all locales must stay in sync when adding/changing copy keys.
-- `i18n/routing.ts` — locale list and `localePrefix` affect all URLs; coordinate with
-  deploy config before changing.
-- `pnpm-lock.yaml` — do not edit manually.
-- Design tokens in `globals.css` (`@theme` block) — values come from
-  `docs/design-system/hex-tables.md` and `motion.md`. Update those docs first if a
-  token needs to change, then mirror in `globals.css`.

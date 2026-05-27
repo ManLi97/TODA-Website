@@ -7,6 +7,7 @@
 // Desktop (lg+): two static 3-column grids.
 import { Animate } from "@/components/animate";
 import { RevealGroup } from "@/components/reveal-group";
+import { SectionHeader } from "@/components/section-header";
 import { Card } from "@/components/card";
 import useEmblaCarousel from "embla-carousel-react";
 
@@ -49,14 +50,13 @@ export function FeaturesSection({
   return (
     <div>
       {/* Section header */}
-      <Animate type="fade-up" className="mb-8">
-        <p className="type-eyebrow text-text-tertiary mb-6">{label}</p>
-        <h2 className="type-display text-text-primary">{headline}</h2>
+      <Animate type="fade-up" className="mb-block">
+        <SectionHeader label={label} headline={headline} />
       </Animate>
 
       {/* ── Mobile/tablet: Row 1 — LTR, swipe left ── */}
       <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef1}>
-        <RevealGroup type="fade-up" className="flex gap-6 py-4 pr-4">
+        <RevealGroup type="fade-up" className="flex gap-group py-4 pr-4">
           {row1.map(({ title, excerpt }) => (
             <div key={title} className="flex-none w-[280px] md:w-[320px]">
               <Card title={title} excerpt={excerpt} />
@@ -66,7 +66,7 @@ export function FeaturesSection({
       </div>
 
       {/* ── Swipe hint — single pulsing ← SWIPE → between both rows, mobile/tablet only ── */}
-      <div className="animate-pulse flex items-center justify-center gap-2 my-5 lg:hidden text-gold-400">
+      <div className="animate-pulse flex items-center justify-center gap-2 my-group lg:hidden text-gold-400">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M15 18l-6-6 6-6" />
         </svg>
@@ -79,7 +79,7 @@ export function FeaturesSection({
       {/* ── Mobile/tablet: Row 2 — RTL, swipe right ── */}
       {/* dir="rtl" makes Embla lay slides right-to-left; dir="ltr" on each slide preserves text alignment */}
       <div className="-mx-6 pr-6 lg:hidden" ref={emblaRef2} dir="rtl">
-        <RevealGroup type="fade-up" className="flex gap-6 py-4 pl-4">
+        <RevealGroup type="fade-up" className="flex gap-group py-4 pl-4">
           {row2.map(({ title, excerpt }) => (
             <div key={title} className="flex-none w-[280px] md:w-[320px]" dir="ltr">
               <Card title={title} excerpt={excerpt} />
@@ -89,13 +89,13 @@ export function FeaturesSection({
       </div>
 
       {/* ── Desktop: two static 3-column grids ── */}
-      <div className="hidden lg:flex lg:flex-col lg:gap-6">
-        <RevealGroup type="fade-up" className="grid grid-cols-3 gap-6">
+      <div className="hidden lg:flex lg:flex-col lg:gap-group">
+        <RevealGroup type="fade-up" className="grid grid-cols-3 gap-group">
           {row1.map(({ title, excerpt }) => (
             <Card key={title} title={title} excerpt={excerpt} />
           ))}
         </RevealGroup>
-        <RevealGroup type="fade-up" className="grid grid-cols-3 gap-6">
+        <RevealGroup type="fade-up" className="grid grid-cols-3 gap-group">
           {row2.map(({ title, excerpt }) => (
             <Card key={title} title={title} excerpt={excerpt} />
           ))}

@@ -28,13 +28,13 @@ export function CaseStudySection({
   const bullets = [bullet1, bullet2, bullet3];
 
   return (
-    <RevealGroup type="fade-up" className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 lg:items-start">
+    <RevealGroup type="fade-up" className="grid grid-cols-1 lg:grid-cols-2 gap-block lg:items-start">
       {/* Copy column — eyebrow → name headline → glass bullet list */}
       <div>
-        <p className="type-eyebrow text-text-tertiary mb-6">{label}</p>
-        <p className="type-sub-display text-text-primary mb-10">{statement}</p>
+        <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>
+        <p className="type-sub-display text-text-primary mb-block">{statement}</p>
         <div className="glass p-6">
-          <ul className="space-y-4 mb-6">
+          <ul className="space-y-group mb-group">
             {bullets.slice(0, 3).map((item, i) => (
               <li key={i} className="flex items-start gap-3">
                 <span className="text-gold-400 shrink-0 leading-[1.55]">—</span>
@@ -42,7 +42,7 @@ export function CaseStudySection({
               </li>
             ))}
           </ul>
-          <p className="type-body italic text-gold-400 border-t border-gold-400/20 pt-5 text-center">&ldquo;{bullet4}&rdquo;</p>
+          <p className="type-body italic text-gold-400 border-t border-gold-400/20 pt-group text-center">&ldquo;{bullet4}&rdquo;</p>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export function CaseStudySection({
             className="w-full h-full border-0"
           />
         </div>
-        <p className="type-caption text-text-tertiary mt-3">{videoCaption}</p>
+        <p className="type-caption text-text-tertiary mt-element">{videoCaption}</p>
       </div>
     </RevealGroup>
   );
