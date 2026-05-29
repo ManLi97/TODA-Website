@@ -31,9 +31,15 @@ export function Header() {
         {/* Logo */}
         <Link
           href="/"
-          className="text-text-primary font-semibold text-[16px] tracking-tight shrink-0 transition-opacity duration-100 hover:opacity-70 active:opacity-100"
+          className="shrink-0 transition-opacity duration-100 hover:opacity-70 active:opacity-100"
         >
-          TODA
+          <img
+            src="/TODA-LOGO.svg"
+            alt="TODA"
+            width={74}
+            height={36}
+            className="block"
+          />
         </Link>
 
         {/* Language switcher */}
