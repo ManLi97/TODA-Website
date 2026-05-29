@@ -9,6 +9,15 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { Animate } from "@/components/animate";
 
+import Image from "next/image";
+
+// Card order matches quote1/2/3. null = placeholder until image is available.
+const TESTIMONIAL_IMAGES: (string | null)[] = [
+  "/joell-testimonial.jpg",
+  "/sandra-nacht-nebel-testimonial.jpg",
+  null,
+];
+
 // Three-layer shadow simulates a physical photograph print.
 // Documented exception to the no-box-shadow rule: skeuomorphic, not a UI elevation token.
 // Without it a white card on near-black reads as a broken UI element.
@@ -138,8 +147,19 @@ export function TestimonialsSection({
                 boxShadow: POLAROID_SHADOW,
               }}
             >
-              {/* Photo placeholder — real portrait in Phase 5 */}
-              <div className="h-[150px] lg:h-[210px] w-full bg-surface-elevated mb-3 overflow-hidden shrink-0" />
+              <div className="relative h-[150px] lg:h-[210px] w-full mb-3 overflow-hidden shrink-0">
+                {TESTIMONIAL_IMAGES[i] ? (
+                  <Image
+                    src={TESTIMONIAL_IMAGES[i]!}
+                    alt={card.author}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 240px, 310px"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-surface-elevated" />
+                )}
+              </div>
               <p className="text-[14px] font-normal leading-[1.6] tracking-[-0.1px] text-polaroid-text mb-4">
                 {card.quote}
               </p>

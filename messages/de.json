@@ -9,7 +9,7 @@
       "label": "Unser Versprechen",
       "headline": "TODA Tattoo Solutions",
       "bullet1": "Nie wieder Anfrage-Chaos.",
-      "bullet2": "Tätowiere. Nicht administriere.",
+      "bullet2": "Kunst im Fokus. Nicht dein Schreibtisch.",
       "bullet3": "Endlich wieder Lust auf Kunden."
     },
     "origin": {
@@ -51,15 +51,15 @@
     "testimonials": {
       "label": "Stimmen aus der Community",
       "headline": "Was unsere Kunden sagen.",
-      "quote1": "Meine Anfragen kommen jetzt geordnet an. Kein WhatsApp-Durcheinander, keine fehlenden Referenzen. Ich weiss sofort, was eine Anfrage wert ist.",
-      "author1": "Mia",
-      "studio1": "Studio Kollektiv, München",
-      "quote2": "Früher hab ich manche Abende nur mit Nachrichten verbracht. Jetzt schaue ich einmal rein und bin fertig.",
-      "author2": "Jonas",
-      "studio2": "Rote Schwalbe, Hamburg",
-      "quote3": "Kunden wissen jetzt schon vor dem ersten Gespräch, was sie erwartet. Das spart mir mehr Zeit als ich dachte.",
-      "author3": "Lena",
-      "studio3": "Black Lotus, Wien",
+      "quote1": "TODA spart mir echt so viel Zeit und meine Kunden lieben es auch wie unkompliziert es ist, DANKE TODA :)",
+      "author1": "Joell",
+      "studio1": "MaggotboneArt",
+      "quote2": "TODA hat mir meine Arbeit wirklich so erleichtert. Der ganze Druck auf den man gut verzichten kann wird von dem Programm übernommen, DANKE",
+      "author2": "Sandra",
+      "studio2": "Nacht und Nebel Tattoo",
+      "quote3": "",
+      "author3": "",
+      "studio3": "",
       "hint": "Tippen zum Wechseln"
     },
     "caseStudy": {
@@ -67,7 +67,7 @@
       "statement": "Sandra · Nacht und Nebel Tattoo",
       "bullet1": "60 Stunden Wochen",
       "bullet2": "Burnout nach 30 Jahren Selbstständig",
-      "bullet3": "Keine Lust mehr auf Kunden",
+      "bullet3": "Keine Kraft mehr für meine Kunst",
       "bullet4": "und dann kam TODA",
       "videoCaption": "Sandra in unserem Podcast"
     },
@@ -88,16 +88,16 @@
     "team": {
       "label": "Das Team",
       "headline": "Dein TODA Team.",
-      "name1": "Tomek",
-      "role1": "Co-Founder & Entwickler",
-      "name2": "Dana",
-      "role2": "Co-Founderin & Tätowiererin",
-      "name3": "Sandra",
-      "role3": "Studio-Partnerin & Community",
+      "name1": "Dana",
+      "role1": "Co-Founder, Marketing",
+      "name2": "Sandra",
+      "role2": "Co-Founder Brand Design",
+      "name3": "Tomek",
+      "role3": "Founder, Strategic & Development Lead",
       "name4": "Manuel",
-      "role4": "Entwickler",
+      "role4": "Geschäftsführer & Co-Founder",
       "name5": "Lucas",
-      "role5": "Social Media",
+      "role5": "Co-Founder Social Media",
       "cta": "Die ganze Geschichte"
     },
     "pricing": {

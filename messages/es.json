@@ -9,7 +9,7 @@
       "label": "Nuestra Promesa",
       "headline": "TODA Tattoo Solutions",
       "bullet1": "Nunca más caos de consultas.",
-      "bullet2": "Tatúa. No administres.",
+      "bullet2": "Arte en foco. No tu escritorio.",
       "bullet3": "Por fin, ganas de ver clientes."
     },
     "origin": {
@@ -51,15 +51,15 @@
     "testimonials": {
       "label": "Voces de la comunidad",
       "headline": "Lo que dicen nuestros clientes.",
-      "quote1": "Mis solicitudes llegan ahora ordenadas. Sin caos de WhatsApp, sin referencias que faltan. Sé de inmediato si vale la pena aceptar una solicitud.",
-      "author1": "Mia",
-      "studio1": "Studio Kollektiv, Múnich",
-      "quote2": "Antes pasaba algunas tardes enteras respondiendo mensajes. Ahora entro una vez y ya está.",
-      "author2": "Jonas",
-      "studio2": "Rote Schwalbe, Hamburgo",
-      "quote3": "Los clientes ya saben qué esperar antes de la primera conversación. Me ahorra más tiempo del que pensaba.",
-      "author3": "Lena",
-      "studio3": "Black Lotus, Viena",
+      "quote1": "TODA spart mir echt so viel Zeit und meine Kunden lieben es auch wie unkompliziert es ist, DANKE TODA :)",
+      "author1": "Joell",
+      "studio1": "MaggotboneArt",
+      "quote2": "TODA hat mir meine Arbeit wirklich so erleichtert. Der ganze Druck auf den man gut verzichten kann wird von dem Programm übernommen, DANKE",
+      "author2": "Sandra",
+      "studio2": "Nacht und Nebel Tattoo",
+      "quote3": "",
+      "author3": "",
+      "studio3": "",
       "hint": "Toca para girar"
     },
     "caseStudy": {
@@ -67,7 +67,7 @@
       "statement": "Sandra · Nacht und Nebel Tattoo",
       "bullet1": "Semanas de 60 horas",
       "bullet2": "Burnout tras 30 años como autónoma",
-      "bullet3": "Sin ganas de atender más clientes",
+      "bullet3": "Sin fuerzas para mi arte",
       "bullet4": "Y entonces llegó TODA",
       "videoCaption": "Sandra en nuestro Podcast"
     },
@@ -88,16 +88,16 @@
     "team": {
       "label": "El equipo",
       "headline": "Tu equipo TODA.",
-      "name1": "Tomek",
-      "role1": "Co-Fundador y Desarrollador",
-      "name2": "Dana",
-      "role2": "Co-Fundadora y Tatuadora",
-      "name3": "Sandra",
-      "role3": "Socia de Estudio y Comunidad",
+      "name1": "Dana",
+      "role1": "Co-Fundadora, Marketing",
+      "name2": "Sandra",
+      "role2": "Co-Fundadora Brand Design",
+      "name3": "Tomek",
+      "role3": "Founder, Strategic & Development Lead",
       "name4": "Manuel",
-      "role4": "Desarrollador",
+      "role4": "CEO & Co-Fundador",
       "name5": "Lucas",
-      "role5": "Redes Sociales",
+      "role5": "Co-Fundador Social Media",
       "cta": "La historia completa"
     },
     "pricing": {
