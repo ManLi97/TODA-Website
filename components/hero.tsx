@@ -13,7 +13,7 @@ interface HeroProps {
 
 export function Hero({ headline, accentText, subHeadline }: HeroProps) {
   return (
-    <div className="max-w-3xl text-center md:text-left">
+    <div className="max-w-3xl mx-auto text-center lg:max-w-4xl">
       {/* Headline — delay 0, slightly longer duration for the display element. */}
       <Animate type="fade-up" duration={650}>
         <h1 className="type-display-hero text-text-primary">
@@ -34,7 +34,9 @@ export function Hero({ headline, accentText, subHeadline }: HeroProps) {
       {/* Sub-headline — overlaps headline (same logical group), delay 350ms. */}
       {subHeadline && (
         <Animate type="fade-up" delay={350} className="mt-group">
-          <p className="type-lede">{subHeadline}</p>
+          {/* mx-auto centers the 38ch-capped lede block under the centered headline.
+              .type-lede has margin: 0 baked in, so the utility must explicitly take over. */}
+          <p className="type-lede mx-auto">{subHeadline}</p>
         </Animate>
       )}
     </div>

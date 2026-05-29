@@ -155,7 +155,7 @@ export function OriginSection({
   }, []);
 
   return (
-    <div ref={containerRef} className="max-w-2xl">
+    <div ref={containerRef} className="max-w-2xl lg:mx-auto">
 
       {/* Section header */}
       <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>

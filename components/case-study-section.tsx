@@ -28,7 +28,7 @@ export function CaseStudySection({
   const bullets = [bullet1, bullet2, bullet3];
 
   return (
-    <RevealGroup type="fade-up" className="grid grid-cols-1 lg:grid-cols-2 gap-block lg:items-start">
+    <RevealGroup type="fade-up" className="grid grid-cols-1 lg:grid-cols-2 gap-block lg:items-center">
       {/* Copy column — eyebrow → name headline → glass bullet list */}
       <div>
         <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>

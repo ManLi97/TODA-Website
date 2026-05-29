@@ -111,7 +111,7 @@ export function PageSection({
             Space before ${} is required: Tailwind's scanner drops a class glued directly
             to a template interpolation, so `py-section${...}` would silently emit no padding. */}
         <div className={`py-section ${backdrop ? "relative z-10" : ""}`}>
-          <div className="max-w-[1200px] mx-auto px-6">{children}</div>
+          <div className="max-w-[1280px] mx-auto px-6">{children}</div>
         </div>
       </section>
     </PageSectionContext.Provider>

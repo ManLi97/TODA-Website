@@ -33,9 +33,9 @@ export function FaqSection({
   ];
 
   return (
-    <div>
-      {/* Section header — animates as one unit on section settle */}
-      <Animate type="fade-up" className="mb-block">
+    <div className="lg:grid lg:grid-cols-[2fr_3fr] lg:gap-block lg:items-start">
+      {/* Section header — sticky on desktop so it stays in view while user scrolls answers */}
+      <Animate type="fade-up" className="mb-block lg:mb-0 lg:sticky lg:top-24 lg:self-start">
         <SectionHeader label={label} headline={headline} />
       </Animate>
 

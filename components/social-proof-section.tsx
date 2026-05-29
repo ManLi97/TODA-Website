@@ -29,7 +29,7 @@ export function SocialProofSection({
   videoCaption,
 }: SocialProofSectionProps) {
   return (
-    <>
+    <div className="lg:grid lg:grid-cols-2 lg:gap-block lg:items-center">
       <RevealGroup type="fade-up" className="max-w-2xl">
         <SectionHeader label={label} headline={headline} className="mb-block" />
 
@@ -43,7 +43,7 @@ export function SocialProofSection({
         </p>
       </RevealGroup>
 
-      <Animate type="fade-up" className="mt-block">
+      <Animate type="fade-up" className="mt-block lg:mt-0">
         <div className="aspect-video glass--gradient overflow-hidden rounded-sm">
           <iframe
             src="https://www.youtube.com/embed/rRTBDva8kqE"
@@ -56,6 +56,6 @@ export function SocialProofSection({
         </div>
         <p className="type-caption text-text-tertiary mt-element">{videoCaption}</p>
       </Animate>
-    </>
+    </div>
   );
 }

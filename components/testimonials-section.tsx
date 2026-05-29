@@ -112,15 +112,17 @@ export function TestimonialsSection({
   ];
 
   return (
-    <div className="flex flex-col items-center w-full">
-      {/* Section header */}
-      <Animate type="fade-up" className="mb-block self-start w-full">
+    <div className="flex flex-col items-center w-full lg:grid lg:grid-cols-2 lg:gap-block lg:items-center">
+      {/* Section header — mobile: top of stack; desktop: left column */}
+      <Animate type="fade-up" className="mb-block self-start w-full lg:mb-0">
         <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>
         <h2 className="type-display text-text-primary">{headline}</h2>
       </Animate>
 
+      {/* Deck + Hint — mobile: stacked below header; desktop: right column, centered */}
+      <div className="flex flex-col items-center">
       {/* Deck — fades up on its own entry */}
-      <Animate type="fade-up" className="mt-block mb-block">
+      <Animate type="fade-up" className="mt-block mb-block lg:mt-0">
         <div className="relative w-[240px] h-[360px] lg:w-[310px] lg:h-[460px]">
           {cards.map((card, i) => (
             <div
@@ -185,6 +187,7 @@ export function TestimonialsSection({
           {hint}
         </p>
       </Animate>
+      </div>
     </div>
   );
 }

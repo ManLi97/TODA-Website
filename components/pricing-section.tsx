@@ -19,9 +19,9 @@ export function PricingSection({
   ctaLabel,
 }: PricingSectionProps) {
   return (
-    <RevealGroup type="fade-up" className="max-w-xl">
+    <RevealGroup type="fade-up" className="max-w-xl lg:mx-auto lg:text-center">
       <h2 className="type-display text-text-primary mb-block">{headline}</h2>
-      <div className="glass glass--gradient flex items-baseline gap-2 mb-element">
+      <div className="glass glass--gradient flex items-baseline gap-2 mb-element lg:justify-center">
         <span className="type-display text-text-primary">{price}</span>
         <span className="type-lede">{pricePeriod}</span>
       </div>
