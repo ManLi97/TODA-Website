@@ -12,10 +12,11 @@ import { Animate } from "@/components/animate";
 import Image from "next/image";
 
 // Card order matches quote1/2/3. null = placeholder until image is available.
-const TESTIMONIAL_IMAGES: (string | null)[] = [
-  "/joell-testimonial.jpg",
-  "/sandra-nacht-nebel-testimonial.jpg",
-  null,
+// position: CSS object-position — defaults to "center", use "top" for full-body shots.
+const TESTIMONIAL_IMAGES: Array<{ src: string; position?: string } | null> = [
+  { src: "/joell-testimonial.jpg" },
+  { src: "/sandra-nacht-nebel-testimonial.jpg" },
+  { src: "/dana-co-founder-profile-image.jpg", position: "top" },
 ];
 
 // Three-layer shadow simulates a physical photograph print.
@@ -150,10 +151,11 @@ export function TestimonialsSection({
               <div className="relative h-[150px] lg:h-[210px] w-full mb-3 overflow-hidden shrink-0">
                 {TESTIMONIAL_IMAGES[i] ? (
                   <Image
-                    src={TESTIMONIAL_IMAGES[i]!}
+                    src={TESTIMONIAL_IMAGES[i]!.src}
                     alt={card.author}
                     fill
                     className="object-cover"
+                    style={{ objectPosition: TESTIMONIAL_IMAGES[i]!.position ?? "center" }}
                     sizes="(max-width: 1024px) 240px, 310px"
                   />
                 ) : (

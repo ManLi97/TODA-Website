@@ -14,7 +14,7 @@ import useEmblaCarousel from "embla-carousel-react";
 // Order matches the fixed team sequence: Dana → Sandra → Tomek → Manuel → Lucas.
 // null = image not yet available; shows surface placeholder.
 const MEMBER_IMAGES: (string | null)[] = [
-  null,                                    // 1. Dana — image pending
+  "/dana-co-founder-profile-image.jpg",    // 1. Dana
   "/sandra-community-profile-image.jpg",   // 2. Sandra
   "/tomek-founder-profile-image.jpg",      // 3. Tomek
   "/manuel-ceo-profile-image.jpg",         // 4. Manuel
