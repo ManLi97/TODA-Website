@@ -4,11 +4,22 @@
 // Mobile: Embla Carousel with 200px slides (~1.6 visible on 375px viewport).
 // Desktop: 5-column grid with <RevealGroup type="scale-in">.
 // Ring animation: CSS keyframes in globals.css. Counter-spin keeps photo upright.
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Animate } from "@/components/animate";
 import { RevealGroup } from "@/components/reveal-group";
 import { SectionHeader } from "@/components/section-header";
 import useEmblaCarousel from "embla-carousel-react";
+
+// Order matches the fixed team sequence: Dana → Sandra → Tomek → Manuel → Lucas.
+// null = image not yet available; shows surface placeholder.
+const MEMBER_IMAGES: (string | null)[] = [
+  null,                                    // 1. Dana — image pending
+  "/sandra-community-profile-image.jpg",   // 2. Sandra
+  "/tomek-founder-profile-image.jpg",      // 3. Tomek
+  "/manuel-ceo-profile-image.jpg",         // 4. Manuel
+  "/lucas-social-media-profile-image.jpg", // 5. Lucas
+];
 
 interface TeamSectionProps {
   label: string;
@@ -58,15 +69,24 @@ export function TeamSection({
           signal. Same -mx-6 / pl-6 pattern as the Testimonials carousel. */}
       <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef}>
         <RevealGroup type="scale-in" className="flex gap-group py-4 pr-4">
-          {members.map(({ name, role }) => (
+          {members.map(({ name, role }, i) => (
             <div key={name} className="flex-none w-[200px] md:w-[215px]">
               {/* Static wrapper carries the grounding shadow (.elevated); the ring inside
                   spins, so the shadow must NOT live on it or it would orbit the circle. */}
               <div className="rounded-full elevated mb-element">
                 <div className="team-avatar-ring">
-                  <div className="team-avatar-inner aspect-square">
-                    {/* Photo placeholder — replace with next/image when portrait is available */}
-                    <div className="w-full h-full bg-surface-elevated" />
+                  <div className="team-avatar-inner aspect-square relative">
+                    {MEMBER_IMAGES[i] ? (
+                      <Image
+                        src={MEMBER_IMAGES[i]!}
+                        alt={name}
+                        fill
+                        className="object-cover"
+                        sizes="200px"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-surface-elevated" />
+                    )}
                   </div>
                 </div>
               </div>
@@ -96,12 +116,22 @@ export function TeamSection({
         type="scale-in"
         className="hidden lg:grid lg:grid-cols-5 gap-group mb-block"
       >
-        {members.map(({ name, role }) => (
+        {members.map(({ name, role }, i) => (
           <div key={name}>
             <div className="rounded-full elevated mb-element">
               <div className="team-avatar-ring">
-                <div className="team-avatar-inner aspect-square">
-                  <div className="w-full h-full bg-surface-elevated" />
+                <div className="team-avatar-inner aspect-square relative">
+                  {MEMBER_IMAGES[i] ? (
+                    <Image
+                      src={MEMBER_IMAGES[i]!}
+                      alt={name}
+                      fill
+                      className="object-cover"
+                      sizes="20vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-surface-elevated" />
+                  )}
                 </div>
               </div>
             </div>
@@ -113,13 +143,7 @@ export function TeamSection({
         ))}
       </RevealGroup>
 
-      {/* Link to full about page */}
-      <Link
-        href="/about"
-        className="text-[14px] font-normal text-text-secondary underline underline-offset-4 decoration-border-subtle hover:text-text-primary hover:decoration-text-secondary transition-colors duration-150"
-      >
-        {cta}
-      </Link>
+      {/* CTA to about page — hidden until /about is live */}
     </div>
   );
 }
