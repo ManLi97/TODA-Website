@@ -16,7 +16,7 @@ export async function Footer() {
             {[
               { key: "legal.imprint", href: "/imprint" },
               { key: "legal.privacy", href: "/privacy" },
-              { key: "legal.terms",   href: "/terms" },
+              // AGB hidden until /terms is live
             ].map(({ key, href }) => (
               <Link
                 key={key}
@@ -31,13 +31,15 @@ export async function Footer() {
           {/* Social links — hrefs are placeholders until Phase 6 */}
           <div className="flex items-center gap-5">
             {[
-              { key: "social.instagram", href: "#" },
-              { key: "social.youtube",   href: "#" },
-              { key: "social.facebook",  href: "#" },
+              { key: "social.instagram", href: "https://www.instagram.com/toda.tattoosolutions/" },
+              { key: "social.youtube",   href: "https://www.youtube.com/@TODATattooSolutions" },
+              { key: "social.facebook",  href: "https://www.facebook.com/profile.php?id=61587056530237" },
             ].map(({ key, href }) => (
               <a
                 key={key}
                 href={href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-text-tertiary text-[12px] font-normal transition-colors duration-100 hover:text-text-secondary"
               >
                 {t(key as Parameters<typeof t>[0])}

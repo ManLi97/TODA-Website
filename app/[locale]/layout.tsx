@@ -34,10 +34,81 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "TODA Solutions",
-  description: "TODA Solutions — Marketing Website",
-};
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://todasolutions.com";
+
+// Per-locale SEO copy — no "studio" wording, TODA is for individual artists
+const localeCopy = {
+  de: {
+    title: "TODA – Die App für Tattoo Artists",
+    description:
+      "Anfragen, Termine & deine Buchungsseite – alles in einer App. Entwickelt von Tattoo Artists für Tattoo Artists. Monatlich kündbar, 24,99 €/Monat.",
+    ogTitle: "TODA – Mehr Kunst. Weniger Chaos.",
+    ogDescription:
+      "Die App für selbstständige Tattoo Artists. Strukturierte Anfragen, Self-Service Buchung, eigene Buchungsseite.",
+  },
+  en: {
+    title: "TODA – The App for Tattoo Artists",
+    description:
+      "Requests, bookings & your booking page – all in one app. Built by tattoo artists, for tattoo artists. Cancel anytime, €24.99/month.",
+    ogTitle: "TODA – More Art. Less Chaos.",
+    ogDescription:
+      "The app for freelance tattoo artists. Structured requests, self-service booking, your own booking page.",
+  },
+  es: {
+    title: "TODA – La App para Tatuadores",
+    description:
+      "Solicitudes, citas y tu página de reservas en una sola app. Creada por tatuadores, para tatuadores. Sin permanencia, 24,99 €/mes.",
+    ogTitle: "TODA – Más Arte. Menos Caos.",
+    ogDescription:
+      "La app para tatuadores autónomos. Solicitudes estructuradas, reservas autogestionadas, tu propia página de reservas.",
+  },
+} as const;
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const c =
+    localeCopy[locale as keyof typeof localeCopy] ?? localeCopy.de;
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title: c.title,
+    description: c.description,
+    icons: {
+      icon: [{ url: "/toda-app-icon.svg", type: "image/svg+xml" }],
+    },
+    openGraph: {
+      title: c.ogTitle,
+      description: c.ogDescription,
+      url: `${siteUrl}/${locale}`,
+      siteName: "TODA",
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 628,
+          alt: "TODA – Die App für Tattoo Artists",
+        },
+      ],
+      locale,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: c.ogTitle,
+      description: c.ogDescription,
+      images: ["/og-image.png"],
+    },
+    alternates: {
+      canonical: `${siteUrl}/${locale}`,
+      languages: {
+        de: `${siteUrl}/de`,
+        en: `${siteUrl}/en`,
+        es: `${siteUrl}/es`,
+      },
+    },
+  };
+}
 
 type Props = {
   children: React.ReactNode;
