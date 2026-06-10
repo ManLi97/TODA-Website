@@ -108,6 +108,19 @@
       "ctaLabel": "Get Started"
     }
   },
+  "blog": {
+    "nav": "Blog",
+    "eyebrow": "TODA Blog",
+    "title": "Knowledge for tattoo artists.",
+    "lede": "Guides, insights and updates for your business as a tattoo artist.",
+    "allPosts": "All articles",
+    "minRead": "{minutes} min read",
+    "relatedPosts": "Related articles",
+    "backToBlog": "Back to blog",
+    "emptyState": "The first articles are coming soon.",
+    "metaTitle": "Blog – TODA for Tattoo Artists",
+    "metaDescription": "Guides, insights and updates for freelance tattoo artists – from TODA."
+  },
   "footer": {
     "legal": {
       "heading": "Legal",

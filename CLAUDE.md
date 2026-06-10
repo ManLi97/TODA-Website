@@ -8,18 +8,18 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 
 ## Tech stack
 
-| Layer           | Technology                                                          |
-|-----------------|---------------------------------------------------------------------|
-| Framework       | Next.js 15 (App Router)                                             |
-| Language        | TypeScript                                                          |
-| Styling         | Tailwind CSS v4 (CSS-first `@theme` in `globals.css`)               |
-| Scroll          | Plain smooth scroll (no scroll-snap)                                |
-| Animations      | GSAP + CustomEase, fire-once entrances via element-scoped IntersectionObserver. |
-| Carousel        | Embla Carousel                                                      |
-| i18n            | next-intl (de / es / en, default: de)                               |
-| Database/Auth   | Supabase (wired, not yet used in UI)                                |
-| Package mgr     | pnpm                                                                |
-| Deployment      | Vercel (inferred)                                                   |
+| Layer         | Technology                                                                      |
+| ------------- | ------------------------------------------------------------------------------- |
+| Framework     | Next.js 15 (App Router)                                                         |
+| Language      | TypeScript                                                                      |
+| Styling       | Tailwind CSS v4 (CSS-first `@theme` in `globals.css`)                           |
+| Scroll        | Plain smooth scroll (no scroll-snap)                                            |
+| Animations    | GSAP + CustomEase, fire-once entrances via element-scoped IntersectionObserver. |
+| Carousel      | Embla Carousel                                                                  |
+| i18n          | next-intl (de / es / en, default: de)                                           |
+| Database/Auth | Supabase (wired, not yet used in UI)                                            |
+| Package mgr   | pnpm                                                                            |
+| Deployment    | Vercel (inferred)                                                               |
 
 ## Workflow
 
@@ -45,7 +45,19 @@ app/
     layout.tsx        # root layout (no scroll provider — plain smooth scroll)
     page.tsx          # 10-section home page using <PageSection>
     globals.css       # Tailwind base, design tokens, smooth scroll on `html` (no snap)
+    blog/
+      page.tsx                      # blog listing (ISR, revalidate 3600)
+      category/[category]/page.tsx  # category-filtered listing (path-based, SSG)
+      [slug]/page.tsx               # article (ISR, per-locale publish, JSON-LD)
+  admin/              # SECOND ROOT LAYOUT — env-var password gate, English-only,
+    layout.tsx        # outside [locale]; middleware matcher excludes /admin
+    page.tsx          # login (HMAC session cookie, lib/admin/auth.ts)
+    (protected)/      # requireAdmin() gate: posts dashboard, editor, categories
+  sitemap.ts          # all locales × published translations, hreflang alternates
+  robots.ts           # disallow /admin
 components/
+  blog/               # post-card, post-grid, category-pills, article-header,
+                      # blog-listing, reading-progress
   page-section.tsx    # layout primitive: min-h-svh + surface variant + reveal context
   animate.tsx         # entrance wrapper — GSAP fromTo, element-scoped IO, fires once
   reveal-group.tsx    # per-element entrance for N children — each fires on its own entry
@@ -68,9 +80,35 @@ messages/
 lib/
   supabase/
     client.ts         # browser Supabase client
-    server.ts         # server-side Supabase client (SSR)
-middleware.ts         # next-intl locale routing
+    server.ts         # server-side Supabase client (SSR, cookies — NOT for ISR pages)
+    static.ts         # cookie-less anon client — the ONLY client for public blog pages
+    admin.ts          # service-role client (server-only) — the ONLY write path
+  blog/               # queries (React cache), markdown pipeline, slugify, types
+  admin/              # auth (HMAC cookie + requireAdmin), revalidate helper
+supabase/migrations/  # blog schema + storage bucket DDL (applied to toda-company)
+                      # NOTE: toda-company is a SHARED DB — migrations 001-010 belong to
+                      # other repos and exist here only as comment-only stubs so `db push`
+                      # accepts the remote history. If another repo adds a migration, add a
+                      # matching stub. Never `migration repair --status reverted` or `db pull`.
+middleware.ts         # next-intl locale routing (matcher excludes /admin and /api)
 ```
+
+## Blog (Supabase CMS)
+
+- **Data model:** `blog_posts` (shell: category, cover) ← `blog_post_translations`
+  (per-locale slug/title/content_md/tags/status — **per-locale publish**) +
+  `blog_categories` (jsonb i18n names, admin-managed). RLS: anon reads published
+  only, **zero write policies** — all writes via service role in admin server actions.
+- **Rendering:** ISR (`revalidate = 3600`) + on-demand `revalidateBlogPaths()` from
+  every admin mutation. Public pages MUST use `lib/supabase/static.ts` — the
+  cookie-based `server.ts` client forces dynamic rendering and kills ISR.
+- **Markdown:** unified/remark/rehype with `rehype-sanitize` → HTML string in RSC;
+  same pipeline powers the admin live preview client-side (`lib/blog/markdown.ts`).
+- **hreflang discipline:** article alternates + sitemap entries are computed from
+  _published_ sibling translations only — never emit a link to a draft locale.
+- **Admin auth:** stateless HMAC cookie (`lib/admin/auth.ts`), password from
+  `ADMIN_PASSWORD`. Every server action calls `requireAdmin()` itself — layouts
+  do not protect actions. Swap to Supabase Auth later = replace `lib/admin/auth.ts`.
 
 ## Key patterns
 
@@ -109,5 +147,9 @@ middleware.ts         # next-intl locale routing
 ## Environment variables
 
 Required in `.env.local`:
+
 - `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key
+- `SUPABASE_SERVICE_ROLE_KEY` — service role key (blog admin writes; server-only)
+- `ADMIN_PASSWORD` — /admin login password
+- `ADMIN_SESSION_SECRET` — HMAC key for the admin session cookie (32+ random bytes)

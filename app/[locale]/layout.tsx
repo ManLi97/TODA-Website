@@ -4,7 +4,7 @@
 // Scroll is plain smooth scroll on <html> — no scroll-snap, no JS scroll provider.
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Inter, Playfair_Display } from "next/font/google";
 import { routing } from "@/i18n/routing";
@@ -34,8 +34,7 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://todasolutions.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://todasolutions.com";
 
 // Per-locale SEO copy — no "studio" wording, TODA is for individual artists
 const localeCopy = {
@@ -67,8 +66,7 @@ const localeCopy = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const c =
-    localeCopy[locale as keyof typeof localeCopy] ?? localeCopy.de;
+  const c = localeCopy[locale as keyof typeof localeCopy] ?? localeCopy.de;
 
   return {
     metadataBase: new URL(siteUrl),
@@ -115,12 +113,21 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
+// Prebuild the three locale shells so statically-opted pages (blog, ISR) can
+// render at build time. Pages that don't call setRequestLocale stay dynamic.
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
   if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
     notFound();
   }
+
+  // Enables static rendering — must precede any next-intl API call (getMessages).
+  setRequestLocale(locale);
 
   const messages = await getMessages();
 

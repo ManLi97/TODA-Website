@@ -108,6 +108,19 @@
       "ctaLabel": "Empezar"
     }
   },
+  "blog": {
+    "nav": "Blog",
+    "eyebrow": "TODA Blog",
+    "title": "Conocimiento para tatuadores.",
+    "lede": "Guías, ideas y novedades para tu negocio como tatuador.",
+    "allPosts": "Todos los artículos",
+    "minRead": "{minutes} min de lectura",
+    "relatedPosts": "Artículos relacionados",
+    "backToBlog": "Volver al blog",
+    "emptyState": "Pronto aparecerán los primeros artículos.",
+    "metaTitle": "Blog – TODA para Tatuadores",
+    "metaDescription": "Guías, ideas y novedades para tatuadores autónomos – de TODA."
+  },
   "footer": {
     "legal": {
       "heading": "Legal",
