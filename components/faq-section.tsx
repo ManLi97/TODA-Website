@@ -11,16 +11,31 @@ import { SectionHeader } from "@/components/section-header";
 interface FaqSectionProps {
   label: string;
   headline: string;
-  q1: string; a1: string;
-  q2: string; a2: string;
-  q3: string; a3: string;
-  q4: string; a4: string;
-  q5: string; a5: string;
+  q1: string;
+  a1: string;
+  q2: string;
+  a2: string;
+  q3: string;
+  a3: string;
+  q4: string;
+  a4: string;
+  q5: string;
+  a5: string;
 }
 
 export function FaqSection({
-  label, headline,
-  q1, a1, q2, a2, q3, a3, q4, a4, q5, a5,
+  label,
+  headline,
+  q1,
+  a1,
+  q2,
+  a2,
+  q3,
+  a3,
+  q4,
+  a4,
+  q5,
+  a5,
 }: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -33,27 +48,25 @@ export function FaqSection({
   ];
 
   return (
-    <div className="lg:grid lg:grid-cols-[2fr_3fr] lg:gap-block lg:items-start">
+    <div className="lg:gap-block lg:grid lg:grid-cols-[2fr_3fr] lg:items-start">
       {/* Section header — sticky on desktop so it stays in view while user scrolls answers */}
-      <Animate type="fade-up" className="mb-block lg:mb-0 lg:sticky lg:top-24 lg:self-start">
+      <Animate type="fade-up" className="mb-block lg:sticky lg:top-24 lg:mb-0 lg:self-start">
         <SectionHeader label={label} headline={headline} />
       </Animate>
 
       {/* Accordion list — constrained to reading width */}
       <div className="max-w-2xl">
         {items.map(({ q, a }, i) => (
-          <div key={i} className="border-t border-border-subtle last:border-b">
+          <div key={i} className="border-border-subtle border-t last:border-b">
             <button
               className="flex w-full items-center justify-between gap-6 py-5 text-left"
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
               aria-expanded={openIndex === i}
             >
               {/* Question uses .type-lede with text-primary override (lede defaults to secondary). */}
-              <span className="type-lede text-text-primary">
-                {q}
-              </span>
+              <span className="type-lede text-text-primary">{q}</span>
               <span
-                className={`faq-icon flex-none text-[20px] leading-none select-none text-gold-400${openIndex === i ? " is-open" : ""}`}
+                className={`faq-icon flex-none text-[20px] leading-none select-none text-gold-400${openIndex === i ? "is-open" : ""}`}
                 aria-hidden="true"
               >
                 +
@@ -65,7 +78,7 @@ export function FaqSection({
               style={{ gridTemplateRows: openIndex === i ? "1fr" : "0fr" }}
             >
               <div className="overflow-hidden">
-                <p className="pb-5 type-lede">{a}</p>
+                <p className="type-lede pb-5">{a}</p>
               </div>
             </div>
           </div>

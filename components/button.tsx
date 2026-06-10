@@ -11,12 +11,9 @@ interface VariantOptions {
 }
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary:
-    "bg-gold-500 text-surface-base hover:bg-gold-400 active:bg-gold-600",
-  secondary:
-    "border border-border-subtle text-text-primary hover:border-text-tertiary",
-  ghost:
-    "text-text-secondary hover:text-text-primary",
+  primary: "bg-gold-500 text-surface-base hover:bg-gold-400 active:bg-gold-600",
+  secondary: "border border-border-subtle text-text-primary hover:border-text-tertiary",
+  ghost: "text-text-secondary hover:text-text-primary",
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
@@ -41,7 +38,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize;
 }
 
-export function Button({ variant = "primary", size = "md", className, children, ...props }: ButtonProps) {
+export function Button({
+  variant = "primary",
+  size = "md",
+  className,
+  children,
+  ...props
+}: ButtonProps) {
   const classes = [buttonVariants({ variant, size }), className].filter(Boolean).join(" ");
   return (
     <button className={classes} {...props}>

@@ -44,9 +44,13 @@ function HighlightedClosing({ text }: { text: string }) {
 }
 
 export function OriginSection({
-  label, headline,
-  line1, line2, line3,
-  bubble1, bubble2,
+  label,
+  headline,
+  line1,
+  line2,
+  line3,
+  bubble1,
+  bubble2,
   closing,
 }: OriginSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,25 +62,27 @@ export function OriginSection({
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      const fadeLines  = gsap.utils.toArray<HTMLElement>("[data-fade-line]", container);
-      const line3El    = container.querySelector<HTMLElement>("[data-line3]");
-      const bubbleEls  = gsap.utils.toArray<HTMLElement>("[data-bubble]", container);
-      const phoneEl    = container.querySelector<HTMLElement>("[data-phone]");
-      const lineEl     = container.querySelector<HTMLElement>("[data-line]");
-      const todaEl     = container.querySelector<HTMLElement>("[data-toda]");
-      const closingEl  = container.querySelector<HTMLElement>("[data-closing]");
+      const fadeLines = gsap.utils.toArray<HTMLElement>("[data-fade-line]", container);
+      const line3El = container.querySelector<HTMLElement>("[data-line3]");
+      const bubbleEls = gsap.utils.toArray<HTMLElement>("[data-bubble]", container);
+      const phoneEl = container.querySelector<HTMLElement>("[data-phone]");
+      const lineEl = container.querySelector<HTMLElement>("[data-line]");
+      const todaEl = container.querySelector<HTMLElement>("[data-toda]");
+      const closingEl = container.querySelector<HTMLElement>("[data-closing]");
 
       // Honour prefers-reduced-motion — skip animation, show everything.
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        gsap.set([...fadeLines, line3El, ...bubbleEls, phoneEl, todaEl, closingEl], { clearProps: "all" });
+        gsap.set([...fadeLines, line3El, ...bubbleEls, phoneEl, todaEl, closingEl], {
+          clearProps: "all",
+        });
         gsap.set(lineEl, { scaleX: 1 });
         return;
       }
 
       // Re-apply initial hidden states (consistent with inline SSR styles).
       gsap.set([...fadeLines, line3El, ...bubbleEls, phoneEl, closingEl], { opacity: 0, y: 15 });
-      gsap.set(todaEl,  { opacity: 0, scale: 0 });
-      gsap.set(lineEl,  { scaleX: 0 });
+      gsap.set(todaEl, { opacity: 0, scale: 0 });
+      gsap.set(lineEl, { scaleX: 0 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -95,60 +101,83 @@ export function OriginSection({
         ease: "power2.out",
       })
 
-      // Line 3 "Dann klingelte das Telefon." — same fade-up, larger delay for dramatic pause
-      .to(line3El, {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-        ease: "power2.out",
-      }, ">+0.45")
+        // Line 3 "Dann klingelte das Telefon." — same fade-up, larger delay for dramatic pause
+        .to(
+          line3El,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power2.out",
+          },
+          ">+0.45"
+        )
 
-      // Phase 2 — Chat bubbles: slower, deliberate, 0.45s stagger between them
-      .to(bubbleEls, {
-        opacity: 1,
-        y: 0,
-        duration: 0.65,
-        stagger: 0.45,
-        ease: "power2.out",
-      }, ">+0.25")
+        // Phase 2 — Chat bubbles: slower, deliberate, 0.45s stagger between them
+        .to(
+          bubbleEls,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.45,
+            ease: "power2.out",
+          },
+          ">+0.25"
+        )
 
-      // Phase 3 — Phone icon appears (~0.4s), then shake (6 frames × 0.1s = 0.6s)
-      .to(phoneEl, {
-        opacity: 1,
-        y: 0,
-        duration: 0.4,
-        ease: "back.out(1.5)",
-      }, ">+0.25")
-      .to(phoneEl, { rotation: -8, duration: 0.1, ease: "none" })
-      .to(phoneEl, { rotation:  8, duration: 0.1, ease: "none" })
-      .to(phoneEl, { rotation: -6, duration: 0.1, ease: "none" })
-      .to(phoneEl, { rotation:  6, duration: 0.1, ease: "none" })
-      .to(phoneEl, { rotation: -3, duration: 0.1, ease: "none" })
-      .to(phoneEl, { rotation:  0, duration: 0.1, ease: "power1.out" })
+        // Phase 3 — Phone icon appears (~0.4s), then shake (6 frames × 0.1s = 0.6s)
+        .to(
+          phoneEl,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: "back.out(1.5)",
+          },
+          ">+0.25"
+        )
+        .to(phoneEl, { rotation: -8, duration: 0.1, ease: "none" })
+        .to(phoneEl, { rotation: 8, duration: 0.1, ease: "none" })
+        .to(phoneEl, { rotation: -6, duration: 0.1, ease: "none" })
+        .to(phoneEl, { rotation: 6, duration: 0.1, ease: "none" })
+        .to(phoneEl, { rotation: -3, duration: 0.1, ease: "none" })
+        .to(phoneEl, { rotation: 0, duration: 0.1, ease: "power1.out" })
 
-      // Phase 4 — Line draws right, smooth and slow (~0.9s)
-      .to(lineEl, {
-        scaleX: 1,
-        duration: 0.9,
-        ease: "power2.inOut",
-      }, ">-0.1")
+        // Phase 4 — Line draws right, smooth and slow (~0.9s)
+        .to(
+          lineEl,
+          {
+            scaleX: 1,
+            duration: 0.9,
+            ease: "power2.inOut",
+          },
+          ">-0.1"
+        )
 
-      // Phase 5 — TODA icon scale-bounce (~0.45s)
-      .to(todaEl, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.45,
-        ease: "back.out(2.5)",
-      }, ">-0.15")
+        // Phase 5 — TODA icon scale-bounce (~0.45s)
+        .to(
+          todaEl,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.45,
+            ease: "back.out(2.5)",
+          },
+          ">-0.15"
+        )
 
-      // Phase 6 — Closing glass box fades in
-      .to(closingEl, {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-        ease: "power2.out",
-      }, ">+0.2");
-
+        // Phase 6 — Closing glass box fades in
+        .to(
+          closingEl,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power2.out",
+          },
+          ">+0.2"
+        );
     }, containerRef);
 
     return () => ctx.revert();
@@ -156,44 +185,43 @@ export function OriginSection({
 
   return (
     <div ref={containerRef} className="max-w-2xl lg:mx-auto">
-
       {/* Section header */}
       <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>
       <h2 className="type-display text-text-primary mb-block">{headline}</h2>
 
       {/* Narrative lines — standard fade-up for lines 1+2, larger delay for line 3 */}
-      <div className="space-y-1 mb-block">
+      <div className="mb-block space-y-1">
         <p
           data-fade-line
           style={{ opacity: 0, transform: "translateY(15px)" }}
-          className="text-sm lg:text-[17px] text-text-secondary leading-relaxed"
+          className="text-text-secondary text-sm leading-relaxed lg:text-[17px]"
         >
           {line1}
         </p>
         <p
           data-fade-line
           style={{ opacity: 0, transform: "translateY(15px)" }}
-          className="text-sm lg:text-[17px] text-text-secondary leading-relaxed"
+          className="text-text-secondary text-sm leading-relaxed lg:text-[17px]"
         >
           {line2}
         </p>
         <p
           data-line3
           style={{ opacity: 0, transform: "translateY(15px)" }}
-          className="text-sm lg:text-[17px] font-medium text-text-primary pt-3"
+          className="text-text-primary pt-3 text-sm font-medium lg:text-[17px]"
         >
           {line3}
         </p>
       </div>
 
       {/* Chat bubbles — Dana left, Tomek right */}
-      <div className="space-y-2 mb-block">
+      <div className="mb-block space-y-2">
         <div
           data-bubble
           style={{ opacity: 0, transform: "translateY(15px)" }}
           className="flex justify-start"
         >
-          <div className="max-w-[78%] bg-surface-raised rounded-2xl rounded-tl-sm px-4 py-2.5 text-[13px] lg:text-[15px] text-text-primary leading-snug">
+          <div className="bg-surface-raised text-text-primary max-w-[78%] rounded-2xl rounded-tl-sm px-4 py-2.5 text-[13px] leading-snug lg:text-[15px]">
             {bubble1}
           </div>
         </div>
@@ -202,22 +230,23 @@ export function OriginSection({
           style={{ opacity: 0, transform: "translateY(15px)" }}
           className="flex justify-end"
         >
-          <div className="max-w-[78%] bg-gold-400/10 border border-gold-400/20 rounded-2xl rounded-tr-sm px-4 py-2.5 text-[13px] lg:text-[15px] text-text-primary leading-snug">
+          <div className="bg-gold-400/10 border-gold-400/20 text-text-primary max-w-[78%] rounded-2xl rounded-tr-sm border px-4 py-2.5 text-[13px] leading-snug lg:text-[15px]">
             {bubble2}
           </div>
         </div>
       </div>
 
       {/* Visual connector: phone icon → drawing line → TODA app icon */}
-      <div className="flex items-center gap-3 mb-block">
+      <div className="mb-block flex items-center gap-3">
         <div
           data-phone
           style={{ opacity: 0, transform: "translateY(15px)" }}
-          className="flex-none w-9 h-9 rounded-full bg-gold-400/10 border border-gold-400/20 flex items-center justify-center text-gold-400"
+          className="bg-gold-400/10 border-gold-400/20 text-gold-400 flex h-9 w-9 flex-none items-center justify-center rounded-full border"
         >
           {/* Feather phone icon — inline SVG, no icon library */}
           <svg
-            width="18" height="18"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -234,15 +263,11 @@ export function OriginSection({
         <div
           data-line
           style={{ transformOrigin: "left center", transform: "scaleX(0)" }}
-          className="flex-1 h-px bg-gradient-to-r from-gold-400/50 to-gold-400"
+          className="from-gold-400/50 to-gold-400 h-px flex-1 bg-gradient-to-r"
         />
 
         {/* TODA app icon — scale-bounce in */}
-        <div
-          data-toda
-          style={{ opacity: 0, transform: "scale(0)" }}
-          className="flex-none"
-        >
+        <div data-toda style={{ opacity: 0, transform: "scale(0)" }} className="flex-none">
           <Image
             src="/toda-app-icon.svg"
             alt="TODA"
@@ -260,11 +285,10 @@ export function OriginSection({
         style={{ opacity: 0, transform: "translateY(15px)" }}
         className="glass glass--gradient max-w-full"
       >
-        <p className="text-sm lg:text-[17px] text-text-primary">
+        <p className="text-text-primary text-sm lg:text-[17px]">
           <HighlightedClosing text={closing} />
         </p>
       </div>
-
     </div>
   );
 }

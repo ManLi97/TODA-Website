@@ -27,25 +27,39 @@ const POLAROID_SHADOW =
 
 // Stack transform per position. pos 0 = active front card.
 const STACK_POSITIONS = [
-  { scale: 1.00, rotate: 0,  x: 0,   y: 0,  zIndex: 30 },
+  { scale: 1.0, rotate: 0, x: 0, y: 0, zIndex: 30 },
   { scale: 0.94, rotate: -4, x: -36, y: 18, zIndex: 20 },
-  { scale: 0.90, rotate: 5,  x: 40,  y: 32, zIndex: 10 },
+  { scale: 0.9, rotate: 5, x: 40, y: 32, zIndex: 10 },
 ];
 
 interface TestimonialsSectionProps {
   label: string;
   headline: string;
   hint: string;
-  quote1: string; author1: string; studio1: string;
-  quote2: string; author2: string; studio2: string;
-  quote3: string; author3: string; studio3: string;
+  quote1: string;
+  author1: string;
+  studio1: string;
+  quote2: string;
+  author2: string;
+  studio2: string;
+  quote3: string;
+  author3: string;
+  studio3: string;
 }
 
 export function TestimonialsSection({
-  label, headline, hint,
-  quote1, author1, studio1,
-  quote2, author2, studio2,
-  quote3, author3, studio3,
+  label,
+  headline,
+  hint,
+  quote1,
+  author1,
+  studio1,
+  quote2,
+  author2,
+  studio2,
+  quote3,
+  author3,
+  studio3,
 }: TestimonialsSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [hintFaded, setHintFaded] = useState(false);
@@ -95,14 +109,14 @@ export function TestimonialsSection({
       },
     });
     // Active card lifts off screen
-    tl.to(activeEl,  { y: -180, rotate: 8,  scale: 1.05, opacity: 0, duration: 0.55 }, 0);
+    tl.to(activeEl, { y: -180, rotate: 8, scale: 1.05, opacity: 0, duration: 0.55 }, 0);
     // Back cards advance in parallel
-    tl.to(posOneEl, { scale: 1.00, rotate: 0,  x: 0,   y: 0,  duration: 0.5 }, 0.05);
+    tl.to(posOneEl, { scale: 1.0, rotate: 0, x: 0, y: 0, duration: 0.5 }, 0.05);
     tl.to(posTwoEl, { scale: 0.94, rotate: -4, x: -36, y: 18, duration: 0.5 }, 0.05);
     // Reset departed card to rearmost slot instantly (invisible behind the new stack)
-    tl.set(activeEl,  { y: 32, rotate: 5, scale: 0.90, x: 40, opacity: 1, zIndex: 10 });
-    tl.set(posOneEl,  { zIndex: 30 });
-    tl.set(posTwoEl,  { zIndex: 20 });
+    tl.set(activeEl, { y: 32, rotate: 5, scale: 0.9, x: 40, opacity: 1, zIndex: 10 });
+    tl.set(posOneEl, { zIndex: 30 });
+    tl.set(posTwoEl, { zIndex: 20 });
   };
 
   const cards = [
@@ -112,81 +126,83 @@ export function TestimonialsSection({
   ];
 
   return (
-    <div className="flex flex-col items-center w-full lg:grid lg:grid-cols-2 lg:gap-block lg:items-center">
+    <div className="lg:gap-block flex w-full flex-col items-center lg:grid lg:grid-cols-2 lg:items-center">
       {/* Section header — mobile: top of stack; desktop: left column */}
-      <Animate type="fade-up" className="mb-block self-start w-full lg:mb-0">
+      <Animate type="fade-up" className="mb-block w-full self-start lg:mb-0">
         <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>
         <h2 className="type-display text-text-primary">{headline}</h2>
       </Animate>
 
       {/* Deck + Hint — mobile: stacked below header; desktop: right column, centered */}
       <div className="flex flex-col items-center">
-      {/* Deck — fades up on its own entry */}
-      <Animate type="fade-up" className="mt-block mb-block lg:mt-0">
-        <div className="relative w-[240px] h-[360px] lg:w-[310px] lg:h-[460px]">
-          {cards.map((card, i) => (
-            <div
-              key={i}
-              ref={(el) => { cardRefs.current[i] = el; }}
-              onClick={i === activeIndex ? handleTap : undefined}
-              onKeyDown={
-                i === activeIndex
-                  ? (e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleTap();
+        {/* Deck — fades up on its own entry */}
+        <Animate type="fade-up" className="mt-block mb-block lg:mt-0">
+          <div className="relative h-[360px] w-[240px] lg:h-[460px] lg:w-[310px]">
+            {cards.map((card, i) => (
+              <div
+                key={i}
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+                onClick={i === activeIndex ? handleTap : undefined}
+                onKeyDown={
+                  i === activeIndex
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleTap();
+                        }
                       }
-                    }
-                  : undefined
-              }
-              role={i === activeIndex ? "button" : undefined}
-              aria-label={i === activeIndex ? hint : undefined}
-              tabIndex={i === activeIndex ? 0 : -1}
-              className={`polaroid-tape absolute inset-0 bg-polaroid rounded-[2px] overflow-hidden ${
-                i === activeIndex ? "cursor-pointer" : "pointer-events-none"
-              }`}
-              style={{
-                padding: "16px 16px 80px 16px",
-                boxShadow: POLAROID_SHADOW,
-              }}
-            >
-              <div className="relative h-[150px] lg:h-[210px] w-full mb-3 overflow-hidden shrink-0">
-                {TESTIMONIAL_IMAGES[i] ? (
-                  <Image
-                    src={TESTIMONIAL_IMAGES[i]!.src}
-                    alt={card.author}
-                    fill
-                    className="object-cover"
-                    style={{ objectPosition: TESTIMONIAL_IMAGES[i]!.position ?? "center" }}
-                    sizes="(max-width: 1024px) 240px, 310px"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-surface-elevated" />
-                )}
+                    : undefined
+                }
+                role={i === activeIndex ? "button" : undefined}
+                aria-label={i === activeIndex ? hint : undefined}
+                tabIndex={i === activeIndex ? 0 : -1}
+                className={`polaroid-tape bg-polaroid absolute inset-0 overflow-hidden rounded-[2px] ${
+                  i === activeIndex ? "cursor-pointer" : "pointer-events-none"
+                }`}
+                style={{
+                  padding: "16px 16px 80px 16px",
+                  boxShadow: POLAROID_SHADOW,
+                }}
+              >
+                <div className="relative mb-3 h-[150px] w-full shrink-0 overflow-hidden lg:h-[210px]">
+                  {TESTIMONIAL_IMAGES[i] ? (
+                    <Image
+                      src={TESTIMONIAL_IMAGES[i]!.src}
+                      alt={card.author}
+                      fill
+                      className="object-cover"
+                      style={{ objectPosition: TESTIMONIAL_IMAGES[i]!.position ?? "center" }}
+                      sizes="(max-width: 1024px) 240px, 310px"
+                    />
+                  ) : (
+                    <div className="bg-surface-elevated h-full w-full" />
+                  )}
+                </div>
+                <p className="text-polaroid-text mb-4 text-[14px] leading-[1.6] font-normal tracking-[-0.1px]">
+                  {card.quote}
+                </p>
+                <p className="text-polaroid-text text-[12px] leading-none font-normal">
+                  {card.author}
+                </p>
+                <p className="text-polaroid-text-secondary mt-1 text-[11px] leading-none font-normal">
+                  {card.studio}
+                </p>
               </div>
-              <p className="text-[14px] font-normal leading-[1.6] tracking-[-0.1px] text-polaroid-text mb-4">
-                {card.quote}
-              </p>
-              <p className="text-[12px] font-normal text-polaroid-text leading-none">
-                {card.author}
-              </p>
-              <p className="text-[11px] font-normal text-polaroid-text-secondary mt-1 leading-none">
-                {card.studio}
-              </p>
-            </div>
-          ))}
-        </div>
-      </Animate>
+            ))}
+          </div>
+        </Animate>
 
-      {/* Hint label — pulses until first tap, then fades out */}
-      <Animate type="fade-in">
-        <p
-          aria-hidden="true"
-          className={`type-caption text-gold-400 hint-pulse${hintFaded ? " hint-faded" : ""}`}
-        >
-          {hint}
-        </p>
-      </Animate>
+        {/* Hint label — pulses until first tap, then fades out */}
+        <Animate type="fade-in">
+          <p
+            aria-hidden="true"
+            className={`type-caption text-gold-400 hint-pulse${hintFaded ? "hint-faded" : ""}`}
+          >
+            {hint}
+          </p>
+        </Animate>
       </div>
     </div>
   );

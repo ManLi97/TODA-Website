@@ -28,7 +28,10 @@ export function CaseStudySection({
   const bullets = [bullet1, bullet2, bullet3];
 
   return (
-    <RevealGroup type="fade-up" className="grid grid-cols-1 lg:grid-cols-2 gap-block lg:items-center">
+    <RevealGroup
+      type="fade-up"
+      className="gap-block grid grid-cols-1 lg:grid-cols-2 lg:items-center"
+    >
       {/* Copy column — eyebrow → name headline → glass bullet list */}
       <div>
         <p className="type-eyebrow text-text-tertiary mb-group">{label}</p>
@@ -42,20 +45,22 @@ export function CaseStudySection({
               </li>
             ))}
           </ul>
-          <p className="type-body italic text-gold-400 border-t border-gold-400/20 pt-group text-center">&ldquo;{bullet4}&rdquo;</p>
+          <p className="type-body text-gold-400 border-gold-400/20 pt-group border-t text-center italic">
+            &ldquo;{bullet4}&rdquo;
+          </p>
         </div>
       </div>
 
       {/* Video column — YouTube embed in glass--gradient frame + caption below */}
       <div>
-        <div className="aspect-video glass--gradient overflow-hidden rounded-sm">
+        <div className="glass--gradient aspect-video overflow-hidden rounded-sm">
           <iframe
             src="https://www.youtube.com/embed/rdOlY1-Bp5E"
             title={videoCaption}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; compute-pressure"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
-            className="w-full h-full border-0"
+            className="h-full w-full border-0"
           />
         </div>
         <p className="type-caption text-text-tertiary mt-element">{videoCaption}</p>

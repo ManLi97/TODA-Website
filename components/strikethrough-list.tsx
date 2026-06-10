@@ -9,7 +9,7 @@ import { gsap } from "gsap";
 import { usePageSection } from "@/components/page-section";
 
 // Resolved from globals.css @theme — hex values, safe for GSAP color interpolation.
-const COLOR_PRIMARY  = "#ffffff";
+const COLOR_PRIMARY = "#ffffff";
 const COLOR_TERTIARY = "#6b6b6b";
 
 interface StrikethroughListProps {
@@ -80,7 +80,7 @@ export function StrikethroughList({ items }: StrikethroughListProps) {
           }
         }
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 }
     );
 
     observer.observe(container);
@@ -105,7 +105,7 @@ export function StrikethroughList({ items }: StrikethroughListProps) {
               lineRefs.current[i] = el;
             }}
             aria-hidden="true"
-            className="absolute left-0 w-full h-[2px] bg-text-tertiary pointer-events-none"
+            className="bg-text-tertiary pointer-events-none absolute left-0 h-[2px] w-full"
             style={{ top: "50%", marginTop: "-1px" }}
           />
         </div>

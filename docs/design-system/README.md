@@ -22,7 +22,7 @@ exist in `components/`. If you're starting a fresh project, recreate them from t
 
 ## Files (read in this order)
 
-1. **`philosophy.md`** — the feeling and the *why*. Materials (black · glass · anthracite),
+1. **`philosophy.md`** — the feeling and the _why_. Materials (black · glass · anthracite),
    surface-aware depth, gold/purple color discipline, typography principles, motion
    principles, the overall "dark gallery" mood. Read this first.
 2. **`hex-tables.md`** — every color hex, mirroring `globals.css @theme`. The authoritative
@@ -71,14 +71,14 @@ exist in `components/`. If you're starting a fresh project, recreate them from t
 
 ## Building blocks (the primitives)
 
-| Primitive | Contract |
-|---|---|
+| Primitive                                                   | Contract                                                                                                                                                                                                                                    |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `<PageSection variant id triggerOnMount? align? backdrop?>` | Layout primitive. `min-h-svh`, surface background, `py-section` padding, max-w container. Cascades `--glass-tint`, `--glass-gradient-fill`, `--shadow-card` per variant so glass + depth auto-adapt. Provides the `triggerOnMount` context. |
-| `<SectionHeader label headline lede? className?>` | The repeated eyebrow → headline (→ lede) block. Owns the `max-w-2xl` measure and internal rhythm. |
-| `<Animate type delay? duration? className?>` | Single-element entrance. Fires once on scroll-in (or on mount under `triggerOnMount`). |
-| `<RevealGroup type className?>` | Same trigger model for N children; each reveals on its own entry, no inter-child delay. |
-| `.glass` / `.glass--gradient` | Focal surfaces. Gradient variant = apex highlight (gold→purple border). |
-| `.elevated` | Opt-in surface-aware depth for non-glass cards/boxes. |
+| `<SectionHeader label headline lede? className?>`           | The repeated eyebrow → headline (→ lede) block. Owns the `max-w-2xl` measure and internal rhythm.                                                                                                                                           |
+| `<Animate type delay? duration? className?>`                | Single-element entrance. Fires once on scroll-in (or on mount under `triggerOnMount`).                                                                                                                                                      |
+| `<RevealGroup type className?>`                             | Same trigger model for N children; each reveals on its own entry, no inter-child delay.                                                                                                                                                     |
+| `.glass` / `.glass--gradient`                               | Focal surfaces. Gradient variant = apex highlight (gold→purple border).                                                                                                                                                                     |
+| `.elevated`                                                 | Opt-in surface-aware depth for non-glass cards/boxes.                                                                                                                                                                                       |
 
 ## Recipe — a new TODA-style page
 
@@ -88,5 +88,5 @@ exist in `components/`. If you're starting a fresh project, recreate them from t
 3. Wrap entrances in `<Animate>` / `<RevealGroup>` (`fade-up` is the default).
 4. Reach for gold/purple as accents only; glass + `.elevated` only on focal/card elements.
 5. Put all copy in `messages/{locale}.json`; wire i18n nav from `@/i18n/navigation`.
-6. If a section must *narrate* (a built sequence), give it its own GSAP timeline — don't chain
+6. If a section must _narrate_ (a built sequence), give it its own GSAP timeline — don't chain
    `<Animate>` delays.

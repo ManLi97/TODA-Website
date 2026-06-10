@@ -14,33 +14,33 @@ are the `<Animate>` and `<RevealGroup>` React components; two sections own bespo
 
 ### Easing
 
-| Token | Curve | Role |
-|---|---|---|
+| Token          | Curve                           | Role                                                          |
+| -------------- | ------------------------------- | ------------------------------------------------------------- |
 | `--ease-entry` | `cubic-bezier(0.16, 1, 0.3, 1)` | Every entrance. Registered with GSAP CustomEase as `"entry"`. |
-| `--ease-loop` | `ease-in-out` | Continuous CSS loops (gradient shimmer) |
+| `--ease-loop`  | `ease-in-out`                   | Continuous CSS loops (gradient shimmer)                       |
 
 ### Duration
 
-| Token | ms | Role |
-|---|---|---|
-| `--t-quick` | 400ms | Small entrance: label, caption, arrow fade (`fade-in` default) |
-| `--t-base` | 550ms | Default: card, feature item (`fade-up` / `slide-left` default) |
-| `--t-medium` | 650ms | Display headlines, lede |
-| `--t-slow` | 700ms | Divider draw, slide-right from off-frame |
-| `--t-hero` | 900ms | Hero / scale-in |
-| `--t-fill` | 1250ms | Progress bar fill |
-| `--t-flow-fast` | 5s | Inline gradient shimmer loop |
-| `--t-flow-slow` | 7s | Hero-numeral gradient shimmer loop |
+| Token           | ms     | Role                                                           |
+| --------------- | ------ | -------------------------------------------------------------- |
+| `--t-quick`     | 400ms  | Small entrance: label, caption, arrow fade (`fade-in` default) |
+| `--t-base`      | 550ms  | Default: card, feature item (`fade-up` / `slide-left` default) |
+| `--t-medium`    | 650ms  | Display headlines, lede                                        |
+| `--t-slow`      | 700ms  | Divider draw, slide-right from off-frame                       |
+| `--t-hero`      | 900ms  | Hero / scale-in                                                |
+| `--t-fill`      | 1250ms | Progress bar fill                                              |
+| `--t-flow-fast` | 5s     | Inline gradient shimmer loop                                   |
+| `--t-flow-slow` | 7s     | Hero-numeral gradient shimmer loop                             |
 
 ### Distance / scale
 
-| Token | Value | Role |
-|---|---|---|
-| `--m-y-rise` | 24px | translateY for `fade-up` |
-| `--m-x-near` | 32px | translateX for `slide-left` |
-| `--m-x-far` | 40px | translateX for `slide-right` (off-frame) |
-| `--m-scale-in` | 0.93 | scale start for `scale-in` / `hero-in` |
-| `--m-grad-bg` | 300% 100% | background-size for gradient shimmer text |
+| Token          | Value     | Role                                      |
+| -------------- | --------- | ----------------------------------------- |
+| `--m-y-rise`   | 24px      | translateY for `fade-up`                  |
+| `--m-x-near`   | 32px      | translateX for `slide-left`               |
+| `--m-x-far`    | 40px      | translateX for `slide-right` (off-frame)  |
+| `--m-scale-in` | 0.93      | scale start for `scale-in` / `hero-in`    |
+| `--m-grad-bg`  | 300% 100% | background-size for gradient shimmer text |
 
 ---
 
@@ -50,15 +50,15 @@ are the `<Animate>` and `<RevealGroup>` React components; two sections own bespo
 directly. The `from`/`to`/duration tables live in `animate.tsx` (`ANIM_FROM`, `ANIM_TO`,
 `ANIM_DURATION`) and are the authoritative definitions:
 
-| `type` | `from` | `to` | Default |
-|---|---|---|---|
-| `fade-up` | `{ opacity: 0, y: 24 }` | `{ opacity: 1, y: 0 }` | 550ms |
-| `fade-in` | `{ opacity: 0 }` | `{ opacity: 1 }` | 400ms |
-| `scale-in` | `{ opacity: 0, scale: 0.93 }` | `{ opacity: 1, scale: 1 }` | 900ms |
-| `slide-left` | `{ opacity: 0, x: -32 }` | `{ opacity: 1, x: 0 }` | 550ms |
-| `slide-right` | `{ opacity: 0, x: 40 }` | `{ opacity: 1, x: 0 }` | 700ms |
-| `draw-w` | `{ width: 0, opacity: 0 }` | `{ width: "3rem", opacity: 0.4 }` | 700ms |
-| `hero-in` | `{ opacity: 0, scale: 0.93 }` | `{ opacity: 1, scale: 1 }` | 900ms |
+| `type`        | `from`                        | `to`                              | Default |
+| ------------- | ----------------------------- | --------------------------------- | ------- |
+| `fade-up`     | `{ opacity: 0, y: 24 }`       | `{ opacity: 1, y: 0 }`            | 550ms   |
+| `fade-in`     | `{ opacity: 0 }`              | `{ opacity: 1 }`                  | 400ms   |
+| `scale-in`    | `{ opacity: 0, scale: 0.93 }` | `{ opacity: 1, scale: 1 }`        | 900ms   |
+| `slide-left`  | `{ opacity: 0, x: -32 }`      | `{ opacity: 1, x: 0 }`            | 550ms   |
+| `slide-right` | `{ opacity: 0, x: 40 }`       | `{ opacity: 1, x: 0 }`            | 700ms   |
+| `draw-w`      | `{ width: 0, opacity: 0 }`    | `{ width: "3rem", opacity: 0.4 }` | 700ms   |
+| `hero-in`     | `{ opacity: 0, scale: 0.93 }` | `{ opacity: 1, scale: 1 }`        | 900ms   |
 
 All use `ease: "entry"`.
 
@@ -133,7 +133,7 @@ deliberately break that because they tell a story on a clock:
 bottom"`, `once: true`). It runs six phases in sequence — narrative lines fade up (line 3
 gets a dramatic pause), chat bubbles fade in slowly, a phone icon appears and shakes, a
 connector line draws left→right, the TODA icon scale-bounces in, then the closing glass box
-fades up. The reason it's a timeline and not per-element reveals: it's a *story being told*,
+fades up. The reason it's a timeline and not per-element reveals: it's a _story being told_,
 so it must build step by step at an authored pace, not react to the scroll position of each
 fragment. Initial hidden states are also set inline on the elements to prevent an SSR flash.
 
@@ -143,7 +143,7 @@ fragment. Initial hidden states are also set inline on the elements to prevent a
 salesperson"). One `IntersectionObserver` on the **container**: when the whole list enters
 view, the rows strike out one after another. Per row, a line draws across (`scaleX 0→1`,
 0.65s `power2.inOut`) and the text fades white→tertiary (0.55s, starting +0.2s into the
-draw). Rows are staggered by `STAGGER = 1.5s` so each line can be *read* before it's crossed
+draw). Rows are staggered by `STAGGER = 1.5s` so each line can be _read_ before it's crossed
 out — the cascade tracks the reader's eye down the list. Fires once; reduced-motion jumps to
 the final struck-through state.
 
@@ -153,16 +153,16 @@ scroll-triggered sections. If a new section needs a narrative build, give it its
 
 ### Cascade math (for timelines only)
 
-When you *are* authoring a timeline, the rhythm is:
+When you _are_ authoring a timeline, the rhythm is:
 
 ```
 next.start = previous.start + previous.duration + breath
 ```
 
-| Relationship | Breath | Feels like |
-|---|---|---|
-| Same logical group (label → headline → lede; consecutive items) | −150 to +150ms (may overlap) | One continuous beat |
-| Distinct phase change (copy → media; bullets → card) | +200 to +400ms | A pause before the next thing |
-| Discrete reveal (step → arrow → step) | +150 to +250ms after the previous settles | A sequence being drawn |
+| Relationship                                                    | Breath                                    | Feels like                    |
+| --------------------------------------------------------------- | ----------------------------------------- | ----------------------------- |
+| Same logical group (label → headline → lede; consecutive items) | −150 to +150ms (may overlap)              | One continuous beat           |
+| Distinct phase change (copy → media; bullets → card)            | +200 to +400ms                            | A pause before the next thing |
+| Discrete reveal (step → arrow → step)                           | +150 to +250ms after the previous settles | A sequence being drawn        |
 
 Phases get clearly separated; groups feel like one beat.

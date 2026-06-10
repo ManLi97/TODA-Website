@@ -13,7 +13,7 @@ interface HeroProps {
 
 export function Hero({ headline, accentText, subHeadline }: HeroProps) {
   return (
-    <div className="max-w-3xl mx-auto text-center lg:max-w-4xl">
+    <div className="mx-auto max-w-3xl text-center lg:max-w-4xl">
       {/* Headline — delay 0, slightly longer duration for the display element. */}
       <Animate type="fade-up" duration={650}>
         <h1 className="type-display-hero text-text-primary">
@@ -23,9 +23,7 @@ export function Hero({ headline, accentText, subHeadline }: HeroProps) {
               <br />
               {/* Playfair italic accent — font-normal prevents inheriting the h1's semibold
                   (we only load Playfair at weight 400) */}
-              <span className="font-playfair italic font-normal text-gold-400">
-                {accentText}
-              </span>
+              <span className="font-playfair text-gold-400 font-normal italic">{accentText}</span>
             </>
           )}
         </h1>

@@ -12,19 +12,19 @@
 @theme {
   /* Foundation — true black + anthracite. Section rhythm alternates base ↔ alt;
      raised/hover are lighter fills for cards, glass tints, and hover states. */
-  --color-bg:             #000000;
-  --color-surface-base:   #0a0a0a;
-  --color-surface-alt:    #1e1e1e;
+  --color-bg: #000000;
+  --color-surface-base: #0a0a0a;
+  --color-surface-alt: #1e1e1e;
   --color-surface-raised: #292929;
-  --color-surface-hover:  #333333;
+  --color-surface-hover: #333333;
   --color-surface-elevated: #333333; /* legacy alias of surface-hover */
-  --color-border:         #383838;
-  --color-border-subtle:  #383838;   /* legacy alias of border */
+  --color-border: #383838;
+  --color-border-subtle: #383838; /* legacy alias of border */
 
   /* Text tiers */
-  --color-text-primary:   #ffffff;
+  --color-text-primary: #ffffff;
   --color-text-secondary: #a3a3a3;
-  --color-text-tertiary:  #6b6b6b;
+  --color-text-tertiary: #6b6b6b;
 
   /* Gold (primary accent) — gold-400 is the everyday UI gold */
   --color-gold-200: #fce49b;
@@ -32,24 +32,24 @@
   --color-gold-500: #c8941a;
   --color-gold-600: #9c7314;
   --color-gold-800: #5c420a;
-  --color-on-gold:  #2b1e08;
+  --color-on-gold: #2b1e08;
 
   /* Purple (secondary accent) */
   --color-purple-200: #d9cbef;
   --color-purple-400: #cbb5ef;
   --color-purple-500: #bba6e8;
   --color-purple-600: #9d88c9;
-  --color-on-purple:  #231a33;
+  --color-on-purple: #231a33;
 
   /* Categorical label tints */
-  --color-label-blue:  #6b8cbe;
+  --color-label-blue: #6b8cbe;
   --color-label-green: #5fb082;
-  --color-label-red:   #b85450;
+  --color-label-red: #b85450;
   --color-label-terra: #b57236;
 
   /* Polaroid testimonial cards — the one deliberately light surface */
-  --color-polaroid:                #fafafa;
-  --color-polaroid-text:           #1a1a1a;
+  --color-polaroid: #fafafa;
+  --color-polaroid-text: #1a1a1a;
   --color-polaroid-text-secondary: #555555;
 }
 ```
@@ -60,32 +60,45 @@
 @theme {
   /* Glass fill + border. --glass-tint here is a DEFAULT; PageSection overrides it
      per section (see "per-section cascade" below) so the tint inverts against the bg. */
-  --glass-tint:        color-mix(in oklch, var(--color-surface-raised) 65%, transparent);
+  --glass-tint: color-mix(in oklch, var(--color-surface-raised) 65%, transparent);
   --glass-border-gold: 1px solid color-mix(in oklch, var(--color-gold-500) 15%, transparent);
 
   /* Brand gradient — gold-dominant, traveling into purple */
-  --grad-brand:   linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-400) 35%, var(--color-purple-500) 100%);
-  --grad-ambient: radial-gradient(ellipse at 15% 10%, color-mix(in oklch, var(--color-gold-500) 12%, transparent) 0%, transparent 55%);
+  --grad-brand: linear-gradient(
+    135deg,
+    var(--color-gold-500) 0%,
+    var(--color-gold-400) 35%,
+    var(--color-purple-500) 100%
+  );
+  --grad-ambient: radial-gradient(
+    ellipse at 15% 10%,
+    color-mix(in oklch, var(--color-gold-500) 12%, transparent) 0%,
+    transparent 55%
+  );
 
   /* Surface-aware card/box elevation. A drop shadow is invisible on true black, so
      depth is split by surface: light = top highlight rim (for black sections),
      dark = real drop shadow (for anthracite). PageSection picks one per variant. */
-  --shadow-card-light: inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 1px rgba(0,0,0,0.5), 0 12px 28px -10px rgba(0,0,0,0.7);
-  --shadow-card-dark:  inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 4px rgba(0,0,0,0.3), 0 14px 30px -8px rgba(0,0,0,0.55);
+  --shadow-card-light:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 1px rgba(0, 0, 0, 0.5),
+    0 12px 28px -10px rgba(0, 0, 0, 0.7);
+  --shadow-card-dark:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 14px 30px -8px rgba(0, 0, 0, 0.55);
 }
 ```
 
 ## Per-section cascade — the key mechanism
 
 `<PageSection variant>` sets three CSS variables inline on each `<section>`, so any
-descendant automatically gets values tuned for *that* section's background. This is why
+descendant automatically gets values tuned for _that_ section's background. This is why
 glass and depth "just work" without per-element guessing:
 
-| Variable                | `base` (near-black)        | `alt` (anthracite)       | Purpose                                      |
-|-------------------------|----------------------------|--------------------------|----------------------------------------------|
-| `--glass-tint`          | `rgba(30,30,30,0.9)`       | `rgba(10,10,10,0.9)`     | `.glass` fill — inverts to contrast with bg  |
-| `--glass-gradient-fill` | `#1e1e1e`                  | `#0a0a0a`                | `.glass--gradient` inner fill (padding-box)  |
-| `--shadow-card`         | `var(--shadow-card-light)` | `var(--shadow-card-dark)`| elevation recipe for `.elevated` / plain glass |
+| Variable                | `base` (near-black)        | `alt` (anthracite)        | Purpose                                        |
+| ----------------------- | -------------------------- | ------------------------- | ---------------------------------------------- |
+| `--glass-tint`          | `rgba(30,30,30,0.9)`       | `rgba(10,10,10,0.9)`      | `.glass` fill — inverts to contrast with bg    |
+| `--glass-gradient-fill` | `#1e1e1e`                  | `#0a0a0a`                 | `.glass--gradient` inner fill (padding-box)    |
+| `--shadow-card`         | `var(--shadow-card-light)` | `var(--shadow-card-dark)` | elevation recipe for `.elevated` / plain glass |
 
 (There is also a `raised` variant, defined but unused by the live page; it mirrors `alt`.)
 
@@ -107,8 +120,11 @@ glass and depth "just work" without per-element guessing:
 .glass--gradient {
   border: 1px solid transparent;
   background:
-    linear-gradient(var(--glass-gradient-fill, var(--color-surface-base)),
-                    var(--glass-gradient-fill, var(--color-surface-base))) padding-box,
+    linear-gradient(
+        var(--glass-gradient-fill, var(--color-surface-base)),
+        var(--glass-gradient-fill, var(--color-surface-base))
+      )
+      padding-box,
     var(--grad-brand) border-box;
   backdrop-filter: none;
 }
@@ -121,5 +137,5 @@ glass and depth "just work" without per-element guessing:
 }
 ```
 
-**Usage rule:** glass and `.elevated` are both applied *selectively* — focal elements
+**Usage rule:** glass and `.elevated` are both applied _selectively_ — focal elements
 and cards, never as wallpaper. See `philosophy.md` (Materials, Depth).

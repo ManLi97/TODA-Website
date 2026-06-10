@@ -25,16 +25,16 @@ export function BoldClaimSection({
       <SectionHeader label={label} headline={headline} className="mb-block" />
       {/* Mobile: video stacked above bullets. Desktop (lg+): 2-col grid — video left (280px),
           bullets right (capped at 2xl so they don't sprawl). */}
-      <div className="lg:grid lg:grid-cols-[280px_1fr] lg:gap-block lg:items-center">
+      <div className="lg:gap-block lg:grid lg:grid-cols-[280px_1fr] lg:items-center">
         {/* Phone-format video — portrait 9:16. Shown on all viewports. */}
-        <div className="max-w-[260px] mx-auto lg:mx-0 lg:max-w-[280px] aspect-[9/16] glass--gradient overflow-hidden rounded-sm">
-          <VideoLoop src="/bold-claim-section-video.mp4" playOnce className="w-full h-full" />
+        <div className="glass--gradient mx-auto aspect-[9/16] max-w-[260px] overflow-hidden rounded-sm lg:mx-0 lg:max-w-[280px]">
+          <VideoLoop src="/bold-claim-section-video.mp4" playOnce className="h-full w-full" />
         </div>
         {/* Three glass claim boxes — static gradient number, text at lede size. */}
-        <div className="flex flex-col gap-group w-full mt-block lg:mt-0 lg:max-w-2xl">
+        <div className="gap-group mt-block flex w-full flex-col lg:mt-0 lg:max-w-2xl">
           {[bullet1, bullet2, bullet3].map((text, i) => (
-            <div key={i} className="glass glass--gradient flex items-center gap-group">
-              <span className="type-sub-display grad-text--flow tabular-nums shrink-0">
+            <div key={i} className="glass glass--gradient gap-group flex items-center">
+              <span className="type-sub-display grad-text--flow shrink-0 tabular-nums">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <p className="type-lede text-text-primary m-0">{text}</p>

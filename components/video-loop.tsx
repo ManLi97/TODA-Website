@@ -40,7 +40,7 @@ export function VideoLoop({ src, poster, className, playOnce = false }: VideoLoo
           }
         }
       },
-      { threshold: 0.25 },
+      { threshold: 0.25 }
     );
 
     observer.observe(video);
@@ -52,16 +52,11 @@ export function VideoLoop({ src, poster, className, playOnce = false }: VideoLoo
       <div
         role="img"
         aria-label="Video placeholder"
-        className={[
-          "bg-surface-elevated flex items-center justify-center",
-          className,
-        ]
+        className={["bg-surface-elevated flex items-center justify-center", className]
           .filter(Boolean)
           .join(" ")}
       >
-        <span className="text-text-tertiary text-[12px] font-normal select-none">
-          Video
-        </span>
+        <span className="text-text-tertiary text-[12px] font-normal select-none">Video</span>
       </div>
     );
   }
@@ -74,7 +69,7 @@ export function VideoLoop({ src, poster, className, playOnce = false }: VideoLoo
       loop={!playOnce}
       muted
       playsInline
-      className={["w-full h-full object-cover block", className].filter(Boolean).join(" ")}
+      className={["block h-full w-full object-cover", className].filter(Boolean).join(" ")}
     />
   );
 }

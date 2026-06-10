@@ -21,11 +21,11 @@ export function PricingSection({
   return (
     <RevealGroup type="fade-up" className="max-w-xl lg:mx-auto lg:text-center">
       <h2 className="type-display text-text-primary mb-block">{headline}</h2>
-      <div className="glass glass--gradient flex items-baseline gap-2 mb-element lg:justify-center">
+      <div className="glass glass--gradient mb-element flex items-baseline gap-2 lg:justify-center">
         <span className="type-display text-text-primary">{price}</span>
         <span className="type-lede">{pricePeriod}</span>
       </div>
-      <p className="text-[14px] font-normal leading-[1.43] tracking-[-0.1px] text-text-secondary mb-block">
+      <p className="text-text-secondary mb-block text-[14px] leading-[1.43] font-normal tracking-[-0.1px]">
         {priceNote}
       </p>
       <a

@@ -22,7 +22,13 @@ export default async function HomePage() {
   return (
     <>
       {/* ── 1. Hero — surface-base ── */}
-      <PageSection variant="base" id="hero" triggerOnMount align="center" backdrop={<HeroParticles />}>
+      <PageSection
+        variant="base"
+        id="hero"
+        triggerOnMount
+        align="center"
+        backdrop={<HeroParticles />}
+      >
         <Hero
           headline={t("hero.headline")}
           accentText={t("hero.accentText")}
@@ -125,11 +131,16 @@ export default async function HomePage() {
         <TeamSection
           label={t("team.label")}
           headline={t("team.headline")}
-          name1={t("team.name1")} role1={t("team.role1")}
-          name2={t("team.name2")} role2={t("team.role2")}
-          name3={t("team.name3")} role3={t("team.role3")}
-          name4={t("team.name4")} role4={t("team.role4")}
-          name5={t("team.name5")} role5={t("team.role5")}
+          name1={t("team.name1")}
+          role1={t("team.role1")}
+          name2={t("team.name2")}
+          role2={t("team.role2")}
+          name3={t("team.name3")}
+          role3={t("team.role3")}
+          name4={t("team.name4")}
+          role4={t("team.role4")}
+          name5={t("team.name5")}
+          role5={t("team.role5")}
           cta={t("team.cta")}
         />
       </PageSection>
@@ -150,11 +161,16 @@ export default async function HomePage() {
         <FaqSection
           label={t("faq.label")}
           headline={t("faq.headline")}
-          q1={t("faq.q1")} a1={t("faq.a1")}
-          q2={t("faq.q2")} a2={t("faq.a2")}
-          q3={t("faq.q3")} a3={t("faq.a3")}
-          q4={t("faq.q4")} a4={t("faq.a4")}
-          q5={t("faq.q5")} a5={t("faq.a5")}
+          q1={t("faq.q1")}
+          a1={t("faq.a1")}
+          q2={t("faq.q2")}
+          a2={t("faq.a2")}
+          q3={t("faq.q3")}
+          a3={t("faq.a3")}
+          q4={t("faq.q4")}
+          a4={t("faq.a4")}
+          q5={t("faq.q5")}
+          a5={t("faq.a5")}
         />
       </PageSection>
     </>

@@ -18,19 +18,16 @@ interface SectionWrapperProps {
   id?: string;
 }
 
-export function SectionWrapper({
-  variant = "base",
-  children,
-  className,
-  id,
-}: SectionWrapperProps) {
+export function SectionWrapper({ variant = "base", children, className, id }: SectionWrapperProps) {
   // overflow-x-hidden clips any horizontal visual overflow from child elements
   // (rotated cards, transforms, compositing layers) without affecting body/html scroll.
-  const sectionClasses = [BG[variant], "py-20", "overflow-x-hidden", className].filter(Boolean).join(" ");
+  const sectionClasses = [BG[variant], "py-20", "overflow-x-hidden", className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <section id={id} className={sectionClasses}>
-      <div className="max-w-[1200px] mx-auto px-6">{children}</div>
+      <div className="mx-auto max-w-[1200px] px-6">{children}</div>
     </section>
   );
 }

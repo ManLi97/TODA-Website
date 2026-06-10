@@ -48,17 +48,17 @@ export function Card({ title, excerpt, label, href, imageSrc, imageAlt, classNam
 
       <div className="p-6">
         {label && (
-          <p className="text-[12px] font-normal leading-none tracking-[-0.05px] text-text-tertiary mb-3">
+          <p className="text-text-tertiary mb-3 text-[12px] leading-none font-normal tracking-[-0.05px]">
             {label}
           </p>
         )}
-        <h3 className="text-[17px] font-semibold leading-[1.47] tracking-[-0.2px] text-text-primary">
+        <h3 className="text-text-primary text-[17px] leading-[1.47] font-semibold tracking-[-0.2px]">
           {title}
         </h3>
         {excerpt && (
           <p
             className={[
-              "mt-2 text-[14px] font-normal leading-[1.43] tracking-[-0.1px] text-text-secondary",
+              "text-text-secondary mt-2 text-[14px] leading-[1.43] font-normal tracking-[-0.1px]",
               // Clamp only for link cards — destination holds the full content.
               // Static feature cards show the full excerpt since there is no "read more" target.
               href ? "line-clamp-3" : "",

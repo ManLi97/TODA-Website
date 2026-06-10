@@ -29,7 +29,7 @@ export function SocialProofSection({
   videoCaption,
 }: SocialProofSectionProps) {
   return (
-    <div className="lg:grid lg:grid-cols-2 lg:gap-block lg:items-center">
+    <div className="lg:gap-block lg:grid lg:grid-cols-2 lg:items-center">
       <RevealGroup type="fade-up" className="max-w-2xl">
         <SectionHeader label={label} headline={headline} className="mb-block" />
 
@@ -38,20 +38,19 @@ export function SocialProofSection({
 
         {/* Payoff — resolution after the negations */}
         <p className="type-lede text-text-secondary mt-block">
-          {payoff}{" "}
-          <span className="text-gold-400">{payoffAccent}</span>
+          {payoff} <span className="text-gold-400">{payoffAccent}</span>
         </p>
       </RevealGroup>
 
       <Animate type="fade-up" className="mt-block lg:mt-0">
-        <div className="aspect-video glass--gradient overflow-hidden rounded-sm">
+        <div className="glass--gradient aspect-video overflow-hidden rounded-sm">
           <iframe
             src="https://www.youtube.com/embed/rRTBDva8kqE"
             title={videoCaption}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; compute-pressure"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
-            className="w-full h-full border-0"
+            className="h-full w-full border-0"
           />
         </div>
         <p className="type-caption text-text-tertiary mt-element">{videoCaption}</p>

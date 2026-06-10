@@ -12,9 +12,7 @@ import { RevealGroup } from "@/components/reveal-group";
 // Section label — internal typographic marker used throughout this page
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-text-tertiary text-[12px] uppercase tracking-widest mb-8">
-      {children}
-    </p>
+    <p className="text-text-tertiary mb-8 text-[12px] tracking-widest uppercase">{children}</p>
   );
 }
 
@@ -22,14 +20,12 @@ export default function ComponentTestPage() {
   return (
     <>
       {/* Page header — pt-14 absorbs fixed nav */}
-      <div className="pt-14 bg-surface-base border-b border-border-subtle">
-        <div className="max-w-[1200px] mx-auto px-6 py-10">
-          <p className="text-text-tertiary text-[12px] uppercase tracking-widest mb-2">
+      <div className="bg-surface-base border-border-subtle border-b pt-14">
+        <div className="mx-auto max-w-[1200px] px-6 py-10">
+          <p className="text-text-tertiary mb-2 text-[12px] tracking-widest uppercase">
             Intern · Phase 4
           </p>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px]">
-            Komponenten
-          </h1>
+          <h1 className="text-[40px] leading-[1.1] font-semibold tracking-[-0.3px]">Komponenten</h1>
           <p className="text-text-secondary mt-2 text-[17px] leading-[1.47] tracking-[-0.2px]">
             Visuelle Verifikation aller Phase-4-Komponenten
           </p>
@@ -42,9 +38,7 @@ export default function ComponentTestPage() {
         <div className="space-y-6">
           {(["sm", "md", "lg"] as const).map((size) => (
             <div key={size} className="flex flex-wrap items-center gap-4">
-              <span className="text-[11px] font-mono text-text-tertiary w-5 shrink-0">
-                {size}
-              </span>
+              <span className="text-text-tertiary w-5 shrink-0 font-mono text-[11px]">{size}</span>
               <Button variant="primary" size={size}>
                 Kostenlos starten
               </Button>
@@ -62,12 +56,11 @@ export default function ComponentTestPage() {
       {/* ─── 2. SectionWrapper ─── */}
       <SectionWrapper variant="alt" id="section-wrapper">
         <SectionLabel>SectionWrapper — Anthrazit Surface Variants</SectionLabel>
-        <p className="text-text-secondary text-[17px] leading-[1.47] tracking-[-0.2px] mb-8 max-w-xl">
-          Alterniert zwischen{" "}
-          <code className="text-gold-500 text-[14px]">base</code>,{" "}
+        <p className="text-text-secondary mb-8 max-w-xl text-[17px] leading-[1.47] tracking-[-0.2px]">
+          Alterniert zwischen <code className="text-gold-500 text-[14px]">base</code>,{" "}
           <code className="text-gold-500 text-[14px]">raised</code> und{" "}
-          <code className="text-gold-500 text-[14px]">alt</code>. Das Farbdelta ist das
-          einzige Trennzeichen — kein Border, kein Shadow. Dieser Abschnitt selbst ist{" "}
+          <code className="text-gold-500 text-[14px]">alt</code>. Das Farbdelta ist das einzige
+          Trennzeichen — kein Border, kein Shadow. Dieser Abschnitt selbst ist{" "}
           <code className="text-gold-500 text-[14px]">alt</code>.
         </p>
         <div className="flex gap-4">
@@ -78,11 +71,9 @@ export default function ComponentTestPage() {
           ].map(({ variant, cls, hex }) => (
             <div key={variant} className="flex-1">
               {/* bg-* classes use design tokens, not inline styles */}
-              <div
-                className={`h-20 rounded-sm border border-border-subtle ${cls}`}
-              />
-              <p className="mt-2 text-[12px] text-text-secondary font-mono">{variant}</p>
-              <p className="text-[11px] text-text-tertiary font-mono">{hex}</p>
+              <div className={`border-border-subtle h-20 rounded-sm border ${cls}`} />
+              <p className="text-text-secondary mt-2 font-mono text-[12px]">{variant}</p>
+              <p className="text-text-tertiary font-mono text-[11px]">{hex}</p>
             </div>
           ))}
         </div>
@@ -100,7 +91,7 @@ export default function ComponentTestPage() {
       {/* ─── 4. Card ─── */}
       <SectionWrapper variant="raised" id="cards">
         <SectionLabel>Card — Text-only (kein imageSrc)</SectionLabel>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <Card
             href="#"
             title="Automatische Erinnerungen"
@@ -121,16 +112,16 @@ export default function ComponentTestPage() {
       {/* ─── 5. VideoLoop ─── */}
       <SectionWrapper variant="alt" id="video-loop">
         <SectionLabel>VideoLoop — Placeholder (kein src)</SectionLabel>
-        <p className="text-text-secondary text-[17px] leading-[1.47] tracking-[-0.2px] mb-8">
+        <p className="text-text-secondary mb-8 text-[17px] leading-[1.47] tracking-[-0.2px]">
           Kein <code className="text-gold-500 text-[14px]">src</code> → Placeholder-Div.
           IntersectionObserver (Threshold 25%) steuert play/pause.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="aspect-video overflow-hidden rounded-sm">
-            <VideoLoop src="" className="w-full h-full" />
+            <VideoLoop src="" className="h-full w-full" />
           </div>
           <div className="aspect-video overflow-hidden rounded-sm">
-            <VideoLoop src="" className="w-full h-full" />
+            <VideoLoop src="" className="h-full w-full" />
           </div>
         </div>
       </SectionWrapper>
@@ -138,24 +129,24 @@ export default function ComponentTestPage() {
       {/* ─── 6. Animate + RevealGroup ─── */}
       <SectionWrapper variant="base" id="animate">
         <SectionLabel>GSAP · Animate + RevealGroup — IO-triggered entrances</SectionLabel>
-        <p className="text-text-secondary text-[17px] leading-[1.47] tracking-[-0.2px] mb-12 max-w-xl">
-          Diese Section ist nicht in eine PageSection eingebettet — Animate/RevealGroup loggen
-          eine Warnung und feuern stattdessen on-mount (Fallback-Modus).
+        <p className="text-text-secondary mb-12 max-w-xl text-[17px] leading-[1.47] tracking-[-0.2px]">
+          Diese Section ist nicht in eine PageSection eingebettet — Animate/RevealGroup loggen eine
+          Warnung und feuern stattdessen on-mount (Fallback-Modus).
         </p>
 
         {/* Single element — Animate wraps as one unit */}
         <Animate type="fade-up" className="mb-12">
-          <h2 className="text-[40px] font-semibold leading-[1.1] tracking-[-0.3px] mb-4">
+          <h2 className="mb-4 text-[40px] leading-[1.1] font-semibold tracking-[-0.3px]">
             Features, die überzeugen.
           </h2>
-          <p className="text-[17px] font-normal leading-[1.47] tracking-[-0.2px] text-text-secondary max-w-xl">
-            Alles, was ein professionelles Studio braucht — in einem System, das aus der
-            Praxis gebaut wurde.
+          <p className="text-text-secondary max-w-xl text-[17px] leading-[1.47] font-normal tracking-[-0.2px]">
+            Alles, was ein professionelles Studio braucht — in einem System, das aus der Praxis
+            gebaut wurde.
           </p>
         </Animate>
 
         {/* Multi-element group — each child reveals on its own entry */}
-        <RevealGroup type="fade-up" className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <RevealGroup type="fade-up" className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <Card
             href="#"
             title="Terminplanung"

@@ -13,19 +13,19 @@ type RGB = [number, number, number];
 
 // Gold palette only — warm, focused. No white or purple.
 const GOLDS: RGB[] = [
-  [200, 148, 26],  // gold-500 #c8941a
-  [232, 183, 61],  // gold-400 #e8b73d
+  [200, 148, 26], // gold-500 #c8941a
+  [232, 183, 61], // gold-400 #e8b73d
   [245, 210, 100], // lighter warm gold
 ];
 
 interface Particle {
-  x: number;      // normalized world x (small, defines spawn angle/radius)
-  y: number;      // normalized world y
-  z: number;      // depth: 1=far/center, 0=close/edge
-  spd: number;    // z decrement per frame
-  sz: number;     // base size
+  x: number; // normalized world x (small, defines spawn angle/radius)
+  y: number; // normalized world y
+  z: number; // depth: 1=far/center, 0=close/edge
+  spd: number; // z decrement per frame
+  sz: number; // base size
   rgb: RGB;
-  life: number;   // 0–1; opacity follows sin(life * π) bell curve
+  life: number; // 0–1; opacity follows sin(life * π) bell curve
   lifeRate: number;
 }
 
@@ -89,7 +89,10 @@ export function HeroParticles() {
         p.z -= p.spd;
         p.life += p.lifeRate;
 
-        if (p.z <= 0 || p.life >= 1) { spawn(p); continue; }
+        if (p.z <= 0 || p.life >= 1) {
+          spawn(p);
+          continue;
+        }
 
         // Perspective projection: particles radiate outward as z shrinks
         const inv = 1 / p.z;
@@ -97,7 +100,10 @@ export function HeroParticles() {
         const py = cy + p.y * inv * h;
 
         // Cull out-of-bounds
-        if (px < 0 || px > w || py < 0 || py > h) { spawn(p); continue; }
+        if (px < 0 || px > w || py < 0 || py > h) {
+          spawn(p);
+          continue;
+        }
 
         // Cull inside text safe zone
         const dx = px - cx;
@@ -126,14 +132,17 @@ export function HeroParticles() {
     };
 
     id = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(id); ro.disconnect(); };
+    return () => {
+      cancelAnimationFrame(id);
+      ro.disconnect();
+    };
   }, []);
 
   return (
     <canvas
       ref={ref}
       aria-hidden="true"
-      className="absolute inset-0 w-full h-full pointer-events-none"
+      className="pointer-events-none absolute inset-0 h-full w-full"
     />
   );
 }

@@ -8,7 +8,7 @@ else lifts off it.
 
 Anthracite is the structural counterpoint to black. Used as the material of cards,
 framed panels, code-like callouts, and internal containers. Anthracite reads as
-"object" — black reads as "space." The *section* rhythm is a strict two-surface
+"object" — black reads as "space." The _section_ rhythm is a strict two-surface
 alternation — near-black (`surface-base`) ↔ anthracite (`surface-alt`), back and forth
 down the page. The lighter tiers (`surface-raised`, `surface-hover`) are not section
 backgrounds; they are the fills for cards, glass tints, and hover states — stacked on
@@ -32,7 +32,7 @@ reach for an accent color.
 
 ### Depth — surface-aware elevation
 
-Surface alternation carries the *section* rhythm; cards and boxes earn a touch of
+Surface alternation carries the _section_ rhythm; cards and boxes earn a touch of
 real depth on top of it. Because a drop shadow is invisible on true black, elevation
 is surface-dependent and cascaded automatically per section (the `.elevated` recipe
 and `--shadow-card` in `globals.css`):
@@ -44,7 +44,7 @@ and `--shadow-card` in `globals.css`):
 
 Apply it the way glass is applied — selectively, never as wallpaper. Plain cards and
 hairline `.glass` boxes get it; gradient-border glass does not — its gold→purple
-border already *is* the highlight, and stacking a shadow on it would dilute the apex.
+border already _is_ the highlight, and stacking a shadow on it would dilute the apex.
 
 ### Color — Gold, Purple, and the Supporting Cast
 
@@ -54,6 +54,7 @@ The gold (warm amber, not yellow, not metallic) is the primary identity signal. 
 it like jewelry on a tailored black suit: small, intentional, expensive-looking.
 
 Gold belongs on:
+
 - Single-word emphasis in a headline — one gold word, not a phrase
 - Numbers and KPIs — a single large gold number on black is the system's signature move
 - Hairlines and rules — thin gold dividers, 1px borders on featured cards, underlines
@@ -67,6 +68,7 @@ Purple is the second voice. Where gold = "this is TODA," purple = "new / forward
 answer / future."
 
 Purple belongs on:
+
 - The second element in a comparison or before/after pairing (gold = us, purple = the
   change or outcome)
 - Section transitions and chapter markers — purple-tinted glass for "we're entering a
@@ -143,7 +145,7 @@ Three principles govern every animation:
 **Reveal on arrival, fire once.** The default is per-element: each element (or each
 child of a `<RevealGroup>`) plays its entrance the moment it crosses into view, then
 **stays** — no reset, no replay on scroll-back. A calm single reveal reads more premium
-than re-animating every time you pass. Deliberate *sequencing* (beats landing one at a
+than re-animating every time you pass. Deliberate _sequencing_ (beats landing one at a
 time, tight overlaps within a group, wider breaths between phases) is reserved for the
 two places that tell a story on a clock: the Origin GSAP timeline and the
 StrikethroughList cascade. Everywhere else, things animate as you reach them — not on a

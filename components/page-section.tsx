@@ -20,16 +20,16 @@ const BG: Record<SectionVariant, string> = {
 // base = true black (#0a0a0a): anthracite glass for contrast.
 // alt  = anthracite (#1e1e1e): black glass for contrast.
 const GLASS_TINT: Record<SectionVariant, string> = {
-  base:   "rgba(30, 30, 30, 0.9)",
-  alt:    "rgba(10, 10, 10, 0.9)",
+  base: "rgba(30, 30, 30, 0.9)",
+  alt: "rgba(10, 10, 10, 0.9)",
   raised: "rgba(41, 41, 41, 0.65)",
 };
 
 // Per-variant fill for .glass--gradient (gradient-bordered boxes and video frames).
 // Same inversion logic as GLASS_TINT — box fill contrasts with section background.
 const GLASS_GRADIENT_FILL: Record<SectionVariant, string> = {
-  base:   "#1e1e1e",
-  alt:    "#0a0a0a",
+  base: "#1e1e1e",
+  alt: "#0a0a0a",
   raised: "#0a0a0a",
 };
 
@@ -37,8 +37,8 @@ const GLASS_GRADIENT_FILL: Record<SectionVariant, string> = {
 // use the "light from above" recipe (top highlight rim); on anthracite a real dark
 // drop shadow reads. Cascades to .elevated / plain .glass descendants via --shadow-card.
 const SHADOW_CARD: Record<SectionVariant, string> = {
-  base:   "var(--shadow-card-light)",
-  alt:    "var(--shadow-card-dark)",
+  base: "var(--shadow-card-light)",
+  alt: "var(--shadow-card-dark)",
   raised: "var(--shadow-card-dark)",
 };
 
@@ -76,10 +76,7 @@ export function PageSection({
   children,
 }: PageSectionProps) {
   // Memoised so consumers don't re-render on every PageSection render.
-  const ctx = useMemo<PageSectionContextValue>(
-    () => ({ triggerOnMount }),
-    [triggerOnMount],
-  );
+  const ctx = useMemo<PageSectionContextValue>(() => ({ triggerOnMount }), [triggerOnMount]);
 
   const sectionClass = [
     BG[variant],
@@ -100,18 +97,20 @@ export function PageSection({
       <section
         id={id}
         className={`${sectionClass} relative`}
-        style={{
-          "--glass-tint": GLASS_TINT[variant],
-          "--glass-gradient-fill": GLASS_GRADIENT_FILL[variant],
-          "--shadow-card": SHADOW_CARD[variant],
-        } as React.CSSProperties}
+        style={
+          {
+            "--glass-tint": GLASS_TINT[variant],
+            "--glass-gradient-fill": GLASS_GRADIENT_FILL[variant],
+            "--shadow-card": SHADOW_CARD[variant],
+          } as React.CSSProperties
+        }
       >
         {backdrop}
         {/* Symmetric vertical breathing room — fluid section rhythm (compresses on mobile).
             Space before ${} is required: Tailwind's scanner drops a class glued directly
             to a template interpolation, so `py-section${...}` would silently emit no padding. */}
         <div className={`py-section ${backdrop ? "relative z-10" : ""}`}>
-          <div className="max-w-[1280px] mx-auto px-6">{children}</div>
+          <div className="mx-auto max-w-[1280px] px-6">{children}</div>
         </div>
       </section>
     </PageSectionContext.Provider>

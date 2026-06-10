@@ -21,39 +21,39 @@ export type AnimationType =
 
 // GSAP fromTo states per motion.md §2
 export const ANIM_FROM: Record<AnimationType, Record<string, string | number>> = {
-  "fade-up":     { opacity: 0, y: 24 },
-  "fade-in":     { opacity: 0 },
-  "scale-in":    { opacity: 0, scale: 0.93 },
-  "slide-left":  { opacity: 0, x: -32 },
+  "fade-up": { opacity: 0, y: 24 },
+  "fade-in": { opacity: 0 },
+  "scale-in": { opacity: 0, scale: 0.93 },
+  "slide-left": { opacity: 0, x: -32 },
   "slide-right": { opacity: 0, x: 40 },
-  "draw-w":      { width: 0, opacity: 0 },
-  "hero-in":     { opacity: 0, scale: 0.93 },
+  "draw-w": { width: 0, opacity: 0 },
+  "hero-in": { opacity: 0, scale: 0.93 },
 };
 
 export const ANIM_TO: Record<AnimationType, Record<string, string | number>> = {
-  "fade-up":     { opacity: 1, y: 0 },
-  "fade-in":     { opacity: 1 },
-  "scale-in":    { opacity: 1, scale: 1 },
-  "slide-left":  { opacity: 1, x: 0 },
+  "fade-up": { opacity: 1, y: 0 },
+  "fade-in": { opacity: 1 },
+  "scale-in": { opacity: 1, scale: 1 },
+  "slide-left": { opacity: 1, x: 0 },
   "slide-right": { opacity: 1, x: 0 },
-  "draw-w":      { width: "3rem", opacity: 0.4 },
-  "hero-in":     { opacity: 1, scale: 1 },
+  "draw-w": { width: "3rem", opacity: 0.4 },
+  "hero-in": { opacity: 1, scale: 1 },
 };
 
 // Default durations (ms) per motion.md §3
 export const ANIM_DURATION: Record<AnimationType, number> = {
-  "fade-up":     550,
-  "fade-in":     400,
-  "scale-in":    900,
-  "slide-left":  550,
+  "fade-up": 550,
+  "fade-in": 400,
+  "scale-in": 900,
+  "slide-left": 550,
   "slide-right": 700,
-  "draw-w":      700,
-  "hero-in":     900,
+  "draw-w": 700,
+  "hero-in": 900,
 };
 
 interface AnimateProps {
   type: AnimationType;
-  delay?: number;    // ms, default 0
+  delay?: number; // ms, default 0
   duration?: number; // ms, overrides the type's default
   className?: string;
   children: React.ReactNode;
@@ -117,7 +117,7 @@ export function Animate({ type, delay = 0, duration, className, children }: Anim
           }
         }
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 }
     );
 
     observer.observe(el);

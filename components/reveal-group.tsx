@@ -70,7 +70,7 @@ export function RevealGroup({ type, className, children }: RevealGroupProps) {
           }
         }
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0 },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0 }
     );
 
     items.forEach((el) => observer.observe(el));
