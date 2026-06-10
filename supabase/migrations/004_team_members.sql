@@ -1,0 +1,3 @@
+-- Stub: applied to toda-company by another repo (shared DB).
+-- Exists only so 'supabase db push' accepts the remote migration history.
+-- DO NOT EDIT, DO NOT DELETE, contains no SQL on purpose.
