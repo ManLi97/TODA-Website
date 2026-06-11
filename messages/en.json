@@ -3,7 +3,7 @@
     "hero": {
       "headline": "More Art.",
       "accentText": "Less Chaos.",
-      "subHeadline": "One App. Everything You Need."
+      "subHeadline": "One app. Your whole studio."
     },
     "boldClaim": {
       "label": "Our Promise",
@@ -89,15 +89,15 @@
       "label": "The team",
       "headline": "Your TODA Team.",
       "name1": "Dana",
-      "role1": "Co-Founder, Marketing",
+      "role1": "Co-founder · Marketing",
       "name2": "Sandra",
-      "role2": "Co-Founder Brand Design",
+      "role2": "Co-founder · Brand Design",
       "name3": "Tomek",
-      "role3": "Founder, Strategic & Development Lead",
+      "role3": "Founder · Strategy & Development",
       "name4": "Manuel",
-      "role4": "CEO & Co-Founder",
+      "role4": "Co-founder · CEO",
       "name5": "Lucas",
-      "role5": "Co-Founder Social Media",
+      "role5": "Co-founder · Social Media",
       "cta": "The full story"
     },
     "pricing": {
@@ -105,7 +105,7 @@
       "price": "€24.99",
       "pricePeriod": "per month",
       "priceNote": "Cancel monthly. No contract.",
-      "ctaLabel": "Get Started"
+      "ctaLabel": "Get started"
     }
   },
   "blog": {

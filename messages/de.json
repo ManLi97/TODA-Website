@@ -3,7 +3,7 @@
     "hero": {
       "headline": "Mehr Kunst.",
       "accentText": "Weniger Chaos.",
-      "subHeadline": "Eine App. Alles was du brauchst."
+      "subHeadline": "Eine App. Dein ganzes Studio."
     },
     "boldClaim": {
       "label": "Unser Versprechen",
@@ -66,7 +66,7 @@
       "label": "Aus der Praxis",
       "statement": "Sandra · Nacht und Nebel Tattoo",
       "bullet1": "60 Stunden Wochen",
-      "bullet2": "Burnout nach 30 Jahren Selbstständig",
+      "bullet2": "Burnout nach 30 Jahren Selbstständigkeit",
       "bullet3": "Keine Kraft mehr für meine Kunst",
       "bullet4": "und dann kam TODA",
       "videoCaption": "Sandra in unserem Podcast"
@@ -89,15 +89,15 @@
       "label": "Das Team",
       "headline": "Dein TODA Team.",
       "name1": "Dana",
-      "role1": "Co-Founder, Marketing",
+      "role1": "Co-Founderin · Marketing",
       "name2": "Sandra",
-      "role2": "Co-Founder Brand Design",
+      "role2": "Co-Founderin · Brand Design",
       "name3": "Tomek",
-      "role3": "Founder, Strategic & Development Lead",
+      "role3": "Founder · Strategie & Entwicklung",
       "name4": "Manuel",
-      "role4": "Geschäftsführer & Co-Founder",
+      "role4": "Co-Founder · Geschäftsführung",
       "name5": "Lucas",
-      "role5": "Co-Founder Social Media",
+      "role5": "Co-Founder · Social Media",
       "cta": "Die ganze Geschichte"
     },
     "pricing": {
@@ -105,7 +105,7 @@
       "price": "24,99 €",
       "pricePeriod": "pro Monat",
       "priceNote": "Monatlich kündbar. Keine Vertragsbindung.",
-      "ctaLabel": "Jetzt Starten"
+      "ctaLabel": "Jetzt starten"
     }
   },
   "blog": {

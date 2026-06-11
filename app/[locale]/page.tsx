@@ -48,7 +48,7 @@ export default async function HomePage() {
       </PageSection>
 
       {/* ── 3. Case Study — surface-base ── */}
-      <PageSection variant="base" id="case-study">
+      <PageSection variant="base" id="case-study" align="center">
         <CaseStudySection
           label={t("caseStudy.label")}
           statement={t("caseStudy.statement")}
@@ -75,7 +75,7 @@ export default async function HomePage() {
       </PageSection>
 
       {/* ── 5. Features — surface-base ── */}
-      <PageSection variant="base" id="features">
+      <PageSection variant="base" id="features" align="center">
         <FeaturesSection
           label={t("features.label")}
           headline={t("features.headline")}
@@ -95,7 +95,7 @@ export default async function HomePage() {
       </PageSection>
 
       {/* ── 6. Social Proof — surface-alt ── */}
-      <PageSection variant="alt" id="social-proof">
+      <PageSection variant="alt" id="social-proof" align="center">
         <SocialProofSection
           label={t("socialProof.label")}
           headline={t("socialProof.headline")}
@@ -109,7 +109,7 @@ export default async function HomePage() {
       </PageSection>
 
       {/* ── 7. Testimonials — surface-base ── */}
-      <PageSection variant="base" id="testimonials">
+      <PageSection variant="base" id="testimonials" align="center">
         <TestimonialsSection
           label={t("testimonials.label")}
           headline={t("testimonials.headline")}
@@ -127,7 +127,7 @@ export default async function HomePage() {
       </PageSection>
 
       {/* ── 8. Team — surface-alt ── */}
-      <PageSection variant="alt" id="team">
+      <PageSection variant="alt" id="team" align="center">
         <TeamSection
           label={t("team.label")}
           headline={t("team.headline")}
@@ -146,7 +146,7 @@ export default async function HomePage() {
       </PageSection>
 
       {/* ── 9. Pricing — surface-base ── */}
-      <PageSection variant="base" id="pricing">
+      <PageSection variant="base" id="pricing" align="center">
         <PricingSection
           headline={t("pricing.headline")}
           price={t("pricing.price")}

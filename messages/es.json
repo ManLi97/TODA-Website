@@ -3,7 +3,7 @@
     "hero": {
       "headline": "Más arte.",
       "accentText": "Menos caos.",
-      "subHeadline": "Una App. Todo lo que necesitas."
+      "subHeadline": "Una app. Todo tu estudio."
     },
     "boldClaim": {
       "label": "Nuestra Promesa",
@@ -89,15 +89,15 @@
       "label": "El equipo",
       "headline": "Tu equipo TODA.",
       "name1": "Dana",
-      "role1": "Co-Fundadora, Marketing",
+      "role1": "Cofundadora · Marketing",
       "name2": "Sandra",
-      "role2": "Co-Fundadora Brand Design",
+      "role2": "Cofundadora · Brand Design",
       "name3": "Tomek",
-      "role3": "Founder, Strategic & Development Lead",
+      "role3": "Fundador · Estrategia y Desarrollo",
       "name4": "Manuel",
-      "role4": "CEO & Co-Fundador",
+      "role4": "Cofundador · CEO",
       "name5": "Lucas",
-      "role5": "Co-Fundador Social Media",
+      "role5": "Cofundador · Social Media",
       "cta": "La historia completa"
     },
     "pricing": {

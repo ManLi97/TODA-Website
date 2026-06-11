@@ -41,7 +41,7 @@ export function Card({ title, excerpt, label, href, imageSrc, imageAlt, classNam
             alt={imageAlt ?? ""}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-[1.02]"
+            className="object-cover"
           />
         </div>
       )}

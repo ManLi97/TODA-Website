@@ -66,7 +66,7 @@ export function FaqSection({
               {/* Question uses .type-lede with text-primary override (lede defaults to secondary). */}
               <span className="type-lede text-text-primary">{q}</span>
               <span
-                className={`faq-icon flex-none text-[20px] leading-none select-none text-gold-400${openIndex === i ? "is-open" : ""}`}
+                className={`faq-icon flex-none text-[20px] leading-none select-none text-gold-400 ${openIndex === i ? "is-open" : ""}`}
                 aria-hidden="true"
               >
                 +
