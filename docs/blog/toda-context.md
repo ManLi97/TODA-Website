@@ -86,6 +86,8 @@ Referrals = Grundgebühr entfällt.
    Disclaimer — „Das ist keine Rechtsberatung. Im Zweifel: Anwält:in
    fragen." Ton bleibt locker, Inhalt bleibt korrekt.
 5. **Faktenbasiert.** Behauptungen zu Gesetzen/Verordnungen brauchen eine
-   Quelle (tattoo-recht.de, BMUV/REACH, Originaltexte). Reddit dient der
-   Themenfindung — keine wörtlichen Zitate aus der Community übernehmen.
+   verifizierte Tier-1/2-Quelle aus `docs/blog/sources.md`. Community-
+   Material (Reddit & Co.) belegt keine Fakten — es erscheint nur als
+   lose Stimmung („Man hört gerade oft von Artists, dass …"), nie als
+   wörtliches Zitat, nie mit Username/Link.
 6. **Zielgruppe:** Solo Tattoo Artists im DACH-Raum (v1 nur Deutsch).
