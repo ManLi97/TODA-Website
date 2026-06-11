@@ -18,7 +18,12 @@ export function YouTubeFacade({ videoId, title }: YouTubeFacadeProps) {
   if (playing) {
     return (
       <iframe
-        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`}
+        // autoplay=1 + allow="autoplay": the facade click is the user gesture, the
+        // browser delegates activation into the iframe — video starts on the FIRST
+        // click (lite-youtube-embed pattern). playsinline=1 keeps iOS Safari from
+        // routing into the fullscreen player, which would otherwise block autoplay
+        // and force a second tap.
+        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1`}
         title={title}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
