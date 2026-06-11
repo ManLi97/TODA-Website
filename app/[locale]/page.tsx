@@ -33,6 +33,9 @@ export default async function HomePage() {
           headline={t("hero.headline")}
           accentText={t("hero.accentText")}
           subHeadline={t("hero.subHeadline")}
+          ctaPrimary={t("hero.ctaPrimary")}
+          ctaSecondary={t("hero.ctaSecondary")}
+          scrollCue={t("hero.scrollCue")}
         />
       </PageSection>
 
@@ -152,6 +155,9 @@ export default async function HomePage() {
           price={t("pricing.price")}
           pricePeriod={t("pricing.pricePeriod")}
           priceNote={t("pricing.priceNote")}
+          recap1={t("pricing.recap1")}
+          recap2={t("pricing.recap2")}
+          recap3={t("pricing.recap3")}
           ctaLabel={t("pricing.ctaLabel")}
         />
       </PageSection>
@@ -171,6 +177,8 @@ export default async function HomePage() {
           a4={t("faq.a4")}
           q5={t("faq.q5")}
           a5={t("faq.a5")}
+          ctaText={t("faq.ctaText")}
+          ctaLabel={t("faq.ctaLabel")}
         />
       </PageSection>
     </>

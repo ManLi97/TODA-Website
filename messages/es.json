@@ -3,7 +3,16 @@
     "hero": {
       "headline": "Más arte.",
       "accentText": "Menos caos.",
-      "subHeadline": "Una app. Todo tu estudio."
+      "subHeadline": "Una app. Todo tu estudio.",
+      "ctaPrimary": "Empezar",
+      "ctaSecondary": "Saber más",
+      "scrollCue": "Desplázate"
+    },
+    "nav": {
+      "features": "Funciones",
+      "pricing": "Precio",
+      "faq": "FAQ",
+      "cta": "Empezar"
     },
     "boldClaim": {
       "label": "Nuestra Promesa",
@@ -83,7 +92,9 @@
       "q4": "¿Cuánto tarda la configuración?",
       "a4": "Unos minutos. Crea tu perfil, establece tu horario, comparte tu enlace. Listo.",
       "q5": "¿Puedo cancelar mensualmente?",
-      "a5": "Sí. Sin contrato, sin permanencia. Cancelación mensual — con un clic en la configuración."
+      "a5": "Sí. Sin contrato, sin permanencia. Cancelación mensual — con un clic en la configuración.",
+      "ctaText": "¿Todo claro? Pues adelante.",
+      "ctaLabel": "Empezar"
     },
     "team": {
       "label": "El equipo",
@@ -105,6 +116,9 @@
       "price": "24,99 €",
       "pricePeriod": "al mes",
       "priceNote": "Cancelación mensual. Sin permanencia.",
+      "recap1": "Todas las solicitudes en un lugar",
+      "recap2": "Tus clientes reservan solos",
+      "recap3": "Lista en minutos",
       "ctaLabel": "Empezar"
     }
   },

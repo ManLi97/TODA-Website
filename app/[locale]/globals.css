@@ -200,6 +200,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Anchor targets land below the fixed h-14 glass header. */
+section[id] {
+  scroll-margin-top: 3.5rem;
+}
+
 /* ───────────────────────────────────────────────────────────────────────────
    BASE — body
    Per docs/design-system/typography.md.
@@ -473,6 +478,30 @@ html {
   translate: -50% 0;
   pointer-events: none;
   z-index: 1;
+}
+
+/* ───────────────────────────────────────────────────────────────────────────
+   SCROLL CUE — hero chevron, gentle float loop. One of the few sanctioned
+   perpetual accents (see motion.md); degrades to static on reduced motion.
+   --------------------------------------------------------------------------- */
+@keyframes scroll-cue-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.scroll-cue svg {
+  animation: scroll-cue-float 2.4s var(--ease-loop) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue svg {
+    animation: none;
+  }
 }
 
 /* ───────────────────────────────────────────────────────────────────────────

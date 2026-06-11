@@ -3,7 +3,16 @@
     "hero": {
       "headline": "More Art.",
       "accentText": "Less Chaos.",
-      "subHeadline": "One app. Your whole studio."
+      "subHeadline": "One app. Your whole studio.",
+      "ctaPrimary": "Get started",
+      "ctaSecondary": "Learn more",
+      "scrollCue": "Scroll down"
+    },
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "cta": "Start"
     },
     "boldClaim": {
       "label": "Our Promise",
@@ -83,7 +92,9 @@
       "q4": "How long does setup take?",
       "a4": "A few minutes. Set up your profile, set your working hours, share your link. Done.",
       "q5": "Can I cancel monthly?",
-      "a5": "Yes. No contract, no minimum term. Cancel any time — with one click in settings."
+      "a5": "Yes. No contract, no minimum term. Cancel any time — with one click in settings.",
+      "ctaText": "All questions answered? Then let's go.",
+      "ctaLabel": "Get started"
     },
     "team": {
       "label": "The team",
@@ -105,6 +116,9 @@
       "price": "€24.99",
       "pricePeriod": "per month",
       "priceNote": "Cancel monthly. No contract.",
+      "recap1": "All requests in one place",
+      "recap2": "Clients book themselves",
+      "recap3": "Ready in minutes",
       "ctaLabel": "Get started"
     }
   },

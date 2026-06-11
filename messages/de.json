@@ -3,7 +3,16 @@
     "hero": {
       "headline": "Mehr Kunst.",
       "accentText": "Weniger Chaos.",
-      "subHeadline": "Eine App. Dein ganzes Studio."
+      "subHeadline": "Eine App. Dein ganzes Studio.",
+      "ctaPrimary": "Jetzt starten",
+      "ctaSecondary": "Mehr erfahren",
+      "scrollCue": "Weiter scrollen"
+    },
+    "nav": {
+      "features": "Funktionen",
+      "pricing": "Preis",
+      "faq": "FAQ",
+      "cta": "Loslegen"
     },
     "boldClaim": {
       "label": "Unser Versprechen",
@@ -83,7 +92,9 @@
       "q4": "Wie lange dauert die Einrichtung?",
       "a4": "Wenige Minuten. Profil anlegen, Arbeitszeiten setzen, Link teilen. Fertig.",
       "q5": "Kann ich monatlich kündigen?",
-      "a5": "Ja. Kein Vertrag, keine Mindestlaufzeit. Monatlich kündbar — per Klick in den Einstellungen."
+      "a5": "Ja. Kein Vertrag, keine Mindestlaufzeit. Monatlich kündbar — per Klick in den Einstellungen.",
+      "ctaText": "Keine offenen Fragen mehr? Dann leg los.",
+      "ctaLabel": "Jetzt starten"
     },
     "team": {
       "label": "Das Team",
@@ -105,6 +116,9 @@
       "price": "24,99 €",
       "pricePeriod": "pro Monat",
       "priceNote": "Monatlich kündbar. Keine Vertragsbindung.",
+      "recap1": "Alle Anfragen an einem Ort",
+      "recap2": "Kunden buchen sich selbst",
+      "recap3": "In Minuten startklar",
       "ctaLabel": "Jetzt starten"
     }
   },

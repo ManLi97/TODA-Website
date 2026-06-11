@@ -7,6 +7,8 @@
 import { useState } from "react";
 import { Animate } from "@/components/animate";
 import { SectionHeader } from "@/components/section-header";
+import { buttonVariants } from "@/components/button";
+import { ONBOARDING_URL } from "@/lib/site";
 
 interface FaqSectionProps {
   label: string;
@@ -21,6 +23,9 @@ interface FaqSectionProps {
   a4: string;
   q5: string;
   a5: string;
+  // Closing CTA below the accordion — the page must not end without an action.
+  ctaText: string;
+  ctaLabel: string;
 }
 
 export function FaqSection({
@@ -36,6 +41,8 @@ export function FaqSection({
   a4,
   q5,
   a5,
+  ctaText,
+  ctaLabel,
 }: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -84,6 +91,21 @@ export function FaqSection({
           </div>
         ))}
       </div>
+
+      {/* Closing CTA — objection handling resolved, hand over the action. */}
+      <Animate type="fade-up" className="mt-block lg:col-span-2">
+        <div className="border-border-subtle gap-group pt-block flex flex-col items-start border-t lg:flex-row lg:items-center lg:justify-between">
+          <p className="type-lede text-text-primary">{ctaText}</p>
+          <a
+            href={ONBOARDING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonVariants({ variant: "primary", size: "md" })}
+          >
+            {ctaLabel}
+          </a>
+        </div>
+      </Animate>
     </div>
   );
 }
