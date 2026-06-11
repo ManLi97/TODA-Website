@@ -2,13 +2,14 @@
 
 @theme {
   /* ─────────────────────────────────────────────────────────────────────────
-     COLORS — anthrazit surfaces
+     COLORS — true-black canvas + anthrazit surfaces
      Hex values mirror docs/design-system/hex-tables.md.
-     --bg is the true-black canvas, kept separate from surface tiers.
-     Elevation order (darkest → lightest): alt < base < raised < hover.
+     surface-base IS the true-black canvas (#000000) — the brand's "dark gallery"
+     stage. --bg stays as the semantic canvas token (same value).
+     Elevation order (darkest → lightest): base < alt < raised < hover.
      ───────────────────────────────────────────────────────────────────────── */
   --color-bg: #000000;
-  --color-surface-base: #0a0a0a;
+  --color-surface-base: #000000;
   --color-surface-alt: #1e1e1e;
   --color-surface-raised: #292929;
   --color-surface-hover: #333333;
@@ -85,6 +86,19 @@
     color-mix(in oklch, var(--color-gold-500) 12%, transparent) 0%,
     transparent 55%
   );
+  /* Purple counter-bloom — the "new act" wash. Mirrored corner, dimmer than gold
+     (purple is the second voice, never the lead). */
+  --grad-ambient-purple: radial-gradient(
+    ellipse at 85% 12%,
+    color-mix(in oklch, var(--color-purple-500) 9%, transparent) 0%,
+    transparent 55%
+  );
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     SHAPE — the two-radius vocabulary: cards 18px, pills 999px.
+     --radius-card generates `rounded-card`; pills use rounded-full / 980px.
+     ───────────────────────────────────────────────────────────────────────── */
+  --radius-card: 18px;
 
   /* ─────────────────────────────────────────────────────────────────────────
      FONTS
@@ -146,9 +160,9 @@
 
   /* ─────────────────────────────────────────────────────────────────────────
      MOTION — easing
-     --ease-entry is the only ease curve for entrances (fade-up, scale-in, slide,
-     draw). --ease-loop is for perpetual loops (gradient shimmer). Anything else
-     is interaction state (button/header hover) and intentionally not tokenised.
+     --ease-entry is THE ease — entrances (fade-up, scale-in, slide, draw) AND
+     interaction states (hover, press, accordion, link color). One curve
+     everywhere; --ease-loop is for perpetual loops (shimmer, scroll cue) only.
      ───────────────────────────────────────────────────────────────────────── */
   --ease-entry: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-loop: ease-in-out;
@@ -327,7 +341,7 @@ section[id] {
     background: var(--glass-tint);
     backdrop-filter: blur(20px) saturate(140%);
     -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border-radius: 18px;
+    border-radius: var(--radius-card);
     border: var(--glass-border-gold);
     max-width: 38rem;
   }
@@ -389,7 +403,7 @@ section[id] {
      ───────────────────────────────────────────────────────────────────────── */
   .faq-icon {
     display: inline-block;
-    transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 200ms var(--ease-entry);
     transform-origin: center;
   }
   .faq-icon.is-open {
@@ -525,7 +539,7 @@ section[id] {
 .hint-faded {
   animation: none;
   opacity: 0;
-  transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 400ms var(--ease-entry);
   pointer-events: none;
 }
 
@@ -631,8 +645,8 @@ section[id] {
   /* Link pills (category filter): gold tint on hover, unless already active. */
   .label-interactive {
     transition:
-      border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
-      color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      border-color 200ms var(--ease-entry),
+      color 200ms var(--ease-entry);
   }
   .label-interactive:not(.label--gold):hover {
     color: var(--color-gold-200);
@@ -688,7 +702,7 @@ section[id] {
   color: var(--color-gold-400);
   text-decoration: underline;
   text-underline-offset: 3px;
-  transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 200ms var(--ease-entry);
 }
 
 .prose-blog a:hover {

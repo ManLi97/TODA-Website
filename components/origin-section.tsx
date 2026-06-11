@@ -9,6 +9,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CustomEase } from "gsap/CustomEase";
 import Image from "next/image";
 
 interface OriginSectionProps {
@@ -59,7 +60,11 @@ export function OriginSection({
     const container = containerRef.current;
     if (!container) return;
 
-    gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger, CustomEase);
+    // Same entry curve as the site-wide entrances — the timeline sequences beats,
+    // but every fade rides the one ease. The phone shake + icon pop below are the
+    // page's single sanctioned personality moment and keep their own character.
+    CustomEase.create("entry", "0.16, 1, 0.3, 1");
 
     const ctx = gsap.context(() => {
       const fadeLines = gsap.utils.toArray<HTMLElement>("[data-fade-line]", container);
@@ -98,7 +103,7 @@ export function OriginSection({
         y: 0,
         duration: 0.55,
         stagger: 0.12,
-        ease: "power2.out",
+        ease: "entry",
       })
 
         // Line 3 "Dann klingelte das Telefon." — same fade-up, larger delay for dramatic pause
@@ -108,7 +113,7 @@ export function OriginSection({
             opacity: 1,
             y: 0,
             duration: 0.55,
-            ease: "power2.out",
+            ease: "entry",
           },
           ">+0.45"
         )
@@ -121,7 +126,7 @@ export function OriginSection({
             y: 0,
             duration: 0.65,
             stagger: 0.45,
-            ease: "power2.out",
+            ease: "entry",
           },
           ">+0.25"
         )
@@ -133,7 +138,7 @@ export function OriginSection({
             opacity: 1,
             y: 0,
             duration: 0.4,
-            ease: "back.out(1.5)",
+            ease: "entry",
           },
           ">+0.25"
         )
@@ -150,7 +155,7 @@ export function OriginSection({
           {
             scaleX: 1,
             duration: 0.9,
-            ease: "power2.inOut",
+            ease: "entry",
           },
           ">-0.1"
         )
@@ -174,7 +179,7 @@ export function OriginSection({
             opacity: 1,
             y: 0,
             duration: 0.55,
-            ease: "power2.out",
+            ease: "entry",
           },
           ">+0.2"
         );

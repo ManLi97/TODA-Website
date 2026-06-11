@@ -73,7 +73,7 @@ export function FaqSection({
               {/* Question uses .type-lede with text-primary override (lede defaults to secondary). */}
               <span className="type-lede text-text-primary">{q}</span>
               <span
-                className={`faq-icon flex-none text-[20px] leading-none select-none text-gold-400 ${openIndex === i ? "is-open" : ""}`}
+                className={`faq-icon text-purple-400 flex-none text-[20px] leading-none select-none ${openIndex === i ? "is-open" : ""}`}
                 aria-hidden="true"
               >
                 +
@@ -81,7 +81,7 @@ export function FaqSection({
             </button>
 
             <div
-              className="grid transition-[grid-template-rows] duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none"
+              className="grid transition-[grid-template-rows] duration-[250ms] ease-[var(--ease-entry)] motion-reduce:transition-none"
               style={{ gridTemplateRows: openIndex === i ? "1fr" : "0fr" }}
             >
               <div className="overflow-hidden">

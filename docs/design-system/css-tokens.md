@@ -11,9 +11,10 @@
 ```css
 @theme {
   /* Foundation — true black + anthracite. Section rhythm alternates base ↔ alt;
-     raised/hover are lighter fills for cards, glass tints, and hover states. */
+     raised/hover are lighter fills for cards, glass tints, and hover states.
+     surface-base IS the true-black canvas — the brand stage is #000, not near-black. */
   --color-bg: #000000;
-  --color-surface-base: #0a0a0a;
+  --color-surface-base: #000000;
   --color-surface-alt: #1e1e1e;
   --color-surface-raised: #292929;
   --color-surface-hover: #333333;
@@ -75,6 +76,16 @@
     color-mix(in oklch, var(--color-gold-500) 12%, transparent) 0%,
     transparent 55%
   );
+  /* Purple counter-bloom — "new act" wash, dimmer than gold. Applied via
+     <PageSection ambient="purple"> (gold bloom: ambient="gold"). */
+  --grad-ambient-purple: radial-gradient(
+    ellipse at 85% 12%,
+    color-mix(in oklch, var(--color-purple-500) 9%, transparent) 0%,
+    transparent 55%
+  );
+
+  /* Shape — the two-radius vocabulary: cards 18px (`rounded-card`), pills 999px. */
+  --radius-card: 18px;
 
   /* Surface-aware card/box elevation. A drop shadow is invisible on true black, so
      depth is split by surface: light = top highlight rim (for black sections),
@@ -94,11 +105,15 @@
 descendant automatically gets values tuned for _that_ section's background. This is why
 glass and depth "just work" without per-element guessing:
 
-| Variable                | `base` (near-black)        | `alt` (anthracite)        | Purpose                                        |
+| Variable                | `base` (true black)        | `alt` (anthracite)        | Purpose                                        |
 | ----------------------- | -------------------------- | ------------------------- | ---------------------------------------------- |
-| `--glass-tint`          | `rgba(30,30,30,0.9)`       | `rgba(10,10,10,0.9)`      | `.glass` fill — inverts to contrast with bg    |
-| `--glass-gradient-fill` | `#1e1e1e`                  | `#0a0a0a`                 | `.glass--gradient` inner fill (padding-box)    |
+| `--glass-tint`          | `rgba(30,30,30,0.9)`       | `rgba(0,0,0,0.9)`         | `.glass` fill — inverts to contrast with bg    |
+| `--glass-gradient-fill` | `#1e1e1e`                  | `#000000`                 | `.glass--gradient` inner fill (padding-box)    |
 | `--shadow-card`         | `var(--shadow-card-light)` | `var(--shadow-card-dark)` | elevation recipe for `.elevated` / plain glass |
+
+`<PageSection>` also accepts `ambient="gold" | "purple"` — an absolute, pointer-inert
+bloom layer using `--grad-ambient(-purple)`. In use: hero (gold), Origin (purple).
+Keep blooms rare; they are atmosphere, not decoration.
 
 (There is also a `raised` variant, defined but unused by the live page; it mirrors `alt`.)
 
@@ -110,7 +125,7 @@ glass and depth "just work" without per-element guessing:
   background: var(--glass-tint);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border-radius: 18px;
+  border-radius: var(--radius-card);
   border: var(--glass-border-gold);
   max-width: 38rem;
 }

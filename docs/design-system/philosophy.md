@@ -9,8 +9,9 @@ else lifts off it.
 Anthracite is the structural counterpoint to black. Used as the material of cards,
 framed panels, code-like callouts, and internal containers. Anthracite reads as
 "object" — black reads as "space." The _section_ rhythm is a strict two-surface
-alternation — near-black (`surface-base`) ↔ anthracite (`surface-alt`), back and forth
-down the page. The lighter tiers (`surface-raised`, `surface-hover`) are not section
+alternation — true black (`surface-base`, `#000000`) ↔ anthracite (`surface-alt`),
+back and forth down the page. The black half of the rhythm IS the void, not a
+near-black stand-in. The lighter tiers (`surface-raised`, `surface-hover`) are not section
 backgrounds; they are the fills for cards, glass tints, and hover states — stacked on
 top to get depth without ever needing a light surface. Never go above mid-grey — the
 moment a surface looks "light," the cinematic feel breaks.
@@ -76,6 +77,10 @@ Purple belongs on:
 - Interactive cues — hover states, callouts, elements just revealed
 - Data viz when a second series is needed alongside gold
 
+Live on the page today: the FAQ expand icons (purple = "the answer"), the hero scroll
+cue's hover (purple = "forward"), and the Origin section's ambient counter-bloom
+(purple = "a new act begins"). Keep it that scarce — purple is a voice, not a theme.
+
 Purple is cooler and lighter (lavender, not royal) — it deliberately doesn't fight
 gold for attention; it complements it.
 
@@ -85,7 +90,9 @@ Three families:
 
 **Atmospheric** — large, soft, full-bleed background washes. Anthracite-into-black
 radial gradients, or a faint gold bloom in one corner fading to pure black across 80%
-of the canvas. These are ambient — felt before they're seen.
+of the canvas. These are ambient — felt before they're seen. In code:
+`<PageSection ambient="gold" | "purple">` — the hero carries the gold bloom, Origin
+the purple counter-bloom. Two blooms on the whole page; resist adding more.
 
 **Brand** — gold → purple, traveling diagonally. Used on section dividers, thin border
 accents on hero cards, large display numerals, and animated transitions. Keep the gold
@@ -152,12 +159,15 @@ StrikethroughList cascade. Everywhere else, things animate as you reach them —
 pre-timed schedule. (See `motion.md`.)
 
 **One ease.** `cubic-bezier(0.16, 1, 0.3, 1)` — a quick start with a soft landing —
-handles every entrance. Continuous loops use `ease-in-out`. No bouncing, no
-overshoots, no spring physics.
+handles every entrance AND every interaction transition (hover, press, accordion).
+Continuous loops use `ease-in-out`. No bouncing, no overshoots, no spring physics.
+The one sanctioned personality beat is the Origin phone-shake + TODA-icon pop — the
+cheeky brand peeking through the premium surface, once per page.
 
 **Motion is a guest, not a host.** The page is read, not poked. Entrances fire once and
 get out of the way; nothing loops or pulses to draw the eye except the few deliberate
-accents (the team avatar ring, the swipe hint). When in doubt, less motion.
+accents (the team avatar ring, the hero scroll cue, the tap hint). When in doubt,
+less motion.
 
 ### The Overall Feeling
 

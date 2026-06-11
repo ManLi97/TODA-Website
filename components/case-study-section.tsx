@@ -53,7 +53,7 @@ export function CaseStudySection({
 
       {/* Video column — YouTube embed in glass--gradient frame + caption below */}
       <div>
-        <div className="glass--gradient aspect-video overflow-hidden rounded-sm">
+        <div className="glass--gradient rounded-card aspect-video overflow-hidden">
           <iframe
             src="https://www.youtube.com/embed/rdOlY1-Bp5E"
             title={videoCaption}

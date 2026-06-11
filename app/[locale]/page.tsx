@@ -27,6 +27,7 @@ export default async function HomePage() {
         id="hero"
         triggerOnMount
         align="center"
+        ambient="gold"
         backdrop={<HeroParticles />}
       >
         <Hero
@@ -64,7 +65,7 @@ export default async function HomePage() {
       </PageSection>
 
       {/* ── 4. Origin — surface-alt ── */}
-      <PageSection variant="alt" id="about">
+      <PageSection variant="alt" id="about" ambient="purple">
         <OriginSection
           label={t("origin.label")}
           headline={t("origin.headline")}

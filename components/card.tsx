@@ -18,7 +18,7 @@ interface CardProps {
 
 export function Card({ title, excerpt, label, href, imageSrc, imageAlt, className }: CardProps) {
   const baseClasses = [
-    "bg-surface-elevated border border-border-subtle rounded-lg overflow-hidden elevated",
+    "bg-surface-elevated border border-border-subtle rounded-card overflow-hidden elevated",
     className,
   ]
     .filter(Boolean)
@@ -27,7 +27,7 @@ export function Card({ title, excerpt, label, href, imageSrc, imageAlt, classNam
   // Interactive classes applied only when the card is a link
   const linkClasses = [
     baseClasses,
-    "group block transition-[border-color] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]",
+    "group block transition-[border-color] duration-200 ease-[var(--ease-entry)]",
     "hover:border-text-tertiary",
   ].join(" ");
 

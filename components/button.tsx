@@ -24,7 +24,7 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
 
 const BASE =
   "inline-flex items-center justify-center font-semibold rounded-[980px] min-h-11 " +
-  "transition-all duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] " +
+  "transition-all duration-150 ease-[var(--ease-entry)] " +
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-400 " +
   "active:scale-[0.97] cursor-pointer select-none";
 

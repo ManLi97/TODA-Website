@@ -6,14 +6,14 @@
 
 ### Foundation — black + anthracite
 
-The page rhythm uses **two** surfaces, alternating: `surface-base` (near-black) ↔
+The page rhythm uses **two** surfaces, alternating: `surface-base` (true black) ↔
 `surface-alt` (anthracite), starting on base. `raised` / `hover` are not section
 backgrounds — they are the lighter fills used by cards, glass tints, and hover states.
 
 | Token                      | Hex       | Role                                                                 |
 | -------------------------- | --------- | -------------------------------------------------------------------- |
-| `--color-bg`               | `#000000` | True black — body/atmosphere canvas, kept separate from surfaces     |
-| `--color-surface-base`     | `#0a0a0a` | Near-black — section background (the "black" half of the rhythm)     |
+| `--color-bg`               | `#000000` | True black — semantic canvas token (same value as surface-base)      |
+| `--color-surface-base`     | `#000000` | True black — section background (the "black" half of the rhythm)     |
 | `--color-surface-alt`      | `#1e1e1e` | Anthracite — section background (the "anthracite" half)              |
 | `--color-surface-raised`   | `#292929` | Elevated fill — glass tint source, raised boxes                      |
 | `--color-surface-hover`    | `#333333` | Hover / highest elevated fill                                        |

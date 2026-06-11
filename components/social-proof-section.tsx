@@ -43,7 +43,7 @@ export function SocialProofSection({
       </RevealGroup>
 
       <Animate type="fade-up" className="mt-block lg:mt-0">
-        <div className="glass--gradient aspect-video overflow-hidden rounded-sm">
+        <div className="glass--gradient rounded-card aspect-video overflow-hidden">
           <iframe
             src="https://www.youtube.com/embed/rRTBDva8kqE"
             title={videoCaption}

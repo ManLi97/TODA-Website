@@ -27,7 +27,7 @@ export function BoldClaimSection({
           bullets right (capped at 2xl so they don't sprawl). */}
       <div className="lg:gap-block lg:grid lg:grid-cols-[280px_1fr] lg:items-center">
         {/* Phone-format video — portrait 9:16. Shown on all viewports. */}
-        <div className="glass--gradient mx-auto aspect-[9/16] max-w-[260px] overflow-hidden rounded-sm lg:mx-0 lg:max-w-[280px]">
+        <div className="glass--gradient rounded-card mx-auto aspect-[9/16] max-w-[260px] overflow-hidden lg:mx-0 lg:max-w-[280px]">
           <VideoLoop src="/bold-claim-section-video.mp4" playOnce className="h-full w-full" />
         </div>
         {/* Three glass claim boxes — static gradient number, text at lede size. */}

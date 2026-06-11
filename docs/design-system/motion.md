@@ -14,10 +14,15 @@ are the `<Animate>` and `<RevealGroup>` React components; two sections own bespo
 
 ### Easing
 
-| Token          | Curve                           | Role                                                          |
-| -------------- | ------------------------------- | ------------------------------------------------------------- |
-| `--ease-entry` | `cubic-bezier(0.16, 1, 0.3, 1)` | Every entrance. Registered with GSAP CustomEase as `"entry"`. |
-| `--ease-loop`  | `ease-in-out`                   | Continuous CSS loops (gradient shimmer)                       |
+| Token          | Curve                           | Role                                                                            |
+| -------------- | ------------------------------- | ------------------------------------------------------------------------------- |
+| `--ease-entry` | `cubic-bezier(0.16, 1, 0.3, 1)` | Every entrance AND interaction transition. GSAP CustomEase name: `"entry"`.     |
+| `--ease-loop`  | `ease-in-out`                   | Continuous CSS loops (gradient shimmer, scroll cue)                             |
+
+One curve, everywhere: GSAP tweens use `"entry"`, CSS transitions use
+`var(--ease-entry)` (buttons, cards, accordion, link colors). The only exceptions are
+the Origin personality beat (phone shake frames + `back.out` icon pop) and `ease-in-out`
+loops.
 
 ### Duration
 
@@ -64,7 +69,8 @@ All use `ease: "entry"`.
 
 **Perpetual loops → CSS `@keyframes`.** These DO exist in `globals.css` (compositor-cheap,
 unlike a GSAP rAF loop): `grad-flow` (gradient-text shimmer), `team-ring-spin` (avatar ring),
-`hint-pulse` (testimonials "tap to flip" label). Each has a `prefers-reduced-motion` off-switch.
+`hint-pulse` (testimonials "tap to flip" label), `scroll-cue-float` (hero chevron drift).
+Each has a `prefers-reduced-motion` off-switch.
 
 ---
 
@@ -137,12 +143,16 @@ fades up. The reason it's a timeline and not per-element reveals: it's a _story 
 so it must build step by step at an authored pace, not react to the scroll position of each
 fragment. Initial hidden states are also set inline on the elements to prevent an SSR flash.
 
+Every fade/draw in the timeline rides the site-wide `"entry"` ease. The **phone shake +
+TODA-icon `back.out` pop** are the page's one sanctioned personality beat (philosophy:
+the cheeky brand peeking through) — keep them, and don't add a second one elsewhere.
+
 ### StrikethroughList — container-triggered cascade
 
 `strikethrough-list.tsx` ("You're an artist — not a secretary, not customer service, not a
 salesperson"). One `IntersectionObserver` on the **container**: when the whole list enters
 view, the rows strike out one after another. Per row, a line draws across (`scaleX 0→1`,
-0.65s `power2.inOut`) and the text fades white→tertiary (0.55s, starting +0.2s into the
+0.65s `"entry"`) and the text fades white→tertiary (0.55s `"entry"`, starting +0.2s into the
 draw). Rows are staggered by `STAGGER = 1.5s` so each line can be _read_ before it's crossed
 out — the cascade tracks the reader's eye down the list. Fires once; reduced-motion jumps to
 the final struck-through state.

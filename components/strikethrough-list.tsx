@@ -6,6 +6,7 @@
 // IntersectionObserver, fires once, no replay.
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { CustomEase } from "gsap/CustomEase";
 import { usePageSection } from "@/components/page-section";
 
 // Resolved from globals.css @theme — hex values, safe for GSAP color interpolation.
@@ -25,6 +26,10 @@ export function StrikethroughList({ items }: StrikethroughListProps) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    // Register the shared entry curve — GSAP dedupes; don't rely on sibling effects.
+    gsap.registerPlugin(CustomEase);
+    CustomEase.create("entry", "0.16, 1, 0.3, 1");
 
     const rows = items
       .map((_, i) => ({ textEl: textRefs.current[i], lineEl: lineRefs.current[i] }))
@@ -59,8 +64,9 @@ export function StrikethroughList({ items }: StrikethroughListProps) {
       rows.forEach(({ textEl, lineEl }, i) => {
         const at = i * STAGGER;
         // Line draws left-to-right, text colour fades to muted slightly after.
-        tl.to(lineEl, { scaleX: 1, duration: 0.65, ease: "power2.inOut" }, at);
-        tl.to(textEl, { color: COLOR_TERTIARY, duration: 0.55, ease: "power1.out" }, at + 0.2);
+        // Both ride the site-wide entry curve — one ease everywhere.
+        tl.to(lineEl, { scaleX: 1, duration: 0.65, ease: "entry" }, at);
+        tl.to(textEl, { color: COLOR_TERTIARY, duration: 0.55, ease: "entry" }, at + 0.2);
       });
     };
 

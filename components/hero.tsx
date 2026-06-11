@@ -80,7 +80,7 @@ export function Hero({
           <a
             href="#bold-claim"
             aria-label={scrollCue}
-            className="scroll-cue text-text-tertiary hover:text-gold-400 p-3 transition-colors duration-150"
+            className="scroll-cue text-text-tertiary hover:text-purple-400 p-3 transition-colors duration-150 ease-[var(--ease-entry)]"
           >
             <svg
               width="20"

@@ -17,11 +17,11 @@ const BG: Record<SectionVariant, string> = {
 
 // Per-variant glass tint — cascades via CSS custom property so any .glass
 // descendant automatically gets the right fill for its section background.
-// base = true black (#0a0a0a): anthracite glass for contrast.
+// base = true black (#000000): anthracite glass for contrast.
 // alt  = anthracite (#1e1e1e): black glass for contrast.
 const GLASS_TINT: Record<SectionVariant, string> = {
   base: "rgba(30, 30, 30, 0.9)",
-  alt: "rgba(10, 10, 10, 0.9)",
+  alt: "rgba(0, 0, 0, 0.9)",
   raised: "rgba(41, 41, 41, 0.65)",
 };
 
@@ -29,8 +29,15 @@ const GLASS_TINT: Record<SectionVariant, string> = {
 // Same inversion logic as GLASS_TINT — box fill contrasts with section background.
 const GLASS_GRADIENT_FILL: Record<SectionVariant, string> = {
   base: "#1e1e1e",
-  alt: "#0a0a0a",
-  raised: "#0a0a0a",
+  alt: "#000000",
+  raised: "#000000",
+};
+
+// Ambient bloom — the sanctioned atmospheric wash (philosophy: "felt before it's
+// seen"). Gold = brand warmth (hero); purple = "new act" counter-bloom (Origin).
+const AMBIENT: Record<"gold" | "purple", string> = {
+  gold: "var(--grad-ambient)",
+  purple: "var(--grad-ambient-purple)",
 };
 
 // Per-variant card/box elevation. On black surfaces a dark drop is invisible, so we
@@ -61,6 +68,8 @@ interface PageSectionProps {
   // "center" adds flex flex-col justify-center so content is vertically centred.
   // "start" (default) leaves content top-weighted with py-20 lg:py-32 padding.
   align?: "start" | "center";
+  // Optional ambient bloom wash behind the content (gold = brand, purple = "new act").
+  ambient?: "gold" | "purple";
   // Optional full-bleed backdrop layer (e.g. canvas particle effect).
   // Rendered absolute inset-0 behind content; content wrapper gets relative z-10.
   backdrop?: React.ReactNode;
@@ -72,6 +81,7 @@ export function PageSection({
   id,
   triggerOnMount = false,
   align = "start",
+  ambient,
   backdrop,
   children,
 }: PageSectionProps) {
@@ -105,11 +115,18 @@ export function PageSection({
           } as React.CSSProperties
         }
       >
+        {ambient && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: AMBIENT[ambient] }}
+          />
+        )}
         {backdrop}
         {/* Symmetric vertical breathing room — fluid section rhythm (compresses on mobile).
             Space before ${} is required: Tailwind's scanner drops a class glued directly
             to a template interpolation, so `py-section${...}` would silently emit no padding. */}
-        <div className={`py-section ${backdrop ? "relative z-10" : ""}`}>
+        <div className={`py-section ${backdrop || ambient ? "relative z-10" : ""}`}>
           <div className="mx-auto max-w-[1280px] px-6">{children}</div>
         </div>
       </section>
