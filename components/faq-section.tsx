@@ -66,9 +66,11 @@ export function FaqSection({
         {items.map(({ q, a }, i) => (
           <div key={i} className="border-border-subtle border-t last:border-b">
             <button
+              id={`faq-q-${i}`}
               className="flex w-full items-center justify-between gap-6 py-5 text-left"
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
               aria-expanded={openIndex === i}
+              aria-controls={`faq-a-${i}`}
             >
               {/* Question uses .type-lede with text-primary override (lede defaults to secondary). */}
               <span className="type-lede text-text-primary">{q}</span>
@@ -81,6 +83,9 @@ export function FaqSection({
             </button>
 
             <div
+              id={`faq-a-${i}`}
+              role="region"
+              aria-labelledby={`faq-q-${i}`}
               className="grid transition-[grid-template-rows] duration-[250ms] ease-[var(--ease-entry)] motion-reduce:transition-none"
               style={{ gridTemplateRows: openIndex === i ? "1fr" : "0fr" }}
             >

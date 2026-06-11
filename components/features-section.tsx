@@ -1,15 +1,13 @@
-"use client";
-
-// Features section — two rows of feature cards.
-// Row 1 (features 1–3): standard LTR Embla carousel on mobile, swipe left to advance.
-// Row 2 (features 4–6): RTL Embla carousel on mobile, swipe right to advance.
-// A single pulsing ← → hint sits between the rows instead of per-row dots.
-// Desktop (lg+): two static 3-column grids.
+// Features section — six feature cards with stroke line icons.
+// Desktop (lg+): bento grid — feature 1 spans two columns (the lead feature),
+// the rest fill the remaining cells. Hierarchy through scale, not color.
+// Mobile/tablet: a plain vertical stack — every feature scannable in one scroll,
+// no carousels, no swipe choreography.
 import { Animate } from "@/components/animate";
 import { RevealGroup } from "@/components/reveal-group";
 import { SectionHeader } from "@/components/section-header";
 import { Card } from "@/components/card";
-import useEmblaCarousel from "embla-carousel-react";
+import { Inbox, Calendar, Globe, Link2, RefreshCw, LayoutDashboard } from "lucide-react";
 
 interface FeaturesSectionProps {
   label: string;
@@ -28,13 +26,8 @@ interface FeaturesSectionProps {
   feature6Excerpt: string;
 }
 
-const EMBLA_BASE = {
-  loop: false,
-  align: "start" as const,
-  containScroll: "keepSnaps" as const,
-  dragFree: true,
-  duration: 35,
-};
+// Brand icon treatment: stroke-based, 1.5px, currentColor (gold via Card).
+const ICON_PROPS = { strokeWidth: 1.5, className: "h-6 w-6" } as const;
 
 export function FeaturesSection({
   label,
@@ -52,18 +45,13 @@ export function FeaturesSection({
   feature6Title,
   feature6Excerpt,
 }: FeaturesSectionProps) {
-  const [emblaRef1] = useEmblaCarousel(EMBLA_BASE);
-  const [emblaRef2] = useEmblaCarousel({ ...EMBLA_BASE, direction: "rtl" });
-
-  const row1 = [
-    { title: feature1Title, excerpt: feature1Excerpt },
-    { title: feature2Title, excerpt: feature2Excerpt },
-    { title: feature3Title, excerpt: feature3Excerpt },
-  ];
-  const row2 = [
-    { title: feature4Title, excerpt: feature4Excerpt },
-    { title: feature5Title, excerpt: feature5Excerpt },
-    { title: feature6Title, excerpt: feature6Excerpt },
+  const features = [
+    { title: feature1Title, excerpt: feature1Excerpt, icon: <Inbox {...ICON_PROPS} /> },
+    { title: feature2Title, excerpt: feature2Excerpt, icon: <Calendar {...ICON_PROPS} /> },
+    { title: feature3Title, excerpt: feature3Excerpt, icon: <Globe {...ICON_PROPS} /> },
+    { title: feature4Title, excerpt: feature4Excerpt, icon: <Link2 {...ICON_PROPS} /> },
+    { title: feature5Title, excerpt: feature5Excerpt, icon: <RefreshCw {...ICON_PROPS} /> },
+    { title: feature6Title, excerpt: feature6Excerpt, icon: <LayoutDashboard {...ICON_PROPS} /> },
   ];
 
   return (
@@ -73,71 +61,20 @@ export function FeaturesSection({
         <SectionHeader label={label} headline={headline} />
       </Animate>
 
-      {/* ── Mobile/tablet: Row 1 — LTR, swipe left ── */}
-      <div className="-mx-6 pl-6 lg:hidden" ref={emblaRef1}>
-        <RevealGroup type="fade-up" className="gap-group flex py-4 pr-4">
-          {row1.map(({ title, excerpt }) => (
-            <div key={title} className="w-[280px] flex-none md:w-[320px]">
-              <Card title={title} excerpt={excerpt} />
-            </div>
-          ))}
-        </RevealGroup>
-      </div>
-
-      {/* ── Swipe hint — single pulsing ← SWIPE → between both rows, mobile/tablet only ── */}
-      <div className="my-group text-gold-400 flex animate-pulse items-center justify-center gap-2 lg:hidden">
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        <span className="text-xs font-semibold tracking-widest">SWIPE</span>
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M9 18l6-6-6-6" />
-        </svg>
-      </div>
-
-      {/* ── Mobile/tablet: Row 2 — RTL, swipe right ── */}
-      {/* dir="rtl" makes Embla lay slides right-to-left; dir="ltr" on each slide preserves text alignment */}
-      <div className="-mx-6 pr-6 lg:hidden" ref={emblaRef2} dir="rtl">
-        <RevealGroup type="fade-up" className="gap-group flex py-4 pl-4">
-          {row2.map(({ title, excerpt }) => (
-            <div key={title} className="w-[280px] flex-none md:w-[320px]" dir="ltr">
-              <Card title={title} excerpt={excerpt} />
-            </div>
-          ))}
-        </RevealGroup>
-      </div>
-
-      {/* ── Desktop: two static 3-column grids ── */}
-      <div className="lg:gap-group hidden lg:flex lg:flex-col">
-        <RevealGroup type="fade-up" className="gap-group grid grid-cols-3">
-          {row1.map(({ title, excerpt }) => (
-            <Card key={title} title={title} excerpt={excerpt} />
-          ))}
-        </RevealGroup>
-        <RevealGroup type="fade-up" className="gap-group grid grid-cols-3">
-          {row2.map(({ title, excerpt }) => (
-            <Card key={title} title={title} excerpt={excerpt} />
-          ))}
-        </RevealGroup>
-      </div>
+      {/* One reveal group, two layouts: vertical stack < lg, bento grid >= lg.
+          4-col bento, two rows: features 1 and 6 span two columns (top-left and
+          bottom-right anchors) — hierarchy through scale, no holes in the grid. */}
+      <RevealGroup type="fade-up" className="gap-group grid grid-cols-1 lg:grid-cols-4">
+        {features.map(({ title, excerpt, icon }, i) => (
+          <Card
+            key={title}
+            title={title}
+            excerpt={excerpt}
+            icon={icon}
+            className={i === 0 || i === 5 ? "lg:col-span-2" : undefined}
+          />
+        ))}
+      </RevealGroup>
     </div>
   );
 }

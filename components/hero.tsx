@@ -1,9 +1,15 @@
+"use client";
+
 // Hero content — rendered inside <PageSection variant="base" id="hero" triggerOnMount align="center">.
-// accentText renders inline inside the h1 in Playfair Display Italic gold,
-// matching the BRAND.md pattern: "Mehr Kunst. [accentText: Weniger Chaos.]"
-// Layout (min-h-svh, centering, padding, max-w container) is owned by the parent <PageSection>;
+// The headline is the page's signature entrance: a two-line mask reveal (each line
+// rises out of an overflow-hidden wrapper on the entry ease, 120ms apart). accentText
+// renders as the second line in Playfair Display italic gold. Sub-headline, CTA row
+// and scroll cue are ordinary <Animate> fade-ups that follow the headline beat.
+// Layout (min-h-svh, centering, padding) is owned by the parent <PageSection>;
 // the scroll cue positions absolutely against the section (PageSection is `relative`).
-// <Animate> children fire on mount via triggerOnMount — timing per motion.md §4.
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { CustomEase } from "gsap/CustomEase";
 import { Animate } from "@/components/animate";
 import { buttonVariants } from "@/components/button";
 import { ONBOARDING_URL } from "@/lib/site";
@@ -25,24 +31,53 @@ export function Hero({
   ctaSecondary,
   scrollCue,
 }: HeroProps) {
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const h1 = headlineRef.current;
+    if (!h1) return;
+
+    gsap.registerPlugin(CustomEase);
+    CustomEase.create("entry", "0.16, 1, 0.3, 1");
+
+    // Static headline for reduced motion — it is never hidden server-side.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const wrappers = Array.from(h1.querySelectorAll<HTMLElement>("[data-mask-line]"));
+    const lines = wrappers.map((w) => w.firstElementChild as HTMLElement);
+
+    gsap.set(lines, { yPercent: 110 });
+    gsap.to(lines, {
+      yPercent: 0,
+      duration: 0.9,
+      stagger: 0.12,
+      ease: "entry",
+      delay: 0.05,
+      // Unclip at rest so the Playfair italic descenders ("g", swashes) render
+      // fully — the mask only exists for the reveal itself.
+      onComplete: () => wrappers.forEach((w) => (w.style.overflow = "visible")),
+    });
+  }, []);
+
   return (
     <div className="mx-auto max-w-3xl text-center lg:max-w-4xl">
-      {/* Headline — delay 0, slightly longer duration for the display element. */}
-      <Animate type="fade-up" duration={650}>
-        <h1 className="type-display-hero text-text-primary">
-          {headline}
-          {accentText && (
-            <>
-              <br />
-              {/* Playfair italic accent — font-normal prevents inheriting the h1's semibold
-                  (we only load Playfair at weight 400) */}
-              <span className="font-playfair text-gold-400 font-normal italic">{accentText}</span>
-            </>
-          )}
-        </h1>
-      </Animate>
+      {/* Headline — two-line mask reveal (see effect above). */}
+      <h1 ref={headlineRef} className="type-display-hero text-text-primary">
+        <span data-mask-line className="block overflow-hidden">
+          <span className="block">{headline}</span>
+        </span>
+        {accentText && (
+          <span data-mask-line className="block overflow-hidden">
+            {/* Playfair italic accent — font-normal prevents inheriting the h1's semibold
+                (we only load Playfair at weight 400) */}
+            <span className="font-playfair text-gold-400 block font-normal italic">
+              {accentText}
+            </span>
+          </span>
+        )}
+      </h1>
 
-      {/* Sub-headline — overlaps headline (same logical group), delay 350ms. */}
+      {/* Sub-headline — overlaps the headline landing (same logical group). */}
       {subHeadline && (
         <Animate type="fade-up" delay={350} className="mt-group">
           {/* mx-auto centers the 38ch-capped lede block under the centered headline.
@@ -76,7 +111,11 @@ export function Hero({
 
       {/* Scroll cue — anchored to the section bottom, gentle float, fades in last. */}
       {scrollCue && (
-        <Animate type="fade-in" delay={1100} className="absolute inset-x-0 bottom-6 flex justify-center">
+        <Animate
+          type="fade-in"
+          delay={1100}
+          className="absolute inset-x-0 bottom-6 flex justify-center"
+        >
           <a
             href="#bold-claim"
             aria-label={scrollCue}

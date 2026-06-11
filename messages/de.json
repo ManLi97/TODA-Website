@@ -69,7 +69,8 @@
       "quote3": "Ganz ehrlich, ich wollte mich nicht Vollzeit selbstständig machen, weil ich die ganze administrative Arbeit kenne. Nur wegen TODA hab ich es doch gemacht.",
       "author3": "Dana",
       "studio3": "DanaInk",
-      "hint": "Tippen zum Wechseln"
+      "hint": "Tippen zum Wechseln",
+      "hintDesktop": "Klicken zum Wechseln"
     },
     "caseStudy": {
       "label": "Aus der Praxis",

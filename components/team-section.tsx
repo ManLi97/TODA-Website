@@ -92,7 +92,7 @@ export function TeamSection({
                         src={MEMBER_IMAGES[i]!}
                         alt={name}
                         fill
-                        className="object-cover"
+                        className="object-cover grayscale brightness-90"
                         sizes="200px"
                       />
                     ) : (
@@ -110,8 +110,8 @@ export function TeamSection({
         </RevealGroup>
       </div>
 
-      {/* ── Swipe hint — pulsing ← SWIPE → , mobile/tablet only ── */}
-      <div className="mt-element mb-block text-gold-400 flex animate-pulse items-center justify-center gap-2 lg:hidden">
+      {/* ── Swipe hint — static ← SWIPE →, mobile/tablet only (the deck peek + hint carry the affordance; no pulse — motion stays a guest) ── */}
+      <div className="mt-element mb-block text-gold-400 flex items-center justify-center gap-2 lg:hidden">
         <svg
           className="h-4 w-4"
           fill="none"
@@ -152,7 +152,7 @@ export function TeamSection({
                       src={MEMBER_IMAGES[i]!}
                       alt={name}
                       fill
-                      className="object-cover"
+                      className="object-cover grayscale brightness-90"
                       sizes="20vw"
                     />
                   ) : (

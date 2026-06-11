@@ -10,13 +10,24 @@ interface CardProps {
   excerpt?: string;
   // Flexible single label: date, category, or any short metadata string
   label?: string;
+  // Optional leading icon (stroke-based line icon, rendered above the title)
+  icon?: React.ReactNode;
   href?: string;
   imageSrc?: string;
   imageAlt?: string;
   className?: string;
 }
 
-export function Card({ title, excerpt, label, href, imageSrc, imageAlt, className }: CardProps) {
+export function Card({
+  title,
+  excerpt,
+  label,
+  icon,
+  href,
+  imageSrc,
+  imageAlt,
+  className,
+}: CardProps) {
   const baseClasses = [
     "bg-surface-elevated border border-border-subtle rounded-card overflow-hidden elevated",
     className,
@@ -47,6 +58,11 @@ export function Card({ title, excerpt, label, href, imageSrc, imageAlt, classNam
       )}
 
       <div className="p-6">
+        {icon && (
+          <div className="text-gold-400 mb-4" aria-hidden>
+            {icon}
+          </div>
+        )}
         {label && (
           <p className="text-text-tertiary mb-3 text-[12px] leading-none font-normal tracking-[-0.05px]">
             {label}

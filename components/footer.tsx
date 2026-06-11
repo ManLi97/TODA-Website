@@ -5,13 +5,15 @@ import { Link } from "@/i18n/navigation";
 
 export async function Footer() {
   const t = await getTranslations("footer");
+  const tBlog = await getTranslations("blog");
   const year = new Date().getFullYear();
 
   return (
     <footer className="bg-surface-raised border-border-subtle border-t">
       <div className="mx-auto max-w-[1440px] px-6 py-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          {/* Legal links */}
+          {/* Legal + site links. Blog lives here too — the header hides it on the
+              smallest screens to make room for the CTA. */}
           <nav aria-label="Legal" className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {[
               { key: "legal.imprint", href: "/imprint" },
@@ -26,6 +28,12 @@ export async function Footer() {
                 {t(key as Parameters<typeof t>[0])}
               </Link>
             ))}
+            <Link
+              href="/blog"
+              className="text-text-tertiary hover:text-text-secondary text-[12px] font-normal transition-colors duration-100"
+            >
+              {tBlog("nav")}
+            </Link>
           </nav>
 
           {/* Social links — hrefs are placeholders until Phase 6 */}

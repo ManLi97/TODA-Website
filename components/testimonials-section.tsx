@@ -36,6 +36,7 @@ interface TestimonialsSectionProps {
   label: string;
   headline: string;
   hint: string;
+  hintDesktop: string;
   quote1: string;
   author1: string;
   studio1: string;
@@ -51,6 +52,7 @@ export function TestimonialsSection({
   label,
   headline,
   hint,
+  hintDesktop,
   quote1,
   author1,
   studio1,
@@ -194,13 +196,25 @@ export function TestimonialsSection({
           </div>
         </Animate>
 
-        {/* Hint label — pulses until first tap, then fades out */}
-        <Animate type="fade-in">
+        {/* Position dots + hint — dots track the active card; the hint pulses until
+            the first tap, then fades out. Hint wording is pointer-aware via breakpoint. */}
+        <Animate type="fade-in" className="gap-element flex flex-col items-center">
+          <div className="flex items-center justify-center gap-2" aria-hidden="true">
+            {cards.map((_, i) => (
+              <span
+                key={i}
+                className={`h-1.5 w-1.5 rounded-full transition-colors duration-150 ease-[var(--ease-entry)] ${
+                  i === activeIndex ? "bg-gold-400" : "bg-border"
+                }`}
+              />
+            ))}
+          </div>
           <p
             aria-hidden="true"
             className={`type-caption text-gold-400 hint-pulse ${hintFaded ? "hint-faded" : ""}`}
           >
-            {hint}
+            <span className="lg:hidden">{hint}</span>
+            <span className="hidden lg:inline">{hintDesktop}</span>
           </p>
         </Animate>
       </div>

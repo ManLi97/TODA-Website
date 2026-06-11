@@ -5,6 +5,7 @@
 // Caption renders below video at type-caption size.
 
 import { RevealGroup } from "@/components/reveal-group";
+import { YouTubeFacade } from "@/components/youtube-facade";
 
 interface CaseStudySectionProps {
   label: string;
@@ -51,17 +52,10 @@ export function CaseStudySection({
         </div>
       </div>
 
-      {/* Video column — YouTube embed in glass--gradient frame + caption below */}
+      {/* Video column — click-to-play facade in glass--gradient frame + caption below */}
       <div>
         <div className="glass--gradient rounded-card aspect-video overflow-hidden">
-          <iframe
-            src="https://www.youtube.com/embed/rdOlY1-Bp5E"
-            title={videoCaption}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; compute-pressure"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-            className="h-full w-full border-0"
-          />
+          <YouTubeFacade videoId="rdOlY1-Bp5E" title={videoCaption} />
         </div>
         <p className="type-caption text-text-tertiary mt-element">{videoCaption}</p>
       </div>

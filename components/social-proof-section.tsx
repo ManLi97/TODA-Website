@@ -6,6 +6,7 @@ import { RevealGroup } from "@/components/reveal-group";
 import { SectionHeader } from "@/components/section-header";
 import { Animate } from "@/components/animate";
 import { StrikethroughList } from "@/components/strikethrough-list";
+import { YouTubeFacade } from "@/components/youtube-facade";
 
 interface SocialProofSectionProps {
   label: string;
@@ -44,14 +45,7 @@ export function SocialProofSection({
 
       <Animate type="fade-up" className="mt-block lg:mt-0">
         <div className="glass--gradient rounded-card aspect-video overflow-hidden">
-          <iframe
-            src="https://www.youtube.com/embed/rRTBDva8kqE"
-            title={videoCaption}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; compute-pressure"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-            className="h-full w-full border-0"
-          />
+          <YouTubeFacade videoId="rRTBDva8kqE" title={videoCaption} />
         </div>
         <p className="type-caption text-text-tertiary mt-element">{videoCaption}</p>
       </Animate>
