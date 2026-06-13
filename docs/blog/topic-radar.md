@@ -19,16 +19,34 @@ Zwei Ströme:
 Scoring pro Themen-Cluster (Strom A):
 
 ```
-Engagement(Post)  = Upvotes + 2 × Kommentarzahl
-Score(Cluster)    = Σ Engagement aller zugehörigen Posts
-Trend-Kriterium   : ≥ 3 unabhängige Posts im Cluster
-Cross-Source-Bonus: Cluster taucht in ≥ 2 Quellen auf → im Ranking bevorzugen
+Engagement(Post)   = Upvotes + 2 × Kommentarzahl
+Baseline(Quelle)   = Median(Engagement) über alle klassifizierten Posts
+                     derselben Quelle im selben Scrape
+Outlier(Post)      = Engagement(Post) / Baseline(Quelle)
+Score(Cluster)     = Σ Outlier(Post) aller zugehörigen Posts
+Trend-Kriterium    : ≥ 3 unabhängige Posts im Cluster (Gate, kein Bonus)
+Cross-Source-Bonus : Cluster taucht in ≥ 2 Quellen auf → bevorzugen
 ```
 
 Kommentare zählen doppelt, weil sie Diskussion (= Schmerz) anzeigen,
-Upvotes nur Zustimmung. Die Cluster-Zuordnung ist der einzige manuelle
-Schritt — deshalb wird die vollständige Zuordnungstabelle (Post →
-Cluster) im Lauf-Eintrag mitdokumentiert, damit sie überprüfbar bleibt.
+Upvotes nur Zustimmung.
+
+**Warum Outlier statt Rohsumme (Σ Engagement).** Die rohe Summe ist durch
+die Quellengröße konfundiert: r/tattooadvice schüttet rund **40× mehr**
+absolutes Engagement pro Post aus als r/TattooArtists (Median 3 278 vs. 84
+im 11.06-Datensatz). Unter `Σ Engagement` gewinnen damit rein mechanisch
+die Consumer-Cluster, und das Artist-Signal — **unsere B2B-Zielgruppe** —
+wird begraben (im 11.06-Datensatz lag der stärkste Artist-Cluster nur auf
+Rang 5, hinter vier Endkunden-Clustern). `Outlier` misst stattdessen die
+**Überperformance gegenüber dem Normalpost der eigenen Quelle**: ein Post
+mit 19× dem Median seines Subs ist ein stärkeres Themensignal als einer mit
+3× — egal, welcher Sub absolut mehr Upvotes ausschüttet. So werden Cluster
+über Quellen hinweg **vergleichbar** (was Σ Engagement nicht leistet).
+Median statt Mittelwert, weil Engagement rechtsschief ist und der
+Mittelwert von genau den Ausreißern hochgezogen würde, die wir messen
+wollen. Die Cluster-Zuordnung bleibt der einzige manuelle Schritt — deshalb
+wird die vollständige Zuordnungstabelle (Post → Cluster, inkl. Ausschlüsse)
+im Lauf-Eintrag mitdokumentiert, damit sie überprüfbar bleibt.
 
 Danach, vor der finalen Wahl:
 
@@ -158,3 +176,69 @@ verifiziert: OLG Hamm 12 U 151/13 (Werkvertrag, Unzumutbarkeit der
 Nachbesserung, Schmerzensgeld + Laserkosten, Körperverletzungs-
 Argument) via juraexamen.info. → Draft `erwartungsmanagement-tattoo-kunden`
 (post_id `11a7fcf2-3ac6-4b7f-a4f9-927e86968c70`).
+
+## Lauf 2026-06-13 — Methodik-Update: Outlier-Normalisierung (A/B-validiert)
+
+**Änderung:** Scoring von `Score(Cluster) = Σ Engagement` auf
+`Score(Cluster) = Σ (Engagement / Median-Engagement der Quelle)` umgestellt
+(neue Formel siehe Methode oben). Grund: Die Rohsumme ist durch die
+Subreddit-Größe konfundiert — r/tattooadvice (ADV, Endkunden) schüttet pro
+Post rund 40–75× mehr absolutes Engagement aus als r/TattooArtists (TA,
+Artists = unsere B2B-Zielgruppe). Unter Σ Engagement gewinnen Consumer-Cluster
+mechanisch, das Artist-Signal wird begraben.
+
+**Test-Design (kontrolliert):** beide Formeln auf *identischem* Post-Set und
+*identischer* Cluster-Zuordnung gerechnet — einzige Variable ist die Formel.
+Reproduzierbar via `/tmp/toda-radar/ab.py` (historisch) + `ab_fresh.py` (live).
+Kein neues Mining-Topic gewählt — reiner Methodik-Lauf.
+
+### A/B 1 — historischer Datensatz `rjxz3bptzNgfzNTK9` (77 Posts, top/month; die Daten hinter den 06-11-Entscheidungen)
+47 Posts klassifiziert (30 Showcase/unklar raus; Cluster reproduzieren die
+06-11-Zuordnung — K4/C2/C5-Summen identisch). Baseline-Median: ADV 3 278 / TA 84 (**39×**).
+
+| Cluster | Quelle | n | OLD Σeng | oldR | NEW Σoutlier | newR |
+|---|---|---|---|---|---|---|
+| C1 Kundenkonflikt/Komm | TA | 6 | 2 446 | 5 | 29.12 | **1** |
+| C2 Urheberrecht/Design | TA | 3 | 1 580 | 6 | 18.81 | **2** |
+| K1 Erwartung/Ergebnis | ADV | 6 | 36 746 | 1 | 11.21 | 3 |
+| C4 Technik/Equipment | TA | 6 | 788 | 7 | 9.38 | 4 |
+| K2 Aftercare/Healing | ADV | 6 | 26 754 | 2 | 8.16 | 5 |
+| K3 Coverup/Removal | ADV | 6 | 23 046 | 3 | 7.03 | 6 |
+| C678 Fehler/Scam/Burnout | TA | 3 | 463 | 8 | 5.51 | 7 |
+| C3 Business/Studio | TA | 8 | 419 | 9 | 4.99 | 8 |
+| C5 Farben/Reaktionen | TA | 1 | 391 | 10 | 4.65 | 9 |
+| K4 Motiv/Kultur | ADV | 2 | 12 840 | 4 | 3.92 | 10 |
+
+Befund: OLD ranked die Top-4 **alle** Consumer (ADV); der stärkste Artist-Cluster
+landet auf Rang 5. NEW stellt die **zwei** Artist-Cluster C1 + C2 auf Rang 1+2 —
+exakt die Themen, die zu den Drafts *Erwartungsmanagement* (K1+C1) und
+*Copycat/Urheberrecht* (C2) wurden. Die neue Formel hätte beide Sieger allein aus
+Strom A oben ausgespielt. Robust: unter Mittelwert- statt Median-Baseline bleibt
+C1 #1 und C2 #3 (vs. OLD #5/#6) — die Schlussfolgerung kippt nicht.
+
+### A/B 2 — frischer Live-Scrape `Bz8d9f7obzljNuETX` (23 Posts, top/week, 13.06.)
+Crawler degradierte bei ~23 Items (bekanntes Verhalten, vgl. 06-11 nachmittags) —
+Snapshot valide. Baseline-Median: ADV 1 416 / TA 19 (**74.5×** — Konfundierung
+repliziert noch stärker). Post→Cluster: K1{1tzf96s,1u0r0rg,1u290p9},
+K5{1tytgzm,1u0nrhu,1u0ijrz,1tzpmc3}, K2{1u2e81d}, C1{1tzt7p4,1u1ak97},
+C3{1u3e608,1u1kpfv}, C4{1u1ousp,1u2aqbg}, C5{1u2cq8i}; Rest Showcase/unklar raus.
+
+| Cluster | Quelle | n | OLD Σeng | oldR | NEW Σoutlier | newR | Gate ≥3 |
+|---|---|---|---|---|---|---|---|
+| C1 Kundenkonflikt/Komm | TA | 2 | 188 | 4 | 9.89 | 1 | nein |
+| K5 Motiv/Stil-Entscheidung | ADV | 4 | 9 659 | 1 | 6.82 | 2 | **ja** |
+| K1 Erwartung/Ergebnis | ADV | 3 | 4 040 | 2 | 2.85 | 3 | **ja** |
+| C5 / C4 / C3 (TA), K2 (ADV) | — | ≤2 | … | 3–7 | ≤1.7 | 4–7 | nein |
+
+Befund: NEW hebt wieder das Artist-Thema C1 auf den höchsten Normwert (9.89) —
+aber C1 hat in dieser dünnen Wochen-Scheibe nur 2 Posts und fällt durchs
+**≥3-Trend-Gate**. Gegateter Sieger bleibt damit korrekt K5 (Consumer-Design-
+Entscheidungen, n4). Heißt: Normalisierung **und** Trend-Gate arbeiten zusammen —
+die Formel pusht Artists nicht blind und fabriziert keinen Trend aus 2 Posts; sie
+surfaced das Artist-Signal nur, wenn genug Volumen einen echten Cluster trägt
+(historischer Monats-Lauf: C1 n6, C2 n3 → Sieg).
+
+**Verdikt: ÜBERNOMMEN.** Datenbasiert besser — löst die objektive Größen-
+Konfundierung (39–75× Quellen-Asymmetrie), holt die B2B-Artist-Themen aus der
+Versenkung und bleibt durchs Trend-Gate diszipliniert. Nächster regulärer
+Mining-Lauf nutzt die neue Formel.
