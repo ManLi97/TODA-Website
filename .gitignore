@@ -14,8 +14,9 @@ out/
 build
 dist
 
-# Claude Code — local machine config, never commit
+# Claude Code — local machine config + throwaway agent worktrees, never commit
 .claude/settings.local.json
+.claude/worktrees/
 
 # Misc
 .DS_Store

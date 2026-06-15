@@ -5,16 +5,40 @@ description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS.
 
 # /blog-article — TODA-Blogartikel datenbasiert erzeugen
 
-Zwei getrennte Läufe über drei Wissensdokumenten:
+**Dieser Skill ist selbstlernend.** Jeder Run beginnt mit einem
+Lern-Schritt und endet damit, die Wissensdokumente nachzuziehen. Die
+vier Wissensschichten des Workflows:
 
-| Dokument | Rolle |
-|---|---|
-| `docs/blog/toda-context.md` | Voice, Produkt, Redaktionsregeln — Pflichtlektüre vor jedem Schreiben |
-| `docs/blog/sources.md` | Quellen-Library (Tier 1–3) — Startpunkt jeder Recherche, selbstwachsend |
-| `docs/blog/topic-radar.md` | Mining-Protokoll — Scoring-Methode + append-only Lauf-Einträge |
+| Schicht | Dokument | Rolle |
+|---|---|---|
+| 1. Brand | `docs/blog/toda-context.md` | Deklarierte Voice, Produkt, Redaktionsregeln — Pflichtlektüre vor jedem Schreiben |
+| 2. Gelernte Voice | `docs/blog/voice-learnings.md` + veröffentlichte Artikel (DB) + `docs/blog/originals/` | Gemessene Grammatik/Tonalität aus Tomeks Korrekturen — Pflichtlektüre vor jedem Schreiben |
+| 3. Community | `docs/blog/sources.md` (Tier 3) + `docs/blog/topic-radar.md` | Was die Leute aktuell bewegt → Top-Themen, gescort, auditierbar |
+| 4. Vertrauensquellen | `docs/blog/sources.md` (Tier 1–2) | Substanz: verifizierte Fakten für jeden Artikel |
 
 **Publiziert wird ausschließlich von Tomek im `/admin`-Editor — dieser
 Skill setzt niemals `status = 'published'`.**
+
+## Lauf 0 — Lern-Schritt (Pflicht am Anfang JEDES Runs)
+
+Bevor irgendetwas anderes passiert:
+
+1. `voice-learnings.md` lesen (Regeln + Auswertungs-Log).
+2. DB abfragen: Welche Artikel mit Original-Snapshot in
+   `docs/blog/originals/` sind inzwischen `published` und noch nicht
+   ausgewertet? Außerdem prüfen: Wurden Drafts gelöscht oder Slugs/
+   Titel geändert? (Auch das ist Feedback.)
+3. Für jeden neuen Fall: veröffentlichte Fassung vs. Snapshot
+   **semantisch** vergleichen (Umformulierungen, Streichungen,
+   Ergänzungen, Umstellungen) → Muster als Regel in
+   `voice-learnings.md` destillieren (Original → Korrektur als
+   Beispiel), Log aktualisieren.
+4. **Eskalationsregel:** Stil → `voice-learnings.md`. Struktur/Prozess
+   (Themenwahl, Quellen, Ablauf, Länge, TODA-Mention-Dichte) → dieses
+   SKILL.md bzw. `sources.md` / `toda-context.md` direkt anpassen.
+   Der Skill schreibt sich selbst fort; Änderungen an SKILL.md im
+   Report an Tomek ausweisen.
+5. Gibt es nichts Neues auszuwerten: weiter, ohne Zeit zu verbrennen.
 
 ## Lauf 1 — Topic-Mining (`/blog-article mining` oder wenn kein Thema gegeben)
 
@@ -30,7 +54,9 @@ Ablauf:
    Quellen-Einträgen. Wochen-Doppelungen fängt der Dedup-Check (Schritt
    4) plus der Abgleich mit den letzten Radar-Einträgen ab.
 2. **Clustern + scoren:** Jeden Post einem Themen-Cluster zuordnen,
-   `Engagement = Upvotes + 2×Kommentare`, Cluster-Score = Summe.
+   `Engagement = Upvotes + 2×Kommentare`, Cluster-Score = Σ der
+   baseline-normalisierten Outlier je Post (Outlier = Engagement /
+   Quellen-Median; volle Formel + Begründung in `topic-radar.md`).
    Die Zuordnungstabelle vollständig in den Radar-Eintrag schreiben —
    der manuelle Schritt muss überprüfbar sein.
 3. **Strom B checken:** tattoo-recht.de (+ ggf. weitere Tier-1/2-News)
@@ -50,7 +76,13 @@ Default-Wochenmix: 2× Strom A + 1× Strom B (wenn es News gibt).
 
 ### 2.0 Kontext laden (Pflicht)
 
-`docs/blog/toda-context.md` lesen — ohne dieses Dokument keinen Artikel.
+1. `docs/blog/toda-context.md` — ohne dieses Dokument keinen Artikel.
+2. `docs/blog/voice-learnings.md` — gelernte Stilregeln anwenden.
+3. **Stil-Referenz:** die 1–2 zuletzt veröffentlichten Artikel aus der
+   DB lesen — aber nur solche mit Original-Snapshot in
+   `docs/blog/originals/` (= durch Tomeks Korrektur gegangen). Sie
+   definieren Grammatik und Tonalität verbindlicher als jede Regel.
+   Gibt es noch keine: Schicht 1 + 2 reichen.
 
 ### 2.1 Recherche — Quellen-Library zuerst
 
@@ -114,6 +146,13 @@ returning post_id, id, slug;
 `status = 'draft'`, `published_at` bleibt NULL. Cover-Bild leer lassen —
 setzt Tomek beim Publish im Admin.
 
+**Snapshot-Pflicht:** Unmittelbar nach dem Insert die Claude-Fassung
+als `docs/blog/originals/<slug>.md` ablegen (Kopf-Kommentar mit
+Insert-Datum + post_id, dann das exakte `content_md`). Ohne Snapshot
+kann der Lern-Schritt (Lauf 0) das Korrektur-Delta nie messen — Tomeks
+Edit im Admin überschreibt die DB-Fassung. Zusätzlich den Artikel im
+Auswertungs-Log von `voice-learnings.md` registrieren.
+
 ### 2.4 Verifizieren & berichten
 
 1. SELECT die eingefügte Zeile zurück (post_id, slug,
@@ -133,5 +172,10 @@ setzt Tomek beim Publish im Admin.
 - Slug-Kollision → neuen Slug wählen, nicht überschreiben.
 - Eine Sprache pro Lauf (v1: nur `de`). Übersetzungen sind ein
   separater, späterer Schritt.
-- `sources.md` und `topic-radar.md` sind Teil des Deliverables — ein
-  Lauf, der sie nicht aktualisiert, ist unvollständig.
+- Die Wissensdokumente sind Teil des Deliverables — ein Lauf ist erst
+  vollständig, wenn aktualisiert sind: `sources.md` (neue/getestete
+  Quellen), `topic-radar.md` (Mining-Eintrag), `voice-learnings.md`
+  (Lern-Schritt + Log) und `originals/` (Snapshot je Insert).
+- Neue Community-Kanäle nur über das Aufnahme-Protokoll in
+  `sources.md` (Test-Scrape → Signal-Bewertung → dokumentiertes
+  Verdikt) — nie unbewertet in den Mining-Mix.

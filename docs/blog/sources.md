@@ -40,6 +40,28 @@ herausstellen, fliegen raus (mit Notiz warum).
 | mystudioflow.io/blog | DSGVO/Studio-Organisation | WebFetch ✅ | Kommerzieller SaaS-Blog (Wettbewerbsumfeld!) — nur als Sekundärquelle, Kernfakten gegen Tier 1 gegenchecken. |
 | juraexamen.info | Urteilsbesprechungen (juristische Ausbildungsseite) | WebFetch ✅ | Fundierte, paragrafengenaue Fallbesprechungen. Verwendet für OLG Hamm 12 U 151/13 (mangelhaftes Tattoo: Werkvertrag § 631 BGB, Unzumutbarkeit der Nachbesserung, Schmerzensgeld). |
 
+## Neue Kanäle aufnehmen (Aufnahme-Protokoll)
+
+Jeder Kandidat (Subreddit, YouTube-Kanal, TikTok-Hashtag, Forum …)
+durchläuft vor Aufnahme genau einen **Test-Scrape** und wird entlang
+dreier Fragen bewertet:
+
+1. **Diskussionsanteil:** Wie viele der Top-Posts/Kommentare sind echte
+   Diskussion (Schmerzpunkte, Fragen, Debatten) statt Showcase/Lob?
+   Richtwert: < 20 % Diskussion → raus.
+2. **Zielgruppen-Fit:** Sprechen dort Solo Artists (oder deren
+   Endkund:innen)? Nischen außerhalb der Zielgruppe → raus, egal wie
+   aktiv.
+3. **Scoring-Tauglichkeit:** Tragen Engagement-Zahlen (Votes,
+   Kommentare)? Wenn ja → quantitativ (fließt in Cluster-Scores);
+   wenn nein, aber inhaltlich wertvoll → **nur qualitativ** (Stimmung,
+   kein Scoring).
+
+Verdikt (aufgenommen quantitativ / aufgenommen qualitativ / raus) wird
+hier in der Tabelle bzw. unter „Bewusst ausgeschlossen" dokumentiert,
+der Test-Lauf im `topic-radar.md`. Wackelkandidaten fliegen nach zwei
+ertraglosen Läufen wieder raus.
+
 ## Tier 3 — Community-Signal (nur Themenfindung & Stimmung)
 
 | Quelle | Was sie liefert | Zugriff | Notizen |

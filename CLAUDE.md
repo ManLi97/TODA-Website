@@ -27,6 +27,24 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 - **Before non-trivial work:** use `/ship` for Plan → Build → Review
 - **Commits:** use `/commit` — Conventional Commits with NOTE blocks
 
+## Claude Code workspace (`.claude/`)
+
+- **`.claude/skills/blog-article/SKILL.md`** — the **self-evolving blog
+  content pipeline** (`/blog-article`). Three phases: learning step
+  (diff published articles against their pre-correction snapshots, then
+  update its own rules), topic mining (Reddit/YouTube scraping via
+  Apify + cluster scoring), writing + draft insert into the Supabase
+  blog CMS. It **never publishes** — Tomek reviews and publishes via
+  `/admin`. Its knowledge base lives in `docs/blog/` (see Project
+  documentation); the skill reads from and writes back to those docs on
+  every run — skill and docs are one system, keep both in sync when
+  changing either.
+- **`.claude/worktrees/`** — temporary git worktrees created by Claude
+  Code agents for isolated work. Disposable, gitignored — never commit
+  or reference their contents.
+- **`.claude/settings.local.json`** — machine-local Claude Code config,
+  gitignored.
+
 ## Commands
 
 ```bash
@@ -143,6 +161,17 @@ middleware.ts         # next-intl locale routing (matcher excludes /admin and /a
 ## Project documentation
 
 - `docs/design-system/` — website-specific design system reference (philosophy, colors, tokens, typography, motion)
+- `docs/blog/` — knowledge base of the `/blog-article` skill (four layers):
+  - `toda-context.md` — declared brand voice, product blocks, hard editorial rules
+  - `voice-learnings.md` — **measured** voice: style rules distilled from Tomek's
+    corrections (original vs. published diff) + evaluation log
+  - `sources.md` — source library: Tier 1–2 (fact-bearing, verified) / Tier 3
+    (community signal, mood only) + channel-intake protocol for new scrape sources
+  - `topic-radar.md` — append-only mining protocol: every topic decision with
+    scrape parameters, cluster scores, and reasoning
+  - `originals/` — pre-correction snapshots of every inserted draft. **Load-bearing
+    for the learning loop** (the admin editor overwrites the DB copy on edit) —
+    never delete or rewrite these.
 
 ## Environment variables
 
