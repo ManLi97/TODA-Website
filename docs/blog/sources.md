@@ -20,6 +20,12 @@ herausstellen, fliegen raus (mit Notiz warum).
    Tier-1-Quelle gegenchecken, wo möglich.
 4. **Neue Quelle = neuer Eintrag im selben Lauf**, inkl. Zugriffsweg und
    wofür sie taugt. Nicht verwendete Fundstellen kommen NICHT rein.
+5. **Verifizierte Quellen werden im Artikel inline verlinkt.** Jede
+   namentlich verwendete Tier-1/2-Faktenquelle bekommt einen Inline-Link
+   `[Text](URL)` auf genau die hier hinterlegte, im selben Lauf geprüfte
+   URL. Linkziel muss **öffentlich lesbar** sein (kein Login/CAPTCHA) —
+   z. B. dejure/NRWE statt openJur. Tier 3 wird nie verlinkt. (Pipeline
+   öffnet externe Links automatisch in neuem Tab.)
 
 ## Tier 1 — Primär- & Behördenquellen (Fakten-Anker)
 
@@ -30,6 +36,7 @@ herausstellen, fliegen raus (mit Notiz warum).
 | BMUV — Safer Tattoo (`bundesumweltministerium.de`) | Tattoo-Sicherheit, Farben | WebFetch ✅ | Eher Einstiegs-/Verbraucherseite, wenig harte Fakten — für Zahlen auf EUR-Lex/BfR ausweichen. |
 | ECHA — Tattoo inks (`echa.europa.eu`) | REACH-Hintergrund | WebFetch ❌ (403, Juni 2026) | Blockt Fetcher. Inhalte stattdessen über EUR-Lex oder BfR beziehen. |
 | NRWE — Rechtsprechungsdatenbank NRW (`nrwe.justiz.nrw.de`) | Amtliche Urteilsvolltexte (NRW-Gerichte) | WebFetch ✅ | Goldstandard für Urteile: Tenor, Begründung, zitierte Paragrafen im Original. Verwendet für AG Köln 137 C 162/25 (Copycat-Tattoo). URL-Schema: `/ag_koeln/j<jahr>/<az>_Urteil_<datum>.html`. |
+| dejure.org (`dejure.org/dienste/vernetzung/rechtsprechung?Gericht=…&Datum=…&Aktenzeichen=…`) | Rechtsprechung: Aktenzeichen-Nachweis, Fundstellen (NJW-RR, MDR …), Volltext-Verweise (DACH) | WebFetch ✅ | **Öffentlich lesbar — kein CAPTCHA** (anders als openJur, das Fetcher/Leser per CAPTCHA blockt). Standard-**Linkziel** für Urteils-Zitate. Verwendet & verifiziert 16.06.2026 für OLG Hamm, Beschluss 05.03.2014, Az. 12 U 151/13 (mangelhaftes Tattoo). |
 
 ## Tier 2 — Fachquellen (geprüft, mit Vorsicht)
 

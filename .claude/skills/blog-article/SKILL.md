@@ -107,8 +107,25 @@ Format (Konvention der bestehenden Posts):
 - **Kein H1 im `content_md`** — der Titel wird aus der DB gerendert.
   Erster Absatz = Einstieg, danach `##`-Sektionen.
 - 900–1500 Wörter, per Du, TODA-Voice (frech, substanziell, Insider).
-- Markdown: GFM; Listen, Tabellen, `>`-Quotes erlaubt. Kein Inline-HTML
-  (Pipeline sanitisiert).
+- Markdown: GFM; Listen, Tabellen, `>`-Quotes, **Emojis** (Unicode direkt
+  im Text, an beliebiger Stelle) erlaubt. Emoji-Dosis NICHT vorschreiben —
+  der Voice-Loop lernt sie aus Tomeks veröffentlichten Fassungen. Kein
+  Inline-HTML (Pipeline sanitisiert; rohes HTML wird stillschweigend verworfen).
+- **Verlinkung** (beide Arten laufen ohne Pipeline-Eingriff; externe Links
+  öffnen automatisch in neuem Tab + `rel="noopener noreferrer"` via
+  Post-Sanitize-Transform in `lib/blog/markdown.ts`):
+  - **Quellen (extern):** Jede namentliche Fakten-/Rechtsaussage (Urteil, §,
+    Studie, Zahl, Verordnung) bekommt einen Inline-Link `[Text](https://…)`
+    auf die **verifizierte Tier-1/2-Quelle** — im selben Lauf per WebFetch
+    geprüft, Linkziel öffentlich lesbar (kein CAPTCHA/Login), URL fix in
+    `sources.md`. Tier-3-Community wird **nie** verlinkt (bleibt Stimmung).
+  - **Intern (Artikel ↔ Artikel):** Nur auf **veröffentlichte** Geschwister
+    derselben Locale linken — `[Text](/<locale>/blog/<slug>)`, thematisch
+    relevant. **Nie auf Drafts** (per-Locale-Publish → 404). Ziele per
+    `select slug, title from blog_post_translations where locale = '<l>' and
+    status = 'published'` ziehen. Keine veröffentlichten Geschwister da: keine
+    internen Links erzwingen, stattdessen Kandidaten im Report vorschlagen
+    (Tomek setzt sie beim Publish).
 - TODA-Erwähnung: max. 1–2 Stellen, organisch dort, wo das Produkt den
   konkreten Schmerzpunkt löst. Kein Werbeblock, kein „Jetzt registrieren".
 - Rechtsthemen: kursiver Disclaimer als letzter Absatz

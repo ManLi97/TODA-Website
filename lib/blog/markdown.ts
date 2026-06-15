@@ -21,12 +21,41 @@ const schema = {
   },
 };
 
+// Trusted post-sanitize transform: external (http/https) links open in a new
+// tab with a safe rel; internal/relative links stay same-tab. The values are
+// constant (no user input), so running AFTER rehype-sanitize is safe and keeps
+// the sanitize schema — and our "no raw HTML in content_md" rule — untouched.
+type HastNode = {
+  type?: string;
+  tagName?: string;
+  properties?: Record<string, unknown>;
+  children?: HastNode[];
+};
+
+function rehypeExternalNewTab() {
+  return (tree: HastNode) => {
+    const walk = (node: HastNode) => {
+      if (node.type === "element" && node.tagName === "a") {
+        const props = node.properties;
+        const href = props?.href;
+        if (props && typeof href === "string" && /^https?:\/\//i.test(href)) {
+          props.target = "_blank";
+          props.rel = "noopener noreferrer";
+        }
+      }
+      node.children?.forEach(walk);
+    };
+    walk(tree);
+  };
+}
+
 const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkRehype)
   .use(rehypeSlug)
   .use(rehypeSanitize, schema)
+  .use(rehypeExternalNewTab)
   .use(rehypeStringify);
 
 export async function renderMarkdown(markdown: string): Promise<string> {
