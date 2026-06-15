@@ -10,6 +10,7 @@ import { PageSection } from "@/components/page-section";
 import { SectionHeader } from "@/components/section-header";
 import { Animate } from "@/components/animate";
 import { ArticleHeader } from "@/components/blog/article-header";
+import { AuthorSignatureFooter } from "@/components/blog/author-signature-footer";
 import { PostGrid } from "@/components/blog/post-grid";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import {
@@ -110,7 +111,9 @@ export default async function BlogArticlePage({ params }: Props) {
     inLanguage: locale,
     mainEntityOfPage: `${siteUrl}/${locale}/blog/${slug}`,
     ...(cover && { image: [cover] }),
-    author: { "@type": "Organization", name: "TODA Solutions" },
+    author: post.author
+      ? { "@type": "Person", name: post.author.name }
+      : { "@type": "Organization", name: "TODA Solutions" },
     publisher: {
       "@type": "Organization",
       name: "TODA Solutions",
@@ -150,6 +153,8 @@ export default async function BlogArticlePage({ params }: Props) {
           <div className="mt-block mx-auto max-w-[760px]">
             <div className="prose-blog" dangerouslySetInnerHTML={{ __html: html }} />
           </div>
+
+          {post.author && <AuthorSignatureFooter author={post.author} locale={locale} />}
         </div>
       </PageSection>
 

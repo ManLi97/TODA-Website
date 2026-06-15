@@ -6,14 +6,27 @@
 import { cache } from "react";
 import { createStaticClient } from "@/lib/supabase/static";
 import { readingMinutes } from "./reading-time";
-import type {
-  BlogLocale,
-  Category,
-  LocalizedName,
-  PostArticle,
-  PostListItem,
-  PublishedAlternates,
+import {
+  SOCIAL_PLATFORMS,
+  type Author,
+  type BlogLocale,
+  type Category,
+  type LocalizedName,
+  type PostArticle,
+  type PostListItem,
+  type PublishedAlternates,
+  type SocialLink,
+  type SocialPlatform,
 } from "./types";
+
+/** Raw author embed (jsonb slogan/socials arrive parsed). */
+interface AuthorRow {
+  name: string;
+  slug: string;
+  avatar_path: string | null;
+  slogan: LocalizedName | null;
+  socials: unknown;
+}
 
 /** Raw shape returned by the translation→post→category embed. */
 interface TranslationRow {
@@ -30,11 +43,45 @@ interface TranslationRow {
   blog_posts: {
     cover_image_path: string | null;
     blog_categories: { slug: string; name: LocalizedName } | null;
+    blog_authors?: AuthorRow | null;
   } | null;
 }
 
 const LIST_SELECT = `post_id, slug, title, excerpt, content_md, tags, published_at, updated_at, seo_title, seo_description,
   blog_posts!inner ( cover_image_path, category_id, blog_categories ( slug, name ) )`;
+
+// Article detail also pulls the post's author (signature footer). Kept off the
+// list select so the listing grid stays lean.
+const ARTICLE_SELECT = `post_id, slug, title, excerpt, content_md, tags, published_at, updated_at, seo_title, seo_description,
+  blog_posts!inner ( cover_image_path, category_id, blog_categories ( slug, name ),
+    blog_authors ( name, slug, avatar_path, slogan, socials ) )`;
+
+/** Normalizes the embedded author row — drops malformed socials defensively. */
+function mapAuthor(raw: AuthorRow | null | undefined): Author | null {
+  if (!raw) return null;
+  const socials: SocialLink[] = Array.isArray(raw.socials)
+    ? (raw.socials as unknown[]).flatMap((item) => {
+        if (!item || typeof item !== "object") return [];
+        const { platform, url } = item as { platform?: unknown; url?: unknown };
+        if (
+          typeof platform === "string" &&
+          typeof url === "string" &&
+          url.trim() &&
+          SOCIAL_PLATFORMS.includes(platform as SocialPlatform)
+        ) {
+          return [{ platform: platform as SocialPlatform, url: url.trim() }];
+        }
+        return [];
+      })
+    : [];
+  return {
+    name: raw.name,
+    slug: raw.slug,
+    slogan: raw.slogan ?? {},
+    avatarPath: raw.avatar_path,
+    socials,
+  };
+}
 
 function mapListItem(row: TranslationRow): PostListItem {
   return {
@@ -106,14 +153,24 @@ export const getPostBySlug = cache(
     const supabase = createStaticClient();
     if (!supabase) return null;
 
-    const { data, error } = await supabase
-      .from("blog_post_translations")
-      .select(LIST_SELECT)
-      .eq("locale", locale)
-      .eq("slug", slug)
-      .eq("status", "published")
-      .lte("published_at", new Date().toISOString())
-      .maybeSingle();
+    const fetchArticle = (select: string) =>
+      supabase
+        .from("blog_post_translations")
+        .select(select)
+        .eq("locale", locale)
+        .eq("slug", slug)
+        .eq("status", "published")
+        .lte("published_at", new Date().toISOString())
+        .maybeSingle();
+
+    let { data, error } = await fetchArticle(ARTICLE_SELECT);
+    // Migration-window guard: before the blog_authors relationship is live the
+    // author embed errors — fall back to the author-less select so articles
+    // still render (without a signature) instead of 404-ing.
+    if (error) {
+      console.error("[blog] getPostBySlug (author embed):", error.message);
+      ({ data, error } = await fetchArticle(LIST_SELECT));
+    }
     if (error) console.error("[blog] getPostBySlug:", error.message);
     if (error || !data) return null;
 
@@ -123,6 +180,7 @@ export const getPostBySlug = cache(
       contentMd: row.content_md,
       seoTitle: row.seo_title,
       seoDescription: row.seo_description,
+      author: mapAuthor(row.blog_posts?.blog_authors),
     };
   }
 );
@@ -164,4 +222,11 @@ export function coverImageUrl(path: string | null): string | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!path || !url) return null;
   return `${url}/storage/v1/object/public/blog-covers/${path}`;
+}
+
+/** Public URL for an author avatar stored in the blog-authors bucket. */
+export function authorAvatarUrl(path: string | null): string | null {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!path || !url) return null;
+  return `${url}/storage/v1/object/public/blog-authors/${path}`;
 }

@@ -29,6 +29,12 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
               >
                 Categories
               </Link>
+              <Link
+                href="/admin/authors"
+                className="text-text-secondary hover:text-text-primary transition-colors"
+              >
+                Authors
+              </Link>
             </nav>
           </div>
           <form action={logout}>

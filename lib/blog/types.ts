@@ -16,6 +16,35 @@ export interface Category {
   sortOrder: number;
 }
 
+/** Supported social platforms for the author signature — each maps to a brand icon. */
+export const SOCIAL_PLATFORMS = [
+  "instagram",
+  "tiktok",
+  "youtube",
+  "x",
+  "facebook",
+  "linkedin",
+  "website",
+  "email",
+] as const;
+
+export type SocialPlatform = (typeof SOCIAL_PLATFORMS)[number];
+
+export interface SocialLink {
+  platform: SocialPlatform;
+  url: string;
+}
+
+/** Article signature author — a person, shared across all locales of a post. */
+export interface Author {
+  name: string;
+  slug: string;
+  /** Short localized tagline shown under the name in the reader's language. */
+  slogan: LocalizedName;
+  avatarPath: string | null;
+  socials: SocialLink[];
+}
+
 /** Card-level shape for the listing grid. */
 export interface PostListItem {
   postId: string;
@@ -35,6 +64,7 @@ export interface PostArticle extends PostListItem {
   contentMd: string;
   seoTitle: string | null;
   seoDescription: string | null;
+  author: Author | null;
 }
 
 /** Published sibling translations of one post — feeds hreflang alternates. */

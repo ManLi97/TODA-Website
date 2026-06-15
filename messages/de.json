@@ -132,6 +132,9 @@
     "minRead": "{minutes} Min. Lesezeit",
     "relatedPosts": "Ähnliche Artikel",
     "backToBlog": "Zurück zum Blog",
+    "authorFooter": {
+      "writtenBy": "Geschrieben von"
+    },
     "emptyState": "Hier erscheinen bald die ersten Artikel.",
     "metaTitle": "Blog – TODA für Tattoo Artists",
     "metaDescription": "Guides, Insights und Updates für selbstständige Tattoo Artists – von TODA."

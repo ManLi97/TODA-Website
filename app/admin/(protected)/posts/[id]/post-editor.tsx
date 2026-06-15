@@ -12,6 +12,7 @@ import {
   deletePost,
   publishTranslation,
   saveTranslation,
+  setAuthor,
   setCategory,
   unpublishTranslation,
   uploadCover,
@@ -31,8 +32,10 @@ export interface EditorTranslation {
 interface PostEditorProps {
   postId: string;
   categoryId: string | null;
+  authorId: string | null;
   coverUrl: string | null;
   categories: { id: string; label: string }[];
+  authors: { id: string; label: string }[];
   translations: Record<string, EditorTranslation>;
 }
 
@@ -63,8 +66,10 @@ function PendingButton({ children, className }: { children: React.ReactNode; cla
 export function PostEditor({
   postId,
   categoryId,
+  authorId,
   coverUrl,
   categories,
+  authors,
   translations,
 }: PostEditorProps) {
   const [activeLocale, setActiveLocale] = useState<string>(routing.locales[0]);
@@ -142,6 +147,31 @@ export function PostEditor({
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <PendingButton className="border-border text-text-secondary hover:text-text-primary rounded-lg border px-3 py-2 text-sm">
+            Save
+          </PendingButton>
+        </form>
+
+        <form action={setAuthor} className="flex items-end gap-3">
+          <input type="hidden" name="postId" value={postId} />
+          <div className="grow">
+            <label className={labelClass} htmlFor="authorId">
+              Author
+            </label>
+            <select
+              id="authorId"
+              name="authorId"
+              defaultValue={authorId ?? ""}
+              className={inputClass}
+            >
+              <option value="">— none —</option>
+              {authors.map((author) => (
+                <option key={author.id} value={author.id}>
+                  {author.label}
                 </option>
               ))}
             </select>

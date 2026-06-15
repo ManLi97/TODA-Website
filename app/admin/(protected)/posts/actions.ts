@@ -124,6 +124,23 @@ export async function setCategory(formData: FormData): Promise<void> {
   revalidatePath(`/admin/posts/${postId}`);
 }
 
+export async function setAuthor(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const postId = formString(formData, "postId");
+  const authorId = formString(formData, "authorId") || null;
+  if (!postId) throw new Error("Missing postId");
+
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from("blog_posts")
+    .update({ author_id: authorId })
+    .eq("id", postId);
+  if (error) throw new Error(`Author update failed: ${error.message}`);
+
+  revalidateBlogPaths();
+  revalidatePath(`/admin/posts/${postId}`);
+}
+
 export async function uploadCover(formData: FormData): Promise<void> {
   await requireAdmin();
   const postId = formString(formData, "postId");

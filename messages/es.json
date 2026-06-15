@@ -132,6 +132,9 @@
     "minRead": "{minutes} min de lectura",
     "relatedPosts": "Artículos relacionados",
     "backToBlog": "Volver al blog",
+    "authorFooter": {
+      "writtenBy": "Escrito por"
+    },
     "emptyState": "Pronto aparecerán los primeros artículos.",
     "metaTitle": "Blog – TODA para Tatuadores",
     "metaDescription": "Guías, ideas y novedades para tatuadores autónomos – de TODA."

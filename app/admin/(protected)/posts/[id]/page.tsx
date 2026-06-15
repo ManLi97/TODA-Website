@@ -13,10 +13,10 @@ export default async function AdminEditPostPage({ params }: Props) {
   const { id } = await params;
   const supabase = createAdminClient();
 
-  const [postResult, translationsResult, categoriesResult] = await Promise.all([
+  const [postResult, translationsResult, categoriesResult, authorsResult] = await Promise.all([
     supabase
       .from("blog_posts")
-      .select("id, category_id, cover_image_path")
+      .select("id, category_id, author_id, cover_image_path")
       .eq("id", id)
       .maybeSingle(),
     supabase
@@ -27,6 +27,7 @@ export default async function AdminEditPostPage({ params }: Props) {
       .from("blog_categories")
       .select("id, slug, name")
       .order("sort_order", { ascending: true }),
+    supabase.from("blog_authors").select("id, name").order("name", { ascending: true }),
   ]);
 
   const post = postResult.data;
@@ -50,10 +51,15 @@ export default async function AdminEditPostPage({ params }: Props) {
     <PostEditor
       postId={post.id}
       categoryId={post.category_id}
+      authorId={post.author_id}
       coverUrl={coverImageUrl(post.cover_image_path)}
       categories={(categoriesResult.data ?? []).map((category) => ({
         id: category.id,
         label: category.name?.de ?? category.slug,
+      }))}
+      authors={(authorsResult.data ?? []).map((author) => ({
+        id: author.id,
+        label: author.name,
       }))}
       translations={translations}
     />
