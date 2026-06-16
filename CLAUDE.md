@@ -39,6 +39,15 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
   documentation); the skill reads from and writes back to those docs on
   every run — skill and docs are one system, keep both in sync when
   changing either.
+- **`.claude/skills/podcast-article/SKILL.md`** — *(in development)* the
+  **podcast→article pipeline** (`/podcast-article`): recycles longform
+  YouTube podcasts (e.g. *Die Stechstunde*) into data-driven German blog
+  articles — never 1:1 transcripts. **Shares the blog-article knowledge
+  spine** (`docs/blog/`: `toda-context.md`, `sources.md`, `voice-learnings.md`,
+  the same Supabase blog CMS + `originals/` snapshots + learning loop); adds
+  its own `podcast-radar.md`. Embeds the source episode via the structured
+  video fields (Blog → *Podcast embed infra*), names + quotes the hosts, and —
+  like `/blog-article` — **never publishes**.
 - **`.claude/worktrees/`** — temporary git worktrees created by Claude
   Code agents for isolated work. Disposable, gitignored — never commit
   or reference their contents.
@@ -113,10 +122,19 @@ middleware.ts         # next-intl locale routing (matcher excludes /admin and /a
 
 ## Blog (Supabase CMS)
 
-- **Data model:** `blog_posts` (shell: category, cover) ← `blog_post_translations`
+- **Data model:** `blog_posts` (shell: category, cover, **author**) ← `blog_post_translations`
   (per-locale slug/title/content_md/tags/status — **per-locale publish**) +
-  `blog_categories` (jsonb i18n names, admin-managed). RLS: anon reads published
-  only, **zero write policies** — all writes via service role in admin server actions.
+  `blog_categories` (jsonb i18n names, admin-managed) + `blog_authors`
+  (admin-managed people; nullable `author_id` on the shell, one author per post
+  across locales → renders the article signature footer). RLS: anon reads
+  published only (author rows readable for the footer), **zero write policies** —
+  all writes via service role in admin server actions.
+- **Podcast embed infra:** `blog_post_translations` also carries `youtube_id` /
+  `video_start_seconds` / `video_published_at` (all nullable) — the structured-field
+  path for embedding a source episode in `/podcast-article` output. Rendered
+  **outside `content_md`** (template + facade + `VideoObject` JSON-LD) so the
+  markdown sanitizer is never opened for raw iframes. Columns are live; the render
+  path is built incrementally with the skill.
 - **Rendering:** ISR (`revalidate = 3600`) + on-demand `revalidateBlogPaths()` from
   every admin mutation. Public pages MUST use `lib/supabase/static.ts` — the
   cookie-based `server.ts` client forces dynamic rendering and kills ISR.
