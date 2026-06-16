@@ -49,7 +49,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return {};
 
   const alternates = await getPublishedAlternates(post.postId);
-  const cover = coverImageUrl(post.coverImagePath);
+  // Social preview image: a compressed 1200×630 JPEG served by /api/og/cover.
+  // The raw cover PNG is 2+ MB — too large for WhatsApp/Facebook to render.
+  // Falls back to the brand OG image when the post has no cover.
+  const ogImage = post.coverImagePath
+    ? `${siteUrl}/api/og/cover?path=${encodeURIComponent(post.coverImagePath)}`
+    : `${siteUrl}/og-image.png`;
   const title = post.seoTitle ?? post.title;
   const description = post.seoDescription ?? post.excerpt;
 
@@ -70,13 +75,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
-      ...(cover && { images: [{ url: cover, width: 1200, height: 675, alt: post.title }] }),
+      images: [{ url: ogImage, width: 1200, height: 630, type: "image/jpeg", alt: post.title }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      ...(cover && { images: [cover] }),
+      images: [ogImage],
     },
     alternates: {
       canonical: `${siteUrl}/${locale}/blog/${slug}`,
