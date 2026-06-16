@@ -106,7 +106,9 @@ Format (Konvention der bestehenden Posts):
 
 - **Kein H1 im `content_md`** — der Titel wird aus der DB gerendert.
   Erster Absatz = Einstieg, danach `##`-Sektionen.
-- 900–1500 Wörter, per Du, TODA-Voice (frech, substanziell, Insider).
+- ~600–650 Wörter, per Du, TODA-Voice (frech, substanziell, Insider) —
+  Zielwert aus `voice-learnings.md` R2 (an Tomeks veröffentlichten
+  Fassungen gemessen, nicht geschätzt).
 - Markdown: GFM; Listen, Tabellen, `>`-Quotes, **Emojis** (Unicode direkt
   im Text, an beliebiger Stelle) erlaubt. Emoji-Dosis NICHT vorschreiben —
   der Voice-Loop lernt sie aus Tomeks veröffentlichten Fassungen. Kein
