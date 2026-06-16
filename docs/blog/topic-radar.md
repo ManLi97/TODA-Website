@@ -242,3 +242,76 @@ surfaced das Artist-Signal nur, wenn genug Volumen einen echten Cluster trägt
 Konfundierung (39–75× Quellen-Asymmetrie), holt die B2B-Artist-Themen aus der
 Versenkung und bleibt durchs Trend-Gate diszipliniert. Nächster regulärer
 Mining-Lauf nutzt die neue Formel.
+
+## Lauf 2026-06-16 — Aftercare-Kommunikation (Strom-A-Scrape ausgefallen, Strom-B-Radar + dokumentiertes Signal)
+
+**Strom A — Scrape heute ausgefallen (transparent dokumentiert):** Zwei
+Versuche mit `trudax/reddit-scraper-lite` (r/TattooArtists + r/tattooadvice,
+top/week+month, `includeMediaLinks: true` für Vote-/Kommentarzahlen):
+- Run `aM8c32jFu9Gkqju9z` (4 startUrls): nach ~8 min abgebrochen, **0 Items** —
+  Reddit blockte die Per-Post-Detailextraktion (zuletzt 8 failed requests/10 s).
+- Run `l52rKQe0e8uIyfanD` (2 startUrls, schlanker): nach ~7 min nur **1 Item**
+  (2/8 Seiten, 6 von 8 Requests failed). Ebenfalls abgebrochen.
+Befund: Die fürs Scoring nötige Detailextraktion (upVotes + numberOfComments)
+wird derzeit residential-seitig hart gedrosselt — kein verwertbarer Frisch-
+Datensatz. **Fallback (wie bei früheren Crawler-Degradationen, vgl. 11.06.
+nachmittags):** dokumentiertes Strom-A-Signal vom 11.06. (77 Posts, A/B-validierte
+Cluster) statt Frisch-Scrape.
+
+**Dokumentiertes Strom-A-Signal (Basis 11.06., weiter gültig):** Top-Artist-Cluster
+nach Outlier-Formel waren C1 (Kundenkommunikation) und C2 (Urheberrecht) — **beide
+inzwischen veröffentlicht** (studio-smile / screenshot-roulette). Nächster
+data-backed Backlog-Eintrag nach C1/C2-Abschluss: **K2 Aftercare/Healing** (Top-
+Consumer-Cluster + der dort explizit notierte Artist-Winkel „standardisierte
+Nachsorge-Kommunikation, die Panik-DMs verhindert").
+
+**Strom B — DACH-Radar (16.06., per WebFetch geprüft):**
+- tattoo-recht.de: FG Düsseldorf 4 K 1875/23 G (Tätowierer steuerlich als Künstler,
+  Feb 2025); LAG SH 2 Sa 278/24 (keine Lohnfortzahlung bei Tattoo-Entzündung —
+  Arbeitnehmer-Thema, off-target für Solo-Artists); „Studionamen schützen"
+  (Markenrecht, Mai 2025).
+- feelfarbig.com: Befähigungsnachweis-Debatte (Jan 2026); Instagram-Musik-
+  Abmahnung (Nov 2025); KI-Kunst-Kritik (Dez 2025); Tattoo-Etiquette (März 2026 —
+  überschneidet sich mit erwartungsmanagement → Dedup-Vorsicht).
+
+**Kandidaten + Abwägung:**
+
+| Kandidat | Quelle | Pro | Contra |
+|---|---|---|---|
+| **K2 Aftercare-Kommunikation** | Strom A (Backlog #2) | Top undone Cluster; **non-legal → diversifiziert** den bislang rein rechts-/regulatorischen Blog (4 Legal-Artikel); stärkster TODA-Fit (Communication Center, Erinnerungen); sauber sourcebar | kein News-Peg |
+| FG Düsseldorf Steuer/Künstler | Strom B | frisches Tier-1-Urteil; echtes Business-Pain | trocken; 5. Legal-Artikel in Folge; schwacher TODA-Fit |
+| Instagram-Musik-Abmahnung | Strom B | hoch relatable (jeder postet Reels) | schwacher TODA-Fit; erneut Legal |
+
+**Dedup (DB-Slugs, Stand 16.06.):** published/draft decken Werkvertrag-Erwartung,
+Urheberrecht, REACH, Anzahlung ab. Nachsorge/Heilung **nicht** abgedeckt → frei.
+
+**Such-Validierung:** „Tattoo Nachsorge" / „Tattoo Heilung Phasen" = breites
+DACH-Suchinteresse (Hersteller-, Apotheken-, Magazin- und Ärzteblatt-Treffer) →
+Suchinteresse bestätigt.
+
+**Quellen-Check (bestanden):** Tier-1 **Ärztekammer Nordrhein**, Rheinisches
+Ärzteblatt 4/2026 (24.03.2026) — Heilung ~6 Wochen, Allergien häufigste
+Nebenwirkung (rote Pigmente), 1–6 % Komplikationen. Tier-2 **DRACO / Dr. Ausbüttel**
+(Apotheken-Wundversorgung) — Phasen-Timeline + Infektions-Warnsignale, deckt sich
+mit Tier-1 bei ~6 Wochen (Tier-2-gegen-Tier-1-Check bestanden). Beide per WebFetch
+verifiziert, öffentlich lesbar → in `sources.md` aufgenommen.
+
+**Entscheidung — 1 Artikel (Strom-A-Backlog-Slot K2):** „Aftercare-Kommunikation /
+Heilphase steuern". Begründung: (a) data-backed Top-Backlog nach C1/C2-Abschluss;
+(b) diversifiziert den bisher rein rechts-/regulatorischen Blog; (c) bester
+TODA-Produkt-Fit (Erinnerungen/Vorlagen); (d) Tier-1+2 verifiziert; (e) interner
+Link auf published Geschwister (studio-smile/Werkvertrag) gesetzt. → Draft
+`tattoo-nachsorge-heilphase-kommunizieren` (post_id
+`a86b0ff3-68ee-484c-92ec-d96ad9b53bd0`), Kategorie Handwerk & Studio.
+
+**Backlog für die nächsten Läufe:**
+1. **FG Düsseldorf 4 K 1875/23 G** — Tätowierer steuerlich als Künstler
+   (freiberuflich vs. gewerblich, Gewerbesteuer/KSK). Frisches Tier-1-Urteil,
+   echtes Solo-Artist-Business-Pain. Bei nächstem Legal-Slot bevorzugt.
+2. **Instagram-Musik-Abmahnung** — Reels mit lizenzpflichtiger Musik =
+   Abmahnrisiko; sehr relatable. Tier-1-Anker (GEMA/§ UrhG) noch zu verifizieren.
+3. **K3 Cover-ups/Scars** (Strom-A-Backlog, Craft-Winkel) und **Studioname/
+   Markenschutz** (Strom B).
+4. **Reddit-Scraper-Reliabilität:** zwei Ausfälle in Folge — vor dem nächsten
+   Mining-Lauf alternative Actor-Config prüfen (z. B. ohne Per-Post-Detail, Vote-
+   Zahlen über andere Felder) oder Backup-Actor evaluieren.

@@ -146,6 +146,7 @@ Schluss-Signatur einsetzen.
 | copycat-tattoo-urteil-urheberrecht (→ veröffentlicht als `screenshot-roulette-…`) | ✅ | 16.06.2026 | **ausgewertet** → R1–R10. DE 994→607 W (−39 %), retitelt, Tabelle + Miturheber-Sektion gestrichen, 1 TODA-Mention, ✅/🤓. |
 | erwartungsmanagement-tattoo-kunden (→ veröffentlicht als `…laecheln-im-studio…`) | ✅ | 16.06.2026 | **ausgewertet** → R1–R10. DE 958→636 W (−34 %), retitelt, „Wenn es knallt"-Sektion gestrichen, TODA-Mention entschärft. |
 | screenshot-roulette EN/ES + studio-lächeln EN/ES | ✅ | 16.06.2026 | **unverändert veröffentlicht** — kein Korrektursignal (Übersetzungen 1:1 übernommen). |
+| tattoo-nachsorge-heilphase-kommunizieren | ✅ | — | **neuer Draft 16.06.2026** (Lauf K2/Aftercare, R1–R10 angewandt, 603 W), wartet auf Publish |
 | tattoo-anzahlung-no-shows-recht | ✅ | — | Draft, wartet auf Publish |
 | reach-taetowierfarben-erklaert | ✅ | — | Draft, wartet auf Publish |
 | dsgvo-tattoo-studio-kundendaten | ✅ (rekonstruiert) | — | gelöscht, siehe oben |

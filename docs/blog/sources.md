@@ -37,6 +37,7 @@ herausstellen, fliegen raus (mit Notiz warum).
 | ECHA — Tattoo inks (`echa.europa.eu`) | REACH-Hintergrund | WebFetch ❌ (403, Juni 2026) | Blockt Fetcher. Inhalte stattdessen über EUR-Lex oder BfR beziehen. |
 | NRWE — Rechtsprechungsdatenbank NRW (`nrwe.justiz.nrw.de`) | Amtliche Urteilsvolltexte (NRW-Gerichte) | WebFetch ✅ | Goldstandard für Urteile: Tenor, Begründung, zitierte Paragrafen im Original. Verwendet für AG Köln 137 C 162/25 (Copycat-Tattoo). URL-Schema: `/ag_koeln/j<jahr>/<az>_Urteil_<datum>.html`. |
 | dejure.org (`dejure.org/dienste/vernetzung/rechtsprechung?Gericht=…&Datum=…&Aktenzeichen=…`) | Rechtsprechung: Aktenzeichen-Nachweis, Fundstellen (NJW-RR, MDR …), Volltext-Verweise (DACH) | WebFetch ✅ | **Öffentlich lesbar — kein CAPTCHA** (anders als openJur, das Fetcher/Leser per CAPTCHA blockt). Standard-**Linkziel** für Urteils-Zitate. Verwendet & verifiziert 16.06.2026 für OLG Hamm, Beschluss 05.03.2014, Az. 12 U 151/13 (mangelhaftes Tattoo). |
+| Ärztekammer Nordrhein — Rheinisches Ärzteblatt (`aekno.de/aerzte/rheinisches-aerzteblatt/…`) | Tattoo-Gesundheit: Wundheilung, Risiken, Nebenwirkungen (DACH) | WebFetch ✅ | Amtliche Ärztekammer-Publikation (Tier 1, zitiert BfR-Experten). Verwendet & verifiziert 16.06.2026 für Aftercare-Artikel: Wundheilung **~6 Wochen** oberflächlich (tiefere Schichten Monate), allergische Reaktionen häufigste Nebenwirkung (rote Pigmente), 1–6 % Komplikationen. Ausgabe 4/2026, 24.03.2026 (Autorin J. Naujoks). |
 
 ## Tier 2 — Fachquellen (geprüft, mit Vorsicht)
 
@@ -46,6 +47,7 @@ herausstellen, fliegen raus (mit Notiz warum).
 | feelfarbig.com | Deutsches Tattoo-Magazin: Branche, Business, Recht (DACH) | WebFetch ✅ | Etabliertes Online-Magazin, aktiv (Stand Juni 2026), redaktionelles Profil. Zweite **Strom-B-Radar**-Quelle. Offene Themen dort notiert: Befähigungsnachweis-Debatte (Jan 2026), Instagram-Musik-Abmahnungen. Fakten trotzdem gegen Tier 1 checken. |
 | mystudioflow.io/blog | DSGVO/Studio-Organisation | WebFetch ✅ | Kommerzieller SaaS-Blog (Wettbewerbsumfeld!) — nur als Sekundärquelle, Kernfakten gegen Tier 1 gegenchecken. |
 | juraexamen.info | Urteilsbesprechungen (juristische Ausbildungsseite) | WebFetch ✅ | Fundierte, paragrafengenaue Fallbesprechungen. Verwendet für OLG Hamm 12 U 151/13 (mangelhaftes Tattoo: Werkvertrag § 631 BGB, Unzumutbarkeit der Nachbesserung, Schmerzensgeld). |
+| DRACO / Dr. Ausbüttel (`draco.de/tattoo-wunden`) | Wundversorgung frischer Tattoos: Heilungsphasen, Infektions-Warnsignale (DACH) | WebFetch ✅ | Professioneller Apotheken-/Wundversorgungs-Leitfaden (Hersteller Dr. Ausbüttel GmbH & Co. KG). Verwendet & verifiziert 16.06.2026: Phasen-Timeline (Tag 1–3 / Woche 2–3 / Woche 3–6, tiefere Schichten Monate), Infektionszeichen (Rötung, Bläschen, Eiter, Fieber → Arzt). Deckt sich mit Ärztekammer-Tier-1 bei ~6 Wochen (Tier-2-gegen-Tier-1-Check bestanden). |
 
 ## Neue Kanäle aufnehmen (Aufnahme-Protokoll)
 
