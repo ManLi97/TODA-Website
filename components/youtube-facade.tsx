@@ -10,9 +10,10 @@ import { Play } from "lucide-react";
 interface YouTubeFacadeProps {
   videoId: string;
   title: string;
+  start?: number; // seconds; appended as &start=N to the nocookie embed URL
 }
 
-export function YouTubeFacade({ videoId, title }: YouTubeFacadeProps) {
+export function YouTubeFacade({ videoId, title, start }: YouTubeFacadeProps) {
   const [playing, setPlaying] = useState(false);
 
   if (playing) {
@@ -23,7 +24,9 @@ export function YouTubeFacade({ videoId, title }: YouTubeFacadeProps) {
         // click (lite-youtube-embed pattern). playsinline=1 keeps iOS Safari from
         // routing into the fullscreen player, which would otherwise block autoplay
         // and force a second tap.
-        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1`}
+        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1${
+          start != null ? `&start=${start}` : ""
+        }`}
         title={title}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"

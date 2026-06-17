@@ -13,6 +13,7 @@ import { ArticleHeader } from "@/components/blog/article-header";
 import { AuthorSignatureFooter } from "@/components/blog/author-signature-footer";
 import { PostGrid } from "@/components/blog/post-grid";
 import { ReadingProgress } from "@/components/blog/reading-progress";
+import { YouTubeFacade } from "@/components/youtube-facade";
 import {
   coverImageUrl,
   getPostBySlug,
@@ -116,6 +117,17 @@ export default async function BlogArticlePage({ params }: Props) {
     inLanguage: locale,
     mainEntityOfPage: `${siteUrl}/${locale}/blog/${slug}`,
     ...(cover && { image: [cover] }),
+    ...(post.youtubeId && {
+      video: {
+        "@type": "VideoObject",
+        name: post.title,
+        description: post.excerpt,
+        thumbnailUrl: `https://i.ytimg.com/vi/${post.youtubeId}/hqdefault.jpg`,
+        embedUrl: `https://www.youtube-nocookie.com/embed/${post.youtubeId}`,
+        ...(post.videoPublishedAt && { uploadDate: post.videoPublishedAt }),
+        ...(post.videoStartSeconds != null && { startOffset: post.videoStartSeconds }),
+      },
+    }),
     author: post.author
       ? { "@type": "Person", name: post.author.name }
       : { "@type": "Organization", name: "TODA Solutions" },
@@ -158,6 +170,18 @@ export default async function BlogArticlePage({ params }: Props) {
           <div className="mt-block mx-auto max-w-[760px]">
             <div className="prose-blog" dangerouslySetInnerHTML={{ __html: html }} />
           </div>
+
+          {post.youtubeId && (
+            <div className="mt-block mx-auto max-w-[760px]">
+              <div className="glass--gradient rounded-card aspect-video overflow-hidden">
+                <YouTubeFacade
+                  videoId={post.youtubeId}
+                  title={t("watchEpisode")}
+                  start={post.videoStartSeconds ?? undefined}
+                />
+              </div>
+            </div>
+          )}
 
           {post.author && <AuthorSignatureFooter author={post.author} locale={locale} />}
         </div>
