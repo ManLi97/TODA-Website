@@ -40,6 +40,9 @@ interface TranslationRow {
   updated_at: string;
   seo_title: string | null;
   seo_description: string | null;
+  youtube_id?: string | null;
+  video_start_seconds?: number | null;
+  video_published_at?: string | null;
   blog_posts: {
     cover_image_path: string | null;
     blog_categories: { slug: string; name: LocalizedName } | null;
@@ -53,6 +56,7 @@ const LIST_SELECT = `post_id, slug, title, excerpt, content_md, tags, published_
 // Article detail also pulls the post's author (signature footer). Kept off the
 // list select so the listing grid stays lean.
 const ARTICLE_SELECT = `post_id, slug, title, excerpt, content_md, tags, published_at, updated_at, seo_title, seo_description,
+  youtube_id, video_start_seconds, video_published_at,
   blog_posts!inner ( cover_image_path, category_id, blog_categories ( slug, name ),
     blog_authors ( name, slug, avatar_path, slogan, socials ) )`;
 
@@ -181,6 +185,9 @@ export const getPostBySlug = cache(
       seoTitle: row.seo_title,
       seoDescription: row.seo_description,
       author: mapAuthor(row.blog_posts?.blog_authors),
+      youtubeId: row.youtube_id ?? null,
+      videoStartSeconds: row.video_start_seconds ?? null,
+      videoPublishedAt: row.video_published_at ?? null,
     };
   }
 );

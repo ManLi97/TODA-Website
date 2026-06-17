@@ -65,6 +65,9 @@ export interface PostArticle extends PostListItem {
   seoTitle: string | null;
   seoDescription: string | null;
   author: Author | null;
+  youtubeId: string | null;
+  videoStartSeconds: number | null;
+  videoPublishedAt: string | null;
 }
 
 /** Published sibling translations of one post — feeds hreflang alternates. */
