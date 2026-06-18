@@ -40,8 +40,8 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
   every run — skill and docs are one system, keep both in sync when
   changing either.
 - **`.claude/skills/podcast-article/SKILL.md`** — *(in development)* the
-  **podcast→article pipeline** (`/podcast-article`): recycles longform
-  YouTube podcasts (e.g. *Die Stechstunde*) into data-driven German blog
+  **podcast→article pipeline** (`/podcast-article`): recycles TODA's own
+  longform YouTube podcast (*Toddcast*) into data-driven German blog
   articles — never 1:1 transcripts. **Shares the blog-article knowledge
   spine** (`docs/blog/`: `toda-context.md`, `sources.md`, `voice-learnings.md`,
   the same Supabase blog CMS + `originals/` snapshots + learning loop); adds

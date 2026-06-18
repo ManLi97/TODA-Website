@@ -63,6 +63,27 @@ Ab 14,99 €/Monat, modular: Extra-Features (z. B. Dashboard für
 +4,99 €/Monat) schaltet der Artist selbst dazu. Referral-Programm: 5 aktive
 Referrals = Grundgebühr entfällt.
 
+## Der Podcast — Toddcast (O-Ton-Quelle)
+
+**Toddcast** ist TODAs eigener Longform-Podcast auf YouTube — von Artists für
+Artists, in derselben Stimme wie der Blog (per Du, Insider, frech aber
+substanziell). Er ist die **O-Ton-Primärquelle** des `/podcast-article`-Skills:
+ausgewählte Folgen werden zu eigenständigen, datengestützten Blogartikeln
+recycelt — **nie** als 1:1-Transkript. Methodik: `docs/blog/podcast-radar.md`.
+
+**Zitat-Regel (im Artikel):**
+- Sprecher:innen werden **namentlich** genannt, so wie sie in der Folge
+  gecreditet sind — Host **oder** Gast. Wörtliche Zitate kurz und treu, sonst
+  paraphrasieren.
+- Die Folge liefert Haltung, Anekdote, O-Ton — **keinen Faktenbeleg.** Fakten
+  brauchen weiter eine Tier-1/2-Quelle aus `sources.md` (gleiche Hierarchie wie
+  Community-Material).
+- Eigener Podcast = **volle Rechte**, kein Freigabe-Schritt vor Publish nötig.
+
+*(Optional — Tomek: feste Stamm-Hosts hier mit Name + Rolle eintragen, falls der
+Skill sie beim Namen kennen soll. Ohne Eintrag zitiert er die in der jeweiligen
+Folge gecrediteten Sprecher:innen.)*
+
 ## Voice & Tonalität
 
 - **Per Du, immer.** Wir reden mit Artists wie mit Kolleg:innen.
