@@ -9,6 +9,7 @@ import { requireAdmin } from "@/lib/admin/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidateBlogPaths } from "@/lib/admin/revalidate";
 import { slugify } from "@/lib/blog/slugify";
+import { parseYouTubeInput } from "@/lib/blog/youtube";
 import { routing } from "@/i18n/routing";
 
 const COVER_TYPES: Record<string, string> = {
@@ -36,6 +37,21 @@ function translationFromForm(formData: FormData) {
   const slug = slugify(formString(formData, "slug") || title);
   if (!title || !slug) throw new Error("Title (and slug) are required");
 
+  // Podcast embed (optional): accept a pasted URL or bare ID; an explicit
+  // start-seconds field wins over a t=/start= offset carried in the URL.
+  const { id: youtubeId, startFromUrl } = parseYouTubeInput(formString(formData, "youtubeId"));
+  const explicitStart = formString(formData, "videoStartSeconds");
+  let videoStartSeconds: number | null;
+  if (explicitStart) {
+    const n = Number(explicitStart);
+    if (!Number.isInteger(n) || n < 0) {
+      throw new Error("Start time must be a whole number of seconds (0 or more)");
+    }
+    videoStartSeconds = n;
+  } else {
+    videoStartSeconds = startFromUrl;
+  }
+
   return {
     post_id: postId,
     locale,
@@ -49,6 +65,9 @@ function translationFromForm(formData: FormData) {
       .filter(Boolean),
     seo_title: formString(formData, "seoTitle") || null,
     seo_description: formString(formData, "seoDescription") || null,
+    youtube_id: youtubeId,
+    video_start_seconds: videoStartSeconds,
+    video_published_at: formString(formData, "videoPublishedAt") || null,
   };
 }
 

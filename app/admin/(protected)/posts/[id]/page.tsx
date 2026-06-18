@@ -21,7 +21,9 @@ export default async function AdminEditPostPage({ params }: Props) {
       .maybeSingle(),
     supabase
       .from("blog_post_translations")
-      .select("locale, slug, title, excerpt, content_md, tags, seo_title, seo_description, status")
+      .select(
+        "locale, slug, title, excerpt, content_md, tags, seo_title, seo_description, status, youtube_id, video_start_seconds, video_published_at"
+      )
       .eq("post_id", id),
     supabase
       .from("blog_categories")
@@ -44,6 +46,9 @@ export default async function AdminEditPostPage({ params }: Props) {
       seoTitle: row.seo_title ?? "",
       seoDescription: row.seo_description ?? "",
       status: row.status,
+      youtubeId: row.youtube_id ?? "",
+      videoStartSeconds: row.video_start_seconds != null ? String(row.video_start_seconds) : "",
+      videoPublishedAt: row.video_published_at ? row.video_published_at.slice(0, 10) : "",
     };
   }
 

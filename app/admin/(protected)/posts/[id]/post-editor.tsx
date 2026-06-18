@@ -26,6 +26,9 @@ export interface EditorTranslation {
   tags: string;
   seoTitle: string;
   seoDescription: string;
+  youtubeId: string;
+  videoStartSeconds: string;
+  videoPublishedAt: string;
   status: string;
 }
 
@@ -47,6 +50,9 @@ const EMPTY: EditorTranslation = {
   tags: "",
   seoTitle: "",
   seoDescription: "",
+  youtubeId: "",
+  videoStartSeconds: "",
+  videoPublishedAt: "",
   status: "missing",
 };
 
@@ -329,6 +335,51 @@ export function PostEditor({
               name="seoDescription"
               value={draft.seoDescription}
               onChange={(e) => update({ seoDescription: e.target.value })}
+              className={inputClass}
+            />
+          </div>
+        </div>
+
+        {/* Podcast embed (optional) — source episode for /podcast-article output */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <label className={labelClass} htmlFor="youtubeId">
+              YouTube URL or video ID (optional)
+            </label>
+            <input
+              id="youtubeId"
+              name="youtubeId"
+              value={draft.youtubeId}
+              onChange={(e) => update({ youtubeId: e.target.value })}
+              placeholder="https://youtu.be/… or 11-char ID"
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="videoStartSeconds">
+              Start at (seconds, optional)
+            </label>
+            <input
+              id="videoStartSeconds"
+              name="videoStartSeconds"
+              type="number"
+              min={0}
+              value={draft.videoStartSeconds}
+              onChange={(e) => update({ videoStartSeconds: e.target.value })}
+              placeholder="e.g. 90"
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="videoPublishedAt">
+              Episode publish date (optional)
+            </label>
+            <input
+              id="videoPublishedAt"
+              name="videoPublishedAt"
+              type="date"
+              value={draft.videoPublishedAt}
+              onChange={(e) => update({ videoPublishedAt: e.target.value })}
               className={inputClass}
             />
           </div>
