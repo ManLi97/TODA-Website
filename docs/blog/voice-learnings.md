@@ -150,3 +150,4 @@ Schluss-Signatur einsetzen.
 | tattoo-anzahlung-no-shows-recht | ✅ | — | Draft, wartet auf Publish |
 | reach-taetowierfarben-erklaert | ✅ | — | Draft, wartet auf Publish |
 | dsgvo-tattoo-studio-kundendaten | ✅ (rekonstruiert) | — | gelöscht, siehe oben |
+| taetowierer-burnout-kundenkommunikation (Toddcast #1 Recycling) | ✅ | — | **neuer Draft 18.06.2026** — erster `/podcast-article`-Lauf. R1–R10 angewandt, ~610 W, 1 TODA-Mention (zwinkernd), Signatur-Schluss, Embed `rdOlY1-Bp5E`@1236s. Wartet auf Publish. |

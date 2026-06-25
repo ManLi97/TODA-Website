@@ -87,4 +87,38 @@ gesetzte Embed-Felder, resultierender Draft-Slug + post_id, Begründung.
 
 <!-- Lauf-Einträge ab hier, neueste unten anhängen -->
 
-*Noch keine Läufe — der erste Eintrag folgt mit dem ersten Toddcast-Artikel.*
+## Lauf 2026-06-18 — Folge 1: Burnout & Kundenkommunikation (Sandra, Nacht und Nebel)
+
+**Folge:** Toddcast #1 „Schockierende Geschichten aus dem Tattoostudio" —
+`youtube.com/watch?v=rdOlY1-Bp5E` (id `rdOlY1-Bp5E`), Kanal @TODATattooSolutions.
+Lineup: Sandra (TODA, Gastgeberin), Meike (Moderatorin), **Sandra (Nacht und Nebel,
+Gast)** — die O-Ton-Geberin.
+
+**Intake:** Apify-Captions (bewährt) → 45-Sek-Fenster (`build.py`-Logik) →
+`ep1_windows.txt` (783 Zeilen, ~54 Min). Auto-Captions fehlerhaft (Namen verrutscht,
+„Stichstunde" statt „Toddcast") → Lineup von Tomek bezogen, Showname auf „Toddcast"
+normalisiert. (Validiert die Skill-Regeln „kein caption-geratener Name" + „immer Toddcast".)
+
+**Segment (gewählt):** ~20:35–31:00, Start `video_start_seconds = 1236`. Sandras
+Burnout aus der 60–70-Std-Woche + ihre Diagnose, dass die **Kundenkommunikation**
+(nicht das Stechen) der Kern-Zeitfresser ist, plus der organische TODA-Wendepunkt
+(Erstkommunikation abgefangen). Engagement nicht quantitativ gescort (Einzel-Folge,
+Kanal neu) — Segment-Wahl qualitativ aus Transkript + TODA-Fit.
+
+**Gates:** (1) Dedup ✅ — „Kundenkommunikation" zwar Tag bei studio-lächeln
+(Erwartungsmgmt) + Nachsorge, aber Burnout/Work-Life-Balance/Erstkommunikations-Last
+ist frischer Winkel. (2) Such-Validierung ✅ — Tätowierer-Burnout/WLB breit belegt
+(EN-Quellen nennen „constant client communication" als Treiber); DACH artist-facing
+Lücke; consumer-Term „was kostet ein Tattoo" bewusst gemieden. (3) Quellen-Check —
+keine Tier-1/2 nötig (kein Rechts-/Zahlenanspruch; Erfahrungs-/Beratungsebene).
+
+**Embed-Felder:** `youtube_id=rdOlY1-Bp5E`, `video_start_seconds=1236`,
+`video_published_at=NULL` (Folgen-Datum offen — Tomek setzt es im A3-Editor / nennt es).
+
+**Interner Link:** publiziertes Cluster-Geschwister
+`eigentlich-bin-ich-…-laecheln…` (Kundenkommunikation-Cluster).
+
+**Ergebnis:** Draft `taetowierer-burnout-kundenkommunikation` (post_id
+`359e6fe0-7824-4857-9a00-3ba8538358a0`), Kategorie Handwerk & Studio, ~610 Wörter,
+R1–R10, 1 TODA-Mention (zwinkernd), Signatur-Schluss. Erster `/podcast-article`-Lauf
+(zugleich B2-Akzeptanztest).
