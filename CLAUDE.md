@@ -39,7 +39,7 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
   documentation); the skill reads from and writes back to those docs on
   every run — skill and docs are one system, keep both in sync when
   changing either.
-- **`.claude/skills/podcast-article/SKILL.md`** — *(in development)* the
+- **`.claude/skills/podcast-article/SKILL.md`** — the
   **podcast→article pipeline** (`/podcast-article`): recycles TODA's own
   longform YouTube podcast (*Toddcast*) into data-driven German blog
   articles — never 1:1 transcripts. **Shares the blog-article knowledge
