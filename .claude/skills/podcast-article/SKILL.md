@@ -142,6 +142,13 @@ returning post_id, id, slug, youtube_id, video_start_seconds;
 3. Report an Tomek: Titel, Review-Link `https://<vercel-domain>/admin/posts/<post_id>`,
    vollständige Quellenliste (Tier + URL), wo die TODA-Erwähnung sitzt, das
    gewählte Segment (Timestamp) und die Folge.
+4. **Distribution-Ausweis** (Pflichtteil des Reports; nur Ausweis):
+   - **Recycling:** 2–3 fertige Social-Hook-Zeilen aus Titel-Hook und
+     gefetteten Formeln (R1/R6).
+   - **Beat-Empfehlung:** Artikel-Publish zeitlich an den Folgen-Push legen —
+     das Embed schiebt die Folge, die Folge schiebt den Artikel (Timing statt
+     Budget; Prinzip: Marketing-Baukasten, `strategy/recycling-engine.md`).
+   - **Earned-Media-Flag:** pitch-fähig für Fachmedien? Ja/nein + warum.
 
 ## Harte Regeln (Spine-Regeln + Podcast-Zusätze)
 - Alle harten Regeln aus `/blog-article` gelten (nie publizieren, nie fremde Posts

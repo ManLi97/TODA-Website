@@ -58,9 +58,10 @@ dreier Fragen bewertet:
 1. **Diskussionsanteil:** Wie viele der Top-Posts/Kommentare sind echte
    Diskussion (Schmerzpunkte, Fragen, Debatten) statt Showcase/Lob?
    Richtwert: < 20 % Diskussion → raus.
-2. **Zielgruppen-Fit:** Sprechen dort Solo Artists (oder deren
-   Endkund:innen)? Nischen außerhalb der Zielgruppe → raus, egal wie
-   aktiv.
+2. **Zielgruppen-Fit:** Sprechen dort Solo Artists im ICP-Profil (oder
+   deren Endkund:innen)? Maßstab ist ICP/Anti-ICP in `toda-context.md`
+   („Für wen wir schreiben") — Anti-ICP-Nischen (Studio-Management,
+   Walk-in, Hobby) → raus, egal wie aktiv.
 3. **Scoring-Tauglichkeit:** Tragen Engagement-Zahlen (Votes,
    Kommentare)? Wenn ja → quantitativ (fließt in Cluster-Scores);
    wenn nein, aber inhaltlich wertvoll → **nur qualitativ** (Stimmung,

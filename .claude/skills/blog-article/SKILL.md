@@ -1,6 +1,6 @@
 ---
 name: blog-article
-description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS. Use when asked to write a TODA blog post (/blog-article <thema>) or to run topic mining (/blog-article mining). Covers data-based topic selection (Reddit + DACH-Radar), sourced research via the Quellen-Library, writing in TODA voice, and draft insert for review in /admin.
+description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS. Use when asked to write a TODA blog post (/blog-article <thema>) or to run topic mining (/blog-article mining). Covers data-based topic selection (Reddit + DACH-Radar + SEO-Gap-Liste), sourced research via the Quellen-Library, writing in TODA voice (Formate: Fall & Recht, Ratgeber, Vorlagen), and draft insert for review in /admin.
 ---
 
 # /blog-article — TODA-Blogartikel datenbasiert erzeugen
@@ -58,19 +58,25 @@ Ablauf:
    baseline-normalisierten Outlier je Post (Outlier = Engagement /
    Quellen-Median; volle Formel + Begründung in `topic-radar.md`).
    Die Zuordnungstabelle vollständig in den Radar-Eintrag schreiben —
-   der manuelle Schritt muss überprüfbar sein.
+   der manuelle Schritt muss überprüfbar sein. **Zielgruppen-Gate:**
+   Cluster mit Anti-ICP-Kernpublikum scheiden aus, egal wie hoch der
+   Score (→ `toda-context.md`, „Für wen wir schreiben").
 3. **Strom B checken:** tattoo-recht.de (+ ggf. weitere Tier-1/2-News)
    per WebFetch auf neue Urteile/Updates prüfen.
-4. **Dedup-Check:** `select t.title, t.slug, t.tags, t.status from
+4. **Strom C ziehen:** nächster offener Eintrag der Ziel-Liste in
+   `topic-radar.md` (höchste Prio zuerst, max. **ein** C-Slot pro Lauf);
+   Listen-Status im selben Lauf pflegen.
+5. **Dedup-Check:** `select t.title, t.slug, t.tags, t.status from
    blog_post_translations t` — behandelte Themen scheiden aus oder
    brauchen einen neuen Winkel.
-5. **Such-Validierung:** Top-Kandidaten per Websuche (DACH-Suchinteresse?).
-6. **Quellen-Check:** Trägt eine Tier-1/2-Quelle das Thema? Ohne
+6. **Such-Validierung:** Top-Kandidaten per Websuche (DACH-Suchinteresse?).
+7. **Quellen-Check:** Trägt eine Tier-1/2-Quelle das Thema? Ohne
    Faktenbasis kein eigener Artikel.
-7. **Radar-Eintrag anhängen** (datiert): Scrape-Parameter, Cluster-Tabelle,
+8. **Radar-Eintrag anhängen** (datiert): Scrape-Parameter, Cluster-Tabelle,
    Scores, Dedup-Ergebnis, gewählte Topics mit Begründung.
 
-Default-Wochenmix: 2× Strom A + 1× Strom B (wenn es News gibt).
+Default-Wochenmix: 1× Strom A + 1× Strom C + 1× Strom B (wenn es News
+gibt). Ist die C-Liste abgearbeitet: zurück zu 2× Strom A.
 
 ## Lauf 2 — Artikel schreiben (`/blog-article <thema>`)
 
@@ -101,6 +107,12 @@ Default-Wochenmix: 2× Strom A + 1× Strom B (wenn es News gibt).
 - Alle verwendeten Quellen mit URL für den Report notieren.
 
 ### 2.2 Schreiben
+
+**Artikel-Format wählen** — Palette und Regeln in `toda-context.md`
+(„Artikel-Formate"): Fall & Recht, Ratgeber oder Vorlagen-Format; Wahl +
+Begründung in den Report. Im **Vorlagen-Format** ist die kopierbare
+Vorlage (Blockquote/Codeblock) der Kern des Artikels und die
+Feature-Brücke („… oder direkt digital in TODA") die eine TODA-Mention.
 
 Format (Konvention der bestehenden Posts):
 
@@ -136,6 +148,9 @@ Format (Konvention der bestehenden Posts):
   - `title` — klickstark, ehrlich, ≤ ~70 Zeichen.
   - `slug` — Regeln aus `lib/blog/slugify.ts`: lowercase, `ä→ae ö→oe
     ü→ue ß→ss`, nur `[a-z0-9-]`. Unique pro Locale — vorher per SELECT prüfen.
+    In `slug`/`seo_title`/`seo_description` ist Suchsprache erlaubt
+    („Tätowierer") — Fließtext und `title` bleiben „Tattoo Artist"
+    (`toda-context.md`, Regel 8).
   - `excerpt` — 1–2 Sätze für die Listing-Karte.
   - `tags` — 2–4 Stück, Title-Case.
   - `seo_title` ≤ 60 Zeichen, `seo_description` ≤ 155 Zeichen.
@@ -179,9 +194,19 @@ Auswertungs-Log von `voice-learnings.md` registrieren.
 2. Wissensdokumente nachziehen: neue Quellen → `sources.md`;
    Mining-Lauf → `topic-radar.md`-Eintrag.
 3. Report an Tomek: Titel, Review-Link
-   `https://<vercel-domain>/admin/posts/<post_id>`, **vollständige
-   Quellenliste mit Tier und URL**, wo die TODA-Erwähnung sitzt, und
-   (bei Mining) der Daten-Trail Thema ← Score ← Scrape.
+   `https://<vercel-domain>/admin/posts/<post_id>`, gewähltes
+   Artikel-Format (mit Begründung), **vollständige Quellenliste mit Tier
+   und URL**, wo die TODA-Erwähnung sitzt, und (bei Mining) der
+   Daten-Trail Thema ← Score ← Scrape.
+4. **Distribution-Ausweis** (Pflichtteil des Reports; nur Ausweis — die
+   Umsetzung bleibt außerhalb dieses Skills):
+   - **Recycling:** 2–3 fertige Social-Hook-Zeilen aus Titel-Hook und
+     gefetteten Formeln (R1/R6) — Zeilen, keine Konzepte. Bei Mining
+     zusätzlich: welche Top-Cluster Toddcast-Folgen-Kandidaten wären.
+   - **Earned-Media-Flag:** pitch-fähig für Fachmedien (feelfarbig,
+     Tattoo Spirit)? Ja/nein + ein Satz warum.
+   - **Lead-Magnet-Flag:** steckt eine Vorlage im Thema
+     (→ Vorlagen-Format), auch wenn dieser Artikel keine ist?
 
 ## Harte Regeln
 

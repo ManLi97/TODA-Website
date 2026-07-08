@@ -25,6 +25,25 @@ Instagram/WhatsApp/Facebook eine Auto-Antwort mit dem Link zu seinem
 persönlichen Anfrage-Widget (`artistname.toda.ink`), und ab da ist der
 Prozess geführt — qualifizierte Anfrage statt „Hey, was kostet ein Tattoo?".
 
+## Für wen wir schreiben — ICP & Anti-ICP
+
+Kurzfassung der Positionierung (Quelle der Wahrheit: Marketing-Baukasten,
+`brand/positioning.md` im Repo `toda/marketing`):
+
+- **ICP:** arbeitet regelmäßig (Kunden über mehrere Plattformen, gut aktiv
+  auf Social Media), nimmt sein Business ernst und will wachsen. Seine
+  Schmerzpunkte sind unsere Themen-Checkliste: No-Shows, unseriöse
+  Anfragen, vergessene Anzahlungen, Termindopplungen, Kommunikations-
+  Überforderung („Künstler, kein Dienstleister"), Organisation in der
+  „Freizeit".
+- **Anti-ICP:** Hobby-/Nebenbei-Tätowierende (< 3 Termine/Woche), Ketten,
+  Studios mit eigenem Manager, Walk-In-Studios, Terminvergabe nur
+  telefonisch/vor Ort, Artists ohne Social-Media-Aktivität.
+
+Konsequenz: Themen und Ansprache richten sich an den ICP. Themen-Cluster,
+deren Kernpublikum Anti-ICP ist, scheiden im Mining aus (Gate in
+`topic-radar.md`).
+
 ## Die Bausteine (für gezielte Erwähnungen)
 
 - **Anfrage-Widget** — 6-Schritte-Wizard (Körperstelle, Fotos mit
@@ -56,6 +75,23 @@ Prozess geführt — qualifizierte Anfrage statt „Hey, was kostet ein Tattoo?"
   Chat-Erlebnis, Networking in der Branche).
 - **Verschieben-Feature** — Termin verschieben per neuem Buchungslink oder
   manuell; Endkunde wird automatisch informiert.
+
+## Positionierungs-Frames für die TODA-Mention
+
+Die eine erlaubte TODA-Mention formuliert nicht frei, sondern claimt
+bevorzugt einen der laut Wettbewerbsanalyse unbesetzten Frames (Quelle:
+Marketing-Baukasten, `brand/positioning.md`):
+
+- **Anfrage-Funnel:** „vom Instagram-DM-Chaos zum geführten Funnel auf
+  deiner eigenen Subdomain".
+- **E-Mail-im-Chat-Look:** „deine Kunden installieren nichts, und du
+  verlierst keinen Thread".
+- **Kanal-Kombination:** „kein neuer Kanal — deine bestehenden,
+  kombiniert".
+
+Positionen werden durch Wiederholung besetzt: gleiche Bilder, gleiche
+Worte, Artikel für Artikel. Der zwinkernde Ton der Mention (R8 in
+`voice-learnings.md`) bleibt davon unberührt.
 
 ## Pricing (nur erwähnen, wenn es wirklich passt)
 
@@ -93,6 +129,27 @@ Folge gecrediteten Sprecher:innen.)*
 - Humor ja, Härte nein. Wir machen niemanden runter (auch keine
   Wettbewerber).
 
+## Artikel-Formate
+
+Die Formatwahl gehört begründet in den Report. Palette:
+
+1. **Fall & Recht** — Default bei Rechtsthemen: eine Leitentscheidung,
+   eine Kernzahl (R4), Disclaimer (Regel 4).
+2. **Ratgeber** — Schmerzpunkt → Handhabe; knappe Listen (R5).
+3. **Vorlagen (Lead-Magnet-Format)** — der Kern des Artikels ist eine
+   sofort nutzbare Vorlage direkt im Text (kopierbarer Textbaustein /
+   Checkliste / Message-Script als Blockquote oder Codeblock): No-Show-
+   Nachricht, Anzahlungs-Baustein, Nachsorge-Vorlage u. ä. Die
+   TODA-Mention ist hier immer die Feature-Brücke: „… oder direkt digital
+   in TODA." Der Report markiert Lead-Magnet-Potenzial (Download +
+   E-Mail-Capture folgen als eigene Infrastruktur). Prinzip:
+   Marketing-Baukasten, `strategy/content-inputs.md`.
+4. **Artist Stories** — personenzentrierte Porträts echter Artists;
+   eigener Skill `/artist-story` mit hartem Artist-Freigabe-Gate. TODA
+   ist im Text keine Figur.
+5. **Podcast-Recycling** — Toddcast-Folge → Artikel; eigener Skill
+   `/podcast-article`.
+
 ## Redaktionelle Regeln (hart)
 
 1. **90 % echter Mehrwert.** Der Artikel muss auch dann exzellent sein,
@@ -111,4 +168,18 @@ Folge gecrediteten Sprecher:innen.)*
    Material (Reddit & Co.) belegt keine Fakten — es erscheint nur als
    lose Stimmung („Man hört gerade oft von Artists, dass …"), nie als
    wörtliches Zitat, nie mit Username/Link.
-6. **Zielgruppe:** Solo Tattoo Artists im DACH-Raum (v1 nur Deutsch).
+6. **Zielgruppe:** Solo Tattoo Artists im DACH-Raum (v1 nur Deutsch) —
+   präzise Definition oben unter „Für wen wir schreiben".
+7. **Wenn der Artikel über TODA selbst spricht: Claims-Leitplanken**
+   (Quelle der Wahrheit: Marketing-Baukasten, `strategy/claims.md`).
+   Keine Spitzenstellungs-/Superlativ-Claims („Nr. 1", „am schnellsten
+   wachsend" ist dauerhaft gesperrt); eigene Zahlen nur absolut + datiert
+   + selbstbezogen, nie als Vergleich; keine Werbung mit
+   Selbstverständlichkeiten (DSGVO/SSL sind Trust-Fakten, kein
+   Werbevorteil); Rankings/Sterne nur mit benanntem Dritt-Ranking,
+   exaktem Wortlaut und Datum.
+8. **Suchsprache vs. Ansprache:** In `slug`, `seo_title` und
+   `seo_description` sind Suchbegriffe wie „Tätowierer" erlaubt — die
+   Zielgruppe sucht das Wort, das wir in der Ansprache nie benutzen. Im
+   Fließtext, in Titeln und in der Ansprache gilt absolut „Tattoo
+   Artist(s)" (Marketing-Baukasten, `language/terminology.md`).

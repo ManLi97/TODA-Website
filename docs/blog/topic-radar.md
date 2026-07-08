@@ -5,9 +5,9 @@ nachprüfbar — welche Daten gescrapt wurden, wie gescort wurde, warum
 ein Topic gewonnen hat. **Append-only:** pro Mining-Lauf ein datierter
 Eintrag, alte Einträge werden nie umgeschrieben.
 
-## Methode (Stand Juni 2026)
+## Methode (Stand Juli 2026)
 
-Zwei Ströme:
+Drei Ströme:
 
 - **Strom A — Community-Schmerzpunkte:** Subreddits aus
   `sources.md` Tier 3 scrapen (Top-Posts, letzte 30 Tage, inkl.
@@ -15,6 +15,32 @@ Zwei Ströme:
 - **Strom B — DACH-Radar:** Tier-1/2-Quellen auf Neuigkeiten prüfen
   (neue Urteile, Verordnungs-Updates). Liefert Themen, die auf Reddit
   nie auftauchen, weil die Communities US-lastig sind.
+- **Strom C — SEO-Gap-Liste (kuratiert):** unbesetzte DACH-Such-
+  intentionen aus der Wettbewerbsrecherche (Prinzip: Marketing-Baukasten,
+  `strategy/content-inputs.md` → „SEO-Gap-Mining"; Beleg:
+  `research/2026-07-08-trust-distribution-playbook.html` im Repo
+  `toda/marketing`). Statisch priorisierte Ziel-Liste (unten), **pro Lauf
+  höchstens ein C-Slot**; alle drei Gates gelten unverändert — Strom C
+  liefert Kandidaten, keine Freifahrt. Liste abgearbeitet → Strom C ruht
+  bis zur nächsten Recherche.
+
+### Strom C — Ziel-Liste (Erhebungsstand 07/2026)
+
+Status pflegt der Skill beim Lauf (offen → in Arbeit → Draft `<slug>` /
+verworfen mit Grund). EN-Cluster ruhen, bis EN-Läufe existieren (v1 = de).
+
+| # | Cluster | Sprache | Status |
+|---|---|---|---|
+| C1 | Tattoo-Anfragen beantworten / Instagram-DM-Chaos organisieren | DE | **offen — höchste Prio: Produkt-Wedge, SERP leer** |
+| C2 | Anzahlung vs. Terminkaution rechtssicher | DE | offen (Dedup gegen Draft `tattoo-anzahlung-no-shows-recht` prüfen — ggf. neuer Winkel) |
+| C3 | Tattoo-Software / Terminverwaltung (Head-Term) | DE | offen (dünne SERP) |
+| C4 | Digitale Einverständniserklärung | DE | offen |
+| C5 | Managing booking requests as a solo artist | EN | ruht (v1 = de) |
+| C6 | Selbstständig als Tätowierer (Hub-Artikel) | DE | offen |
+| C7 | Nachsorge-Vorlage / Aftercare-PDF | DE | offen — Vorlagen-Format; Dedup gegen `tattoo-nachsorge-heilphase-kommunizieren` (Vorlage als neuer Winkel) |
+| C8 | Deposit-Policy-Templates + No-Show-Scripts | EN | ruht (v1 = de) |
+| C9 | Tattoo-Preise / Stundensatz-Rechner | DE | offen (Suchinteresse validieren) |
+| C10 | No-Shows vermeiden / Ausfallhonorar | DE | offen (validieren; Vorlagen-Format-Kandidat) |
 
 Scoring pro Themen-Cluster (Strom A):
 
@@ -47,6 +73,11 @@ Mittelwert von genau den Ausreißern hochgezogen würde, die wir messen
 wollen. Die Cluster-Zuordnung bleibt der einzige manuelle Schritt — deshalb
 wird die vollständige Zuordnungstabelle (Post → Cluster, inkl. Ausschlüsse)
 im Lauf-Eintrag mitdokumentiert, damit sie überprüfbar bleibt.
+
+**Zielgruppen-Gate (vor der Detail-Prüfung):** Cluster, deren Kernpublikum
+Anti-ICP ist (Studio-/Ketten-Management, Walk-in, Hobby-Nische), scheiden
+aus — egal wie hoch der Score. Definition: `toda-context.md`, „Für wen wir
+schreiben".
 
 Danach, vor der finalen Wahl:
 
