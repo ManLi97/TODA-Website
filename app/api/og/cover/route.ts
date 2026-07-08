@@ -16,12 +16,12 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import sharp from "sharp";
+import { SITE_URL } from "@/lib/site";
 
 // sharp needs native bindings — force Node.js runtime (not edge).
 export const runtime = "nodejs";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://todasolutions.com";
 
 // Cover paths look like "<uuid>/<timestamp>.png" — no traversal, no scheme.
 const COVER_PATH = /^[\w-]+\/[\w.-]+\.(png|jpe?g|webp)$/i;

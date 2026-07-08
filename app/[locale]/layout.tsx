@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { Inter, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { routing } from "@/i18n/routing";
+import { SITE_URL } from "@/lib/site";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AnalyticsBeacon } from "@/components/analytics-beacon";
@@ -36,7 +37,7 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://todasolutions.com";
+const siteUrl = SITE_URL;
 
 // Per-locale SEO copy — no "studio" wording, TODA is for individual artists
 const localeCopy = {

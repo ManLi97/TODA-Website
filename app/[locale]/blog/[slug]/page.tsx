@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { SITE_URL } from "@/lib/site";
 import { PageSection } from "@/components/page-section";
 import { SectionHeader } from "@/components/section-header";
 import { Animate } from "@/components/animate";
@@ -28,7 +29,7 @@ import type { BlogLocale } from "@/lib/blog/types";
 export const revalidate = 3600;
 export const dynamicParams = true;
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://todasolutions.com";
+const siteUrl = SITE_URL;
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;

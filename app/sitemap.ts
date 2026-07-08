@@ -5,8 +5,9 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { getCategories, getPublishedAlternates, getPublishedPosts } from "@/lib/blog/queries";
+import { SITE_URL } from "@/lib/site";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://todasolutions.com";
+const siteUrl = SITE_URL;
 
 function allLocaleLanguages(path: string): Record<string, string> {
   return Object.fromEntries(
