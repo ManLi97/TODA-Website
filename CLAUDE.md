@@ -48,6 +48,13 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
   its own `podcast-radar.md`. Embeds the source episode via the structured
   video fields (Blog → *Podcast embed infra*), names + quotes the hosts, and —
   like `/blog-article` — **never publishes**.
+- **`.claude/skills/artist-story/SKILL.md`** — the **artist-portrait
+  pipeline** (`/artist-story`): turns interview material from a real
+  artist (transcript/questionnaire — outreach and interviews stay human
+  work) into a person-centered "Artist Stories" blog draft. TODA is not
+  a character in the text; hard artist-approval gate before publish plus
+  a confirmed usage scope before insert. Shares the blog knowledge spine
+  (`docs/blog/`, same CMS, same learning loop).
 - **`.claude/worktrees/`** — temporary git worktrees created by Claude
   Code agents for isolated work. Disposable, gitignored — never commit
   or reference their contents.

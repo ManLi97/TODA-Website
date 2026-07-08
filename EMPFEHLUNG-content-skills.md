@@ -4,6 +4,8 @@
 
 Dieses Dokument ist eine Empfehlung, keine Änderung: Die Skills bleiben unangetastet, bis Tomek einzelne Punkte freigibt. Freigegebene Punkte werden dann über die skill-eigenen Eskalationswege eingearbeitet (Lauf 0: Struktur → SKILL.md / `toda-context.md` / `sources.md`), damit das selbstlernende System konsistent bleibt.
 
+> **Update 09.07.2026 — umgesetzt.** Tomek hat K1 und K2 entschieden (K1: SEO-Meta-Felder dürfen Suchsprache tragen; K2: die gemessene Blog-Voice gilt — Blog-Ausnahme im Baukasten dokumentiert, `language/writing-rules.md` + `language/terminology.md`). Mit voller Autorität umgesetzt: **E1** (Strom C + Ziel-Liste in `topic-radar.md`), **E2** (ICP/Anti-ICP + Positionierungs-Frames in `toda-context.md`, Zielgruppen-Gates in Mining und `sources.md`), **E4 + E7 + E3-Skill-Teil** (Distribution-Ausweis mit Recycling-, Earned-Media- und Lead-Magnet-Flag in beiden Reports), **E5** (Claims-Regel 7 in `toda-context.md`), **K1** (Regel 8) — plus **zwei neue Formate**: das **Vorlagen-Format** in `/blog-article` (kopierbare Vorlage als Artikel-Kern + Feature-Brücke, funktioniert ohne Download-Infra) und **Artist Stories** als eigener Skill `/artist-story` (personenzentrierte Porträts, hartes Artist-Freigabe-Gate). **Offen bleiben:** E3-Infrastruktur (Download + E-Mail-Capture), E6 Vergleichs-Format (eigenes Projekt), Presse-Kit.
+
 ---
 
 ## Der Kern, der nicht verhandelbar ist
