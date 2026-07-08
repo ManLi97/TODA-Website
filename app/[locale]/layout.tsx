@@ -11,6 +11,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { AnalyticsBeacon } from "@/components/analytics-beacon";
 import "./globals.css";
 
 // Inter — DS type ladder uses three weights only: 200 (thin), 400 (regular),
@@ -141,6 +142,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Footer />
         </NextIntlClientProvider>
         <Analytics />
+        <AnalyticsBeacon />
       </body>
     </html>
   );
