@@ -12,8 +12,9 @@ import { runMiningCycleWithRetention } from "@/lib/mining/sync";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-// 3 parallel actor runs (~17s each at 15 posts, 210s poll deadline) + ingest + sweep
-// fit comfortably; 300s is the max on every plan incl. Hobby (fluid compute default).
+// 3 parallel actor runs (broad/week + broad/month + seeded; ~6-40s each measured, 210s
+// poll deadline) + ingest + sweep fit comfortably; 300s is the max on every plan incl.
+// Hobby (fluid compute default).
 export const maxDuration = 300;
 
 export async function GET(request: NextRequest) {

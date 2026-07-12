@@ -13,6 +13,7 @@ import {
   RETENTION_DAYS,
   RUN_TIMEOUT_MS,
   SEED_TERMS,
+  SEEDED_COMMUNITY,
   UPSERT_CHUNK,
   broadInput,
   seededInput,
@@ -119,6 +120,7 @@ export async function ingestDataset(datasetId: string, meta: IngestMeta): Promis
   const outcome: RunOutcome = {
     runId: null,
     datasetId,
+    label: meta.label,
     pass: meta.pass,
     timeWindow: meta.timeWindow,
     status: "failed",
@@ -219,6 +221,7 @@ async function recordFailedRun(
   return {
     runId: e ? null : (data?.id as string),
     datasetId,
+    label: meta.label,
     pass: meta.pass,
     timeWindow: meta.timeWindow,
     status: "failed",
@@ -232,16 +235,18 @@ async function recordFailedRun(
 
 // --- Cycle -----------------------------------------------------------------
 
-type RunSpec = { pass: Pass; timeWindow: TimeWindow; input: unknown };
+type RunSpec = { pass: Pass; timeWindow: TimeWindow; input: unknown; label: string };
 
+// Both subs share each broad run (per-URL cap, so no source starves — see config),
+// plus one seeded recall run. 3 runs, all started + polled in parallel.
 const CYCLE_SPECS: RunSpec[] = [
-  { pass: "broad", timeWindow: "week", input: broadInput("week") },
-  { pass: "broad", timeWindow: "month", input: broadInput("month") },
-  { pass: "seeded", timeWindow: "week", input: seededInput() },
+  { pass: "broad", timeWindow: "week", input: broadInput("week"), label: "broad/week" },
+  { pass: "broad", timeWindow: "month", input: broadInput("month"), label: "broad/month" },
+  { pass: "seeded", timeWindow: "week", input: seededInput(), label: `seeded/${SEEDED_COMMUNITY}/week` },
 ];
 
-// Full cycle: start + poll the 3 specs in PARALLEL, ingest each SUCCEEDED dataset.
-// A failed/timed-out run is still recorded (failed mining_runs row WITH dataset_id).
+// Full cycle: start + poll all specs in PARALLEL, ingest each SUCCEEDED dataset. A
+// failed/timed-out run is still recorded (failed mining_runs row WITH dataset_id).
 // Requires APIFY_TOKEN.
 export async function runMiningCycle(): Promise<RunOutcome[]> {
   if (!hasApifyToken()) throw new Error("APIFY_TOKEN not set — required for the full mining cycle");
@@ -254,6 +259,7 @@ export async function runMiningCycle(): Promise<RunOutcome[]> {
         actor: APIFY_ACTOR_NAME,
         apifyRunId: null,
         input: spec.input,
+        label: spec.label,
       };
       let datasetId: string | null = null;
       let apifyRunId: string | null = null;
@@ -278,6 +284,7 @@ export async function runMiningCycle(): Promise<RunOutcome[]> {
       : {
           runId: null,
           datasetId: null,
+          label: CYCLE_SPECS[i].label,
           pass: CYCLE_SPECS[i].pass,
           timeWindow: CYCLE_SPECS[i].timeWindow,
           status: "failed" as const,
@@ -309,10 +316,9 @@ function summarize(runs: RunOutcome[], bodiesRedacted: number): MiningSyncResult
   const warnings: string[] = [];
   const errors: string[] = [];
   for (const r of runs) {
-    const label = `${r.pass}/${r.timeWindow}`;
-    if (r.status === "failed") errors.push(`${label}: ${r.error ?? "unknown error"}`);
+    if (r.status === "failed") errors.push(`${r.label}: ${r.error ?? "unknown error"}`);
     else if (r.pass === "broad" && r.fieldCoveragePct < COVERAGE_ALERT_PCT) {
-      warnings.push(`${label}: field coverage ${r.fieldCoveragePct}% below ${COVERAGE_ALERT_PCT}%`);
+      warnings.push(`${r.label}: field coverage ${r.fieldCoveragePct}% below ${COVERAGE_ALERT_PCT}%`);
     }
   }
   return {

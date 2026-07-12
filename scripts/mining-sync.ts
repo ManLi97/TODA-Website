@@ -46,6 +46,7 @@ async function main() {
       actor: APIFY_ACTOR_NAME,
       apifyRunId: arg("run") ?? null,
       input: null,
+      label: `${pass}/${window}`,
     });
     console.log(JSON.stringify({ mode: "ingest", outcome }, null, 2));
     if (outcome.status === "failed") process.exit(1);

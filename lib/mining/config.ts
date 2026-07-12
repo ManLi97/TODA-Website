@@ -5,13 +5,16 @@
 //              (feeds the run-scoped medians and the outlier score view).
 //   • seeded — keyword search within r/TattooArtists; RECALL only, never scored.
 //
-// Input-shape facts verified against the live actor input schema (2026-07-12):
+// Input-shape facts verified against the live actor input schema + a volume test
+// (2026-07-12):
 //   • startUrls take {url} objects; the actor's sort/time/community options do NOT
 //     apply to them, so the broad pass encodes the window in the URL (/top/?t=week)
 //     — the exact form of the verified sample run.
-//   • maxPostsCount is a TOTAL cap across the whole run (not per URL). BROAD_MAX_POSTS
-//     is therefore a NON-BINDING ceiling: both subreddits' top listings fit under it,
-//     so the cap only bounds a runaway and never starves a source's median.
+//   • maxPostsCount is applied PER subreddit listing, not as a whole-run total: two
+//     subs in one run with cap 200 returned tattooadvice 200 + TattooArtists 28 = 228
+//     (> 200), so neither source starves the other. TattooArtists's small count is its
+//     real weekly volume, not a cap artifact — so both subs share ONE broad run per
+//     window (lets the view compare sources within a run).
 //   • searchTerms / withinCommunity / searchSort / searchTime apply ONLY to the
 //     seeded (keyword) path.
 import type { TimeWindow } from "./types";
@@ -21,8 +24,10 @@ export const APIFY_ACTOR_PATH = "harshmaur~reddit-scraper";
 // Human-readable actor id recorded on each mining_runs row.
 export const APIFY_ACTOR_NAME = "harshmaur/reddit-scraper";
 
-// Quantitative sources (Strom A). Both scraped in ONE broad run per window so the
-// view's per-(run, source) medians and cross-source comparison hold within a run.
+// Quantitative sources (Strom A). Both scraped in ONE broad run per window (each URL
+// gets its own maxPostsCount — see note above), so the view computes per-(run, source)
+// medians and can compare sources within a run. Cross-source stays a tiebreaker, never
+// additive.
 export const SUBREDDITS = ["TattooArtists", "tattooadvice"];
 
 // Seeded recall vocabulary (pain points). Recall-only: seeded rows never enter the
@@ -30,9 +35,10 @@ export const SUBREDDITS = ["TattooArtists", "tattooadvice"];
 export const SEED_TERMS = ["booking", "deposit", "no-show", "pricing", "cancellation"];
 export const SEEDED_COMMUNITY = "r/TattooArtists";
 
-// Non-binding whole-run ceiling (see note above): both subs' top listings fit under
-// it, so per-source counts are driven by availability, not the cap.
-export const BROAD_MAX_POSTS = 200;
+// Per-subreddit post cap (applied per startUrl). 100 top posts per sub per window is
+// ample for a stable median and bounds cost; a high-volume sub is capped here, a small
+// one returns whatever it has (e.g. r/TattooArtists ~28 in a week).
+export const BROAD_MAX_POSTS = 100;
 export const SEEDED_MAX_POSTS = 50;
 
 export const RETENTION_DAYS = 30;
@@ -43,7 +49,8 @@ export const RUN_TIMEOUT_MS = 210_000;
 export const POLL_INTERVAL_MS = 5_000;
 export const UPSERT_CHUNK = 1000;
 
-// Broad pass: subreddit top-listing per window, comments off.
+// Broad pass: both subreddits' top-listings for a window (one startUrl each, so each
+// gets its own maxPostsCount), comments off.
 export function broadInput(window: TimeWindow) {
   return {
     startUrls: SUBREDDITS.map((sub) => ({

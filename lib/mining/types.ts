@@ -74,12 +74,14 @@ export type IngestMeta = {
   actor: string;
   apifyRunId: string | null;
   input: unknown;
+  label: string; // human label, e.g. "broad/TattooArtists/week" — for logs/warnings
 };
 
 // Result of ingesting one dataset (or recording one failed run).
 export type RunOutcome = {
   runId: string | null; // mining_runs.id (uuid); null if the row write itself failed
   datasetId: string | null;
+  label: string;
   pass: Pass;
   timeWindow: TimeWindow;
   status: "succeeded" | "failed";
