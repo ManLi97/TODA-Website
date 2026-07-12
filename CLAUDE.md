@@ -55,6 +55,13 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
   a character in the text; hard artist-approval gate before publish plus
   a confirmed usage scope before insert. Shares the blog knowledge spine
   (`docs/blog/`, same CMS, same learning loop).
+- **`.claude/skills/supabase/SKILL.md`** — the **`/supabase` skill**: how to work
+  with the SHARED, production Supabase DB (`znocynswpsfckyfumema`, co-owned by
+  toda-company / toda-website / toda-productivity). Two MCP instances (stdio
+  read-only, plugin write); **repo-owned tables only**; migrations applied via MCP
+  and **mirrored byte-identically into `toda-company`** (the schema authority) +
+  its `docs/db-ownership.md` — never `db push`. Consult it for any migration,
+  table, RLS, or DML change against this DB.
 - **`.claude/worktrees/`** — temporary git worktrees created by Claude
   Code agents for isolated work. Disposable, gitignored — never commit
   or reference their contents.
