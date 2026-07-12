@@ -116,6 +116,8 @@ export async function POST(request: NextRequest) {
       eventType === "engagement"
         ? {
             maxScrollPct: clampInt(body.maxScrollPct, 0, 100) ?? 0,
+            // dwellMs = ACTIVE time on the page (tab visible + user interacting),
+            // not the raw entry→leave span. Computed client-side (lib/analytics/dwell.ts).
             dwellMs: clampInt(body.dwellMs, 0, 86_400_000) ?? 0,
             ...(sessionId ? { sessionId } : {}),
           }

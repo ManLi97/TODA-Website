@@ -1,11 +1,16 @@
 "use client";
 
-// One engagement row per page-view: max scroll depth + dwell time.
+// One engagement row per page-view: max scroll depth + active dwell time.
 //
 // Companion to <AnalyticsBeacon /> (which records the pageview). Together they
 // answer Tomek's #1 question — "do readers reach the end of an article?" — plus
-// bounce and session duration, all without a cookie: rows are grouped by the
+// bounce and active-time-on-page, all without a cookie: rows are grouped by the
 // per-visit sessionStorage id (lib/analytics/session.ts).
+//
+// dwellMs = ACTIVE time only (tab visible AND user interacting), computed by the
+// pure lib/analytics/dwell.ts accumulator. It is NOT the raw span between entry
+// and leave — an idle or backgrounded tab must not inflate it. Interaction =
+// scroll / mousemove / keydown / click / touchstart; idle after IDLE_MS.
 //
 // Exactly one row is emitted per page-view, on the FIRST terminal signal:
 //   • tab hidden / closed / backgrounded → visibilitychange:hidden + pagehide
@@ -24,10 +29,14 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { getSessionId } from "@/lib/analytics/session";
+import { createDwellTracker, type DwellTracker } from "@/lib/analytics/dwell";
+
+// Interaction gap after which the user counts as idle and dwell stops accruing.
+const IDLE_MS = 25_000;
 
 type PageView = {
   path: string;
-  startedAt: number; // performance.now() at entry (monotonic)
+  dwell: DwellTracker; // active-time accumulator (visible + interacting only)
   maxScrollPct: number; // 0..100, high-water mark
   sent: boolean;
 };
@@ -47,6 +56,12 @@ export function AnalyticsEngagement() {
     if (pct > v.maxScrollPct) v.maxScrollPct = pct;
   }).current;
 
+  // Any qualifying interaction keeps the active-dwell span alive (and resumes it
+  // after an idle gap). Cheap: a few comparisons in the tracker, no timers.
+  const bump = useRef(() => {
+    view.current?.dwell.activity(performance.now());
+  }).current;
+
   const flush = useRef(() => {
     const v = view.current;
     if (!v || v.sent) return;
@@ -60,7 +75,7 @@ export function AnalyticsEngagement() {
       event_type: "engagement",
       path: v.path,
       maxScrollPct: Math.round(v.maxScrollPct),
-      dwellMs: Math.round(performance.now() - v.startedAt),
+      dwellMs: Math.round(v.dwell.value(performance.now())),
       sessionId: getSessionId(),
     });
     try {
@@ -70,28 +85,35 @@ export function AnalyticsEngagement() {
     }
   }).current;
 
-  // Global scroll + terminal-signal listeners — attached once for the app's life.
+  // Global scroll + interaction + terminal-signal listeners — attached once for
+  // the app's life.
   useEffect(() => {
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(measure);
+      bump(); // scrolling is an interaction
     };
     const onVisibility = () => {
-      if (document.visibilityState === "hidden") flush();
+      const visible = document.visibilityState === "visible";
+      view.current?.dwell.setVisible(visible, performance.now());
+      if (!visible) flush(); // leaving the tab is a terminal signal
     };
+    const activityEvents = ["mousemove", "keydown", "click", "touchstart"] as const;
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    activityEvents.forEach((e) => window.addEventListener(e, bump, { passive: true }));
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("pagehide", flush);
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      activityEvents.forEach((e) => window.removeEventListener(e, bump));
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pagehide", flush);
       cancelAnimationFrame(raf);
     };
-  }, [flush, measure]);
+  }, [flush, measure, bump]);
 
   // Per page-view lifecycle. Flushing the previous view happens HERE (start of
   // the next run), never in cleanup — see the header note on StrictMode.
@@ -102,7 +124,13 @@ export function AnalyticsEngagement() {
     if (prev && prev.path === pathname && !prev.sent) return;
     // Real client-side navigation away from an unsent view → record it first.
     if (prev && !prev.sent) flush();
-    view.current = { path: pathname, startedAt: performance.now(), maxScrollPct: 0, sent: false };
+    const visible = document.visibilityState === "visible";
+    view.current = {
+      path: pathname,
+      dwell: createDwellTracker(IDLE_MS, visible, performance.now()),
+      maxScrollPct: 0,
+      sent: false,
+    };
     measure(); // seed depth so short pages register as fully read
   }, [pathname, flush, measure]);
 
