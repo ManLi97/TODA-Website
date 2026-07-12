@@ -36,3 +36,7 @@ next-env.d.ts
 # Supabase CLI artifacts + plain .env (only .env.example is committable)
 supabase/.temp/
 .env
+
+# Service-account keys — never commit (real keys live in ~/.toda-secrets, outside the repo)
+gsc-sa-*.json
+*.service-account.json

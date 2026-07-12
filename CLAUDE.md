@@ -153,6 +153,25 @@ middleware.ts         # next-intl locale routing (matcher excludes /admin and /a
   `ADMIN_PASSWORD`. Every server action calls `requireAdmin()` itself — layouts
   do not protect actions. Swap to Supabase Auth later = replace `lib/admin/auth.ts`.
 
+## Analytics & Search Console (time-series for the Company Dashboard)
+
+First-party, cookieless, **snapshot / append-only** — never overwrite in realtime; the website is
+a time-series source in the shared **toda-company** DB (`znocynswpsfckyfumema`).
+
+- **On-site behavior** → `analytics_events` (append-only). `components/analytics-beacon.tsx` records
+  one **pageview** per navigation; `components/analytics-engagement.tsx` records one **engagement**
+  (max scroll depth + dwell) per page-view on the first terminal signal (tab hidden / pagehide / SPA
+  nav). Both share a per-visit `sessionStorage` id (`lib/analytics/session.ts`). Ingest + validation:
+  `app/api/collect/route.ts` (server is the sole validator; always 204). No cookies, no raw IP
+  (daily-salted hash → per-day identity only). Bounce / session-duration / finish-rate are computed
+  at query time, not stored.
+- **Google Search Console** → `gsc_performance_daily` (long-format snapshot). `lib/gsc/*` calls the
+  Search Analytics API with a service-account JWT; `app/api/cron/gsc-sync/route.ts` (daily Vercel cron
+  in `vercel.json`) UPSERTs a 7-day trailing window (`dataState=all`, restatement-safe);
+  `scripts/gsc-backfill.ts` (`pnpm gsc:backfill`, off-Vercel) does the one-time ~16-month backfill
+  (`dataState=final`). The `dimension='total'` rows carry the authoritative daily totals (per-dimension
+  sums are lower — GSC drops anonymized queries).
+
 ## Key patterns
 
 - **`<PageSection>` is the layout primitive:** every section wraps in
@@ -207,3 +226,8 @@ Required in `.env.local`:
 - `SUPABASE_SERVICE_ROLE_KEY` — service role key (blog admin writes; server-only)
 - `ADMIN_PASSWORD` — /admin login password
 - `ADMIN_SESSION_SECRET` — HMAC key for the admin session cookie (32+ random bytes)
+- `ANALYTICS_SALT` — daily-rotating salt for the anonymous visitor hash (server-only)
+- `GSC_SITE_URL` — Search Console property (`sc-domain:todasolutions.com` or `https://www.todasolutions.com/`)
+- `GSC_SA_KEY` — GSC service-account JSON key as a string (Vercel Production)
+- `GSC_SA_KEY_FILE` — path to the GSC service-account JSON key file (local dev)
+- `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync`

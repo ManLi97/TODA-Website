@@ -98,9 +98,7 @@ export async function POST(request: NextRequest) {
       request.headers.get("x-real-ip") ||
       "";
     const utcDay = new Date().toISOString().slice(0, 10); // YYYY-MM-DD (UTC) → rotates daily
-    const visitorHash = createHash("sha256")
-      .update(`${utcDay}:${SALT}:${ip}:${ua}`)
-      .digest("hex");
+    const visitorHash = createHash("sha256").update(`${utcDay}:${SALT}:${ip}:${ua}`).digest("hex");
 
     const selfHost = (request.headers.get("host") ?? "").replace(/^www\./, "").split(":")[0];
     const utm = (body.utm ?? {}) as Record<string, unknown>;
