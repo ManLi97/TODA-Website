@@ -10,7 +10,8 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "gsc:backfill": "tsx --conditions=react-server scripts/gsc-backfill.ts"
+    "gsc:backfill": "tsx --conditions=react-server scripts/gsc-backfill.ts",
+    "mining:sync": "tsx --conditions=react-server scripts/mining-sync.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
