@@ -40,17 +40,20 @@ gcloud iam service-accounts describe "$SA_EMAIL" >/dev/null 2>&1 || \
   gcloud iam service-accounts create "$SA_NAME" --display-name="GSC snapshot (headless read)"
 
 mkdir -p "$KEY_DIR"; chmod 700 "$KEY_DIR"
-if [ ! -f "$KEY_FILE" ]; then
+# -s (non-empty), NOT -f: a failed attempt can leave a 0-byte file behind, which
+# must count as "no key yet" so we regenerate instead of skipping.
+if [ ! -s "$KEY_FILE" ]; then
   # A just-created service account can take a few seconds to propagate before it
   # accepts key creation (IAM eventual consistency, NOT_FOUND) — retry with backoff.
   for attempt in 1 2 3 4 5 6; do
-    if gcloud iam service-accounts keys create "$KEY_FILE" --iam-account="$SA_EMAIL" 2>/dev/null; then
+    rm -f "$KEY_FILE"  # clear any 0-byte leftover so gcloud writes fresh
+    if gcloud iam service-accounts keys create "$KEY_FILE" --iam-account="$SA_EMAIL" 2>/dev/null && [ -s "$KEY_FILE" ]; then
       break
     fi
     echo "  SA not ready for key creation yet (attempt $attempt) — waiting ${attempt}s ..."
     sleep "$attempt"
   done
-  [ -f "$KEY_FILE" ] || { echo "ERROR: key creation failed after retries — just re-run the script"; exit 1; }
+  [ -s "$KEY_FILE" ] || { echo "ERROR: key creation failed after retries — just re-run the script"; exit 1; }
   chmod 600 "$KEY_FILE"
   echo "Key written to: $KEY_FILE  (gitignored location, keep secret)"
 else
