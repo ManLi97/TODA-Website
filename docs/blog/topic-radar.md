@@ -57,6 +57,24 @@ Cross-Source-Bonus : Cluster taucht in ≥ 2 Quellen auf → bevorzugen
 Kommentare zählen doppelt, weil sie Diskussion (= Schmerz) anzeigen,
 Upvotes nur Zustimmung.
 
+**Datenerhebung & Scoring codifiziert (Stand 07/2026).** Strom A ist keine
+Ad-hoc-Handarbeit mehr, sondern eine Daten-Pipeline (`lib/mining/*`): Scrape
+via Apify-Actor `harshmaur/reddit-scraper` (ersetzt das tote
+`trudax/reddit-scraper-lite`) → `topic_signals`; die Cluster-Zuordnung
+schreibt der Skill als Verdikte nach `topic_classifications`; das Scoring
+rechnet die **deterministische SQL-View** `topic_cluster_scores`
+(per-`(run,source)`-Median, Outlier, Σ, Trend-Gate ≥ 3, Cross-Source).
+**Die Formel ist unverändert** — nur Erhebung und Rechnung sind jetzt Code
+statt Handschritt. Zwei Pässe: **broad** (beide Subs, `top/?t=week` +
+`top/?t=month`) ist die quantitative Spine → speist Median + View; **seeded**
+(Keyword-Suche in r/TattooArtists: booking, deposit, no-show, pricing,
+cancellation) ist **RECALL-ONLY**: `is_seeded = true`-Zeilen fließen NIE in
+Median, Score oder Trend-Gate. Grund: Ein Seed-Pass übersampelt gezielt
+Schmerzbegriffe → verzerrt den Quellen-Median und bläht Σ für genau diese
+Cluster auf (Populations-Asymmetrie / Score-Bias). Seeded liefert nur
+qualitativen Recall-Kontext für den Writer und wird erst nach einer **neuen
+A/B-Kalibrierung** quantitativ nutzbar.
+
 **Warum Outlier statt Rohsumme (Σ Engagement).** Die rohe Summe ist durch
 die Quellengröße konfundiert: r/tattooadvice schüttet rund **40× mehr**
 absolutes Engagement pro Post aus als r/TattooArtists (Median 3 278 vs. 84
@@ -89,6 +107,33 @@ Danach, vor der finalen Wahl:
 3. **Quellen-Check:** Gibt es Tier-1/2-Quellen, die das Thema tragen?
    Ein Community-Thema ohne seriöse Faktenbasis wird kein eigener
    Artikel — höchstens Stimmungselement in einem anderen.
+
+## Cluster-Label-Registry (kanonische Slugs)
+
+Wenn der Skill `topic_classifications.cluster` schreibt, wählt er einen Slug
+**aus dieser Registry** — oder erweitert sie bewusst. **Warum sie existiert:**
+Freitext-Cluster-Labels sind das größte Datenqualitäts-Risiko der Pipeline —
+zwei near-duplicate Slugs (`no-show` vs. `no-shows` vs. `noshow-frust`)
+zersplittern den Score desselben Themas über mehrere View-Zeilen und
+zerlegen das Trend-Gate. Darum: kanonische kebab-case-Slugs, DE/EN gemischt
+wie die Schmerzpunkte es hergeben. Die Registry ist **erweiterbar**, aber
+jede Neuaufnahme ist deliberat — erst prüfen, ob ein bestehender Slug passt;
+neuen Slug nur, wenn wirklich ein neues Thema. Neue Slugs am Ende ergänzen,
+nie bestehende umbenennen (ein Rename spaltet historische Scores). Jede
+Ergänzung im Lauf-Eintrag festhalten.
+
+| Slug | Deckt ab |
+|---|---|
+| `no-shows` | Nichterscheinen, Terminausfälle, „Flakiness" |
+| `deposits-anzahlung` | Anzahlung / Terminkaution / Deposit-Policy |
+| `pricing` | Preisgestaltung, Stundensatz, Preiskommunikation |
+| `booking-flow` | Terminanfragen, Buchung, DM-/Anfrage-Chaos |
+| `cancellations` | Absagen, Umbuchungen, Reschedule-Policies |
+| `communication-overload` | DM-Flut, Erwartungsmanagement, Kundenkommunikation |
+| `time-management` | Zeitplanung, Kalender, Überlastung |
+| `client-conflict` | Kundenkonflikte, schwierige Gespräche, Grenzen |
+| `copyright-design` | Urheberrecht, Design-Eigentum, Referenzen/Copycats |
+| `aftercare` | Nachsorge-/Heilphasen-Kommunikation |
 
 ---
 
@@ -346,3 +391,57 @@ Link auf published Geschwister (studio-smile/Werkvertrag) gesetzt. → Draft
 4. **Reddit-Scraper-Reliabilität:** zwei Ausfälle in Folge — vor dem nächsten
    Mining-Lauf alternative Actor-Config prüfen (z. B. ohne Per-Post-Detail, Vote-
    Zahlen über andere Felder) oder Backup-Actor evaluieren.
+
+## Lauf 2026-07-12 — Topic-Mining als Daten-Pipeline codifiziert (harshmaur-Volumentest)
+
+**Was gebaut wurde:** Strom A ist jetzt eine echte Daten-Pipeline statt
+Ad-hoc-Scrape. Migration `topic_mining` (Version 20260712201039) legt 3
+Tabellen + 1 View an (RLS an, null Policies → nur Service-Role):
+`mining_runs` (ein Row je Apify-Run, `dataset_id` UNIQUE = Idempotenz-Anker),
+`topic_signals` (ein Reddit-Post-Snapshot je `(run_id, external_id)`,
+append-only/run-scoped → derselbe Post in zwei Runs = zwei Zeilen; **keine
+Author-Felder** — Whitelist-Mapper, Name/ID strukturell unerreichbar; `body`
+mit 30-Tage-TTL, `body_cleared_at` auditiert die Löschung),
+`topic_classifications` (die auditierbare Verdikt-Schicht, die der Skill
+schreibt: `is_discussion`, `cluster`, `note`) und die
+`security_invoker`-View `topic_cluster_scores` (rechnet
+Median/Outlier/Σ + Trend-Gate/Cross-Source **deterministisch in SQL**; scort
+nur `is_seeded=false` + `is_discussion=true` mit non-null Metriken).
+
+**Scraper-Wechsel:** `harshmaur/reddit-scraper` (PAY_PER_EVENT ~$0.002/Post,
+Free-Tier) ersetzt das tote `trudax/reddit-scraper-lite` (zwei Ausfälle
+16.06.) und `clearpath/reddit-post-comments-bulk-scraper`. Verifizierte
+Felder: `parsedId, title, body, parsedCommunityName, flair, postType,
+postUrl, createdAt, upVotes, commentsCount, dataType`.
+
+**Per-URL-Cap-Fund (Test):** `maxPostsCount` ist ein Cap **pro
+Subreddit-URL**, kein Run-Total — ein kombinierter broad-Run beider Subs bei
+Cap 200 lieferte tattooadvice 200 + TattooArtists 28 = **228** (> 200).
+Heißt: beide Subs teilen sicher **einen** broad-Run je Fenster, keine Quelle
+verhungert.
+
+**Volumentest (2026-07-12, alle Runs `succeeded`, 100 % Field-Coverage,
+Laufzeiten 6–40 s → passt ins 300-s-Cron-Budget):**
+- broad/week kombiniert = **128** Posts (tattooadvice 100 [capped] +
+  TattooArtists 28 [reales Wochenvolumen]).
+- broad/month kombiniert = **200** Posts (100 + 100).
+- seeded/week = **205** Posts (r/TattooArtists, `searchSort=top`), davon 97
+  mit Seed-Term in Titel/Body, 108 ohne (Reddit-Suche matcht auch
+  Kommentare/fuzzy → `matched_term` ist best-effort, konsistent mit
+  seeded = recall-only).
+
+**View-Korrektheit gegen Handrechnung bewiesen:** Kontroll-Cluster `vtest-a`
+scort exakt **9.6134** (= 5/12 + 91/12 + 96/59.5) — per-`(run,source)`-Median,
+NULL-Cluster zählt in den Median aber scort nicht, `is_discussion=false`
+aus dem Median ausgeschlossen, Cross-Source `n_sources=2`, Trend-Gate bei
+n = 3 wahr.
+
+**Stand DB:** 3 Seed-Runs drin (broad/week 128, broad/month 200,
+seeded/week 205). Seeded-Zeilen bleiben recall-only (nie gescort).
+
+**Offen:** Cron `/api/cron/mining-sync` (Vercel, Mo/Mi/Fr 06:00 UTC) wartet
+auf `APIFY_TOKEN` (noch nicht von Tomek provisioniert). Bis dahin / zur
+Recovery: tokenloser Ingest-only-CLI-Modus `pnpm mining:sync --dataset <id>
+--pass <broad|seeded> --window <week|month>` (öffentliche Apify-Datasets
+lesen ohne Token). YouTube-Kommentare bleiben on-demand via Apify-MCP
+(qualitativ), unverändert.

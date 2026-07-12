@@ -17,7 +17,8 @@ be honoured (read when in doubt — do not duplicate it here):
 ## 1. Non-negotiables — worauf achten
 
 - **Repo-owned tables only.** This repo (toda-website) owns: `blog_categories`, `blog_posts`,
-  `blog_post_translations`, `blog_authors`, `analytics_events`, `gsc_performance_daily` + storage
+  `blog_post_translations`, `blog_authors`, `analytics_events`, `gsc_performance_daily`,
+  `mining_runs`, `topic_signals`, `topic_classifications` (+ view `topic_cluster_scores`) + storage
   buckets `blog-covers`, `blog-authors`. **Every other table is FOREIGN → tabu**: no DDL, no DML,
   no drop/truncate, ever. Full matrix: `db-ownership.md`.
 - **toda-company is the schema authority.** Its `supabase/migrations/` is the **full, byte-exact

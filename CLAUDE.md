@@ -178,6 +178,15 @@ a time-series source in the shared **toda-company** DB (`znocynswpsfckyfumema`).
   `scripts/gsc-backfill.ts` (`pnpm gsc:backfill`, off-Vercel) does the one-time ~16-month backfill
   (`dataState=final`). The `dimension='total'` rows carry the authoritative daily totals (per-dimension
   sums are lower — GSC drops anonymized queries).
+- **Reddit topic mining** (Strom A of `/blog-article`, feeds blog topic selection — NOT the dashboard) →
+  `mining_runs` / `topic_signals` / `topic_classifications` + the `topic_cluster_scores` view.
+  `lib/mining/*` scrapes the `harshmaur/reddit-scraper` Apify actor via a **whitelist mapper** (no author
+  fields; `body` on a 30-day TTL), ingests under the same snapshot/append-only semantics (one `mining_runs`
+  row per actor run, `topic_signals` keyed `(run_id, external_id)`), and scores clusters **deterministically
+  in SQL** (`security_invoker` view, A/B-validated outlier formula — the skill writes classifications, the
+  view does the median/Σ). `app/api/cron/mining-sync/route.ts` (Vercel cron Mo/Wed/Fri in `vercel.json`) +
+  `scripts/mining-sync.ts` (`pnpm mining:sync`; tokenless `--dataset` ingest mode reads public datasets
+  without a token). Needs `APIFY_TOKEN` for the full cycle. Methodology: `docs/blog/topic-radar.md`.
 
 ## Key patterns
 
@@ -237,4 +246,6 @@ Required in `.env.local`:
 - `GSC_SITE_URL` — Search Console property (`sc-domain:todasolutions.com` or `https://www.todasolutions.com/`)
 - `GSC_SA_KEY` — GSC service-account JSON key as a string (Vercel Production)
 - `GSC_SA_KEY_FILE` — path to the GSC service-account JSON key file (local dev)
-- `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync`
+- `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync` and `/api/cron/mining-sync`
+- `APIFY_TOKEN` — Apify API token for the Reddit mining full cycle + cron (server-only; ingest-only
+  `pnpm mining:sync --dataset` works without it)

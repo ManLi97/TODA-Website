@@ -72,12 +72,21 @@ hier in der Tabelle bzw. unter „Bewusst ausgeschlossen" dokumentiert,
 der Test-Lauf im `topic-radar.md`. Wackelkandidaten fliegen nach zwei
 ertraglosen Läufen wieder raus.
 
+**Scraper-Verdikt (verifiziert 2026-07-12):** `harshmaur/reddit-scraper`
+**aufgenommen — quantitativ**. Volumentest über beide Kern-Subs: Coverage
+**100 %**, per-Source-Zahlen median-tauglich (broad/week **128** =
+tattooadvice 100 + TattooArtists 28; broad/month **200** = 100 + 100).
+Ersetzt `trudax/reddit-scraper-lite` (**retired** — seit 16.06. tot, zwei
+Ausfälle in Folge durch residential-gedrosselte Detail-Extraktion) und
+`clearpath/reddit-post-comments-bulk-scraper`. Test-Details im
+`topic-radar.md`-Eintrag 2026-07-12.
+
 ## Tier 3 — Community-Signal (nur Themenfindung & Stimmung)
 
 | Quelle | Was sie liefert | Zugriff | Notizen |
 |---|---|---|---|
-| r/TattooArtists | Schmerzpunkte arbeitender Artists (international, US-lastig) | Apify `trudax/reddit-scraper-lite` (Posts, `includeMediaLinks: true` für Upvotes/Kommentarzahl) + `clearpath/reddit-post-comments-bulk-scraper` (Kommentare einzelner Threads) | Kernquelle Strom A. |
-| r/tattooadvice | Endkunden-Perspektive (was Kunden verwirrt = Content-Chance) | wie oben | Strom A, Zweitquelle. |
+| r/TattooArtists | Schmerzpunkte arbeitender Artists (international, US-lastig) | **Codifizierte Pipeline** (`lib/mining/*` → `mining_runs`/`topic_signals`, Apify-Actor `harshmaur/reddit-scraper`, PAY_PER_EVENT ~$0.002/Post). Kommentare/YouTube on demand via Apify-MCP (qualitativ). | Kernquelle Strom A (broad-Pass). Ersetzt `trudax/reddit-scraper-lite` + `clearpath/…` (retired, siehe Aufnahme-Protokoll). |
+| r/tattooadvice | Endkunden-Perspektive (was Kunden verwirrt = Content-Chance) | wie oben — beide Subs teilen einen broad-Run je Fenster (Cap gilt pro Sub-URL) | Strom A, Zweitquelle. |
 | Google-Suchvalidierung | Wird das Thema auch *gesucht*? (SEO-Check) | Brave Search MCP | Validierung der Top-Themen, kein eigenes Signal. |
 | YouTube-Kommentare — „Honest Tattooer Podcast" (+ „The Business of Tattooing" als Reserve) | Insider-Stimmung arbeitender Artists (Shop-Ökonomie, Splits/Booth-Rent, No-Show-Frust, Fake-Experten, Übersättigung) | Apify `streamers/youtube-comments-scraper` (`startUrls` = Video-URLs, `sortCommentsBy: "TOP_COMMENTS"`, ~$0.002/Kommentar, schnell & stabil) | Getestet 11.06.2026 (115 Kommentare / 4 Business-Episoden): **nur qualitativ** verwenden — Vote-Zahlen zu klein fürs Scoring. Liefert O-Ton-Stimmung als Würze, fließt nicht in die Cluster-Tabelle ein. |
 
@@ -92,4 +101,7 @@ ertraglosen Läufen wieder raus.
 - **Facebook-Gruppen (DACH)** — bestes Signal, aber privat und
   scraping-rechtlich heikel.
 - **Apify-Actors, die nicht funktionieren:** `khadinakbar/reddit-posts-comments-scraper`
-  (403s), `apify/rag-web-browser` auf reddit.com (geblockt).
+  (403s), `apify/rag-web-browser` auf reddit.com (geblockt),
+  `trudax/reddit-scraper-lite` (**retired** seit 16.06.: Per-Post-Detailextraktion
+  residential gedrosselt, zwei Ausfälle in Folge — ersetzt durch
+  `harshmaur/reddit-scraper`, siehe `topic-radar.md`).

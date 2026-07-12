@@ -45,22 +45,44 @@ Bevor irgendetwas anderes passiert:
 Methode und Scoring-Formel stehen in `topic-radar.md` (Pflichtlektüre).
 Ablauf:
 
-1. **Strom A scrapen — alle aktiven Tier-3-Quellen aus `sources.md`.**
-   Subreddits im **Mischfenster**: `top/?t=week` (was diese Woche
-   brennt) + `top/?t=month` (was sich als Trend hält); Posts mit
-   `includeMediaLinks: true` für Upvotes/Kommentarzahl. Dazu
-   YouTube-Kommentare der gelisteten Podcast-Kanäle (Top-Kommentare
-   aktueller Business-Episoden). Actor-Konfigurationen stehen bei den
-   Quellen-Einträgen. Wochen-Doppelungen fängt der Dedup-Check (Schritt
-   4) plus der Abgleich mit den letzten Radar-Einträgen ab.
-2. **Clustern + scoren:** Jeden Post einem Themen-Cluster zuordnen,
-   `Engagement = Upvotes + 2×Kommentare`, Cluster-Score = Σ der
-   baseline-normalisierten Outlier je Post (Outlier = Engagement /
-   Quellen-Median; volle Formel + Begründung in `topic-radar.md`).
-   Die Zuordnungstabelle vollständig in den Radar-Eintrag schreiben —
-   der manuelle Schritt muss überprüfbar sein. **Zielgruppen-Gate:**
-   Cluster mit Anti-ICP-Kernpublikum scheiden aus, egal wie hoch der
-   Score (→ `toda-context.md`, „Für wen wir schreiben").
+1. **Strom A — Pipeline lesen (Freshness-Gate zuerst).** Strom A ist
+   codifiziert: der Scrape läuft als Daten-Pipeline (`lib/mining/*` →
+   `mining_runs`/`topic_signals`, Apify-Actor `harshmaur/reddit-scraper`,
+   Cron Mo/Mi/Fr) — dieser Skill scrapt nicht mehr ad hoc, sondern liest
+   die DB.
+   - **Freshness-Gate:** Der jüngste `succeeded` **broad**-Run je Fenster
+     (`week` + `month`) muss ≤ 7 Tage alt sein **und**
+     `field_coverage_pct ≥ 80`. Sonst degradierter Fallback: dokumentiertes
+     Signal (wie beim Scrape-Ausfall 16.06.) ODER ad-hoc-Scrape via
+     Apify-MCP + Ingest (`pnpm mining:sync --dataset <id> --pass broad
+     --window <week|month>`), bevor es weitergeht.
+   - **Unklassifizierte Posts ziehen:** `topic_signals` der jüngsten
+     broad-Runs left-join `topic_classifications` (noch offene Verdikte),
+     im **Mischfenster** `week` (was diese Woche brennt) + `month` (was
+     sich als Trend hält).
+   - **Seeded-Rows** (`is_seeded = true`) sind **nur qualitativer
+     Recall-Kontext** für den Writer — sie fließen NIE in Median, Score
+     oder Trend-Gate (Begründung in `topic-radar.md`).
+   - YouTube-Kommentare der gelisteten Podcast-Kanäle bleiben **on demand**
+     via Apify-MCP (Top-Kommentare aktueller Business-Episoden, nur
+     qualitativ) — unverändert.
+   Wochen-Doppelungen fängt der Dedup-Check (Schritt 5) plus der Abgleich
+   mit den letzten Radar-Einträgen ab.
+2. **Klassifizieren + Scores lesen** — der einzige verbleibende manuelle,
+   auditierbare Schritt:
+   - **Klassifikation:** Jeden offenen Post als INSERT in
+     `topic_classifications` schreiben (Schreib-MCP
+     `mcp__plugin_supabase_supabase__execute_sql`): `is_discussion` (bool),
+     `cluster` (**kanonischer Slug aus der Cluster-Label-Registry in
+     `topic-radar.md`** — NULL = Diskussion ohne Cluster), optional `note`.
+     Keine Freitext-Labels erfinden: near-duplicate Slugs zersplittern den
+     Score (siehe Registry).
+   - **Scores lesen:** `topic_cluster_scores` für die betreffenden
+     `run_id`s abfragen — die View rechnet Median + Outlier + Σ
+     **deterministisch in SQL** (Formel unverändert), kein manuelles
+     Median-/Σ-Rechnen mehr. **Zielgruppen-Gate, Trend-Gate (≥ 3 Posts)
+     und Cross-Source** wendet der Skill weiterhin selbst an
+     (Zielgruppen-Gate → `toda-context.md`, „Für wen wir schreiben").
 3. **Strom B checken:** tattoo-recht.de (+ ggf. weitere Tier-1/2-News)
    per WebFetch auf neue Urteile/Updates prüfen.
 4. **Strom C ziehen:** nächster offener Eintrag der Ziel-Liste in
@@ -72,8 +94,9 @@ Ablauf:
 6. **Such-Validierung:** Top-Kandidaten per Websuche (DACH-Suchinteresse?).
 7. **Quellen-Check:** Trägt eine Tier-1/2-Quelle das Thema? Ohne
    Faktenbasis kein eigener Artikel.
-8. **Radar-Eintrag anhängen** (datiert): Scrape-Parameter, Cluster-Tabelle,
-   Scores, Dedup-Ergebnis, gewählte Topics mit Begründung.
+8. **Radar-Eintrag anhängen** (datiert): referenzierte `run_id`s (statt
+   Scrape-Parameter-Prosa), Klassifikations-/Cluster-Tabelle, Scores aus
+   der View, Dedup-Ergebnis, gewählte Topics mit Begründung.
 
 Default-Wochenmix: 1× Strom A + 1× Strom C + 1× Strom B (wenn es News
 gibt). Ist die C-Liste abgearbeitet: zurück zu 2× Strom A.
