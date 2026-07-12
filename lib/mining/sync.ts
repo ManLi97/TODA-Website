@@ -157,7 +157,8 @@ export async function ingestDataset(datasetId: string, meta: IngestMeta): Promis
       )
       .select("id")
       .single();
-    if (runErr || !runRow) throw new Error(`mining_runs upsert failed: ${runErr?.message ?? "no row"}`);
+    if (runErr || !runRow)
+      throw new Error(`mining_runs upsert failed: ${runErr?.message ?? "no row"}`);
     outcome.runId = runRow.id as string;
 
     if (stats.postCount === 0) {
@@ -242,7 +243,12 @@ type RunSpec = { pass: Pass; timeWindow: TimeWindow; input: unknown; label: stri
 const CYCLE_SPECS: RunSpec[] = [
   { pass: "broad", timeWindow: "week", input: broadInput("week"), label: "broad/week" },
   { pass: "broad", timeWindow: "month", input: broadInput("month"), label: "broad/month" },
-  { pass: "seeded", timeWindow: "week", input: seededInput(), label: `seeded/${SEEDED_COMMUNITY}/week` },
+  {
+    pass: "seeded",
+    timeWindow: "week",
+    input: seededInput(),
+    label: `seeded/${SEEDED_COMMUNITY}/week`,
+  },
 ];
 
 // Full cycle: start + poll all specs in PARALLEL, ingest each SUCCEEDED dataset. A
@@ -273,7 +279,12 @@ export async function runMiningCycle(): Promise<RunOutcome[]> {
         }
         return ingestDataset(finished.defaultDatasetId, { ...meta, apifyRunId });
       } catch (err) {
-        return recordFailedRun(meta, apifyRunId, datasetId, err instanceof Error ? err.message : String(err));
+        return recordFailedRun(
+          meta,
+          apifyRunId,
+          datasetId,
+          err instanceof Error ? err.message : String(err)
+        );
       }
     })
   );
@@ -318,7 +329,9 @@ function summarize(runs: RunOutcome[], bodiesRedacted: number): MiningSyncResult
   for (const r of runs) {
     if (r.status === "failed") errors.push(`${r.label}: ${r.error ?? "unknown error"}`);
     else if (r.pass === "broad" && r.fieldCoveragePct < COVERAGE_ALERT_PCT) {
-      warnings.push(`${r.label}: field coverage ${r.fieldCoveragePct}% below ${COVERAGE_ALERT_PCT}%`);
+      warnings.push(
+        `${r.label}: field coverage ${r.fieldCoveragePct}% below ${COVERAGE_ALERT_PCT}%`
+      );
     }
   }
   return {
