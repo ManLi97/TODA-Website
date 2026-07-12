@@ -36,15 +36,20 @@ function mapRows(
     const keys = r.keys ?? [];
     const date = keys[0]; // "date" is always the first requested dimension
     if (!date) continue;
+    // clicks/impressions are integer counts; ctr/position are non-additive averages.
+    const clicks = Math.round(r.clicks ?? 0);
+    const impressions = Math.round(r.impressions ?? 0);
+    // GSC returns 0/0 date rows for idle search types/days — skip them so the table
+    // isn't padded with no-activity noise (an absent row reads as 0 at query time).
+    if (clicks === 0 && impressions === 0) continue;
     out.push({
       site_property: siteProperty,
       date,
       search_type: entry.type,
       dimension: label,
       dimension_value: label === "total" ? "" : (keys[1] ?? ""),
-      // clicks/impressions are integer counts; ctr/position are non-additive averages.
-      clicks: Math.round(r.clicks ?? 0),
-      impressions: Math.round(r.impressions ?? 0),
+      clicks,
+      impressions,
       ctr: r.ctr ?? null,
       position: r.position ?? null,
       data_state: dataState,
