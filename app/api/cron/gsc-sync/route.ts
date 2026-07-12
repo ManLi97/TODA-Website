@@ -10,7 +10,8 @@ import { syncGscWindow } from "@/lib/gsc/sync";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-// GSC pulls can take minutes across the full matrix — needs a Pro-tier duration.
+// GSC pulls can take a while across the full matrix. 300s is the max on every
+// plan incl. Hobby (fluid compute default) — the daily 7-day window fits easily.
 export const maxDuration = 300;
 
 // Trailing days to re-pull each run: covers GSC's ~2-3 day lag + restatement.
