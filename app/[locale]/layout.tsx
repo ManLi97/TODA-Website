@@ -13,6 +13,7 @@ import { SITE_URL } from "@/lib/site";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AnalyticsBeacon } from "@/components/analytics-beacon";
+import { AnalyticsEngagement } from "@/components/analytics-engagement";
 import "./globals.css";
 
 // Inter — DS type ladder uses three weights only: 200 (thin), 400 (regular),
@@ -144,6 +145,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         </NextIntlClientProvider>
         <Analytics />
         <AnalyticsBeacon />
+        <AnalyticsEngagement />
       </body>
     </html>
   );

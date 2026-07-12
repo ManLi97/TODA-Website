@@ -9,6 +9,7 @@
 // See app/api/collect/route.ts for the ingest contract.
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { getSessionId } from "@/lib/analytics/session";
 
 export function AnalyticsBeacon() {
   const pathname = usePathname();
@@ -30,6 +31,7 @@ export function AnalyticsBeacon() {
       referrer: document.referrer || undefined,
       utm: source || medium || campaign ? { source, medium, campaign } : undefined,
       screen: `${window.screen.width}x${window.screen.height}`,
+      sessionId: getSessionId(),
     });
 
     try {

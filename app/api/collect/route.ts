@@ -6,8 +6,11 @@
 // daily-rotating salted hash, so there is nothing to consent to (no banner).
 //
 // Contract: POST /api/collect  — body is text/plain JSON (that's what sendBeacon
-//   sends), shape: { path: string, referrer?: string,
-//   utm?: { source?, medium?, campaign? }, screen?: string }
+//   sends). Two event types share this route:
+//     pageview   { path, referrer?, utm?{source,medium,campaign}, screen?, sessionId? }
+//     engagement { event_type:"engagement", path, maxScrollPct, dwellMs, sessionId? }
+//   `event_type` defaults to "pageview". The client sends flat values; the SERVER
+//   is the only validator — it clamps ranges and builds the stored `props` blob.
 //   → 204 No Content, ALWAYS. Analytics must never surface an error to the page,
 //   so every failure path (bad body, bot, missing config, DB error) still 204s.
 
@@ -26,6 +29,18 @@ const LOCALES = ["de", "es", "en"] as const;
 const PATH_RE = /^\/(de|es|en)(\/[\w\-./]*)?$/;
 
 const noContent = () => new NextResponse(null, { status: 204 });
+
+// Accepted event types (client-supplied `event_type`, default pageview).
+const EVENT_TYPES = new Set(["pageview", "engagement"]);
+// Per-visit session id shape (crypto.randomUUID / fallback), sessionStorage-scoped.
+const SESSION_RE = /^[\w-]{8,64}$/;
+
+// Coerce to an integer clamped to [min,max]; null when not a finite number.
+function clampInt(v: unknown, min: number, max: number): number | null {
+  const n = typeof v === "number" ? v : typeof v === "string" ? Number(v) : NaN;
+  if (!Number.isFinite(n)) return null;
+  return Math.min(max, Math.max(min, Math.round(n)));
+}
 
 function deviceFromUA(ua: string): "mobile" | "tablet" | "desktop" {
   if (/\b(ipad|tablet|playbook|silk)\b/i.test(ua) || (/android/i.test(ua) && !/mobile/i.test(ua))) {
@@ -91,9 +106,30 @@ export async function POST(request: NextRequest) {
     const utm = (body.utm ?? {}) as Record<string, unknown>;
     const str = (v: unknown, max: number) => (typeof v === "string" && v ? v.slice(0, max) : null);
 
+    const eventType = EVENT_TYPES.has(body.event_type as string)
+      ? (body.event_type as string)
+      : "pageview";
+    const sessionId =
+      typeof body.sessionId === "string" && SESSION_RE.test(body.sessionId) ? body.sessionId : null;
+
+    // props carries the type-specific payload; the server-derived columns (locale,
+    // is_article, device, country, visitor_hash) describe BOTH types uniformly.
+    const props =
+      eventType === "engagement"
+        ? {
+            maxScrollPct: clampInt(body.maxScrollPct, 0, 100) ?? 0,
+            dwellMs: clampInt(body.dwellMs, 0, 86_400_000) ?? 0,
+            ...(sessionId ? { sessionId } : {}),
+          }
+        : {
+            ...(body.screen ? { screen: str(body.screen, 24) } : {}),
+            ...(sessionId ? { sessionId } : {}),
+          };
+
     await createAdminClient()
       .from("analytics_events")
       .insert({
+        event_type: eventType,
         path: path.slice(0, 512),
         locale,
         is_article: isArticle,
@@ -104,7 +140,7 @@ export async function POST(request: NextRequest) {
         country: request.headers.get("x-vercel-ip-country") || null,
         device: deviceFromUA(ua),
         visitor_hash: visitorHash,
-        props: body.screen ? { screen: str(body.screen, 24) } : {},
+        props,
       });
 
     return noContent();
