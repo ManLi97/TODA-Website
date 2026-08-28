@@ -48,12 +48,15 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
   its own `podcast-radar.md`. Embeds the source episode via the structured
   video fields (Blog → *Podcast embed infra*), names + quotes the hosts, and —
   like `/blog-article` — **never publishes**.
-- **`.claude/skills/artist-story/SKILL.md`** — the **artist-portrait
-  pipeline** (`/artist-story`): turns interview material from a real
-  artist (transcript/questionnaire — outreach and interviews stay human
-  work) into a person-centered "Artist Stories" blog draft. TODA is not
-  a character in the text; hard artist-approval gate before publish plus
-  a confirmed usage scope before insert. Shares the blog knowledge spine
+- **`.claude/skills/artist-story/SKILL.md`** — the **artist-story
+  pipeline** (`/artist-story`): turns an artist's input material
+  (shoot transcript, research dossier, own content, voice memo —
+  outreach and interviews stay human work) into a blog article written
+  in the artist's own first-person voice, as if he wrote it himself.
+  First deliverable is always a standalone HTML preview in the exact
+  site look (template in `assets/`) that goes to the artist for
+  approval; DB insert only after his go, publish stays with Tomek.
+  TODA is not a character in the text. Shares the blog knowledge spine
   (`docs/blog/`, same CMS, same learning loop).
 - **`.claude/skills/supabase/SKILL.md`** — the **`/supabase` skill**: how to work
   with the SHARED, production Supabase DB (`znocynswpsfckyfumema`, co-owned by
