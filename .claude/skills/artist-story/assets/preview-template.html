@@ -1,0 +1,306 @@
+<!doctype html>
+<!--
+  artist-story Vorschau-Template — 1:1-Replik der Blog-Detailseite
+  (Quelle: app/[locale]/globals.css @theme + components/, Stand 2026-08-29).
+  Platzhalter ersetzen: {{PAGE_TITLE}} {{TITLE}} {{CATEGORY}} {{META_LINE}}
+  {{TAGS_HTML}} {{COVER_ALT}} {{CONTENT_HTML}} {{AUTHOR_NAME}} {{AUTHOR_SLOGAN}}
+  {{AUTHOR_SOCIALS}} sowie {{LOGO}} {{COVER}} {{AVATAR}} (data-URIs; Logo aus
+  public/TODA-LOGO.svg). Social-Icon-SVG-Pfade: components/blog/social-icon.tsx.
+  Drift-Check bei Redesigns: .prose-blog + Tokens gegen globals.css pruefen.
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{PAGE_TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --surface-alt: #1e1e1e;
+    --surface-raised: #292929;
+    --border-subtle: #383838;
+    --text-primary: #ffffff;
+    --text-secondary: #a3a3a3;
+    --text-tertiary: #6b6b6b;
+    --gold-200: #fce49b;
+    --gold-400: #e8b73d;
+    --gold-500: #c8941a;
+    --gold-600: #9c7314;
+    --purple-400: #cbb5ef;
+    --glass-tint: rgba(41,41,41,.65);
+    --glass-border-gold: 1px solid rgba(200,148,26,.15);
+    --grad-brand: linear-gradient(135deg, #c8941a 0%, #e8b73d 35%, #bba6e8 100%);
+    --shadow-card: inset 0 1px 0 rgba(255,255,255,.07), 0 1px 1px rgba(0,0,0,.5), 0 12px 28px -10px rgba(0,0,0,.7);
+    --spacing-section: clamp(4.5rem, 11vw, 8rem);
+    --spacing-block: clamp(2rem, 6vw, 4rem);
+    --spacing-group: clamp(1.25rem, 4vw, 2rem);
+    --spacing-element: clamp(0.5rem, 2vw, 1rem);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text-secondary);
+    font-family: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-feature-settings: "cv11", "ss03";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── Header ── */
+  .site-header {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    background: var(--glass-tint);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+    border-bottom: var(--glass-border-gold);
+  }
+  .site-header .inner {
+    margin: 0 auto; max-width: 1440px; height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 0 1.5rem;
+  }
+  .site-header .logo-link { flex-shrink: 0; transition: opacity .1s; }
+  .site-header .logo-link:hover { opacity: .7; }
+  .site-header nav { display: flex; align-items: center; gap: 1.5rem; }
+  .nav-links { display: none; align-items: center; gap: 1.25rem; }
+  @media (min-width: 768px) { .nav-links { display: flex; } }
+  .nav-link {
+    color: var(--text-tertiary); padding: .5rem .25rem;
+    font-size: 12px; font-weight: 400; letter-spacing: .025em;
+    text-transform: uppercase; transition: color .1s;
+  }
+  .nav-link:hover { color: var(--text-secondary); }
+  .nav-link.active { color: var(--text-primary); }
+  .lang-switch { display: flex; align-items: center; gap: .375rem; font-size: 12px; text-transform: uppercase; letter-spacing: .025em; }
+  .lang-switch .sep { color: var(--border-subtle); }
+  .lang-switch a { color: var(--text-tertiary); transition: color .1s; }
+  .lang-switch a:hover { color: var(--text-secondary); }
+  .lang-switch a.active { color: var(--text-primary); }
+  .cta-button {
+    background: var(--gold-500); color: var(--bg);
+    display: inline-flex; min-height: 36px; align-items: center; justify-content: center;
+    border-radius: 980px; padding: .375rem 1rem;
+    font-size: 12px; font-weight: 600; letter-spacing: .025em; text-transform: uppercase;
+    transition: background-color .15s; cursor: pointer; user-select: none;
+  }
+  .cta-button:hover { background: var(--gold-400); }
+  .cta-button:active { background: var(--gold-600); }
+
+  /* ── Reading progress ── */
+  .progress { position: fixed; inset: 56px 0 auto 0; z-index: 40; height: 2px; }
+  .progress .bar { height: 100%; width: 100%; transform-origin: left; background: var(--grad-brand); transform: scaleX(0); }
+
+  /* ── Artikel ── */
+  .article-section { background: var(--bg); min-height: 100svh; overflow-x: clip; position: relative; }
+  .section-pad { padding-top: var(--spacing-section); padding-bottom: var(--spacing-section); }
+  .container { margin: 0 auto; max-width: 1280px; padding: 0 1.5rem; }
+  .header-offset { padding-top: 56px; }
+  .article-col { margin: 0 auto; max-width: 760px; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: .375rem;
+    font-size: .8125rem; line-height: 1.4; color: var(--text-tertiary);
+    transition: color .2s; margin-bottom: var(--spacing-group);
+  }
+  .back-link:hover { color: var(--text-secondary); }
+
+  .label--gold {
+    display: inline-block; font-size: .75rem; letter-spacing: .14em; text-transform: uppercase;
+    font-weight: 400; padding: .4375rem .875rem; border-radius: 999px;
+    color: var(--gold-200);
+    border: 1px solid rgba(200,148,26,.45);
+    background: rgba(200,148,26,.10);
+  }
+  .article-title {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 600; line-height: 1.08; letter-spacing: -.04em;
+    color: var(--text-primary); margin-top: var(--spacing-group);
+  }
+  .meta-row {
+    margin-top: var(--spacing-group);
+    display: flex; flex-wrap: wrap; align-items: center;
+    column-gap: .75rem; row-gap: .5rem;
+    font-size: .8125rem; line-height: 1.4; color: var(--text-tertiary);
+  }
+  .meta-row .tag { color: var(--purple-400); }
+
+  .cover {
+    margin-top: var(--spacing-block);
+    position: relative; aspect-ratio: 16 / 9; width: 100%;
+    overflow: hidden; border-radius: 18px;
+    border: var(--glass-border-gold);
+    box-shadow: var(--shadow-card);
+  }
+  .cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+  /* ── Prose ── */
+  .prose-wrap { margin-top: var(--spacing-block); }
+  .prose-blog {
+    color: var(--text-secondary); font-size: 1.1875rem; font-weight: 400;
+    line-height: 1.55; letter-spacing: -.01em; max-width: 62ch;
+  }
+  .prose-blog h2 { color: var(--text-primary); font-size: 1.75rem; font-weight: 600; line-height: 1.1; letter-spacing: -.025em; margin-top: 3rem; margin-bottom: 1rem; }
+  .prose-blog p { margin-bottom: 1.25rem; }
+  .prose-blog a { color: var(--gold-400); text-decoration: underline; text-underline-offset: 3px; transition: color .2s cubic-bezier(.16,1,.3,1); }
+  .prose-blog a:hover { color: var(--gold-200); }
+  .prose-blog strong { color: var(--text-primary); font-weight: 600; }
+  .prose-blog ul { padding-left: 1.5rem; margin-bottom: 1.25rem; list-style: disc; }
+  .prose-blog li { margin-bottom: .5rem; }
+  .prose-blog li::marker { color: var(--gold-500); }
+  .prose-blog blockquote {
+    border-left: 2px solid var(--gold-500);
+    background: rgba(200,148,26,.06);
+    border-radius: 0 8px 8px 0; padding: 1rem 1.5rem; margin: 1.75rem 0;
+    color: var(--text-primary); font-style: italic;
+  }
+  .prose-blog blockquote p:last-child { margin-bottom: 0; }
+
+  /* ── Autor-Card ── */
+  .author-card {
+    margin: var(--spacing-block) auto 0; max-width: 760px;
+    display: flex; flex-direction: column; gap: 1.25rem;
+    background: var(--surface-alt); border-radius: 18px; padding: 1.5rem;
+    border: var(--glass-border-gold);
+    box-shadow: var(--shadow-card);
+  }
+  @media (min-width: 640px) {
+    .author-card { flex-direction: row; align-items: center; gap: 1.5rem; padding: 2rem; }
+  }
+  .author-card .avatar { height: 72px; width: 72px; flex-shrink: 0; border-radius: 999px; object-fit: cover; }
+  .author-card .body { display: flex; flex-direction: column; gap: .5rem; }
+  .author-card .eyebrow { font-size: .8125rem; line-height: 1.4; color: var(--text-tertiary); text-transform: uppercase; }
+  .author-card .name { color: var(--text-primary); font-size: 1.125rem; font-weight: 600; }
+  .author-card .slogan { font-size: .8125rem; line-height: 1.4; color: var(--text-secondary); }
+  .author-card .socials { margin-top: .25rem; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+  .author-card .socials a { color: var(--text-tertiary); transition: color .2s; display: inline-flex; }
+  .author-card .socials a:hover { color: var(--gold-400); }
+  .author-card .socials svg { height: 20px; width: 20px; }
+
+  /* ── Footer ── */
+  .site-footer { background: var(--surface-raised); border-top: 1px solid var(--border-subtle); }
+  .site-footer .inner { margin: 0 auto; max-width: 1440px; padding: 2rem 1.5rem; }
+  .site-footer .row { display: flex; flex-direction: column; gap: 1.5rem; }
+  @media (min-width: 640px) { .site-footer .row { flex-direction: row; align-items: center; justify-content: space-between; } }
+  .site-footer nav { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.5rem; row-gap: .5rem; }
+  .site-footer .social-row { display: flex; align-items: center; gap: 1.25rem; }
+  .site-footer a { color: var(--text-tertiary); font-size: 12px; font-weight: 400; transition: color .1s; }
+  .site-footer a:hover { color: var(--text-secondary); }
+  .site-footer .copyright { color: var(--text-tertiary); margin-top: 1.5rem; font-size: 12px; line-height: 1.5; letter-spacing: -.05px; }
+
+  /* ── Entrance-Animationen (Artikel-Header-Kaskade) ── */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(.93); } to { opacity: 1; transform: scale(1); } }
+    .anim-pill  { animation: fadeUp .4s cubic-bezier(.16,1,.3,1) both; }
+    .anim-title { animation: fadeUp .65s cubic-bezier(.16,1,.3,1) .15s both; }
+    .anim-meta  { animation: fadeUp .55s cubic-bezier(.16,1,.3,1) .35s both; }
+    .anim-cover { animation: scaleIn .9s cubic-bezier(.16,1,.3,1) .6s both; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <a class="logo-link" href="https://www.todasolutions.com/de" aria-label="TODA">
+      <img src="{{LOGO}}" alt="TODA" width="74" height="36" style="display:block">
+    </a>
+    <nav>
+      <div class="nav-links">
+        <a class="nav-link" href="https://www.todasolutions.com/de/#features">Funktionen</a>
+        <a class="nav-link" href="https://www.todasolutions.com/de/#pricing">Preis</a>
+        <a class="nav-link" href="https://www.todasolutions.com/de/#faq">FAQ</a>
+      </div>
+      <a class="nav-link active" href="https://www.todasolutions.com/de/blog">Blog</a>
+      <div class="lang-switch">
+        <a class="active" href="#">de</a><span class="sep">|</span><a href="#">en</a><span class="sep">|</span><a href="#">es</a>
+      </div>
+      <a class="cta-button" href="https://app.toda.ink/onboarding" target="_blank" rel="noopener noreferrer">Loslegen</a>
+    </nav>
+  </div>
+</header>
+
+<div class="progress"><div class="bar" id="progressBar"></div></div>
+
+<section id="article" class="article-section">
+  <div class="section-pad">
+    <div class="container">
+      <div class="header-offset">
+
+        <div class="article-col">
+          <a class="back-link" href="https://www.todasolutions.com/de/blog">&#8592; Zurück zum Blog</a>
+        </div>
+
+        <header class="article-col">
+          <span class="label--gold anim-pill">{{CATEGORY}}</span>
+          <h1 class="article-title anim-title">{{TITLE}}</h1>
+          <div class="meta-row anim-meta">
+            <span>{{META_LINE}}</span>
+            {{TAGS_HTML}}
+          </div>
+          <figure class="cover anim-cover">
+            <img src="{{COVER}}" alt="{{COVER_ALT}}">
+          </figure>
+        </header>
+
+        <div class="prose-wrap article-col">
+          <div class="prose-blog">
+            {{CONTENT_HTML}}
+          </div>
+        </div>
+
+        <aside class="author-card">
+          <img class="avatar" src="{{AVATAR}}" alt="{{AUTHOR_NAME}}">
+          <div class="body">
+            <span class="eyebrow">Geschrieben von</span>
+            <p class="name">{{AUTHOR_NAME}}</p>
+            <p class="slogan">{{AUTHOR_SLOGAN}}</p>
+            <div class="socials">
+              {{AUTHOR_SOCIALS}}
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="inner">
+    <div class="row">
+      <nav aria-label="Legal">
+        <a href="https://www.todasolutions.com/de/imprint">Impressum</a>
+        <a href="https://www.todasolutions.com/de/privacy">Datenschutz</a>
+        <a href="https://www.todasolutions.com/de/blog">Blog</a>
+      </nav>
+      <div class="social-row">
+        <a href="https://www.instagram.com/toda.tattoosolutions/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://www.youtube.com/@TODATattooSolutions" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="https://www.facebook.com/profile.php?id=61587056530237" target="_blank" rel="noopener noreferrer">Facebook</a>
+      </div>
+    </div>
+    <p class="copyright">© 2026 TODA Solutions. Alle Rechte vorbehalten.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var bar = document.getElementById("progressBar");
+    if (!bar || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    function update() {
+      var max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(scrollY / max, 1) : 0) + ")";
+    }
+    addEventListener("scroll", update, { passive: true });
+    update();
+  })();
+</script>
+
+</body>
+</html>
