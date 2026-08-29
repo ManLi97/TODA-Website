@@ -213,6 +213,39 @@ export async function getPublishedAlternates(postId: string): Promise<PublishedA
   return alternates;
 }
 
+/**
+ * Cross-locale slug fallback — heals the language switcher (and shared links)
+ * landing on a source-locale slug, e.g. /en/blog/<de-slug>. Returns null when
+ * the slug belongs to no published translation in any other locale (→ real 404);
+ * otherwise { siblingSlug } with the target locale's published slug, or
+ * siblingSlug null when that locale has no published sibling (→ listing).
+ */
+export async function resolveCrossLocaleSlug(
+  slug: string,
+  targetLocale: BlogLocale
+): Promise<{ siblingSlug: string | null } | null> {
+  const supabase = createStaticClient();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from("blog_post_translations")
+    .select("post_id")
+    .eq("slug", slug)
+    .neq("locale", targetLocale)
+    .eq("status", "published")
+    .lte("published_at", new Date().toISOString())
+    .limit(1)
+    .maybeSingle();
+  if (error) {
+    console.error("[blog] resolveCrossLocaleSlug:", error.message);
+    return null;
+  }
+  if (!data) return null;
+
+  const alternates = await getPublishedAlternates(data.post_id);
+  return { siblingSlug: alternates[targetLocale] ?? null };
+}
+
 export async function getRelatedPosts(
   postId: string,
   categorySlug: string | null,
