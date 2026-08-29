@@ -33,10 +33,17 @@ Eigener Kanal = eigene Analytics. Signale:
   Kanal-Median** (gleiche Outlier-Logik wie topic-radar: eine überdurch-
   schnittliche Folge ist ein stärkeres Themensignal als eine durchschnittliche,
   unabhängig von der absoluten Kanalgröße).
-- **Kommentar-Mining:** Top-Kommentare der Kandidaten-Folge scrapen (Apify,
-  vgl. den YouTube-Kommentar-Test in `topic-radar.md`, Lauf 11.06.) → welche
-  These / welches Segment zündet, welche Fragen sich wiederholen. Das legt den
-  artikel-fähigen **Kern** einer 60–90-Minuten-Folge frei.
+- **Kommentar-Mining:** Top-Kommentare der Kandidaten-Folge über den
+  Data-API-Helper `lib/mining/youtube.ts` (`commentThreads`, `order=relevance`)
+  bzw. `pnpm mining:sync --source yt-comments` → welche These / welches Segment
+  zündet, welche Fragen sich wiederholen. Das legt den artikel-fähigen **Kern**
+  einer 60–90-Minuten-Folge frei. *(Korrektur 2026-08-29: Hier stand Apify —
+  die Strecke ist seit 08/2026 komplett ersetzt, siehe SKILL.md 1.1. Der
+  Lauf-Eintrag vom 18.06. nennt Apify historisch korrekt und bleibt unverändert.)*
+- **Clips als Ersatz, solange der Kanal klein ist:** Gebaute Clips im
+  `toda-video-tool` sind eine fertige Segment-Bewertung durch zwei unabhängige
+  Verfahren (OpusClip-Viralitätsscore, Community-Puls) — bei einem Kanal ohne
+  nennenswerte Kommentare tragen sie die Auswahl (belegt Lauf 2).
 - **Selbst-Contained-Check:** Trägt das Segment eine in sich geschlossene
   These / Story / Anleitung, die als 600–650-Wörter-Artikel steht?
 

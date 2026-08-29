@@ -101,6 +101,11 @@ bildhafter Brancheninsider-Vergleich.
 ### R8 — TODA: genau EINE Erwähnung, selbst-ironisch/zwinkernd
 Tomek konsolidiert auf **eine** Stelle und rahmt sie augenzwinkernd.
 - zwei Erwähnungen (AGB-PDF + Widget) → eine: „Kurze Schleichwerbung: Deine AGB schickt TODA immer automatisch für dich mit … 🤓"
+- **Wortwahl korrigiert (Tomek, 2026-08-29): „Kurze Eigenwerbung", nicht
+  „Schleichwerbung".** Die Formel bleibt, das Wort geht — „Schleichwerbung" ist der
+  deutsche Rechtsbegriff für *unzulässige* Werbung (Kennzeichnungspflicht), und ihn
+  über die eigene Produkterwähnung auf einer gewerblichen Seite zu schreiben, ist
+  unnötig angreifbar. Der Zwinker trägt genauso. Erstanwendung: Rabatte-Artikel.
 - explizit „TODA-Anfrage-Widget" → softer „(wie das von uns entwickelte Widget)"
 - → Im Zweifel **eine** Erwähnung, lieber zu dezent als zu werblich. (TODA-Mention-Dichte → auch SKILL.md-relevant.)
 

@@ -49,6 +49,15 @@ Toddcast-Artikel ist Stil-Lernmaterial wie jeder andere. Nichts Neues → weiter
   nie übernommen (Whitelist-Mapper).
 
 ### 1.1 Episoden-Intake (Hybrid)
+
+**Vorrang-Regel (Lauf 2, 2026-08-29): Ist die Folge im `toda-video-tool` als
+erschlossene Episode vorhanden, schlägt deren Transkript die YouTube-Captions.**
+Prüfen unter `podcast/toda-toddcast/<episode>/reference/` — liegt dort ein
+`transkript.json` samt Dreh-Datenblatt, entfallen Schritt 2–4 (Captions,
+Fenster-Merge, Qualitäts-Gate): das Transkript ist bereits satzweise, mit
+Timestamps und ohne ASR-Namensfehler. Die DeepAPI-Strecke bleibt der Weg für
+Folgen ohne erschlossene Episode (Fremdkanäle, Altbestand).
+
 1. **Video-ID** aus der URL: `parseYouTubeInput()` aus `lib/blog/youtube.ts`
    (normalisiert watch / youtu.be / embed / live / shorts / nocookie → 11-Zeichen-ID).
 2. **Captions ziehen (DeepAPI):** `POST /v1/scrape/youtube/transcript`
@@ -67,14 +76,36 @@ Toddcast-Artikel ist Stil-Lernmaterial wie jeder andere. Nichts Neues → weiter
    YouTube-Beschreibung ziehen. Ohne verlässliches Lineup → locker attribuieren
    („eine Gast-Künstlerin erzählt im Toddcast …"), **nie** einen aus Captions
    geratenen Namen behaupten.
+6. **Zitierfähigkeit: `transkript.json` ist NICHT die Sprecher-Wahrheit.** Auch das
+   erschlossene Transkript trägt Sprecherfehler; die bild-verifizierten Korrekturen
+   leben in den `szenen.md` der gebauten Clips und sind **nicht immer
+   zurückgeschrieben**. Regel: **Namentlich zitiert wird nur, was eine `szenen.md`
+   bestätigt.** Sätze, die dort ein ⚠️, „Patt" oder eine abweichende Zuordnung
+   tragen, werden ohne Sprecher wiedergegeben oder paraphrasiert. Belegt in Lauf 2:
+   Die 400-Euro-Zeile (#201–#202) steht in `transkript.json` als VOSSI, die
+   `szenen.md` von `vossi-400-euro-illusion` weist sie per Bildbeweis TOMEK zu.
 
 ### 1.2 Segment-Auswahl (Radar Phase A — Hybrid, Tomek bestätigt)
-Aus dem Transkript das **eine** artikel-fähige Segment wählen: eine in sich
-geschlossene These/Story/Anleitung mit DACH-Such-Demand-Potenzial. Kommentar-
-Mining zeigt, welches Segment zündet. Segment-Timestamp notieren →
-`video_start_seconds`. Kandidaten Tomek vorlegen, er bestätigt.
-**Eine Folge → ein Artikel pro Lauf**; dieselbe Folge kann später für ein anderes
-Segment wiederkommen (Dedup-Check trackt benutzte Slugs/Themen).
+Aus dem Transkript die artikel-fähige **These** wählen: in sich geschlossen, mit
+DACH-Such-Demand-Potenzial. Kommentar-Mining zeigt, welches Segment zündet.
+Segment-Timestamp notieren → `video_start_seconds`. Kandidaten Tomek vorlegen, er
+bestätigt. **Eine Folge → ein Artikel pro Lauf**; dieselbe Folge kann später für
+eine andere These wiederkommen (Dedup-Check trackt benutzte Slugs/Themen).
+
+Zwei Präzisierungen aus Lauf 2 (2026-08-29):
+
+- **Mehrere Segmente dürfen gebündelt werden, wenn sie EINE These tragen.** R4
+  („ein zentraler Fall/Fakt") gilt der These, nicht der Fundstelle. Belegt: Drei
+  Passagen zu Rabatt/Preis (Gegenrechnung 00:14:54, Kern 01:04:10, Mechanik
+  01:09:03) ergaben einen Artikel statt drei dünner. `video_start_seconds` zeigt
+  dann auf das **Kernsegment**, die übrigen Fundstellen gehören in den
+  Radar-Eintrag.
+- **Bei kleinem Kanal ersetzen gebaute Clips das Kommentar-Mining.** Existieren im
+  `toda-video-tool` Clips zur Folge, sind sie eine fertige Segment-Bewertung durch
+  zwei unabhängige Verfahren (Route A = OpusClip-Viralitätsscore, Route B =
+  Community-Puls). Ihre `szenen.md` liefern zugleich Timecodes und die
+  bild-verifizierte Sprecherzuordnung. Kommentar-Mining lohnt erst, wenn der Kanal
+  Kommentare trägt (Erstlauf-Stand: 31 Abos).
 
 ## Lauf 2 — Validieren, Schreiben, Einfügen
 
