@@ -3,11 +3,11 @@ focus_plan: true
 slug: "seo-connected-entity-graph"
 title: "Connected structured-data entity graph for TODA"
 revision: 1
-auto_mode: Awaiting-Approval
-execution: Not-Started
+auto_mode: Approved
+execution: In-Progress
 base_commit: "effac142e4ff1a4efbee549371cf45b661457751"
 created_at: "2026-08-28T23:47:33Z"
-approved_at: null
+approved_at: "2026-08-29T00:00:31Z"
 ---
 
 # Connected structured-data entity graph for TODA
