@@ -27,7 +27,13 @@ try {
 
 const arg = (name: string): string | undefined => {
   const i = process.argv.indexOf(`--${name}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
+  if (i < 0) return undefined;
+  const value = process.argv[i + 1];
+  // A flag without a value (end of argv, or the next token is another flag) must fail
+  // loudly — falling through to a default silently ran the FULL paid battery once.
+  if (value === undefined || value.startsWith("--"))
+    throw new Error(`--${name} needs a value (e.g. --${name} yt-channels)`);
+  return value;
 };
 const flag = (name: string): boolean => process.argv.includes(`--${name}`);
 
