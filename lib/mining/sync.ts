@@ -43,6 +43,31 @@ export function computeCoveragePct(rows: TopicSignalRow[], pass: IngestMeta["pas
   return Math.round((good.length / rows.length) * 10000) / 100;
 }
 
+// Scraped text is untrusted input, and PostgREST parses the whole row payload as
+// JSON: a lone UTF-16 surrogate (a truncated emoji half) fails the entire chunk
+// with "invalid input syntax for type json", and Postgres additionally rejects
+// NUL (U+0000) in text/jsonb. toWellFormed() replaces lone surrogates with U+FFFD.
+// First hit: a YouTube comment, 2026-08-29.
+const cleanString = (s: string) => s.toWellFormed().replaceAll(String.fromCharCode(0), "");
+function stripNullBytes(row: TopicSignalRow): TopicSignalRow {
+  return {
+    ...row,
+    title: cleanString(row.title),
+    source: cleanString(row.source),
+    body: row.body === null ? null : cleanString(row.body),
+    matched_term: row.matched_term === null ? null : cleanString(row.matched_term),
+    metrics:
+      row.metrics === null
+        ? null
+        : (Object.fromEntries(
+            Object.entries(row.metrics).map(([k, v]) => [
+              cleanString(k),
+              typeof v === "string" ? cleanString(v) : v,
+            ])
+          ) as TopicSignalRow["metrics"]),
+  };
+}
+
 // A single upsert statement cannot carry two rows with the same conflict key, so
 // dedupe on external_id first (last write wins).
 function dedupeByExternalId(rows: TopicSignalRow[]): TopicSignalRow[] {
@@ -130,10 +155,14 @@ export async function ingestOutput(
       return outcome;
     }
 
-    for (let i = 0; i < rows.length; i += UPSERT_CHUNK) {
+    // Postgres/PostgREST reject NUL bytes and lone surrogates — scraped comment text can carry null
+    // bytes (first hit: a YouTube comment, 2026-08-29), which failed the whole chunk.
+    const sanitized = rows.map(stripNullBytes);
+
+    for (let i = 0; i < sanitized.length; i += UPSERT_CHUNK) {
       const { error } = await supabase
         .from("topic_signals")
-        .upsert(rows.slice(i, i + UPSERT_CHUNK), { onConflict: "run_id,external_id" });
+        .upsert(sanitized.slice(i, i + UPSERT_CHUNK), { onConflict: "run_id,external_id" });
       if (error) throw new Error(`topic_signals upsert failed: ${error.message}`);
     }
 
