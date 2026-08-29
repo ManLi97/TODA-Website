@@ -132,6 +132,13 @@ Schluss-Signatur einsetzen.
   künftig bei Rechts-/Geld-Themen einen solchen Rubrik-Tag mitliefern. **DE
   hat einen Tippfehler: `Rech-und-Kohle` → soll `Recht-und-Kohle`.** Tomek
   beim Publish-Review nennen (Skill ändert keine bestehenden Posts).
+- **29.08.2026 — Artist-Korrektur (`/artist-story` Lauf 1):** Einzige
+  Korrektur von Markus Vossi an seiner Story: Der Text hatte „nach der
+  Ausbildung sofort weg" verdichtet — real hat er noch ~1 Jahr als
+  Dachdecker gearbeitet und dabei mehrfach den Betrieb gewechselt (erst
+  das erklärt die Winter-Arbeitslosigkeit). Muster: **Zeitachsen aus dem
+  O-Ton nicht dramaturgisch verdichten** — die unglatte Realität ist das
+  Authentizitätssignal des Formats, nicht der Feind der Story.
 - **11.06.2026 — Artikel gelöscht statt korrigiert:**
   `dsgvo-tattoo-studio-kundendaten` (DSGVO, Lauf 1) wurde zusammen mit
   den 3 Seed-Posts aus der DB gelöscht. Grund noch unbestätigt
@@ -151,3 +158,4 @@ Schluss-Signatur einsetzen.
 | reach-taetowierfarben-erklaert | ✅ | — | Draft, wartet auf Publish |
 | dsgvo-tattoo-studio-kundendaten | ✅ (rekonstruiert) | — | gelöscht, siehe oben |
 | taetowierer-burnout-kundenkommunikation (Toddcast #1 Recycling) | ✅ | — | **neuer Draft 18.06.2026** — erster `/podcast-article`-Lauf. R1–R10 angewandt, ~610 W, 1 TODA-Mention (zwinkernd), Signatur-Schluss, Embed `rdOlY1-Bp5E`@1236s. Wartet auf Publish. |
+| vom-dachdecker-zum-tattoo-artist (Artist-Story, Toddcast #1) | ✅ | — | **neuer Draft 29.08.2026** — erster `/artist-story`-Insert nach dokumentiertem Artist-Go (Markus Vossi). Einzige Artist-Korrektur eingearbeitet (Dachdecker-Jahr nach Ausbildung, s. Feedback-Signale). Eigener Autor-Datensatz + Avatar/Cover in Storage, Kategorie toda-podcast. Wartet auf Publish. |
