@@ -237,8 +237,14 @@ export function mapSpecItems(spec: SourceSpec, output: unknown, runId: string): 
 
 // --- yt-comments target selection (Phase 2) -----------------------------------
 
+// Cheap German heuristic: umlauts/ß or German function words in the title. Dynamic
+// comment targets must stay DACH — raw view sorting picked EN videos (measured
+// 2026-08-29: 298 comments, 0 % German).
+const GERMAN_HINT = /[äöüß]|\b(der|die|das|und|nicht|ich|mit|für|ist|wie|dein|beim)\b/i;
+
 // Deterministic: dedupe by videoId, drop reference-channel videos (their comments
-// would double-count the channels we already median), take the top N by views,
+// would double-count the channels we already median), prefer German-titled videos by
+// views (fallback: overall top views, so Phase 2 never starves), take the top N,
 // then append the optional fixed list.
 export function selectYtCommentTargets(searchItems: RawYoutubeSearchVideo[]): string[] {
   const refHandles = new Set(YT_REFERENCE_CHANNELS.map((h) => h.replace(/^@/, "").toLowerCase()));
@@ -249,8 +255,9 @@ export function selectYtCommentTargets(searchItems: RawYoutubeSearchVideo[]): st
     if (handle && refHandles.has(handle)) continue;
     byId.set(item.id, item);
   }
-  const top = [...byId.values()]
-    .sort((a, b) => (b.views ?? 0) - (a.views ?? 0))
+  const byViews = [...byId.values()].sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
+  const german = byViews.filter((v) => GERMAN_HINT.test(v.title ?? ""));
+  const top = (german.length > 0 ? german : byViews)
     .slice(0, YT_COMMENT_TARGETS)
     .map((v) => v.id as string);
   for (const fixed of YT_COMMENT_VIDEOS) if (!top.includes(fixed)) top.push(fixed);

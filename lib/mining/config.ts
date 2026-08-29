@@ -42,9 +42,14 @@ export type SourceSpec = {
 // median base for x-ratios. Rows are broad with engagement = views.
 export const YT_REFERENCE_CHANNELS = ["@inkarea", "@honesttattooerpodcast"];
 
-// German click-demand queries (fixed set, matches the proven /community-voices battery).
+// German click-demand queries (fixed set). Doctrine: AUDIENCE/DOMAIN anchors only —
+// never trend-topic anchors (a fixed "KI Tattoo" query would "discover" its own topic
+// every week; measured 2026-08-29 it even matched Hindi "ki" content). Trend topics
+// enter as ad-hoc skill-run queries, "neu"-labelled, recall-only. "Tattoo Preise" is
+// a deliberate EVERGREEN pain bucket (permanent ICP pain, not a trend) — its hits are
+// validation material, never discovery evidence. Umlaut words double as language anchor.
 const YT_SEARCH_QUERIES = [
-  "KI Tattoo",
+  "Tätowierer Deutschland",
   "Tattoo Podcast deutsch",
   "Tätowierer werden",
   "Tattoo Studio Alltag",
@@ -56,7 +61,9 @@ const YT_SEARCH_QUERIES = [
 const IG_HASHTAGS = ["tattoodeutschland", "tattooartistgermany", "taetowierer"];
 
 // Trend early-warning queries (mostly consumer — context only, labelled by consumers).
-const TIKTOK_SEARCH_QUERIES = ["Tätowierer werden", "Tattoo Studio Alltag"];
+// "Tattoo Studio Alltag" matched EN walk-in ads + spam (measured 2026-08-29) — the
+// umlaut in "Tätowierer" is the language anchor that keeps results DACH.
+const TIKTOK_SEARCH_QUERIES = ["Tätowierer werden", "Tätowierer Alltag"];
 
 // Fixed TikTok comment videos: DE artist-education content with active comment
 // sections — real DACH voices. Selected 2026-08-29 from a live
@@ -64,17 +71,22 @@ const TIKTOK_SEARCH_QUERIES = ["Tätowierer werden", "Tattoo Studio Alltag"];
 // "Tätowieren lernen", 6 months): German-language artist/education videos with the
 // most comments; consumer travel/challenge content excluded (Anti-ICP).
 export const TIKTOK_COMMENT_VIDEOS = [
-  "https://www.tiktok.com/@die.muse.tattoo/video/7623121781875903777", // Wanna-Do-Aktion, 293 comments
+  // die.muse.tattoo Wanna-Do-Aktion removed 2026-08-29: giveaway video, comments were
+  // consumer one-liners ("ich auch bitte"), Ø 19 chars — no artist voice.
+  "https://www.tiktok.com/@jeanne.tattoo/video/7616787067351125270", // Beginner-Journey "Ich hab es getan", 82 comments
   "https://www.tiktok.com/@laura.tattooart/video/7633831863844457760", // Tätowieren lernen, 138 comments
   "https://www.tiktok.com/@alessandro.bongiovanni/video/7645913476631760161", // Selbstlern-Journey, 123 comments
 ];
 
 // Open-web variants: forums, trade press (feelfarbig, Tattoo Spirit), what platform
 // endpoints don't see. 5 fixed variants — skill runs may add "neu"-labelled extras.
+// Two of the original five matched only EN SEO listicles / EN reddit snippets
+// (measured 2026-08-29, 0 % German) — reworded with umlaut + "Deutschland" anchors.
+// "no show Anzahlung" is an EVERGREEN pain bucket (validation material, not discovery).
 const WEB_QUERIES = [
-  "Tattoo Branche Deutschland Trends 2026",
+  "Worüber diskutieren Tätowierer in Deutschland aktuell",
   "Tätowierer Selbstständigkeit Probleme Erfahrungen",
-  "Tattoo Studio eröffnen Voraussetzungen Forum",
+  "Eigenes Tattoo Studio eröffnen Erfahrungen Deutschland Tätowierer",
   "feelfarbig Tattoo Spirit aktuelle Themen Tätowierer",
   "Tattoo Preise Diskussion no show Anzahlung",
 ];

@@ -21,6 +21,15 @@ Drei Ströme:
   bleibt als quantitative Diskussions-Baseline mit Label **Hypothese**
   (EN→DACH-Übertragung); echte DACH-Stimmen liefern die Kontext-Quellen
   (TikTok-/YouTube-Kommentare, Web-Snippets).
+  **Query-Doktrin der festen Batterie (seit 29.08.):** Such-Queries sind
+  **Publikums-/Domain-Anker, nie Trend-Themen-Anker** — eine feste
+  „KI Tattoo“-Query würde ihr eigenes Thema jede Woche „entdecken“
+  (Seed-Bias). Discovery kommt aus den ungeseedeten Quellen (Reddit-broad,
+  Kanal-Referenzen, Kommentare, Hashtags); Trend-Themen-Queries laufen nur
+  ad hoc im Skill-Lauf, „neu“-gelabelt, recall-only. Bewusste Ausnahme:
+  Evergreen-Pain-Buckets („Tattoo Preise“, „no show Anzahlung“) — deren
+  Treffer sind Validierungs-Material, nie Discovery-Beleg. Umlaut-Wörter
+  („Tätowierer“) dienen als Sprach-Anker gegen EN-Drift.
 - **Strom B — DACH-Radar:** Tier-1/2-Quellen auf Neuigkeiten prüfen
   (neue Urteile, Verordnungs-Updates). Liefert Themen, die auf Reddit
   nie auftauchen, weil die Communities US-lastig sind.
@@ -522,3 +531,44 @@ Verdikte (276 DeepAPI- + 300 Kommentar-Zeilen) — der nächste
 
 **Offen:** Vercel-Env (`DEEPAPI_*`, `YOUTUBE_API_KEY` setzen; `APIFY_TOKEN`
 entfernen) + Deploy + erster Montags-Cron — 🔴 bei Tomek.
+
+## Lauf 2026-08-29 (nachts) — Batterie-Tuning nach Datenqualitäts-Messung
+
+**Anlass:** Erster Production-Cron (manuell getriggert) + voller
+`--fresh`-Lauf, danach Sprach-/Inhalts-Messung aller Quellen per SQL
+(DE-Heuristik über Titel+Body, Stichproben-Lesung der Ausreißer).
+
+**Befunde (vorher):** `yt-search/ki-tattoo` 0 % DE — „KI“ matchte
+Hindi/Bengali-Content (Bollywood-Songs); `tiktok-search/tattoo-studio-alltag`
+0 % DE (EN-Walk-in-Werbung, Spam); `web/tattoo-branche-…-trends` und
+`web/…-eroeffnen-…-forum` 0 % DE (EN-SEO-Listicles bzw. EN-Reddit-Snippets);
+`yt-comments` 298 Kommentare, 0 % DE (Top-Views-Zielauswahl wählte
+EN-Videos); `tiktok-comments/7623…` (Giveaway-Video) Ø 19 Zeichen
+Consumer-Einzeiler. Stark: TikTok-Kommentare der DE-Artist-Videos
+(87–100 % DE, Ø 116–147 Z.), 3/5 Web-Queries (100 % DE), IG-Hashtags,
+Reddit-broad + yt-channels (Scoring).
+
+**Änderungen (`lib/mining/config.ts` + `mappers.ts`; geänderte Quellen
+laufen 2 Läufe als „neu“, Deltas erst ab Lauf 3):**
+
+1. Query-Doktrin (→ Methode v2): Themen-Anker „KI Tattoo“ raus →
+   Domain-Anker „Tätowierer Deutschland“.
+2. `tiktok-search`: „Tattoo Studio Alltag“ → „Tätowierer Alltag“
+   (Umlaut-Anker).
+3. Web: 2 tote Queries deutsch verankert („Worüber diskutieren Tätowierer
+   in Deutschland aktuell“, „Eigenes Tattoo Studio eröffnen Erfahrungen
+   Deutschland Tätowierer“).
+4. `selectYtCommentTargets`: DE-Titel-Filter (GERMAN_HINT-Regex) vor
+   Views-Ranking, Fallback Top-Views.
+5. TikTok-Fix-Liste: Giveaway-Video ersetzt durch
+   @jeanne.tattoo/7616787067351125270 (Beginner-Journey, 82 Kommentare).
+6. Ingest-Härtung: `cleanString` (toWellFormed + NUL-Strip) auf allen
+   Text-/metrics-Feldern — ein Lone Surrogate in einem YouTube-Kommentar
+   hatte einen kompletten 100er-Chunk scheitern lassen
+   („invalid input syntax for type json“).
+
+**Nachher (gemessener Verifikations-Lauf, 23/23 succeeded, 634 Items):**
+`yt-comments` 0 → **86 % DE** (Ø 141 Z.); `web/worueber…` **100 % DE**;
+`web/eigenes…` **88 % DE**; `yt-search/taetowierer-deutschland` **67 % DE**;
+`tiktok-search/taetowierer-alltag` **50 % DE**; neues TikTok-Video 57 % DE
+mit echten Inhalten. Run-IDs im `mining_runs`-Log dieser Nacht.
