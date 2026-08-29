@@ -211,7 +211,10 @@ Marketing-Repo: `/Users/harvestflow/Developer/toda/marketing/channels/instagram.
 Gibt es zur Artist-Story eine **öffentliche Toddcast-Folge** — nicht immer
 der Fall, bei Vossi (2026-08-29) schon —, entsteht zusätzlich zum Carousel
 **ein Story-Bild, das auf die Folge zeigt**. Kein Ersatz für die
-Artikel-Story aus Lauf 4, sondern ein zweiter Baustein.
+Artikel-Story aus Lauf 4, sondern ein zweiter Baustein. Die Kanal- und
+Format-Wahrheit liegt wie bei Lauf 4 im Marketing-Repo:
+`/Users/harvestflow/Developer/toda/marketing/channels/instagram.md`
+→ „Podcast-Story" — Pflichtlektüre vor dem Bauen.
 
 1. **Warum YouTube-Look, nicht TODA-Look.** Der Link-Sticker ist laut
    `channels/instagram.md` der einzige Ort, an dem ein externer Link
