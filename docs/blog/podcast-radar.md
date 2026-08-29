@@ -129,3 +129,64 @@ keine Tier-1/2 nötig (kein Rechts-/Zahlenanspruch; Erfahrungs-/Beratungsebene).
 `359e6fe0-7824-4857-9a00-3ba8538358a0`), Kategorie Handwerk & Studio, ~610 Wörter,
 R1–R10, 1 TODA-Mention (zwinkernd), Signatur-Schluss. Erster `/podcast-article`-Lauf
 (zugleich B2-Akzeptanztest).
+
+---
+
+## Lauf 2026-08-29 — Folge „Vom Dachdecker zum Tattoo-Artist": Rabatte & Preisspirale
+
+**Folge:** Toddcast, `youtube.com/watch?v=_zy3a1RIaWE`, live 29.08.2026.
+Lineup: Tomek (TODA, Host), Markus „Skeet" Vossi (Gast).
+
+**Intake — Abweichung von Lauf 1 (bewusst):** KEINE YouTube-Auto-Captions.
+Stattdessen das Transkript aus `toda-video-tool`
+(`podcast/toda-toddcast/vossi-tomek-toddcast1/reference/transkript.json`, 998 Sätze)
+plus die `szenen.md` der gebauten Clips als **bild-verifizierte** Sprecherquelle.
+Daraus ist die Vorrang-Regel in SKILL.md 1.1 entstanden.
+
+**Segment-Auswahl — ebenfalls abweichend:** Der Kanal ist zu jung für
+Kommentar-Mining (31 Abos beim Erstlauf). Als Engagement-Ersatz dienten die 13
+gebauten Clips — zwei unabhängige Verfahren haben die Folge bereits nach
+tragfähigen Stellen abgesucht (Route A = OpusClip-Viralitätsscore, Route B =
+Community-Puls). Drei Clips tragen dieselbe These und wurden zu einem Artikel
+verdichtet: `vossi-rabatte-falle` (01:04:10–01:06:22, Kern),
+`vossi-unter-wert-verkaufen` (01:09:03–01:10:40, Mechanik),
+`vossi-400-euro-illusion` (00:14:54–00:16:32, Gegenrechnung).
+`video_start_seconds = 3899` zeigt auf das Kernsegment.
+
+**Gates:**
+1. **Dedup ✅** — Preis/Rabatt ist in `blog_post_translations` unbesetzt.
+   Nachbarn: `tattoo-anzahlung-no-shows-recht` (draft, Anzahlung ≠ Rabatt) und
+   `eigentlich-bin-ich-…-laecheln…` (Erwartungsmanagement) — Letzterer als
+   interner Link genutzt.
+2. **Such-Validierung ✅** — 6 DeepAPI-Web-Suchen (29.08.2026). Artist-facing
+   DE-Demand belegt: „Stundensatz für Tätowierer kalkulieren", „Tattoo Preise
+   berechnen: Stundensatz & Kalkulation" (nennt Vorbereitungszeit als unbezahlte
+   Arbeitszeit), „Viele Tattoo Künstler verkaufen sich unter Wert!" (2 Monate alt),
+   „Tattoo Talk #28 – Preismodelle im Tattoostudio" (12/2025).
+   **Der Befund, der den Winkel setzt:** Die Rabattfallen-These ist im deutschen
+   Handwerk vollständig durchdekliniert (handwerk.com, dhz.net, Handwerksblatt,
+   handwerk magazin), in der Tattoo-Nische DE praktisch nicht. Der DE-SERP zu
+   „Tattoo Preis" ist konsumentenseitig besetzt (Preisguides, Rechner) —
+   artist-facing ist die Lücke. Deckt sich mit dem Puls-Befund
+   „DE-Artist-Business-Stimmen fehlen strukturell".
+3. **Quellen-Check — keine Tier-1/2 verwendet.** Wie in Lauf 1: kein Rechts- oder
+   Zahlenanspruch, reine Erfahrungs-/Beratungsebene. Die Handwerks-Fachartikel aus
+   der Suche wurden **nicht** zitiert — Snippets sind kein Beleg und ein
+   Verifikations-Scrape schlug fehl (geratene URL). `sources.md` führt für
+   Preis-/Business-Psychologie ohnehin keine Tier-1/2-Quelle.
+
+**Sprecher-Absicherung:** Jedes Zitat gegen die `szenen.md` des zugehörigen Clips
+geprüft; verwendet wurden nur als VOSSI bild-bestätigte Sätze. **Nicht
+attribuiert** wurde die 400-Euro-Zeile (#201–#202) — `transkript.json` sagt VOSSI,
+die `szenen.md` von `vossi-400-euro-illusion` weist sie per Bildbeweis TOMEK zu.
+Sie steht im Artikel als Außenstimme ohne Sprecher.
+
+**Ergebnis:** Draft `tattoo-preise-rabatte-unter-wert-verkaufen`
+(post_id `80df85d2-a328-450f-a342-9fe29da8b265`), Kategorie `law-money`, 634 Wörter, R1–R10,
+1 TODA-Mention, 2 interne Links.
+
+**Entscheidungen Tomeks zu diesem Lauf (2026-08-29):**
+- Das Zitat „Ach, du bist Tätowierer …" bleibt stehen — fremde Rede, und genau
+  das ist die Pointe; `terminology.md` gilt für TODAs eigene Sprache.
+- „Kurze Eigenwerbung" statt „Kurze Schleichwerbung" (R8 entsprechend nachgezogen).
+- Kategorie `law-money` statt `toda-podcast` — Themen-Cluster schlägt Format-Label.
