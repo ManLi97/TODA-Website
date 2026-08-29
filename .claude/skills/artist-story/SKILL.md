@@ -172,6 +172,40 @@ das ist Teil des Versprechens.
    Share-Paket für den Artist selbst (sein Share an seine Follower ist
    der stärkste Beat des Formats — ihm so leicht wie möglich machen).
 
+## Lauf 4 — Instagram-Carousel-Paket (Pflicht, sobald publiziert)
+
+Zu jeder publizierten Artist-Story entsteht das Social-Paket — Erstlauf
+(Vossi, 2026-08-29) ist das Muster; die Kanal- und Format-Wahrheit
+(Caption-/Link-/Collab-Regeln, Benchmarks, Recherche-Destillat) liegt im
+Marketing-Repo: `/Users/harvestflow/Developer/toda/marketing/channels/instagram.md`
+→ „Artist-Story-Carousel" — Pflichtlektüre vor dem Bauen.
+
+1. **Bild-Regel (Tomek, festgenagelt):** Das Bild des Posts ist IMMER der
+   Autor-Card-Avatar des Artikels (`blog_authors.avatar_path`) — auf Hook-
+   und CTA-Slide. Kein anderes Bild, kein Stock, kein KI-Bild.
+2. **7-Slide-Dramaturgie** (Abweichung nur mit Grund): 1 Hook (Portrait +
+   O-Ton-Titelzitat + Goldzeile + „1/7 →") · 2 Backup-Hook (härtester
+   Zahlen-/Kontrast-Moment — füttert den Re-Serve) · 3–4 Story-Beats ·
+   5 Überraschung/Ehrlichkeits-Beat · 6 Save-Magnet (Mitgaben-Checkliste
+   + Save-Zeile) · 7 CTA-Klammer (Portrait dunkler; „Link in den
+   Kommentaren" + Artist-Handle + Save/Send-Zeile).
+3. **Jeder Slide-Text stammt aus dem Artikel** — kondensieren ja,
+   dazudichten nie (härteste Regel gilt auch hier). Eine Idee pro Slide,
+   Support ≤ 25 Wörter, „n/7"-Nummerierung, EIN Gold-Akzent pro Slide.
+4. **Technik:** Slide-HTMLs nach `assets/carousel-slides.html` (Archetypen
+   + Tokens; 1080×1350) → headless Chrome je Slide (`--headless
+   --screenshot --window-size=1080,1350 --hide-scrollbars`) → jeden PNG
+   **selbst ansehen** (Sichtpflicht wie 3.1).
+5. **Ablage — Desktop, nie Repo:** `~/Desktop/toda-post-<slug>/` mit den
+   Slides + `posting-paket.md` (Caption 150–300 Zeichen ohne Link ·
+   1. Kommentar mit Artikel-Link · Story-Baustein mit Link-Sticker ·
+   Collab-Einladung an den Artist als Standard-Empfehlung ·
+   Share-Nachricht an den Artist · Timing/Messung). Das Template ist die
+   Referenz, nicht der Output — PNGs werden nicht versioniert.
+6. **Lern-Rücklauf:** ~72 h nach dem Posten Insights erfragen (Saves,
+   Reichweite, ggf. Swipe-Through) → Learnings hierher bzw. in die
+   Format-Definition im Marketing-Repo zurückschreiben.
+
 ## Harte Regeln
 
 - Alle Spine-Regeln aus `/blog-article` gelten (nie publizieren, nie
@@ -192,4 +226,6 @@ Lauf 1 (2026-08-29): Markus „Skeet" Vossi, *„Du musst noch üben" — mein
 Weg vom Dachdecker zum Tattoo Artist* — Quelle Toddcast Folge 01,
 Vorschau `toda-blog-vom-dachdecker-zum-tattoo-artist.html`. Der Lauf hat
 dieses SKILL.md geformt (Ich-Perspektive, Vorschau-zuerst, Echtbild,
-Nachweis-Liste, Superlativ-Entschärfung).
+Nachweis-Liste, Superlativ-Entschärfung). Publiziert 29.08.2026 in de/en/es
+(Kategorie `artist-stories`); gleicher Tag: erstes Carousel-Paket
+(`~/Desktop/toda-post-vom-dachdecker/`) → daraus Lauf 4 codifiziert.

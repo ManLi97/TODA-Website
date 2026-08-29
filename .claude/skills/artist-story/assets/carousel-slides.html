@@ -1,0 +1,108 @@
+<!doctype html>
+<!--
+  Artist-Story-Carousel — Slide-Template (Lauf 4 des Skills).
+  Referenz-Implementierung = Lauf 1 (Vossi, 2026-08-29). Tokens aus globals.css/@theme.
+
+  Nutzung: pro Artikel ein Generator-Script (Scratchpad) bauen, das diese CSS + die
+  vier Archetypen unten kopiert und pro Slide EIN HTML-File (1080×1350) schreibt:
+    - {{PHOTO_B64}}  = Autor-Card-Avatar des Artikels als JPEG-base64 (Bild-Regel Tomek)
+    - {{LOGO_B64}}   = public/TODA-LOGO.svg als base64
+    - Textplatzhalter direkt ersetzen; JEDER Text stammt aus dem Artikel (kondensieren
+      ja, dazudichten nie).
+  Rendern (je Slide):
+    chrome --headless --disable-gpu --screenshot=slide-N.png \
+      --window-size=1080,1350 --hide-scrollbars file://<slide-N.html>
+  Danach: jeden PNG SELBST ANSEHEN (Sichtpflicht wie Lauf 3.1).
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --gold-200:#fce49b; --gold-400:#e8b73d; --gold-500:#c8941a;
+    --txt:#ffffff; --txt2:#a3a3a3; --txt3:#6b6b6b;
+  }
+  html,body { width:1080px; height:1350px; overflow:hidden; }
+  body {
+    background:#000; color:var(--txt2);
+    font-family:"Inter","SF Pro Display",-apple-system,system-ui,sans-serif;
+    font-feature-settings:"cv11","ss03"; -webkit-font-smoothing:antialiased;
+  }
+  .slide { position:relative; width:1080px; height:1350px; padding:110px; display:flex; flex-direction:column; }
+  .num { position:absolute; top:64px; right:72px; font-size:30px; color:var(--txt3); letter-spacing:.08em; }
+  .num.on-photo { color:rgba(255,255,255,.75); }
+  .logo { position:absolute; bottom:56px; right:72px; height:44px; opacity:.9; }
+  .eyebrow { font-size:30px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-400); font-weight:400; margin-bottom:44px; }
+  .big { font-size:88px; font-weight:600; line-height:1.12; letter-spacing:-.03em; color:var(--txt); }
+  .big .gold { color:var(--gold-400); }
+  .support { font-size:40px; font-weight:400; line-height:1.45; color:var(--txt2); margin-top:52px; max-width:800px; }
+  .mid { justify-content:center; }
+  .photo-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 20%; }
+  .shade { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,.25) 0%, rgba(0,0,0,.05) 30%, rgba(0,0,0,.88) 78%); }
+  .shade.heavy { background:linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,.45) 35%, rgba(0,0,0,.94) 75%); }
+  .bottom { position:relative; margin-top:auto; }
+  .quote { font-size:104px; font-weight:600; line-height:1.06; letter-spacing:-.03em; color:var(--txt); }
+  .goldline { font-size:42px; color:var(--gold-400); margin-top:36px; font-weight:400; letter-spacing:.02em; }
+  .cue { font-size:32px; color:rgba(255,255,255,.8); margin-top:56px; letter-spacing:.1em; }
+  .list { display:flex; flex-direction:column; gap:56px; }
+  .item { display:flex; gap:36px; align-items:baseline; }
+  .item .n { font-size:56px; font-weight:600; color:var(--gold-400); min-width:64px; }
+  .item .t { font-size:44px; line-height:1.3; color:var(--txt); font-weight:600; }
+  .item .t small { display:block; font-size:34px; color:var(--txt2); font-weight:400; margin-top:10px; }
+  .savehint { margin-top:72px; font-size:34px; color:var(--gold-200); }
+</style>
+</head>
+<body>
+
+<!-- Archetyp 1: HOOK (Slide 1) — Portrait + O-Ton-Titelzitat + Goldzeile + Swipe-Cue -->
+<div class="slide">
+  <img class="photo-bg" src="data:image/jpeg;base64,{{PHOTO_B64}}" alt="">
+  <div class="shade"></div>
+  <span class="num on-photo">1/7</span>
+  <div class="bottom">
+    <div class="quote">&bdquo;{{TITEL_ZITAT}}&ldquo;</div>
+    <div class="goldline">{{VERSPRECHEN — z. B. „Vom X zum Tattoo Artist — die Story von …"}}</div>
+    <div class="cue">weiterlesen &rarr;</div>
+  </div>
+  <img class="logo" src="data:image/svg+xml;base64,{{LOGO_B64}}" alt="TODA">
+</div>
+
+<!-- Archetyp 2: STATEMENT (Slides 2–5) — eine Idee, ≤25 Wörter Support, EIN Gold-Akzent -->
+<div class="slide mid">
+  <span class="num">{{N}}/7</span>
+  <div class="eyebrow">{{EYEBROW}}</div>
+  <div class="big">{{STATEMENT mit <span class="gold">Gold-Akzent</span>}}</div>
+  <div class="support">{{SUPPORT}}</div>
+  <img class="logo" src="data:image/svg+xml;base64,{{LOGO_B64}}" alt="TODA">
+</div>
+
+<!-- Archetyp 3: CHECKLISTE (Save-Magnet, Slide 6) — nummerierte Mitgaben + Save-Zeile -->
+<div class="slide mid">
+  <span class="num">6/7</span>
+  <div class="eyebrow">{{EYEBROW — z. B. „Was ich jedem mitgeben würde"}}</div>
+  <div class="list">
+    <div class="item"><span class="n">1</span><span class="t">{{PUNKT}}<small>{{KURZ-ERKLÄRUNG}}</small></span></div>
+    <!-- … 3–4 Punkte gesamt -->
+  </div>
+  <div class="savehint">{{SAVE-ZEILE — z. B. „Speichern — für den Tag, an dem du zweifelst."}}</div>
+  <img class="logo" src="data:image/svg+xml;base64,{{LOGO_B64}}" alt="TODA">
+</div>
+
+<!-- Archetyp 4: CTA-KLAMMER (letzter Slide) — Portrait dunkler, spiegelt den Hook -->
+<div class="slide">
+  <img class="photo-bg" src="data:image/jpeg;base64,{{PHOTO_B64}}" alt="">
+  <div class="shade heavy"></div>
+  <span class="num on-photo">7/7</span>
+  <div class="bottom">
+    <div class="quote" style="font-size:88px;">Die ganze Story<br>im Blog.</div>
+    <div class="goldline">Link in den Kommentaren</div>
+    <div class="cue" style="letter-spacing:.02em;">Geschrieben von {{VORNAME}} &mdash; {{ARTIST_HANDLE}}<br><br>Speichern &amp; einem Artist schicken, {{SEND-ANLASS}}.</div>
+  </div>
+  <img class="logo" src="data:image/svg+xml;base64,{{LOGO_B64}}" alt="TODA">
+</div>
+
+</body>
+</html>
