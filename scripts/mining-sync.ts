@@ -1,18 +1,22 @@
-// Reddit mining CLI (off-Vercel / manual). Mirrors scripts/gsc-backfill.ts.
+// Community-Pulse battery CLI (off-Vercel / manual). Mirrors scripts/gsc-backfill.ts.
 //
 //   pnpm mining:sync
-//       Full cycle (broad/week + broad/month + seeded/week) + retention. Needs APIFY_TOKEN.
-//   pnpm mining:sync --dataset <id> --pass broad|seeded --window week|month [--run <apifyRunId>]
-//       Ingest one EXISTING dataset (tokenless) — today's "run via Apify MCP → ingest"
-//       path, and the recovery path for a run that finished after the cron's poll deadline.
+//       Full weekly battery (DeepAPI Phase 1 + yt-comments Phase 2) + retention.
+//   pnpm mining:sync --source <key>
+//       One battery slot (exact key or prefix, e.g. yt-channels, reddit-broad,
+//       yt-search, tiktok-comments). "yt-comments" runs Phase 2 only (fixed list).
+//   pnpm mining:sync --request <deepapiRequestId> --source <key>
+//       Recovery: re-ingest a finished DeepAPI request (GET /v1/requests/{id} is
+//       free) into its battery slot — heals the failed mining_runs row (dataset_id).
+//   pnpm mining:sync --fresh
+//       Salt the idempotency keys: force new DeepAPI runs within the same ISO week.
 //   pnpm mining:sync --retention-only
 //       Run only the 30-day body sweep.
 //
 // Env (loaded from .env.local): NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
-// and (full mode only) APIFY_TOKEN.
-import { APIFY_ACTOR_NAME } from "@/lib/mining/config";
-import { ingestDataset, redactExpiredBodies, runMiningCycleWithRetention } from "@/lib/mining/sync";
-import type { Pass, TimeWindow } from "@/lib/mining/types";
+// DEEPAPI_API_BASE_URL, DEEPAPI_API_KEY (or `source ~/.deepapi/env` in the shell),
+// YOUTUBE_API_KEY (yt-comments; missing → visible failed row).
+import { ingestRequest, redactExpiredBodies, runBatteryWithRetention } from "@/lib/mining/sync";
 
 // Node loads .env.local itself (no dotenv dep). Shell-provided env still wins.
 try {
@@ -34,27 +38,21 @@ async function main() {
     return;
   }
 
-  const datasetId = arg("dataset");
-  if (datasetId) {
-    const pass = arg("pass") as Pass | undefined;
-    const window = arg("window") as TimeWindow | undefined;
-    if (pass !== "broad" && pass !== "seeded") throw new Error("--pass must be broad|seeded");
-    if (window !== "week" && window !== "month") throw new Error("--window must be week|month");
-    const outcome = await ingestDataset(datasetId, {
-      pass,
-      timeWindow: window,
-      actor: APIFY_ACTOR_NAME,
-      apifyRunId: arg("run") ?? null,
-      input: null,
-      label: `${pass}/${window}`,
-    });
-    console.log(JSON.stringify({ mode: "ingest", outcome }, null, 2));
+  const requestId = arg("request");
+  if (requestId) {
+    const sourceKey = arg("source");
+    if (!sourceKey) throw new Error("--request needs --source <battery slot key>");
+    const outcome = await ingestRequest(requestId, sourceKey);
+    console.log(JSON.stringify({ mode: "recover", outcome }, null, 2));
     if (outcome.status === "failed") process.exit(1);
     return;
   }
 
-  const result = await runMiningCycleWithRetention();
-  console.log(JSON.stringify({ mode: "full-cycle", ...result }, null, 2));
+  const result = await runBatteryWithRetention({
+    source: arg("source"),
+    salt: flag("fresh") ? `fresh-${Date.now()}` : undefined,
+  });
+  console.log(JSON.stringify({ mode: arg("source") ?? "full-battery", ...result }, null, 2));
   if (result.runs.length > 0 && result.runs.every((r) => r.status === "failed")) process.exit(1);
 }
 
