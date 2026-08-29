@@ -206,6 +206,47 @@ Marketing-Repo: `/Users/harvestflow/Developer/toda/marketing/channels/instagram.
    Reichweite, ggf. Swipe-Through) → Learnings hierher bzw. in die
    Format-Definition im Marketing-Repo zurückschreiben.
 
+## Lauf 5 — Story-Baustein: die Podcast-Folge (nur wenn es eine gibt)
+
+Gibt es zur Artist-Story eine **öffentliche Toddcast-Folge** — nicht immer
+der Fall, bei Vossi (2026-08-29) schon —, entsteht zusätzlich zum Carousel
+**ein Story-Bild, das auf die Folge zeigt**. Kein Ersatz für die
+Artikel-Story aus Lauf 4, sondern ein zweiter Baustein.
+
+1. **Warum YouTube-Look, nicht TODA-Look.** Der Link-Sticker ist laut
+   `channels/instagram.md` der einzige Ort, an dem ein externer Link
+   wirklich klickbar ist. Die Story muss deshalb **vor dem Tap** zeigen,
+   wohin er führt: ein laufender YouTube-Player. Rote Wortmarke, roter
+   Play-Button, Fortschrittsbalken, Timecode, Kanalzeile mit
+   „Abonnieren" — **Gold ist nur der Link-Cue**, der einzige Marken-Anker.
+2. **Wahrheitspflicht (Verlängerung der Echtbild-Regel).** Thumbnail,
+   Titel und Laufzeit stammen **aus der live geschalteten Folge**, nicht
+   aus dem Entwurf: Kanal vorher scrapen (DeepAPI
+   `POST /v1/scrape/youtube/channel`) und das Thumbnail gegen
+   `i.ytimg.com/vi/<id>/hq720.jpg` prüfen. Was die Story zeigt, muss nach
+   dem Tap identisch aussehen. Ist die Folge noch nicht live, entfällt
+   Lauf 5 — **kein Mockup einer unveröffentlichten Folge**.
+3. **Keine Zahlen im Design.** Weder Aufrufe noch Abonnenten — kleine
+   Zahlen entwerten den Post. Die Kanalzeile trägt Name + ruhige Subline;
+   die Meta-Zeile Laufzeit + „zu Gast: <Artist>" (macht die Klammer zur
+   Story sichtbar).
+4. **Technik:** `assets/story-podcast.html` (1080×1920, Platzhalter im
+   Kopf der Datei dokumentiert) → Generator-Script im Scratchpad, das
+   **zuerst den Doku-Kommentar entfernt** und dann ersetzt (sonst landen
+   die base64-Blobs im Kommentar) → headless Chrome
+   (`--window-size=1080,1920 --force-device-scale-factor=1`) → PNG
+   **selbst ansehen** (Sichtpflicht wie 3.1 und Lauf 4).
+5. **Safe-Area ist Layout-Gesetz, nicht Geschmack.** Instagram belegt oben
+   und unten je 250 px; **y 1500–1670 bleibt leer**, dort setzt Tomek den
+   Link-Sticker, und der Goldpfeil zeigt genau dorthin. Nachweis vor der
+   Übergabe: Kontroll-Render mit IG-Chrome-Overlay und Mock-Sticker **im
+   Scratchpad** (nie im Deliverable-Ordner) — er hat im Erstlauf die
+   Action-Chip-Zeile gekippt, weil sie die Sticker-Zone gefressen hat.
+6. **Ablage:** derselbe Desktop-Ordner wie Lauf 4 —
+   `story-podcast.png` (das Asset für die Story) plus `story-podcast.html`
+   zum Nachjustieren. Im `posting-paket.md` bekommt die Folge einen
+   eigenen Story-Block: Bild, Sticker-Ziel (Folgen-URL), Sticker-Text.
+
 ## Harte Regeln
 
 - Alle Spine-Regeln aus `/blog-article` gelten (nie publizieren, nie
@@ -228,4 +269,7 @@ Vorschau `toda-blog-vom-dachdecker-zum-tattoo-artist.html`. Der Lauf hat
 dieses SKILL.md geformt (Ich-Perspektive, Vorschau-zuerst, Echtbild,
 Nachweis-Liste, Superlativ-Entschärfung). Publiziert 29.08.2026 in de/en/es
 (Kategorie `artist-stories`); gleicher Tag: erstes Carousel-Paket
-(`~/Desktop/toda-post-vom-dachdecker/`) → daraus Lauf 4 codifiziert.
+(`~/Desktop/toda-post-vom-dachdecker/`) → daraus Lauf 4 codifiziert. Ebenfalls
+29.08.2026: erste Podcast-Story (`story-podcast.png`) zur live geschalteten
+Folge *Vom Dachdecker zum Tattoo-Artist — mehr Geld, mehr Freizeit*
+(`youtube.com/watch?v=_zy3a1RIaWE`) → daraus Lauf 5 codifiziert.

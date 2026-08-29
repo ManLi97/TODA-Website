@@ -1,0 +1,158 @@
+<!doctype html>
+<!--
+  Podcast-Story — Slide-Template (Lauf 5 des Skills). 1080×1920, EIN PNG.
+  Referenz-Implementierung = Vossi/Toddcast „Vom Dachdecker zum Tattoo-Artist" (2026-08-29).
+
+  Job: Die Story sagt auf einen Blick „hinter dem Link läuft ein YouTube-Video" —
+  darum YouTube-Look, nicht TODA-Look. Gold ist nur der Link-Cue (Marken-Anker).
+
+  Platzhalter (alle Pflicht):
+    {{THUMB_B64}}   = das ECHTE, live geschaltete YouTube-Thumbnail als JPEG-base64
+                      (16:9). Gegen i.ytimg.com/vi/<id>/hq720.jpg verifizieren —
+                      die Story muss zeigen, was die Leute nach dem Tap sehen.
+    {{AVATAR_B64}}  = Kanal-Avatar als base64 (public/toda-app-icon.svg)
+    {{TITEL_1}} / {{TITEL_2}} = der LIVE-YouTube-Titel, auf zwei Zeilen umbrochen
+                      (nichts umformulieren; Umbruch so setzen, dass Zeile 1 passt)
+    {{DAUER}}       = Laufzeit exakt wie auf YouTube, z. B. 1:04:36
+    {{GAST}}        = „zu Gast: <Name>" — der Artist der Story
+    {{KANAL}} / {{KANAL_SUB}} = Kanalname + eine ruhige Subline
+    {{TIMECODE}}    = Position/Dauer, konsistent zu --fill-pct (6 % ≈ 3:52 bei 1:04:36)
+
+  Harte Layout-Regeln (aus dem Safe-Area-Check, nicht verschieben):
+    - Instagram-Chrome belegt oben und unten je 250 px. Alles Sichtbare liegt
+      dazwischen; der YouTube-Balken startet deshalb bei y=252.
+    - y 1500–1670 bleibt LEER — dort setzt Tomek den Link-Sticker. Der Goldpfeil
+      zeigt genau dorthin. Nie zubauen.
+    - KEINE Aufrufzahlen/Abonnentenzahlen im Design (kleine Zahlen entwerten den
+      Post); Kanalzeile trägt Name + Subline + „Abonnieren".
+
+  Rendern:
+    chrome --headless --disable-gpu --hide-scrollbars \
+      --screenshot=story-podcast.png --window-size=1080,1920 \
+      --force-device-scale-factor=1 file://<story-podcast.html>
+  Danach: PNG SELBST ANSEHEN (Sichtpflicht wie Lauf 3.1 und 4).
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --yt-bg:#0f0f0f; --yt-red:#ff0000;
+    --txt:#f1f1f1; --txt2:#aaaaaa;
+    --gold:#e8b73d;
+    --fill-pct:6%;            /* Fortschritt im Balken — konsistent zu {{TIMECODE}} */
+  }
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--yt-bg)}
+  body{
+    font-family:"Roboto","Helvetica Neue",-apple-system,system-ui,sans-serif;
+    color:var(--txt); -webkit-font-smoothing:antialiased;
+  }
+  .stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+
+  /* roter Player-Glow, damit die schwarze Bühne nicht flach wirkt */
+  .glow{position:absolute;left:50%;top:300px;width:1400px;height:820px;transform:translateX(-50%);
+    background:radial-gradient(ellipse at center, rgba(255,0,0,.20) 0%, rgba(255,0,0,.06) 40%, rgba(255,0,0,0) 70%)}
+
+  /* ---------- YouTube-Leiste (y 252–316, unter dem IG-Chrome) ---------- */
+  .ytbar{position:absolute;top:252px;left:56px;right:56px;height:64px;display:flex;align-items:center;justify-content:space-between}
+  .wordmark{display:flex;align-items:center;gap:14px}
+  .wordmark svg{display:block}
+  .wordmark .wm{font-weight:700;font-size:52px;letter-spacing:-.035em;color:#fff;line-height:1}
+  .pill{display:flex;align-items:center;gap:14px;height:56px;padding:0 28px;border-radius:28px;
+    background:rgba(232,183,61,.13);border:1px solid rgba(232,183,61,.42);
+    font-size:26px;font-weight:700;letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
+  .pill .dot{width:14px;height:14px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 8px rgba(232,183,61,.18)}
+
+  /* ---------- Player (randlos, exakt 16:9) ---------- */
+  .player{position:absolute;top:352px;left:0;width:1080px;height:608px;overflow:hidden;background:#000;
+    box-shadow:0 40px 90px rgba(0,0,0,.75)}
+  .player img.thumb{width:100%;height:100%;object-fit:cover;display:block}
+  /* Scrim nur unten: trägt Timecode + Fortschrittsbalken, ohne die Thumbnail-Typo zu töten */
+  .player .vig{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.10) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 58%,rgba(0,0,0,.42) 82%,rgba(0,0,0,.86) 100%)}
+
+  .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:176px;height:124px;border-radius:30px;background:var(--yt-red);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 20px 56px rgba(0,0,0,.62)}
+  .play svg{display:block;margin-left:6px}
+
+  .timecode{position:absolute;left:36px;bottom:44px;font-size:28px;font-weight:500;color:#fff;
+    text-shadow:0 2px 10px rgba(0,0,0,.9);letter-spacing:.01em}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:10px;background:rgba(255,255,255,.32)}
+  .bar .fill{position:absolute;left:0;top:0;bottom:0;width:var(--fill-pct);background:var(--yt-red)}
+  .bar .knob{position:absolute;left:var(--fill-pct);top:50%;width:32px;height:32px;border-radius:50%;
+    background:var(--yt-red);transform:translate(-50%,-50%);box-shadow:0 0 0 6px rgba(255,0,0,.22)}
+
+  /* ---------- Titel & Meta ---------- */
+  .body{position:absolute;top:1006px;left:56px;right:56px}
+  h1{font-size:52px;line-height:1.2;font-weight:700;letter-spacing:-.018em;color:var(--txt)}
+  .meta{margin-top:20px;font-size:32px;font-weight:500;color:var(--txt2)}
+  .meta b{color:var(--txt);font-weight:700}
+
+  /* ---------- Kanalzeile ---------- */
+  .channel{margin-top:38px;display:flex;align-items:center;gap:26px}
+  .avatar{width:96px;height:96px;border-radius:50%;object-fit:cover;background:#000;flex:none}
+  .cname{font-size:38px;font-weight:700;line-height:1.15}
+  .csub{font-size:28px;color:var(--txt2);margin-top:6px}
+  .sub-btn{margin-left:auto;height:80px;padding:0 46px;border-radius:40px;background:var(--yt-red);
+    color:#fff;font-size:32px;font-weight:700;display:flex;align-items:center;letter-spacing:.005em}
+
+  /* ---------- Link-Cue: zeigt auf die freie Sticker-Zone ---------- */
+  .cue{position:absolute;left:0;right:0;top:1392px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .cue .line{font-size:36px;font-weight:700;color:var(--gold);letter-spacing:.03em}
+  /* y 1500–1670 bleibt frei — Platz für den Instagram-Link-Sticker */
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="glow"></div>
+
+  <div class="ytbar">
+    <div class="wordmark">
+      <svg width="94" height="66" viewBox="0 0 28.57 20" aria-hidden="true">
+        <path fill="#ff0000" d="M27.9727 3.12324C27.6435 1.89323 26.6768 0.926623 25.4468 0.597366C23.2197 0 14.285 0 14.285 0C14.285 0 5.35042 0 3.12323 0.597366C1.89323 0.926623 0.926623 1.89323 0.597366 3.12324C0 5.35042 0 10 0 10C0 10 0 14.6496 0.597366 16.8768C0.926623 18.1068 1.89323 19.0734 3.12323 19.4026C5.35042 20 14.285 20 14.285 20C14.285 20 23.2197 20 25.4468 19.4026C26.6768 19.0734 27.6435 18.1068 27.9727 16.8768C28.5701 14.6496 28.5701 10 28.5701 10C28.5701 10 28.5701 5.35042 27.9727 3.12324Z"/>
+        <path fill="#fff" d="M11.4253 14.2854L18.8477 10.0004L11.4253 5.71533V14.2854Z"/>
+      </svg>
+      <span class="wm">YouTube</span>
+    </div>
+    <span class="pill"><span class="dot"></span>Neue Folge</span>
+  </div>
+
+  <div class="player">
+    <img class="thumb" src="data:image/jpeg;base64,{{THUMB_B64}}" alt="">
+    <div class="vig"></div>
+    <div class="play">
+      <svg width="46" height="53" viewBox="0 0 56 64" aria-hidden="true"><path fill="#fff" d="M0 0L56 32L0 64Z"/></svg>
+    </div>
+    <div class="timecode">{{TIMECODE}}</div>
+    <div class="bar"><div class="fill"></div><div class="knob"></div></div>
+  </div>
+
+  <div class="body">
+    <h1>{{TITEL_1}}<br>{{TITEL_2}}</h1>
+    <div class="meta"><b>{{DAUER}}</b> &middot; {{GAST}}</div>
+
+    <div class="channel">
+      <img class="avatar" src="data:image/svg+xml;base64,{{AVATAR_B64}}" alt="">
+      <div>
+        <div class="cname">{{KANAL}}</div>
+        <div class="csub">{{KANAL_SUB}}</div>
+      </div>
+      <span class="sub-btn">Abonnieren</span>
+    </div>
+  </div>
+
+  <div class="cue">
+    <div class="line">Link antippen &mdash; und die Folge l&auml;uft</div>
+    <svg class="arrow" width="56" height="66" viewBox="0 0 70 86" aria-hidden="true">
+      <path d="M35 6 L35 60" stroke="#e8b73d" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <path d="M13 46 L35 74 L57 46" stroke="#e8b73d" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+</div>
+</body>
+</html>
