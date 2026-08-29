@@ -2,7 +2,9 @@
 // Ten sections: Hero → Bold Claim → Case Study → Origin → Features → Social Proof → Testimonials → Team → Pricing → FAQ.
 // Surface rhythm: two surfaces alternating — base (near-black) ↔ alt (anthracite), starting on base.
 // Copy from messages/{locale}.json "home" namespace.
-import { getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { JsonLd } from "@/components/json-ld";
 import { Hero } from "@/components/hero";
 import { BoldClaimSection } from "@/components/bold-claim-section";
 import { CaseStudySection } from "@/components/case-study-section";
@@ -15,12 +17,33 @@ import { FeaturesSection } from "@/components/features-section";
 import { OriginSection } from "@/components/origin-section";
 import { PageSection } from "@/components/page-section";
 import { HeroParticles } from "@/components/hero-particles";
+import { routing } from "@/i18n/routing";
+import type { BlogLocale } from "@/lib/blog/types";
+import { SITE_METADATA } from "@/lib/seo/site-metadata";
+import { createHomepageJsonLd } from "@/lib/seo/structured-data";
 
-export default async function HomePage() {
-  const t = await getTranslations("home");
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function HomePage({ params }: Props) {
+  const { locale: rawLocale } = await params;
+  if (!routing.locales.includes(rawLocale as BlogLocale)) notFound();
+  const locale = rawLocale as BlogLocale;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: "home" });
+  const metadata = SITE_METADATA[locale];
+  const jsonLd = createHomepageJsonLd({
+    locale,
+    title: metadata.title,
+    description: metadata.description,
+  });
 
   return (
     <>
+      <JsonLd document={jsonLd} />
+
       {/* ── 1. Hero — surface-base ── */}
       <PageSection
         variant="base"

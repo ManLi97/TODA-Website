@@ -2,6 +2,7 @@
 // Legal routes (/imprint, /privacy, /terms) 404 until Phase 6. Acceptable.
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { TODA_SOCIAL_URLS } from "@/lib/site";
 
 export async function Footer() {
   const t = await getTranslations("footer");
@@ -36,15 +37,12 @@ export async function Footer() {
             </Link>
           </nav>
 
-          {/* Social links — hrefs are placeholders until Phase 6 */}
+          {/* First-party social identity links, shared with Organization JSON-LD. */}
           <div className="flex items-center gap-5">
             {[
-              { key: "social.instagram", href: "https://www.instagram.com/toda.tattoosolutions/" },
-              { key: "social.youtube", href: "https://www.youtube.com/@TODATattooSolutions" },
-              {
-                key: "social.facebook",
-                href: "https://www.facebook.com/profile.php?id=61587056530237",
-              },
+              { key: "social.instagram", href: TODA_SOCIAL_URLS.instagram },
+              { key: "social.youtube", href: TODA_SOCIAL_URLS.youtube },
+              { key: "social.facebook", href: TODA_SOCIAL_URLS.facebook },
             ].map(({ key, href }) => (
               <a
                 key={key}

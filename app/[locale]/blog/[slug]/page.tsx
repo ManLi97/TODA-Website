@@ -7,6 +7,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
+import { JsonLd } from "@/components/json-ld";
 import { PageSection } from "@/components/page-section";
 import { SectionHeader } from "@/components/section-header";
 import { Animate } from "@/components/animate";
@@ -16,6 +17,7 @@ import { PostGrid } from "@/components/blog/post-grid";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { YouTubeFacade } from "@/components/youtube-facade";
 import {
+  authorAvatarUrl,
   coverImageUrl,
   getPostBySlug,
   getPublishedAlternates,
@@ -25,6 +27,7 @@ import {
 import { renderMarkdown } from "@/lib/blog/markdown";
 import { formatDate } from "@/lib/blog/format";
 import type { BlogLocale } from "@/lib/blog/types";
+import { createArticleJsonLd } from "@/lib/seo/structured-data";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -108,43 +111,28 @@ export default async function BlogArticlePage({ params }: Props) {
   ]);
 
   const cover = coverImageUrl(post.coverImagePath);
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
+  const jsonLd = createArticleJsonLd({
+    locale,
+    slug,
+    title: post.title,
     description: post.excerpt,
-    datePublished: post.publishedAt,
-    dateModified: post.updatedAt,
-    inLanguage: locale,
-    mainEntityOfPage: `${siteUrl}/${locale}/blog/${slug}`,
-    ...(cover && { image: [cover] }),
-    ...(post.youtubeId && {
-      video: {
-        "@type": "VideoObject",
-        name: post.title,
-        description: post.excerpt,
-        thumbnailUrl: `https://i.ytimg.com/vi/${post.youtubeId}/hqdefault.jpg`,
-        embedUrl: `https://www.youtube-nocookie.com/embed/${post.youtubeId}`,
-        ...(post.videoPublishedAt && { uploadDate: post.videoPublishedAt }),
-        ...(post.videoStartSeconds != null && { startOffset: post.videoStartSeconds }),
-      },
-    }),
-    author: post.author
-      ? { "@type": "Person", name: post.author.name }
-      : { "@type": "Organization", name: "TODA Solutions" },
-    publisher: {
-      "@type": "Organization",
-      name: "TODA Solutions",
-      logo: { "@type": "ImageObject", url: `${siteUrl}/toda-app-icon.svg` },
-    },
-  };
+    publishedAt: post.publishedAt,
+    updatedAt: post.updatedAt,
+    coverImageUrl: cover,
+    author: post.author,
+    authorImageUrl: post.author ? authorAvatarUrl(post.author.avatarPath) : null,
+    video: post.youtubeId
+      ? {
+          youtubeId: post.youtubeId,
+          startSeconds: post.videoStartSeconds,
+          publishedAt: post.videoPublishedAt,
+        }
+      : null,
+  });
 
   return (
     <article>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd document={jsonLd} />
       <ReadingProgress />
 
       <PageSection variant="base" id="article">

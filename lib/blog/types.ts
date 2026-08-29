@@ -35,7 +35,7 @@ export interface SocialLink {
   url: string;
 }
 
-/** Article signature author — a person, shared across all locales of a post. */
+/** Article signature author — a person or named collective shared across all post locales. */
 export interface Author {
   name: string;
   slug: string;

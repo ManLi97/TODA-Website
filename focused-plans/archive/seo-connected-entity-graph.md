@@ -4,10 +4,11 @@ slug: "seo-connected-entity-graph"
 title: "Connected structured-data entity graph for TODA"
 revision: 1
 auto_mode: Approved
-execution: In-Progress
+execution: Completed
 base_commit: "effac142e4ff1a4efbee549371cf45b661457751"
 created_at: "2026-08-28T23:47:33Z"
 approved_at: "2026-08-29T00:00:31Z"
+completed_at: "2026-08-29T00:09:44Z"
 ---
 
 # Connected structured-data entity graph for TODA
@@ -283,3 +284,35 @@ A fresh Auto-Mode agent must, before changing application code:
 4. Recheck the public anon author row and current visible de/en/es price, legal identity, social links, and canonical origin without exposing credentials.
 5. After explicit approval, change only plan metadata to `auto_mode: Approved`, `execution: In-Progress`, and set `approved_at`; commit that approval state before implementation.
 6. Execute adaptively inside the objective, exclusions, and Definition of Done. Record non-material deviations and evidence in the final archived Execution Record.
+
+## Execution Record
+
+Completed at `2026-08-29T00:09:44Z`.
+
+### Delivered
+
+- Added one pure structured-data boundary with canonical Organization, logo, WebSite, SoftwareApplication, Offer, locale WebPage, Article, Person, and VideoObject IDs plus safe script serialization.
+- Added one connected six-node graph to each localized homepage. The visible EUR 24.99 monthly offer uses `UnitPriceSpecification.billingDuration: P1M`; its URL points to the locale-visible pricing section rather than adding a speculative purchase action.
+- Replaced inline article JSON-LD with self-contained connected graphs. The live `toda-team` collective now resolves to the canonical Organization; generic genuine author records retain only validated public HTTP(S) identity URLs and make no affiliation claim.
+- Connected optional article videos through stable IDs and removed direct VideoObject `startOffset`; a valid non-negative player offset is represented only in the embed URL.
+- Centralized locale metadata, social URLs, canonical price facts, and a trailing-slash-safe site origin. Footer and Next metadata output continue to use those shared sources.
+- Added the repository's first focused test/typecheck scripts and seven parse-and-relationship tests spanning all locales, legal/identity facts, price parity, serialization safety, Person/collective author behavior, and video behavior.
+
+### Verification evidence
+
+- `pnpm test` passed: 7 tests, 0 failures.
+- `pnpm typecheck` passed with zero diagnostics.
+- `pnpm lint` passed with only the pre-existing `next lint` deprecation and `components/header.tsx` `<img>` warning.
+- Targeted Prettier check passed for every touched/new application and test file; `git diff --check` passed for task-owned changes.
+- `pnpm build` passed, including compilation, lint/type validation, page-data collection, and generation of all 44 static pages.
+- A production `next start` smoke check parsed exactly one JSON-LD graph from de/es/en homepages and all six published article translations. It verified unique IDs, locale canonicals/hreflang, graph references, EUR 24.99 Offer data, centralized footer identities, Organization authorship for every live article, and unchanged robots/sitemap `www` URLs.
+- The full `pnpm format:check` still reports the pre-existing repository debt. Its failing set improved from 31 baseline paths to 30 because touched `lib/site.ts` is now formatted; no new path was added.
+- A task-file secret marker scan found no credential material. The unrelated parallel `.env.example` change remained untouched and unstaged.
+
+### Adaptations and residual limitations
+
+- No material scope deviation occurred. The implementation omitted an onboarding `BuyAction`: the locale pricing section is the factual Offer URL, while inventing a purchase action was unnecessary for the smallest graph.
+- No FAQPage, homepage team Person, Review/AggregateRating, LocalBusiness, Product, unsupported SoftwareApplication claim, profile route, DB change, or crawler rewrite was added.
+- Current published posts contain no video, so the optional VideoObject branch is proven by deterministic tests rather than a live rendered article; all current article routes were still exercised end to end.
+- No external rich-result validator or fresh web research was needed for correctness. Post-deployment recrawl/index inspection remains operational follow-up, not part of this implementation.
+- Off-site authority remains separate: TODA should keep its official profiles legally/brand-consistent, earn relevant independent citations and links, and add third-party knowledge-source records only where eligibility and verifiable sourcing exist. This on-site graph improves entity consistency but cannot guarantee a Knowledge Panel or rich result.
