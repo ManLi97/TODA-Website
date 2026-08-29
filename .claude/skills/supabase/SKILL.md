@@ -23,12 +23,18 @@ be honoured (read when in doubt — do not duplicate it here):
   no drop/truncate, ever. Full matrix: `db-ownership.md`.
 - **toda-company is the schema authority.** Its `supabase/migrations/` is the **full, byte-exact
   mirror** of the live project. A migration you apply is not "done" until it is mirrored there (§4).
-- **Two MCP instances, one write path:**
-  - `mcp__supabase__*` (stdio, repo-own) is **READ-ONLY**. A write here errors `read-only mode` —
-    that means wrong instance, not "find a workaround".
-  - `mcp__plugin_supabase_supabase__*` is the **WRITE** path (`apply_migration`, `execute_sql`).
-- **Never** `supabase db push` / `db pull` / `migration repair` on this DB — migrations go via MCP.
-  (The `001`–`015` stubs in this repo's `supabase/migrations/` are legacy db-push scaffolding; leave them.)
+- **CLI write regime (global rule since 2026-08-29 — `skill:supabase-write-regime` is canonical):**
+  MCP is the read/evidence channel only (`mcp__supabase__*`, enforced read-only). Migrations are
+  applied via **`supabase db push`, executed by TOMEK** (agent authors + verifies, pre-action
+  report first; the agent-side `db push` denies are the feature). The former plugin-MCP write path
+  (`apply_migration`) is retired.
+- **Stub discipline makes `db push` safe here:** every remote version owned by another repo exists
+  locally as a comment-only stub (`-- Stub: … DO NOT EDIT …`) so the CLI matches the shared remote
+  history and shows only real new migrations as pending. **Before any push:** compare
+  `supabase_migrations.schema_migrations` (read-only MCP) against `supabase/migrations/` and add
+  missing stubs — the dry-run must list exactly your new migration. **Never** `db pull` /
+  `migration repair` on this DB. (Proven end-to-end 2026-08-29: 22 stubs 016–0037 +
+  `community_pulse_v2` pushed cleanly.)
 - **Verify target identity before any write:** `get_project_url` + one SELECT against a repo-own
   table. IDs from docs/env are claims, not proof (fork/rebrand rule).
 - **Pre-action report before every write**, even with standing authority: target (project ref, prod),
@@ -42,12 +48,13 @@ identity, and check advisors after any change.
 
 ## 3. Applying a migration (DDL)
 
-1. **Write the DDL.** Website file lives at `supabase/migrations/<version>_<name>.sql` — but the
-   version is assigned at apply time (step 3), so name it after applying, or `git mv` it to match.
-2. **Identity check** (§1): `get_project_url` + one SELECT on a repo-own table.
-3. **Pre-action report**, then **apply via the plugin:**
-   `mcp__plugin_supabase_supabase__apply_migration({ project_id, name: "<snake_case>", query: "<DDL>" })`.
-   Version = auto-assigned UTC timestamp. Success = `{"success":true}`.
+1. **Write the DDL** at `supabase/migrations/<UTC-timestamp>_<name>.sql` (timestamp via
+   `date -u +%Y%m%d%H%M%S` — with `db push` the filename IS the version).
+2. **Identity check** (§1): `get_project_url` + one SELECT on a repo-own table. Then verify the
+   stub coverage (§1) so the dry-run will list only your migration.
+3. **Pre-action report**, then **Tomek executes** in a separate terminal (interactive gates have
+   no TTY in `!`-runs): `supabase db push --dry-run --linked` (must list exactly the new file) →
+   `supabase db push --linked`.
 4. **Advisors:** `get_advisors` security + performance. For a new website table, the ONLY expected new
    lints are the intentional `rls_enabled_no_policy` INFO (service-role-only: RLS on, zero policies)
    and brand-new `unused_index` INFO. Any other new WARN/ERROR on your object → fix before committing.
