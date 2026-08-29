@@ -32,9 +32,9 @@ Built with Next.js 15 App Router, React 19, TypeScript, Tailwind v4.
 - **`.claude/skills/blog-article/SKILL.md`** — the **self-evolving blog
   content pipeline** (`/blog-article`). Three phases: learning step
   (diff published articles against their pre-correction snapshots, then
-  update its own rules), topic mining (Reddit/YouTube scraping via
-  Apify + cluster scoring), writing + draft insert into the Supabase
-  blog CMS. It **never publishes** — Tomek reviews and publishes via
+  update its own rules), topic mining (reads the weekly community-pulse
+  battery from the DB + cluster scoring), writing + draft insert into the
+  Supabase blog CMS. It **never publishes** — Tomek reviews and publishes via
   `/admin`. Its knowledge base lives in `docs/blog/` (see Project
   documentation); the skill reads from and writes back to those docs on
   every run — skill and docs are one system, keep both in sync when
@@ -181,15 +181,22 @@ a time-series source in the shared **toda-company** DB (`znocynswpsfckyfumema`).
   `scripts/gsc-backfill.ts` (`pnpm gsc:backfill`, off-Vercel) does the one-time ~16-month backfill
   (`dataState=final`). The `dimension='total'` rows carry the authoritative daily totals (per-dimension
   sums are lower — GSC drops anonymized queries).
-- **Reddit topic mining** (Strom A of `/blog-article`, feeds blog topic selection — NOT the dashboard) →
-  `mining_runs` / `topic_signals` / `topic_classifications` + the `topic_cluster_scores` view.
-  `lib/mining/*` scrapes the `harshmaur/reddit-scraper` Apify actor via a **whitelist mapper** (no author
-  fields; `body` on a 30-day TTL), ingests under the same snapshot/append-only semantics (one `mining_runs`
-  row per actor run, `topic_signals` keyed `(run_id, external_id)`), and scores clusters **deterministically
-  in SQL** (`security_invoker` view, A/B-validated outlier formula — the skill writes classifications, the
-  view does the median/Σ). `app/api/cron/mining-sync/route.ts` (Vercel cron Mo/Wed/Fri in `vercel.json`) +
-  `scripts/mining-sync.ts` (`pnpm mining:sync`; tokenless `--dataset` ingest mode reads public datasets
-  without a token). Needs `APIFY_TOKEN` for the full cycle. Methodology: `docs/blog/topic-radar.md`.
+- **Community-pulse topic mining v2** (Strom A of `/blog-article` + consumed by the marketing repo's
+  `/community-voices` — NOT the dashboard) → `mining_runs` / `topic_signals` / `topic_classifications` +
+  the `topic_cluster_scores` view. `lib/mining/*` runs a FIXED weekly multi-source battery
+  (`lib/mining/config.ts` = source of truth): DeepAPI scrapes (reddit broad, YouTube search + reference
+  channels, IG hashtags, TikTok search/comments, web) + YouTube Data API v3 `commentThreads` (free quota;
+  never its expensive `search`). **Whitelist mappers** per source (no author/commenter identities, ever;
+  `body` on a 30-day TTL), snapshot/append-only semantics (one `mining_runs` row per request,
+  `dataset_id` = provider ref: DeepAPI requestId | `ytapi:{isoWeek}:comments:{videoId}`; `topic_signals`
+  keyed `(run_id, external_id)`). Scoring stays **deterministic in SQL** (`security_invoker` view;
+  `engagement` column is non-NULL only for scorable rows: reddit broad = upvotes + 2*comments, yt channel
+  reference rows = views — everything else is qualitative context with raw numbers in `metrics` jsonb).
+  Deterministic idempotency keys (`toda-mining:{isoWeek}:{sourceKey}`) make same-week retries free.
+  `app/api/cron/mining-sync/route.ts` (Vercel cron Monday 06:00 UTC in `vercel.json`) +
+  `scripts/mining-sync.ts` (`pnpm mining:sync`; `--source <key>`, recovery `--request <id> --source <key>`,
+  `--fresh`, `--retention-only`). Needs `DEEPAPI_API_BASE_URL`/`DEEPAPI_API_KEY` (+ `YOUTUBE_API_KEY` for
+  yt-comments; missing key = visible failed row). Methodology: `docs/blog/topic-radar.md`.
 
 ## Key patterns
 
@@ -250,5 +257,8 @@ Required in `.env.local`:
 - `GSC_SA_KEY` — GSC service-account JSON key as a string (Vercel Production)
 - `GSC_SA_KEY_FILE` — path to the GSC service-account JSON key file (local dev)
 - `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync` and `/api/cron/mining-sync`
-- `APIFY_TOKEN` — Apify API token for the Reddit mining full cycle + cron (server-only; ingest-only
-  `pnpm mining:sync --dataset` works without it)
+- `DEEPAPI_API_BASE_URL` / `DEEPAPI_API_KEY` — DeepAPI for the community-pulse battery (server-only;
+  local dev: `source ~/.deepapi/env`)
+- `YOUTUBE_API_KEY` — YouTube Data API v3 for yt-comments (battery Phase 2 + on-demand skill scrapes;
+  missing → yt-comments becomes a visible failed mining_runs row)
+- `SERP_API_KEY` — SerpApi for German search volumes in skill runs (not used by the cron)

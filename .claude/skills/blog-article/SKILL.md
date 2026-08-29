@@ -1,6 +1,6 @@
 ---
 name: blog-article
-description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS. Use when asked to write a TODA blog post (/blog-article <thema>) or to run topic mining (/blog-article mining). Covers data-based topic selection (Reddit + DACH-Radar + SEO-Gap-Liste), sourced research via the Quellen-Library, writing in TODA voice (Formate: Fall & Recht, Ratgeber, Vorlagen), and draft insert for review in /admin.
+description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS. Use when asked to write a TODA blog post (/blog-article <thema>) or to run topic mining (/blog-article mining). Covers data-based topic selection (Community-Puls (DB) + DACH-Radar + SEO-Gap-Liste), sourced research via the Quellen-Library, writing in TODA voice (Formate: Fall & Recht, Ratgeber, Vorlagen), and draft insert for review in /admin.
 ---
 
 # /blog-article — TODA-Blogartikel datenbasiert erzeugen
@@ -45,27 +45,36 @@ Bevor irgendetwas anderes passiert:
 Methode und Scoring-Formel stehen in `topic-radar.md` (Pflichtlektüre).
 Ablauf:
 
-1. **Strom A — Pipeline lesen (Freshness-Gate zuerst).** Strom A ist
-   codifiziert: der Scrape läuft als Daten-Pipeline (`lib/mining/*` →
-   `mining_runs`/`topic_signals`, Apify-Actor `harshmaur/reddit-scraper`,
-   Cron Mo/Mi/Fr) — dieser Skill scrapt nicht mehr ad hoc, sondern liest
-   die DB.
-   - **Freshness-Gate:** Der jüngste `succeeded` **broad**-Run je Fenster
-     (`week` + `month`) muss ≤ 7 Tage alt sein **und**
-     `field_coverage_pct ≥ 80`. Sonst degradierter Fallback: dokumentiertes
-     Signal (wie beim Scrape-Ausfall 16.06.) ODER ad-hoc-Scrape via
-     Apify-MCP + Ingest (`pnpm mining:sync --dataset <id> --pass broad
-     --window <week|month>`), bevor es weitergeht.
-   - **Unklassifizierte Posts ziehen:** `topic_signals` der jüngsten
-     broad-Runs left-join `topic_classifications` (noch offene Verdikte),
-     im **Mischfenster** `week` (was diese Woche brennt) + `month` (was
-     sich als Trend hält).
+1. **Strom A — Community-Puls aus der DB lesen (Freshness-Gate zuerst).**
+   Strom A ist zentrale Infrastruktur: die wöchentliche Quellen-Batterie
+   (DeepAPI: Reddit broad, YouTube-Suche/-Referenzkanäle, IG-Hashtags,
+   TikTok-Suche/-Kommentare, Web + YouTube-Data-API-Kommentare) läuft als
+   Daten-Pipeline (`lib/mining/*` → `mining_runs`/`topic_signals`, Cron
+   Mo 06:00 UTC; Batterie-Quelle der Wahrheit: `lib/mining/config.ts`) —
+   dieser Skill scrapt nicht ad hoc, sondern liest die DB. `/community-voices`
+   (Marketing-Repo) liest denselben Datenbestand.
+   - **Freshness-Gate:** Der jüngste `succeeded`-Run je Kern-`source_key`
+     (`reddit-broad`, `yt-channels`, `yt-search`, mind. eine Context-Quelle)
+     muss ≤ 8 Tage alt sein; broad-Runs zusätzlich `field_coverage_pct ≥ 80`.
+     Sonst degradierter Fallback: dokumentiertes Signal (wie beim
+     Scrape-Ausfall 16.06.) ODER Nachlauf via `pnpm mining:sync`
+     (bzw. `--source <key>`), Recovery eines hängengebliebenen Requests via
+     `pnpm mining:sync --request <deepapiRequestId> --source <key>`,
+     bevor es weitergeht.
+   - **Unklassifizierte Zeilen ziehen:** `topic_signals` der jüngsten Runs
+     left-join `topic_classifications` (noch offene Verdikte). Scorebar sind
+     nur Zeilen mit `engagement is not null` (Reddit broad + Kanal-Referenz);
+     Zeilen mit `engagement NULL` (Suchen, Hashtags, Kommentare, Web) sind
+     **qualitativer DACH-Kontext** — Entscheidungssignal neben den Scores,
+     nie selbst gescored.
    - **Seeded-Rows** (`is_seeded = true`) sind **nur qualitativer
      Recall-Kontext** für den Writer — sie fließen NIE in Median, Score
      oder Trend-Gate (Begründung in `topic-radar.md`).
-   - YouTube-Kommentare der gelisteten Podcast-Kanäle bleiben **on demand**
-     via Apify-MCP (Top-Kommentare aktueller Business-Episoden, nur
-     qualitativ) — unverändert.
+   - **YouTube-Kommentare on demand** (aktuelle Business-Episoden der
+     Podcast-Kanäle, nur qualitativ): Data-API-Helper
+     `lib/mining/youtube.ts` (`commentThreads`, `order=relevance` — nie
+     die teure Data-API-`search`); Video-IDs aus den yt-search-Zeilen der
+     DB oder via DeepAPI `POST /v1/scrape/youtube/search`.
    Wochen-Doppelungen fängt der Dedup-Check (Schritt 5) plus der Abgleich
    mit den letzten Radar-Einträgen ab.
 2. **Klassifizieren + Scores lesen** — der einzige verbleibende manuelle,
@@ -76,7 +85,14 @@ Ablauf:
      `cluster` (**kanonischer Slug aus der Cluster-Label-Registry in
      `topic-radar.md`** — NULL = Diskussion ohne Cluster), optional `note`.
      Keine Freitext-Labels erfinden: near-duplicate Slugs zersplittern den
-     Score (siehe Registry).
+     Score (siehe Registry). **Immer `on conflict (run_id, external_id)
+     do nothing`** — `/community-voices` klassifiziert dieselben Runs;
+     die erste Klassifikation steht.
+   - **Kanal-Zeilen-Pflicht (x-Ratio-Basis):** Werden Zeilen eines
+     `yt-channels`-Runs klassifiziert, dann IMMER **alle 30 Zeilen je Kanal**
+     desselben Runs (`is_discussion = true`, `cluster NULL` als Default;
+     Cluster nur bei thematischem Video) — sonst verschiebt sich der
+     Kanalmedian und die x-Ratios der View werden falsch.
    - **Scores lesen:** `topic_cluster_scores` für die betreffenden
      `run_id`s abfragen — die View rechnet Median + Outlier + Σ
      **deterministisch in SQL** (Formel unverändert), kein manuelles
@@ -91,7 +107,12 @@ Ablauf:
 5. **Dedup-Check:** `select t.title, t.slug, t.tags, t.status from
    blog_post_translations t` — behandelte Themen scheiden aus oder
    brauchen einen neuen Winkel.
-6. **Such-Validierung:** Top-Kandidaten per Websuche (DACH-Suchinteresse?).
+6. **Such-Validierung:** Top-Kandidaten mit SerpApi-Suchvolumen prüfen
+   (google.de, `SERP_API_KEY`) + DeepAPI `seo.rank`/`seo.audit` als
+   SERP-Read (wer rankt zum Thema, wie stark?). DeepAPI `seo.keyword` ist
+   für DE tot (gemessen 29.08.) — nicht verwenden. Die DACH-Kontext-Zeilen
+   aus Strom A (TikTok-/YT-Kommentare, Web) sind qualitatives
+   Entscheidungssignal neben den Scores — nie selbst gescored.
 7. **Quellen-Check:** Trägt eine Tier-1/2-Quelle das Thema? Ohne
    Faktenbasis kein eigener Artikel.
 8. **Radar-Eintrag anhängen** (datiert): referenzierte `run_id`s (statt
@@ -234,8 +255,9 @@ Auswertungs-Log von `voice-learnings.md` registrieren.
 ## Harte Regeln
 
 - Niemals publizieren, niemals bestehende Posts ändern oder löschen.
-- Tier 3 belegt keine Fakten; keine Reddit-Zitate; keine unbelegten
-  Rechtsaussagen.
+- Tier 3 belegt keine Fakten; keine Community-Zitate (Reddit, TikTok-/
+  YT-Kommentare, FB) als Faktenbeleg — Tier 3 bleibt Stimmung; keine
+  unbelegten Rechtsaussagen.
 - Slug-Kollision → neuen Slug wählen, nicht überschreiben.
 - Eine Sprache pro Lauf (v1: nur `de`). Übersetzungen sind ein
   separater, späterer Schritt.

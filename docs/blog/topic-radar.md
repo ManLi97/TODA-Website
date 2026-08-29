@@ -5,13 +5,22 @@ nachprüfbar — welche Daten gescrapt wurden, wie gescort wurde, warum
 ein Topic gewonnen hat. **Append-only:** pro Mining-Lauf ein datierter
 Eintrag, alte Einträge werden nie umgeschrieben.
 
-## Methode (Stand Juli 2026)
+## Methode v2 (Stand 2026-08)
 
 Drei Ströme:
 
-- **Strom A — Community-Schmerzpunkte:** Subreddits aus
-  `sources.md` Tier 3 scrapen (Top-Posts, letzte 30 Tage, inkl.
-  Upvotes + Kommentarzahl). Posts thematisch clustern.
+- **Strom A — Community-Puls (zentrale Wochen-Batterie → DB):** Eine feste
+  Multi-Quellen-Batterie (DeepAPI: Reddit broad, YouTube-Suche +
+  Referenzkanäle, Instagram-Hashtags, TikTok-Suche/-Kommentare, Websuche;
+  plus YouTube-Data-API-Kommentare) läuft wöchentlich (Cron Mo 06:00 UTC)
+  als Daten-Pipeline `lib/mining/*` → `mining_runs`/`topic_signals`.
+  **Batterie-Quelle der Wahrheit: `lib/mining/config.ts`** — Queries,
+  Kanäle, Hashtags, Caps stehen dort, nicht hier. Skills (dieses Repo:
+  `/blog-article`; Marketing-Repo: `/community-voices`) lesen die DB und
+  klassifizieren; sie scrapen nicht ad hoc. Reddit (r/TattooArtists, EN)
+  bleibt als quantitative Diskussions-Baseline mit Label **Hypothese**
+  (EN→DACH-Übertragung); echte DACH-Stimmen liefern die Kontext-Quellen
+  (TikTok-/YouTube-Kommentare, Web-Snippets).
 - **Strom B — DACH-Radar:** Tier-1/2-Quellen auf Neuigkeiten prüfen
   (neue Urteile, Verordnungs-Updates). Liefert Themen, die auf Reddit
   nie auftauchen, weil die Communities US-lastig sind.
@@ -42,33 +51,48 @@ verworfen mit Grund). EN-Cluster ruhen, bis EN-Läufe existieren (v1 = de).
 | C9 | Tattoo-Preise / Stundensatz-Rechner | DE | offen (Suchinteresse validieren) |
 | C10 | No-Shows vermeiden / Ausfallhonorar | DE | offen (validieren; Vorlagen-Format-Kandidat) |
 
-Scoring pro Themen-Cluster (Strom A):
+Scoring pro Themen-Cluster (Strom A, Formel v2):
 
 ```
-Engagement(Post)   = Upvotes + 2 × Kommentarzahl
-Baseline(Quelle)   = Median(Engagement) über alle klassifizierten Posts
-                     derselben Quelle im selben Scrape
-Outlier(Post)      = Engagement(Post) / Baseline(Quelle)
-Score(Cluster)     = Σ Outlier(Post) aller zugehörigen Posts
-Trend-Kriterium    : ≥ 3 unabhängige Posts im Cluster (Gate, kein Bonus)
+engagement(Zeile)  = Spalte topic_signals.engagement — non-NULL NUR wo bewiesen:
+                     Reddit broad:  Upvotes + 2 × Kommentarzahl
+                     YT-Kanal-Referenzzeilen: Views
+                     alles andere (Suchen, Hashtags, Kommentare, Web): NULL
+                     = Kontext-Zeile, von der View ausgeschlossen
+Baseline(Quelle)   = Median(engagement) über alle klassifizierten Zeilen
+                     derselben Quelle (source) im selben Run
+Outlier(Zeile)     = engagement(Zeile) / Baseline(Quelle)
+Score(Cluster)     = Σ Outlier(Zeile) aller zugehörigen Zeilen
+Trend-Kriterium    : ≥ 3 unabhängige Zeilen im Cluster (Gate, kein Bonus)
 Cross-Source-Bonus : Cluster taucht in ≥ 2 Quellen auf → bevorzugen
 ```
 
 Kommentare zählen doppelt, weil sie Diskussion (= Schmerz) anzeigen,
-Upvotes nur Zustimmung.
+Upvotes nur Zustimmung. Für YouTube-Kanal-Zeilen ist derselbe Outlier die
+**x-Ratio** (Views ÷ Kanalmedian der 30 neuesten Videos): `source` =
+`@kanal`, der per-(run, source)-Median der View IST der Kanalmedian.
+**Kanal-Zeilen-Klassifikationspflicht:** Wer Kanal-Zeilen eines Runs
+klassifiziert, klassifiziert ALLE 30 je Kanal (`is_discussion = true`,
+`cluster NULL` als Default; Cluster nur bei thematischem Video) — sonst
+verschiebt sich der Median. Rohzahlen aller Quellen liegen in
+`topic_signals.metrics` (jsonb): eine spätere A/B-Kalibrierung kann
+weitere Quellen zu scorebar befördern, ohne neu zu scrapen.
 
-**Datenerhebung & Scoring codifiziert (Stand 07/2026).** Strom A ist keine
-Ad-hoc-Handarbeit mehr, sondern eine Daten-Pipeline (`lib/mining/*`): Scrape
-via Apify-Actor `harshmaur/reddit-scraper` (ersetzt das tote
-`trudax/reddit-scraper-lite`) → `topic_signals`; die Cluster-Zuordnung
-schreibt der Skill als Verdikte nach `topic_classifications`; das Scoring
-rechnet die **deterministische SQL-View** `topic_cluster_scores`
-(per-`(run,source)`-Median, Outlier, Σ, Trend-Gate ≥ 3, Cross-Source).
-**Die Formel ist unverändert** — nur Erhebung und Rechnung sind jetzt Code
-statt Handschritt. Zwei Pässe: **broad** (beide Subs, `top/?t=week` +
-`top/?t=month`) ist die quantitative Spine → speist Median + View; **seeded**
-(Keyword-Suche in r/TattooArtists: booking, deposit, no-show, pricing,
-cancellation) ist **RECALL-ONLY**: `is_seeded = true`-Zeilen fließen NIE in
+**Datenerhebung & Scoring codifiziert — Reddit/Apify-Runbook (historisch,
+bis 08/2026).** Bis zur Batterie v2 lief Strom A als reine Reddit-Pipeline:
+Scrape via Apify-Actor `harshmaur/reddit-scraper` (ersetzte das tote
+`trudax/reddit-scraper-lite`), Cron Mo/Mi/Fr, zwei Pässe **broad**
+(beide Subs, `top/?t=week` + `top/?t=month`) als quantitative Spine und
+**seeded** (Keyword-Suche in r/TattooArtists: booking, deposit, no-show,
+pricing, cancellation) als RECALL-ONLY. Gemessen (Proben 29.08.): Reddit ist
+für DACH leer — daher der Umbau auf die Multi-Quellen-Batterie (Pipeline v2,
+Provider `deepapi`/`youtube_data_api`; historische Zeilen behalten
+`provider='apify'`, `source_key='reddit-broad'|'reddit-seeded'`). Die
+Verdikt-Schicht (`topic_classifications`) und die **deterministische
+SQL-View** `topic_cluster_scores` (per-`(run,source)`-Median, Outlier, Σ,
+Trend-Gate ≥ 3, Cross-Source) sind unverändert; die View liest seit v2 die
+`engagement`-Spalte statt der Inline-Reddit-Formel (Backfill identisch).
+**Seeded bleibt RECALL-ONLY:** `is_seeded = true`-Zeilen fließen NIE in
 Median, Score oder Trend-Gate. Grund: Ein Seed-Pass übersampelt gezielt
 Schmerzbegriffe → verzerrt den Quellen-Median und bläht Σ für genau diese
 Cluster auf (Populations-Asymmetrie / Score-Bias). Seeded liefert nur
@@ -102,7 +126,8 @@ Danach, vor der finalen Wahl:
 1. **Dedup-Check:** Query gegen `blog_post_translations`
    (Titel/Tags/Slugs aller Drafts + veröffentlichten Posts) — schon
    behandelte Themen scheiden aus oder brauchen einen neuen Winkel.
-2. **Such-Validierung:** Top-Kandidaten per Websuche prüfen — wird das
+2. **Such-Validierung:** Top-Kandidaten mit SerpApi-Suchvolumen (google.de)
+   + DeepAPI `seo.rank`/`seo.audit` als SERP-Read prüfen — wird das
    Thema im DACH-Raum auch gesucht? (SEO-Signal, kein K.-o.-Kriterium.)
 3. **Quellen-Check:** Gibt es Tier-1/2-Quellen, die das Thema tragen?
    Ein Community-Thema ohne seriöse Faktenbasis wird kein eigener
@@ -445,3 +470,55 @@ Recovery: tokenloser Ingest-only-CLI-Modus `pnpm mining:sync --dataset <id>
 --pass <broad|seeded> --window <week|month>` (öffentliche Apify-Datasets
 lesen ohne Token). YouTube-Kommentare bleiben on-demand via Apify-MCP
 (qualitativ), unverändert.
+
+## Lauf 2026-08-29 — Community-Pulse-Pipeline v2 codifiziert (Reddit/Apify → DeepAPI-Batterie)
+
+**Was gebaut wurde:** Strom A ist jetzt eine wöchentliche Multi-Quellen-Batterie
+(Cron Mo 06:00 UTC) statt der Reddit/Apify-Pipeline. Migration
+`community_pulse_v2` (Version 20260829120000, via `supabase db push` im
+CLI-Regime, Spiegel in toda-company Commit `541d34a`, md5-bewiesen
+byte-identisch): `mining_runs` +`provider`/`source_key` (pass += `context`,
+`time_window` Freitext), `topic_signals` +`platform`/`metrics`/`engagement`,
+View v2 liest die `engagement`-Spalte (Output-Spalten unverändert). Batterie:
+20 DeepAPI-Slots (5 yt-search, yt-channels, reddit-broad, 3 ig-hashtags,
+2 tiktok-search, 3 tiktok-comments, 5 web) + yt-comments via YouTube Data API
+(`commentThreads`, kostenlos) — Definition in `lib/mining/config.ts`.
+Whitelist-Typen aus den Live-Kontrakten (`/v1/capabilities` + je 1 dryRun,
+29.08.) — Autor-/Kommentator-Felder strukturell unerreichbar.
+
+**Verifikations-Belege (29.08.):**
+- **Backfill ≡ v1:** 0 Zeilen mit fehlendem/falschem `engagement` auf 4629
+  Alt-Signals; 0 Divergenz-Zeilen (engagement non-NULL ⟺ up_votes+comments
+  non-NULL auf `provider='apify'`) → View v2 ≡ v1 auf allen historischen Daten.
+  (Der 9.6134-Kontroll-Cluster vom 12.07. war nicht reproduzierbar —
+  `topic_classifications` war zwischenzeitlich geleert; ersetzt durch den
+  Konstruktions- + Live-Handbeweis.)
+- **x-Ratio-Handrechnung (D3):** yt-channels-Run `896aef95` vollklassifiziert
+  (60/60; Members-only-Platzhalter `KikV57bc-cg` mit 1M-Views als
+  `is_discussion=false` aus der Median-Basis). Handmedian @inkarea (29 Videos)
+  = **1800**; TEMU-Video 16000 Views → erwartet 8.8889; View lieferte exakt
+  **8.8889**. Anker konsistent: 28.08. x8.65 bei Median 1850 (Datei-Baseline
+  Marketing).
+- **Live-Batterie:** alle 20 DeepAPI-Slots + 3 yt-comments-Runs succeeded,
+  636 Signals, Coverage 100 % überall. Reddit broad = 34 Posts (reales
+  Monatsvolumen r/TattooArtists, deckt sich mit Baseline n=34); Top-Thread
+  „Client is refusing a custom drawing…" (Engagement 923 = 313 + 2·305).
+- **Idempotenz (D5):** 6 Invocations am selben Tag → je Slot exakt 1 Run mit
+  1 Provider-Ref (`toda-mining:2026-W35:<slot>` → gleiche requestId, Replays
+  kostenlos; Batterie-Vollauf ~2,40 $). yt-comments-Refs deterministisch
+  `ytapi:2026-W35:comments:<videoId>`.
+- **Resilienz:** Lauf ohne `YOUTUBE_API_KEY` → yt-comments als sichtbare
+  failed-Row, alle anderen Slots succeeded.
+- **Cron-Route:** lokal 401 (falscher/fehlender Token), 200 mit 23
+  Per-Source-Outcomes bei korrektem Token; Retention-Sweep 0 auf frischen Daten.
+- **Konsumenten-Smokes:** Freshness-Gate (8 Kern-Keys, alle frisch),
+  Unclassified-Query, Score-Read — funktionieren für `/blog-article` und
+  `/community-voices` (geteilte Klassifikationsarbeit, `on conflict do nothing`).
+
+**Klassifikations-Stand:** yt-channels-Run `896aef95` ist klassifiziert
+(Kanal-Referenz, cluster NULL). Alle übrigen Runs der Woche W35 haben offene
+Verdikte (276 DeepAPI- + 300 Kommentar-Zeilen) — der nächste
+`/blog-article mining`-Lauf klassifiziert sie.
+
+**Offen:** Vercel-Env (`DEEPAPI_*`, `YOUTUBE_API_KEY` setzen; `APIFY_TOKEN`
+entfernen) + Deploy + erster Montags-Cron — 🔴 bei Tomek.

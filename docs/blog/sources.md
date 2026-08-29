@@ -72,7 +72,8 @@ hier in der Tabelle bzw. unter „Bewusst ausgeschlossen" dokumentiert,
 der Test-Lauf im `topic-radar.md`. Wackelkandidaten fliegen nach zwei
 ertraglosen Läufen wieder raus.
 
-**Scraper-Verdikt (verifiziert 2026-07-12):** `harshmaur/reddit-scraper`
+**Scraper-Verdikt (verifiziert 2026-07-12 — historisch, Apify-Strecke bis
+08/2026 ersetzt durch die DeepAPI-Batterie):** `harshmaur/reddit-scraper`
 **aufgenommen — quantitativ**. Volumentest über beide Kern-Subs: Coverage
 **100 %**, per-Source-Zahlen median-tauglich (broad/week **128** =
 tattooadvice 100 + TattooArtists 28; broad/month **200** = 100 + 100).
@@ -83,12 +84,18 @@ Ausfälle in Folge durch residential-gedrosselte Detail-Extraktion) und
 
 ## Tier 3 — Community-Signal (nur Themenfindung & Stimmung)
 
+Erhebung: zentrale Wochen-Batterie (Pipeline v2, `lib/mining/config.ts` =
+Quelle der Wahrheit; Cron Mo 06:00 UTC → `mining_runs`/`topic_signals`).
+Skills lesen die DB, sie scrapen nicht ad hoc.
+
 | Quelle | Was sie liefert | Zugriff | Notizen |
 |---|---|---|---|
-| r/TattooArtists | Schmerzpunkte arbeitender Artists (international, US-lastig) | **Codifizierte Pipeline** (`lib/mining/*` → `mining_runs`/`topic_signals`, Apify-Actor `harshmaur/reddit-scraper`, PAY_PER_EVENT ~$0.002/Post). Kommentare/YouTube on demand via Apify-MCP (qualitativ). | Kernquelle Strom A (broad-Pass). Ersetzt `trudax/reddit-scraper-lite` + `clearpath/…` (retired, siehe Aufnahme-Protokoll). |
-| r/tattooadvice | Endkunden-Perspektive (was Kunden verwirrt = Content-Chance) | wie oben — beide Subs teilen einen broad-Run je Fenster (Cap gilt pro Sub-URL) | Strom A, Zweitquelle. |
-| Google-Suchvalidierung | Wird das Thema auch *gesucht*? (SEO-Check) | Brave Search MCP | Validierung der Top-Themen, kein eigenes Signal. |
-| YouTube-Kommentare — „Honest Tattooer Podcast" (+ „The Business of Tattooing" als Reserve) | Insider-Stimmung arbeitender Artists (Shop-Ökonomie, Splits/Booth-Rent, No-Show-Frust, Fake-Experten, Übersättigung) | Apify `streamers/youtube-comments-scraper` (`startUrls` = Video-URLs, `sortCommentsBy: "TOP_COMMENTS"`, ~$0.002/Kommentar, schnell & stabil) | Getestet 11.06.2026 (115 Kommentare / 4 Business-Episoden): **nur qualitativ** verwenden — Vote-Zahlen zu klein fürs Scoring. Liefert O-Ton-Stimmung als Würze, fließt nicht in die Cluster-Tabelle ein. |
+| r/TattooArtists | Schmerzpunkte arbeitender Artists (EN, US-lastig) | Batterie `reddit-broad` (DeepAPI `/v1/scrape/reddit/posts`, top/month) | Quantitative Diskussions-Baseline, Label **Hypothese** (EN→DACH-Übertragung). Einzige scorebare Reddit-Quelle seit v2. |
+| TikTok-Kommentare unter DE-Artist-Education-Content | Echte DACH-Stimmen (Fragen, Einwände, Schmerzpunkte) | Batterie `tiktok-comments` (feste Video-Liste `TIKTOK_COMMENT_VIDEOS` in `lib/mining/config.ts`) | Gemessen 29.08.: bestes DACH-Signal. **Nur qualitativ** (engagement NULL) — Kontext-Zeilen, nie gescored. |
+| YouTube-Kommentare DACH-Kanäle | Insider-Stimmung arbeitender Artists (DACH) | Batterie `yt-comments` (YouTube Data API v3 `commentThreads`, `order=relevance`, kostenlos; Ziel-Videos aus der yt-search-Phase) + on demand via `lib/mining/youtube.ts` | **Nur qualitativ.** Nie die Data-API-`search` benutzen (100 Einheiten/Call) — Video-IDs kommen aus DeepAPI-yt-search. |
+| Öffentliche Facebook-Gruppen | DACH-Artist-Diskussionen | Qualitativ; DACH-Artist-Gruppen sind überwiegend privat → FB-Stimmen kommen v. a. als Websuche-Snippets herein und werden so gelabelt | Kuratierte Gruppenliste = separater Discovery-Lauf (offen). |
+| Web-Snippets (Foren, Fachpresse) | Was Plattform-Endpoints nicht sehen | Batterie `web` (DeepAPI `/v1/search/web`, 5 feste Query-Varianten) | **Nur qualitativ.** Survivorship-Bias einkalkulieren (Suche zeigt Gewinner). |
+| Google-Suchvalidierung | Wird das Thema auch *gesucht*? (SEO-Check) | SerpApi (google.de, `SERP_API_KEY`) + DeepAPI `seo.rank`/`seo.audit` als SERP-Read — in Skill-Läufen, nicht im Cron | Validierung der Top-Themen, kein eigenes Signal. DeepAPI `seo.keyword` ist für DE tot (gemessen 29.08.). |
 
 ### Bewusst ausgeschlossen
 
@@ -96,12 +103,19 @@ Ausfälle in Folge durch residential-gedrosselte Detail-Extraktion) und
 - **r/sticknpokes** — reines Showcase (getestet 11.06.2026).
 - **r/TattooApprentice** — fast nur Portfolio-Kritik; Azubi-Nische ist
   nicht die Solo-Artist-Zielgruppe (getestet 11.06.2026).
-- **Instagram-Kommentare** — 90 % Emojis/Lob, kaum Schmerzpunkt-Signal,
-  hoher Aufwand. Für Stil-Trends später evtl. relevant.
-- **Facebook-Gruppen (DACH)** — bestes Signal, aber privat und
-  scraping-rechtlich heikel.
-- **Apify-Actors, die nicht funktionieren:** `khadinakbar/reddit-posts-comments-scraper`
-  (403s), `apify/rag-web-browser` auf reddit.com (geblockt),
-  `trudax/reddit-scraper-lite` (**retired** seit 16.06.: Per-Post-Detailextraktion
-  residential gedrosselt, zwei Ausfälle in Folge — ersetzt durch
-  `harshmaur/reddit-scraper`, siehe `topic-radar.md`).
+- **r/tattooadvice** — Endkunden-Perspektive; seit v2 nicht mehr in der
+  Batterie (DACH-Endkunden-Signal liefert TikTok-Suche direkter).
+  Historische Zeilen bleiben in der DB.
+- **Instagram-Kommentare** — gemessen: fast nur Emojis/Lob, und die
+  API deckelt bei ~11 Kommentaren pro Post — kein Schmerzpunkt-Signal.
+  (IG-**Hashtags** sind dagegen Batterie-Quelle: Angebotsseite, Szene-Optik.)
+- **Private Facebook-Gruppen** — bestes Signal, aber privat und
+  scraping-rechtlich heikel. Öffentliche Gruppen sind OK (siehe Tier-3).
+- **tattooscout.de** — Consumer-lastig und träge; höchstens
+  Validierungs-Kontext, keine Mining-Quelle.
+- **Apify (historisch, bis 08/2026):** die gesamte Apify-Strecke ist
+  ersetzt durch die DeepAPI-Batterie + YouTube Data API. Historische
+  Actor-Verdikte (`harshmaur/reddit-scraper` aufgenommen 07/2026;
+  `trudax/reddit-scraper-lite`, `clearpath/…`, `khadinakbar/…`,
+  `apify/rag-web-browser` raus) bleiben in `topic-radar.md` dokumentiert;
+  DB-Zeilen mit `provider='apify'` bleiben gültige Historie.

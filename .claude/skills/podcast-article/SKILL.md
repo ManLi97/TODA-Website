@@ -22,7 +22,7 @@ Geteilter Spine (identisch zu `/blog-article` — dort lesen, nicht duplizieren)
 **Was dieser Skill anders macht als `/blog-article`** — nur diese vier Schichten;
 alles andere (Lern-Schritt, Recherche, Schreiben, Insert, Snapshot, Report) ist
 **identisch** und wird von `/blog-article` übernommen:
-1. **Episoden-Intake** — URL → Transkript (Apify-Captions + Fenster-Merge).
+1. **Episoden-Intake** — URL → Transkript (DeepAPI-Transcript + Fenster-Merge).
 2. **Segment-Auswahl** — welches Segment trägt den Artikel (Radar Phase A).
 3. **Recycling-Disziplin** — O-Ton reframen statt transkribieren.
 4. **Embed-Verdrahtung** — `youtube_id` / `video_start_seconds` / `video_published_at`.
@@ -42,13 +42,18 @@ Toddcast-Artikel ist Stil-Lernmaterial wie jeder andere. Nichts Neues → weiter
 - `/podcast-article mining` — Radar Phase A: Kandidaten-Folgen/-Segmente aus
   Kanal-Signalen (Views/Likes/Kommentare + Kommentar-Mining) vorschlagen, Tomek
   wählt. Solange der Kanal klein ist, reicht Kommentar-Mining der jüngsten Folgen
-  statt Voll-Scoring.
+  statt Voll-Scoring. **Kommentar-Mining läuft über den Data-API-Helper**
+  `lib/mining/youtube.ts` (`fetchCommentThreads`, `commentThreads` mit
+  `order=relevance`, 1 Quota-Einheit/100 Kommentare — nie die Data-API-`search`)
+  bzw. `pnpm mining:sync --source yt-comments`; Kommentator-Identitäten werden
+  nie übernommen (Whitelist-Mapper).
 
 ### 1.1 Episoden-Intake (Hybrid)
 1. **Video-ID** aus der URL: `parseYouTubeInput()` aus `lib/blog/youtube.ts`
    (normalisiert watch / youtu.be / embed / live / shorts / nocookie → 11-Zeichen-ID).
-2. **Captions ziehen (Apify):** YouTube-Caption-Actor über das Apify-MCP, liefert
-   `items[0].captions = [{start, end, text}]`. Bewährt gegen `rdOlY1-Bp5E` (Folge 1).
+2. **Captions ziehen (DeepAPI):** `POST /v1/scrape/youtube/transcript`
+   (skill:deepapi laden; liefert das Transkript mit Timestamps). Die frühere
+   Apify-Captions-Strecke ist ersetzt (Apify komplett raus, 08/2026).
 3. **Fenster-Merge** zur Lesbarkeit: Captions in ~45-Sekunden-Fenster mit
    `[MM:SS]`-Kopf zusammenfassen (Logik wie `/tmp/toda-podcast/build.py`).
    Ergebnis: ein durchsuchbares Transkript **mit Timestamps** — Basis für den

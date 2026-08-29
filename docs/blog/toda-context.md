@@ -27,18 +27,10 @@ Prozess geführt — qualifizierte Anfrage statt „Hey, was kostet ein Tattoo?"
 
 ## Für wen wir schreiben — ICP & Anti-ICP
 
-Kurzfassung der Positionierung (Quelle der Wahrheit: Marketing-Baukasten,
-`brand/positioning.md` im Repo `toda/marketing`):
-
-- **ICP:** arbeitet regelmäßig (Kunden über mehrere Plattformen, gut aktiv
-  auf Social Media), nimmt sein Business ernst und will wachsen. Seine
-  Schmerzpunkte sind unsere Themen-Checkliste: No-Shows, unseriöse
-  Anfragen, vergessene Anzahlungen, Termindopplungen, Kommunikations-
-  Überforderung („Künstler, kein Dienstleister"), Organisation in der
-  „Freizeit".
-- **Anti-ICP:** Hobby-/Nebenbei-Tätowierende (< 3 Termine/Woche), Ketten,
-  Studios mit eigenem Manager, Walk-In-Studios, Terminvergabe nur
-  telefonisch/vor Ort, Artists ohne Social-Media-Aktivität.
+**Pflicht-Referenz statt Kopie:** ICP- und Anti-ICP-Definition VOR jedem
+Lauf aus der Quelle der Wahrheit lesen —
+`/Users/harvestflow/Developer/toda/marketing/brand/positioning.md`
+(Marketing-Baukasten; Kopien hier drifteten).
 
 Konsequenz: Themen und Ansprache richten sich an den ICP. Themen-Cluster,
 deren Kernpublikum Anti-ICP ist, scheiden im Mining aus (Gate in
@@ -78,20 +70,13 @@ deren Kernpublikum Anti-ICP ist, scheiden im Mining aus (Gate in
 
 ## Positionierungs-Frames für die TODA-Mention
 
-Die eine erlaubte TODA-Mention formuliert nicht frei, sondern claimt
-bevorzugt einen der laut Wettbewerbsanalyse unbesetzten Frames (Quelle:
-Marketing-Baukasten, `brand/positioning.md`):
-
-- **Anfrage-Funnel:** „vom Instagram-DM-Chaos zum geführten Funnel auf
-  deiner eigenen Subdomain".
-- **E-Mail-im-Chat-Look:** „deine Kunden installieren nichts, und du
-  verlierst keinen Thread".
-- **Kanal-Kombination:** „kein neuer Kanal — deine bestehenden,
-  kombiniert".
-
-Positionen werden durch Wiederholung besetzt: gleiche Bilder, gleiche
-Worte, Artikel für Artikel. Der zwinkernde Ton der Mention (R8 in
-`voice-learnings.md`) bleibt davon unberührt.
+Frames = bevorzugte Sprache der einen TODA-Mention: die Mention formuliert
+nicht frei, sondern claimt einen der unbesetzten Frames aus
+`/Users/harvestflow/Developer/toda/marketing/brand/positioning.md`
+(vor dem Schreiben dort lesen — Live-Referenz statt Kopie). Positionen
+werden durch Wiederholung besetzt: gleiche Bilder, gleiche Worte, Artikel
+für Artikel. Der zwinkernde Ton der Mention (R8 in `voice-learnings.md`)
+bleibt davon unberührt.
 
 ## Pricing (nur erwähnen, wenn es wirklich passt)
 
@@ -165,19 +150,18 @@ Die Formatwahl gehört begründet in den Report. Palette:
    fragen." Ton bleibt locker, Inhalt bleibt korrekt.
 5. **Faktenbasiert.** Behauptungen zu Gesetzen/Verordnungen brauchen eine
    verifizierte Tier-1/2-Quelle aus `docs/blog/sources.md`. Community-
-   Material (Reddit & Co.) belegt keine Fakten — es erscheint nur als
+   Material (egal von welcher Plattform — Reddit, TikTok-/YouTube-
+   Kommentare, Facebook, Foren) belegt keine Fakten — es erscheint nur als
    lose Stimmung („Man hört gerade oft von Artists, dass …"), nie als
    wörtliches Zitat, nie mit Username/Link.
 6. **Zielgruppe:** Solo Tattoo Artists im DACH-Raum (v1 nur Deutsch) —
    präzise Definition oben unter „Für wen wir schreiben".
-7. **Wenn der Artikel über TODA selbst spricht: Claims-Leitplanken**
-   (Quelle der Wahrheit: Marketing-Baukasten, `strategy/claims.md`).
-   Keine Spitzenstellungs-/Superlativ-Claims („Nr. 1", „am schnellsten
-   wachsend" ist dauerhaft gesperrt); eigene Zahlen nur absolut + datiert
-   + selbstbezogen, nie als Vergleich; keine Werbung mit
-   Selbstverständlichkeiten (DSGVO/SSL sind Trust-Fakten, kein
-   Werbevorteil); Rankings/Sterne nur mit benanntem Dritt-Ranking,
-   exaktem Wortlaut und Datum.
+7. **Wenn der Artikel über TODA selbst spricht: Claims-Leitplanken.**
+   Ein-Satz-Kern: Nichts behaupten, was nicht absolut, datiert und
+   selbstbezogen belegbar ist — Superlative sind gesperrt. Vollständige
+   Leitplanken VOR dem Schreiben aus
+   `/Users/harvestflow/Developer/toda/marketing/strategy/claims.md`
+   lesen (Quelle der Wahrheit, Live-Referenz statt Kopie).
 8. **Suchsprache vs. Ansprache:** In `slug`, `seo_title` und
    `seo_description` sind Suchbegriffe wie „Tätowierer" erlaubt — die
    Zielgruppe sucht das Wort, das wir in der Ansprache nie benutzen. Im
