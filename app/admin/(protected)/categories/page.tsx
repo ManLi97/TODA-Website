@@ -21,7 +21,7 @@ export default async function AdminCategoriesPage() {
   const categories = (data ?? []) as CategoryRow[];
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex min-w-0 flex-col gap-6 sm:gap-8">
       <div>
         <h1 className="text-2xl font-semibold">Categories</h1>
         <p className="text-text-tertiary mt-1 text-sm">
@@ -29,7 +29,7 @@ export default async function AdminCategoriesPage() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex min-w-0 flex-col gap-4">
         {categories.map((category) => (
           <CategoryForm
             key={category.id}

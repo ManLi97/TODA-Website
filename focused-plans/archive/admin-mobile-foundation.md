@@ -4,10 +4,11 @@ slug: "admin-mobile-foundation"
 title: "Mobile-first foundation for the TODA admin backoffice"
 revision: 1
 auto_mode: Approved
-execution: In-Progress
+execution: Completed
 base_commit: "5cbe9b085f35cddefc694c34150627c252f1649f"
 created_at: "2026-08-31T07:43:26Z"
 approved_at: "2026-08-31T07:50:25Z"
+completed_at: "2026-08-31T08:17:46Z"
 ---
 
 # Mobile-first foundation for the TODA admin backoffice
@@ -326,3 +327,40 @@ A fresh Auto-Mode agent must, before changing application code:
 5. Re-run the active-plan guard and verify required environment variables are present without printing values. Recheck at least one populated post editor and the narrow current layouts before implementation.
 6. After Tomek’s explicit approval, change only plan metadata to `auto_mode: Approved`, `execution: In-Progress`, set `approved_at`, and commit that approval state before application implementation.
 7. Execute adaptively within the Objective, Out of scope, and Definition of Done. Preserve all server-action and database boundaries, do not submit runtime mutations, and record non-material adaptations plus complete evidence in the archived Execution Record.
+
+## Execution Record
+
+Completed at `2026-08-31T08:17:46Z`.
+
+### Delivered
+
+- Added one route-aware admin navigation definition with active desktop links and a labeled, safe-area-aware mobile bottom bar. The mobile grid derives its columns from the route count, so a future fourth destination requires adding one real route item rather than redesigning the shell.
+- Reworked the protected app bar and main content spacing for narrow viewports while keeping authorization in the server layout and logout in its existing server action.
+- Added admin-only control recipes with 16px form text, 44px minimum control/button heights, visible focus treatment, disabled states, and resilient `min-w-0` behavior.
+- Replaced the phone posts matrix with information-complete cards containing title, category, update date, and all de/es/en statuses; retained the matrix table at `md+`.
+- Rebuilt category forms as labeled, one-column phone cards with coherent Save/Delete regions and wider responsive grids.
+- Rebuilt author cards for labeled fields, stacked phone social rows, and responsive avatar upload/delete regions without changing any of the three server-action forms.
+- Reworked shared post settings, locale selection, uploads, publication actions, and danger controls for narrow screens. Added touch-sized Write/Preview switching below `lg` while retaining simultaneous desktop columns and preserving the submitted Markdown textarea/state.
+- Preserved the existing login composition while adding a proper password label, current-password autocomplete, shared touch/focus styling, and narrower phone gutters.
+
+### Verification evidence
+
+- `pnpm test` passed: 7 tests, 0 failures.
+- `pnpm typecheck` passed with zero diagnostics.
+- `pnpm lint` passed with only the pre-existing Next lint deprecation and `components/header.tsx` `<img>` warning.
+- Targeted Prettier passed for every touched application/component file and this plan; `git diff --check` passed.
+- `pnpm build` passed after the final source change, including lint/type validation, generation of all 50 static pages, and compilation of all five admin route patterns.
+- The full `pnpm format:check` remains non-green because of repository-wide debt, but its failure set improved from 34 baseline paths to 32. Both touched baseline failures (`authors/author-form.tsx` and `authors/page.tsx`) are now formatted, and no new failing path was introduced.
+- A final production `next start` check used authenticated local Chrome/CDP without printing credentials or submitting any form. It gathered 33 route/viewport evidence sets with zero failures across 320×568, 390×844, 768×1024, and 1280×800.
+- At both phone widths, login and all protected routes had exact document/client widths, no out-of-bounds controls, no in-flow control overlap, no horizontal scrollers, no sub-16px form controls, and no sub-44px visible phone controls.
+- Runtime assertions proved mobile cards versus desktop table, exactly three locale statuses per post card, one-column category fields with five persistent labels at 320px, one active navigation destination, editor locale switching, Write/Preview switching, textarea-state preservation, and simultaneous desktop editor/preview panes.
+- At maximum phone scroll, the final Posts, Categories, Authors, and Editor controls cleared the fixed bottom navigation. The tightest measured clearance was 31px in the 320px editor.
+- Representative screenshots were inspected for login, shell/posts, categories, authors, editor write mode, editor preview mode, 320px stress behavior, and desktop regression behavior. Temporary scripts/screenshots stayed outside the repository, and all local server/browser listeners were stopped.
+
+### Adaptations and residual limitations
+
+- No material scope deviation occurred. Publication controls use a reliable wrapping/stacking action region rather than adding a second sticky bar above mobile navigation; this avoids obscuring content on 568px-high phones.
+- The mobile navigation uses an inline `gridTemplateColumns` value derived from the static route count. Tailwind class recipes remain complete/static, while the shell can accept a fourth real destination without a layout-class edit.
+- Existing category/author cards use neutral `div` containers rather than unnamed `section` landmarks; persistent labels and form semantics provide the intended accessibility without creating unlabeled regions.
+- The runtime check used installed Chrome emulation, not physical iOS Safari. The high-risk Safari contracts—16px form text, safe-area padding, intrinsic file-input containment, and exact narrow-width layout—were verified directly. A physical-device smoke check remains optional operational confidence, not an incomplete Definition of Done item.
+- The existing 32-file formatting debt and public-header lint warning remain outside scope. No Social/calendar route, placeholder, dependency, database/auth/action change, public-site change, or production data mutation was introduced.

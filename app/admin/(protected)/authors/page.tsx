@@ -32,16 +32,16 @@ export default async function AdminAuthorsPage() {
   const authors = (data ?? []) as AuthorRow[];
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex min-w-0 flex-col gap-6 sm:gap-8">
       <div>
         <h1 className="text-2xl font-semibold">Authors</h1>
         <p className="text-text-tertiary mt-1 text-sm">
-          Each author signs the bottom of their articles — name, slogan and social links.
-          Assign one to a post in the post editor.
+          Each author signs the bottom of their articles — name, slogan and social links. Assign one
+          to a post in the post editor.
         </p>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex min-w-0 flex-col gap-4">
         {authors.map((author) => (
           <AuthorForm
             key={author.id}

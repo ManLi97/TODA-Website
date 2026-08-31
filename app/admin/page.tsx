@@ -12,7 +12,7 @@ export default async function AdminLoginPage() {
   }
 
   return (
-    <main className="flex min-h-svh items-center justify-center px-6">
+    <main className="flex min-h-svh items-center justify-center px-4 py-6 sm:px-6">
       <div className="w-full max-w-sm">
         <p className="type-eyebrow text-text-tertiary mb-2">TODA</p>
         <h1 className="mb-8 text-2xl font-semibold">Admin</h1>

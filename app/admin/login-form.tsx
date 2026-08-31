@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { adminControlClass, adminPrimaryButtonClass } from "@/components/admin/admin-styles";
 import { login, type LoginState } from "./actions";
 
 const initialState: LoginState = { error: null };
@@ -10,20 +11,25 @@ export function LoginForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
+      <label htmlFor="admin-password" className="sr-only">
+        Password
+      </label>
       <input
+        id="admin-password"
         type="password"
         name="password"
         required
         autoFocus
+        autoComplete="current-password"
         placeholder="Password"
-        className="border-border bg-surface-alt text-text-primary placeholder:text-text-tertiary focus:border-gold-500 w-full rounded-lg border px-4 py-3 focus:outline-none"
+        className={adminControlClass}
       />
-      {state.error && <p className="text-label-red text-sm">{state.error}</p>}
-      <button
-        type="submit"
-        disabled={pending}
-        className="bg-gold-500 text-on-gold rounded-lg px-4 py-3 font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
-      >
+      {state.error && (
+        <p role="alert" className="text-label-red text-sm">
+          {state.error}
+        </p>
+      )}
+      <button type="submit" disabled={pending} className={`${adminPrimaryButtonClass} w-full`}>
         {pending ? "Signing in…" : "Sign in"}
       </button>
     </form>

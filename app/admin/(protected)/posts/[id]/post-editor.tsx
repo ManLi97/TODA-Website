@@ -5,6 +5,14 @@
 // preview rendered through the SAME pipeline as the public article page.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
+import {
+  adminControlClass,
+  adminDangerButtonClass,
+  adminFileInputClass,
+  adminLabelClass,
+  adminPrimaryButtonClass,
+  adminSecondaryButtonClass,
+} from "@/components/admin/admin-styles";
 import { renderMarkdown } from "@/lib/blog/markdown";
 import { slugify } from "@/lib/blog/slugify";
 import { routing } from "@/i18n/routing";
@@ -56,9 +64,8 @@ const EMPTY: EditorTranslation = {
   status: "missing",
 };
 
-const inputClass =
-  "w-full rounded-lg border border-border bg-surface-alt px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-gold-500 focus:outline-none";
-const labelClass = "mb-1.5 block text-xs uppercase tracking-wide text-text-tertiary";
+const inputClass = adminControlClass;
+const labelClass = adminLabelClass;
 
 function PendingButton({ children, className }: { children: React.ReactNode; className: string }) {
   const { pending } = useFormStatus();
@@ -89,6 +96,7 @@ export function PostEditor({
   // Tracks whether the slug was hand-edited per locale — auto-slug stops then.
   const slugTouched = useRef<Record<string, boolean>>({});
   const [previewHtml, setPreviewHtml] = useState("");
+  const [mobilePane, setMobilePane] = useState<"write" | "preview">("write");
 
   const draft = drafts[activeLocale];
 
@@ -134,12 +142,12 @@ export function PostEditor({
   }, [translations, activeLocale]);
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex min-w-0 flex-col gap-8 sm:gap-10">
       {/* ── Shared post settings ─────────────────────────────────────── */}
-      <section className="border-border bg-surface-alt grid gap-6 rounded-xl border p-6 sm:grid-cols-2">
-        <form action={setCategory} className="flex items-end gap-3">
+      <section className="border-border bg-surface-alt grid min-w-0 gap-5 rounded-xl border p-4 sm:grid-cols-2 sm:gap-6 sm:p-6">
+        <form action={setCategory} className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-end">
           <input type="hidden" name="postId" value={postId} />
-          <div className="grow">
+          <div className="min-w-0 grow">
             <label className={labelClass} htmlFor="categoryId">
               Category
             </label>
@@ -157,14 +165,14 @@ export function PostEditor({
               ))}
             </select>
           </div>
-          <PendingButton className="border-border text-text-secondary hover:text-text-primary rounded-lg border px-3 py-2 text-sm">
+          <PendingButton className={`${adminSecondaryButtonClass} w-full sm:w-auto`}>
             Save
           </PendingButton>
         </form>
 
-        <form action={setAuthor} className="flex items-end gap-3">
+        <form action={setAuthor} className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-end">
           <input type="hidden" name="postId" value={postId} />
-          <div className="grow">
+          <div className="min-w-0 grow">
             <label className={labelClass} htmlFor="authorId">
               Author
             </label>
@@ -182,14 +190,17 @@ export function PostEditor({
               ))}
             </select>
           </div>
-          <PendingButton className="border-border text-text-secondary hover:text-text-primary rounded-lg border px-3 py-2 text-sm">
+          <PendingButton className={`${adminSecondaryButtonClass} w-full sm:w-auto`}>
             Save
           </PendingButton>
         </form>
 
-        <form action={uploadCover} className="flex items-end gap-3">
+        <form
+          action={uploadCover}
+          className="flex min-w-0 flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-end"
+        >
           <input type="hidden" name="postId" value={postId} />
-          <div className="grow">
+          <div className="min-w-0 grow">
             <label className={labelClass} htmlFor="cover">
               Cover image {coverUrl ? "(set)" : "(none)"}
             </label>
@@ -198,10 +209,10 @@ export function PostEditor({
               type="file"
               name="file"
               accept="image/jpeg,image/png,image/webp,image/avif"
-              className="text-text-secondary file:bg-surface-hover file:text-text-primary block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:px-3 file:py-2 file:text-sm"
+              className={adminFileInputClass}
             />
           </div>
-          <PendingButton className="border-border text-text-secondary hover:text-text-primary rounded-lg border px-3 py-2 text-sm">
+          <PendingButton className={`${adminSecondaryButtonClass} w-full sm:w-auto`}>
             Upload
           </PendingButton>
         </form>
@@ -211,22 +222,27 @@ export function PostEditor({
           <img
             src={coverUrl}
             alt="Current cover"
-            className="border-border max-h-40 rounded-lg border object-cover sm:col-span-2"
+            className="border-border max-h-40 w-full rounded-lg border object-cover sm:col-span-2"
           />
         )}
       </section>
 
       {/* ── Locale tabs ──────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between">
-        <div className="border-border bg-surface-alt flex gap-1 rounded-lg border p-1">
+      <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div
+          role="group"
+          aria-label="Translation locale"
+          className="border-border bg-surface-alt grid w-full grid-cols-3 gap-1 rounded-lg border p-1 sm:w-auto"
+        >
           {routing.locales.map((locale) => {
             const status = translations[locale]?.status ?? "missing";
             return (
               <button
                 key={locale}
                 type="button"
+                aria-pressed={locale === activeLocale}
                 onClick={() => setActiveLocale(locale)}
-                className={`rounded-md px-4 py-1.5 text-sm uppercase transition-colors ${
+                className={`focus-visible:ring-gold-500/40 inline-flex min-h-11 items-center justify-center rounded-md px-4 text-sm uppercase transition-colors focus-visible:ring-2 focus-visible:outline-none ${
                   locale === activeLocale
                     ? "bg-surface-hover text-text-primary"
                     : "text-text-tertiary hover:text-text-secondary"
@@ -234,6 +250,7 @@ export function PostEditor({
               >
                 {locale}
                 <span
+                  aria-hidden="true"
                   className={`ml-2 inline-block h-1.5 w-1.5 rounded-full ${
                     status === "published"
                       ? "bg-label-green"
@@ -246,11 +263,11 @@ export function PostEditor({
             );
           })}
         </div>
-        {statusBadge}
+        <div className="self-start sm:self-auto">{statusBadge}</div>
       </div>
 
       {/* ── Per-locale translation form ──────────────────────────────── */}
-      <form key={activeLocale} action={saveTranslation} className="flex flex-col gap-6">
+      <form key={activeLocale} action={saveTranslation} className="flex min-w-0 flex-col gap-6">
         <input type="hidden" name="postId" value={postId} />
         <input type="hidden" name="locale" value={activeLocale} />
 
@@ -386,36 +403,75 @@ export function PostEditor({
         </div>
 
         {/* Markdown + live preview */}
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div>
-            <label className={labelClass} htmlFor="contentMd">
-              Content (Markdown)
-            </label>
-            <textarea
-              id="contentMd"
-              name="contentMd"
-              rows={24}
-              value={draft.contentMd}
-              onChange={(e) => update({ contentMd: e.target.value })}
-              className={`${inputClass} font-mono leading-relaxed`}
-            />
+        <div className="min-w-0">
+          <div
+            role="group"
+            aria-label="Content view"
+            className="border-border bg-surface-alt mb-4 grid grid-cols-2 gap-1 rounded-lg border p-1 lg:hidden"
+          >
+            <button
+              type="button"
+              aria-pressed={mobilePane === "write"}
+              aria-controls="admin-markdown-pane"
+              onClick={() => setMobilePane("write")}
+              className={`focus-visible:ring-gold-500/40 min-h-11 rounded-md px-4 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none ${
+                mobilePane === "write" ? "bg-surface-hover text-text-primary" : "text-text-tertiary"
+              }`}
+            >
+              Write
+            </button>
+            <button
+              type="button"
+              aria-pressed={mobilePane === "preview"}
+              aria-controls="admin-preview-pane"
+              onClick={() => setMobilePane("preview")}
+              className={`focus-visible:ring-gold-500/40 min-h-11 rounded-md px-4 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none ${
+                mobilePane === "preview"
+                  ? "bg-surface-hover text-text-primary"
+                  : "text-text-tertiary"
+              }`}
+            >
+              Preview
+            </button>
           </div>
-          <div>
-            <span className={labelClass}>Preview</span>
-            <div className="border-border bg-surface-base h-full max-h-[600px] overflow-y-auto rounded-lg border p-6">
-              <div className="prose-blog" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+
+          <div className="grid min-w-0 gap-4 lg:grid-cols-2">
+            <div
+              id="admin-markdown-pane"
+              className={`min-w-0 ${mobilePane === "write" ? "block" : "hidden lg:block"}`}
+            >
+              <label className={labelClass} htmlFor="contentMd">
+                Content (Markdown)
+              </label>
+              <textarea
+                id="contentMd"
+                name="contentMd"
+                rows={24}
+                value={draft.contentMd}
+                onChange={(e) => update({ contentMd: e.target.value })}
+                className={`${inputClass} font-mono leading-relaxed`}
+              />
+            </div>
+            <div
+              id="admin-preview-pane"
+              className={`min-w-0 ${mobilePane === "preview" ? "block" : "hidden lg:block"}`}
+            >
+              <span className={labelClass}>Preview</span>
+              <div className="border-border bg-surface-base max-h-[70svh] min-h-[50svh] overflow-x-auto overflow-y-auto rounded-lg border p-4 sm:p-6 lg:h-full lg:max-h-[600px] lg:min-h-0">
+                <div className="prose-blog" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="border-border flex items-center gap-3 border-t pt-6">
-          <PendingButton className="border-border text-text-primary hover:bg-surface-hover rounded-lg border px-4 py-2 text-sm font-semibold">
+        <div className="border-border flex flex-col gap-3 border-t pt-6 sm:flex-row sm:flex-wrap sm:items-center">
+          <PendingButton className={`${adminSecondaryButtonClass} w-full sm:w-auto`}>
             Save draft
           </PendingButton>
           <button
             type="submit"
             formAction={publishTranslation}
-            className="bg-gold-500 text-on-gold rounded-lg px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-90"
+            className={`${adminPrimaryButtonClass} w-full sm:w-auto`}
           >
             Save & publish
           </button>
@@ -423,7 +479,7 @@ export function PostEditor({
             <button
               type="submit"
               formAction={unpublishTranslation}
-              className="border-label-red/40 text-label-red hover:bg-label-red/10 rounded-lg border px-4 py-2 text-sm"
+              className={`${adminDangerButtonClass} w-full sm:w-auto`}
             >
               Unpublish
             </button>
@@ -434,18 +490,15 @@ export function PostEditor({
       {/* ── Danger zone ──────────────────────────────────────────────── */}
       <form
         action={deletePost}
-        onSubmit={(e) => {
+        onSubmit={(event) => {
           if (!window.confirm("Delete this post in ALL locales? This cannot be undone.")) {
-            e.preventDefault();
+            event.preventDefault();
           }
         }}
         className="border-border border-t pt-6"
       >
         <input type="hidden" name="postId" value={postId} />
-        <button
-          type="submit"
-          className="text-label-red text-sm transition-opacity hover:opacity-80"
-        >
+        <button type="submit" className={`${adminDangerButtonClass} w-full sm:w-auto`}>
           Delete post (all locales)
         </button>
       </form>
