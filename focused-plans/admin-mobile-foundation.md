@@ -3,11 +3,11 @@ focus_plan: true
 slug: "admin-mobile-foundation"
 title: "Mobile-first foundation for the TODA admin backoffice"
 revision: 1
-auto_mode: Awaiting-Approval
-execution: Not-Started
+auto_mode: Approved
+execution: In-Progress
 base_commit: "5cbe9b085f35cddefc694c34150627c252f1649f"
 created_at: "2026-08-31T07:43:26Z"
-approved_at: null
+approved_at: "2026-08-31T07:50:25Z"
 ---
 
 # Mobile-first foundation for the TODA admin backoffice
