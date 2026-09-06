@@ -21,7 +21,8 @@ DeepAPI-Guthaben vor Aufladung: 8,93 $ (18:xx). Nach Aufladung + FB-Batch 1: ≈
 | 13 | 06.09. 20:41–21:05 UTC | Digest: 2 Fehlversuche (Grammar-Limit / Truncation, ≈ 0,6 geschätzt) + Erfolg 1,14 | 0 | ≈1,7 | ≈21,3 | digest.log, digest2.log, pulse_digests.cost_usd |
 | 14 | 06.09. 20:53–21:00 UTC | Lauf 2: yt-search ×5 + tiktok-search ×2 (neue Body-Hash-Keys) + serp/trends (Quota) + Kommentare (2 neue TikTok-Ziele, Rest Replay) | 3,64 (39,686 → 36,045) | 0 | ≈24,9 | run2-sources.log, run2-comments.log |
 | 15 | 06.09. 21:08–21:14 UTC | Lauf 2: yt-comments Neuauswahl (Data API, frei) + Enrich 222 neue Zeilen | 0 | 1,12 | ≈26,0 | run2-ytc.log, run2-enrich.log |
+| 16 | 06.09. 21:24–21:28 UTC | Digest-Neugenerierung nach Migration v3.1 (70k in / 33k out) | 0 | 1,18 | ≈27,2 | Task-Output, `pulse_digests.cost_usd` 1.1832 |
 
 Regel: vor jedem bezahlten Lauf `--dry-cost`; nach jedem Lauf `pnpm mining:sync --balance` (frei) → Zeile hier.
 
-Stand 06.09. ~21:15 UTC: DeepAPI-Balance 36,05 $; kumuliert ≈ 26,0 $ von 40 $ → Rest ≈ 14 $. Offen: Digest-Neugenerierung nach Migration v3.1 (≈ 1,2 $).
+Stand 06.09. ~21:30 UTC: DeepAPI-Balance 36,05 $ (unverändert, Digest nutzt kein DeepAPI); kumuliert ≈ 27,2 $ von 40 $ → Rest ≈ 12,8 $. Loop geschlossen — nächster bezahlter Lauf ist der Cron am 07.09. 06:00 UTC (W37, ≈ 18 $ erwartet, außerhalb des Test-Mandats).

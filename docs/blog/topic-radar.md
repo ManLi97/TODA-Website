@@ -752,3 +752,8 @@ weiter grün: useful_de 791, Fragen de 105, Beschwerden+Wünsche de 115, Trend-G
 (`.claude/plans/community-pulse-v3/quality-2026-W36-lauf2.json`). Spend gesamt ≈ 26 $ von 40 $.
 Offen für Lauf 3 (nächste Woche, Cron): Kommentar-Ziele nach Video-Verdikt wählen (RTL-Sozial-
 Reportage lieferte 69 % off_topic trotz „Tattoos" im Titel); Batch API für den Enrich-Schritt.
+
+**Abschluss (21:28 UTC):** Migration v3.1 live (`20260906205136`, Spiegel toda-company) und
+W36-Digest darauf neu erzeugt (1,18 $, 2119 Signale, 7 Content-Kandidaten): Videoliste 8 Videos,
+alle klassifiziert, 0 off_topic; 128/128 Evidence-IDs auflösbar; keine Mitbewerbernamen. Test-Loop
+beendet bei ≈ 27,2 $ von 40 $. Ab W37 läuft die Kette per Cron (Montag 06:00 UTC).
