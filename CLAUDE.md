@@ -79,6 +79,7 @@ pnpm build        # production build
 pnpm lint         # ESLint via next lint
 pnpm format       # Prettier write
 pnpm format:check # Prettier check (CI)
+pnpm gsc:inspect  # GSC URL-Inspection of every sitemap URL + sitemap status (readonly evidence)
 ```
 
 ## Deployment
@@ -257,6 +258,9 @@ a time-series source in the shared **toda-company** DB (`znocynswpsfckyfumema`).
 ## Project documentation
 
 - `docs/design-system/` — website-specific design system reference (philosophy, colors, tokens, typography, motion)
+- `docs/seo/url-contract.md` — binding URL contract (canonical `/{locale}/…`, hreflang + `x-default`,
+  308 redirects, legal-page canonical, breadcrumbs), the GSC finding behind it, curl verification
+  recipe and dated status lines
 - `docs/blog/` — knowledge base of the `/blog-article` skill (four layers):
   - `toda-context.md` — declared brand voice, product blocks, hard editorial rules
   - `voice-learnings.md` — **measured** voice: style rules distilled from Tomek's
@@ -281,7 +285,8 @@ Required in `.env.local`:
 - `ANALYTICS_SALT` — daily-rotating salt for the anonymous visitor hash (server-only)
 - `GSC_SITE_URL` — Search Console property (`sc-domain:todasolutions.com` or `https://www.todasolutions.com/`)
 - `GSC_SA_KEY` — GSC service-account JSON key as a string (Vercel Production)
-- `GSC_SA_KEY_FILE` — path to the GSC service-account JSON key file (local dev)
+- `GSC_SA_KEY_FILE` — path to the GSC service-account JSON key file (local dev; on Tomek's machine
+  `~/.toda-secrets/gsc-sa-toda-gsc-snap.json`, passed as an env prefix — `.env.local` holds no `GSC_*`)
 - `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync`, `/api/cron/mining-sync` and
   `/api/cron/pulse-worker` (the chain sends it to itself)
 - `DEEPAPI_API_BASE_URL` / `DEEPAPI_API_KEY` — DeepAPI for the community-pulse battery (server-only;
