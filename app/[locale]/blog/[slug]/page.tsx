@@ -30,6 +30,7 @@ import {
 import { renderMarkdown } from "@/lib/blog/markdown";
 import { formatDate } from "@/lib/blog/format";
 import type { BlogLocale } from "@/lib/blog/types";
+import { articleAlternates } from "@/lib/seo/alternates";
 import { createArticleJsonLd } from "@/lib/seo/structured-data";
 
 export const revalidate = 3600;
@@ -66,11 +67,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = post.seoTitle ?? post.title;
   const description = post.seoDescription ?? post.excerpt;
 
-  const languages: Record<string, string> = {};
-  for (const [altLocale, altSlug] of Object.entries(alternates)) {
-    languages[altLocale] = `${siteUrl}/${altLocale}/blog/${altSlug}`;
-  }
-
   return {
     title,
     description,
@@ -93,7 +89,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     alternates: {
       canonical: `${siteUrl}/${locale}/blog/${slug}`,
-      languages,
+      languages: articleAlternates(alternates, locale as BlogLocale, slug),
     },
   };
 }

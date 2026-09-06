@@ -1,6 +1,9 @@
 // Locale-specific metadata reused by Next metadata and the homepage entity graph.
 // Keeping one source prevents the canonical page and its structured data from
 // describing the product differently.
+import type { Metadata } from "next";
+import { legalCanonical } from "@/lib/seo/alternates";
+
 export const SITE_METADATA = {
   de: {
     title: "TODA – Die App für Tattoo Artists",
@@ -29,3 +32,50 @@ export const SITE_METADATA = {
 } as const;
 
 export type SiteLocale = keyof typeof SITE_METADATA;
+
+const BRAND_OG_IMAGE = {
+  url: "/og-image.png",
+  width: 1200,
+  height: 628,
+  alt: "TODA – Die App für Tattoo Artists",
+};
+
+/**
+ * Metadata for the German-only legal pages (/imprint, /privacy). They render
+ * identical content under every locale prefix, so all three consolidate onto
+ * the DE canonical and emit no hreflang (URL contract D5). Title/description
+ * are German on purpose — the documented exception to "all copy via next-intl".
+ * Declared fully because a child `alternates`/`openGraph` replaces the layout's
+ * object instead of merging into it.
+ */
+export function legalPageMetadata({
+  path,
+  title,
+  description,
+}: {
+  path: "/imprint" | "/privacy";
+  title: string;
+  description: string;
+}): Metadata {
+  const canonical = legalCanonical(path);
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "TODA",
+      locale: "de",
+      type: "website",
+      images: [BRAND_OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [BRAND_OG_IMAGE.url],
+    },
+  };
+}

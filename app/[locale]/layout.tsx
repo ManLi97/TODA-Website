@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import { Inter, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { routing } from "@/i18n/routing";
+import { localizedAlternates } from "@/lib/seo/alternates";
 import { SITE_METADATA, type SiteLocale } from "@/lib/seo/site-metadata";
 import { SITE_URL } from "@/lib/site";
 import { Header } from "@/components/header";
@@ -74,13 +75,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: c.ogDescription,
       images: ["/og-image.png"],
     },
+    // Home alternates (D2): de/en/es + x-default (German). Child routes that
+    // export their own `alternates` replace this object entirely (no deep merge).
     alternates: {
       canonical: `${siteUrl}/${locale}`,
-      languages: {
-        de: `${siteUrl}/de`,
-        en: `${siteUrl}/en`,
-        es: `${siteUrl}/es`,
-      },
+      languages: localizedAlternates(""),
     },
   };
 }

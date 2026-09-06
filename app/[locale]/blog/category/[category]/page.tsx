@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
+import { localizedAlternates } from "@/lib/seo/alternates";
 import { BlogListing } from "@/components/blog/blog-listing";
 import { getCategories } from "@/lib/blog/queries";
 import { categoryName } from "@/lib/blog/format";
@@ -36,16 +37,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = categoryName(category.name, locale as BlogLocale);
   const path = `/blog/category/${categorySlug}`;
 
+  const title = `${name} – ${t("metaTitle")}`;
+  const description = t("metaDescription");
+
   return {
-    title: `${name} – ${t("metaTitle")}`,
-    description: t("metaDescription"),
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/${locale}${path}`,
+      siteName: "TODA",
+      locale,
+      type: "website",
+    },
     alternates: {
       canonical: `${siteUrl}/${locale}${path}`,
-      languages: {
-        de: `${siteUrl}/de${path}`,
-        en: `${siteUrl}/en${path}`,
-        es: `${siteUrl}/es${path}`,
-      },
+      languages: localizedAlternates(path),
     },
   };
 }

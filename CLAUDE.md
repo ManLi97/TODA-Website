@@ -106,7 +106,8 @@ app/
     layout.tsx        # outside [locale]; middleware matcher excludes /admin
     page.tsx          # login (HMAC session cookie, lib/admin/auth.ts)
     (protected)/      # requireAdmin() gate: posts dashboard, editor, categories
-  sitemap.ts          # all locales × published translations, hreflang alternates
+  sitemap.ts          # all locales × published translations, hreflang alternates + x-default
+                      # (lib/seo/alternates.ts — same builder as <head>); legal pages DE-only
   robots.ts           # disallow /admin
 components/
   blog/               # post-card, post-grid, category-pills, article-header,
@@ -125,7 +126,8 @@ components/
   header.tsx / footer.tsx
   button.tsx / card.tsx / video-loop.tsx
 i18n/
-  routing.ts          # defineRouting — locales, localePrefix "always"
+  routing.ts          # defineRouting — locales, localePrefix "always", localeDetection false
+                      # (unprefixed → /de deterministically), localeCookie false, alternateLinks false
   navigation.ts       # typed Link/useRouter re-exports
   request.ts          # getRequestConfig
 messages/
@@ -143,7 +145,8 @@ supabase/migrations/  # blog schema + storage bucket DDL (applied to toda-compan
                       # other repos and exist here only as comment-only stubs so `db push`
                       # accepts the remote history. If another repo adds a migration, add a
                       # matching stub. Never `migration repair --status reverted` or `db pull`.
-middleware.ts         # next-intl locale routing (matcher excludes /admin and /api)
+middleware.ts         # next-intl locale routing, every locale redirect rewritten 307 → 308
+                      # (matcher excludes /admin and /api)
 ```
 
 ## Blog (Supabase CMS)
@@ -167,7 +170,13 @@ middleware.ts         # next-intl locale routing (matcher excludes /admin and /a
 - **Markdown:** unified/remark/rehype with `rehype-sanitize` → HTML string in RSC;
   same pipeline powers the admin live preview client-side (`lib/blog/markdown.ts`).
 - **hreflang discipline:** article alternates + sitemap entries are computed from
-  _published_ sibling translations only — never emit a link to a draft locale.
+  _published_ sibling translations only — never emit a link to a draft locale. Every
+  alternate set carries `x-default` = the German URL (article without a published DE
+  sibling: its own URL); `<head>` and sitemap use the same builder
+  (`lib/seo/alternates.ts`) so they never diverge. No hreflang `Link` header — next-intl
+  `alternateLinks` is off. Legal pages (`/imprint`, `/privacy`) are German under every
+  prefix: canonical = `/de/...`, no hreflang, sitemap lists the DE URL once. Full
+  contract: `docs/seo/url-contract.md`.
 - **Admin auth:** stateless HMAC cookie (`lib/admin/auth.ts`), password from
   `ADMIN_PASSWORD`. Every server action calls `requireAdmin()` itself — layouts
   do not protect actions. Swap to Supabase Auth later = replace `lib/admin/auth.ts`.

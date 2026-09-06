@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
+import { localizedAlternates } from "@/lib/seo/alternates";
 import { BlogListing } from "@/components/blog/blog-listing";
 import type { BlogLocale } from "@/lib/blog/types";
 
@@ -33,11 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     alternates: {
       canonical: `${siteUrl}/${locale}/blog`,
-      languages: {
-        de: `${siteUrl}/de/blog`,
-        en: `${siteUrl}/en/blog`,
-        es: `${siteUrl}/es/blog`,
-      },
+      languages: localizedAlternates("/blog"),
     },
   };
 }

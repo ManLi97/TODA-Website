@@ -1,4 +1,14 @@
-// Impressum — static legal page, German law, no i18n needed
+// Impressum — static legal page, German law, no i18n needed.
+// Own metadata: DE canonical for every prefix, no hreflang (D5).
+import { legalPageMetadata } from "@/lib/seo/site-metadata";
+
+export const metadata = legalPageMetadata({
+  path: "/imprint",
+  title: "Impressum – TODA",
+  description:
+    "Impressum der TODA Tattoo Solutions S.L., Anbieter der TODA App für Tattoo Artists: Anschrift, Vertretung, Kontakt und Registerdaten.",
+});
+
 export default function ImprintPage() {
   return (
     <div className="min-h-svh pt-24 pb-20">

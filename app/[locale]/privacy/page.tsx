@@ -1,4 +1,14 @@
-// Datenschutzerklärung — static legal page, German law, no i18n needed
+// Datenschutzerklärung — static legal page, German law, no i18n needed.
+// Own metadata: DE canonical for every prefix, no hreflang (D5).
+import { legalPageMetadata } from "@/lib/seo/site-metadata";
+
+export const metadata = legalPageMetadata({
+  path: "/privacy",
+  title: "Datenschutzerklärung – TODA",
+  description:
+    "Datenschutzerklärung der TODA Tattoo Solutions S.L.: welche Daten diese Website verarbeitet, zu welchen Zwecken, auf welcher Rechtsgrundlage und welche Rechte Betroffene haben.",
+});
+
 export default function PrivacyPage() {
   return (
     <div className="min-h-svh pt-24 pb-20">
