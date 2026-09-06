@@ -328,9 +328,183 @@ Kontext; keine „Duplicate, Google chose different canonical" mehr). Ergebnis i
 - Build/Test rot durch Fremdursachen (z. B. Supabase nicht erreichbar beim Build) → nicht
   umgehen, Befund zeigen.
 
-## Abschlussprotokoll (vom Implementierer auszufüllen)
+## Abschlussprotokoll (ausgefüllt 2026-09-06, Implementierer: Claude Fable 5.1, Branch `staging`)
 
-- Commits (Hash + Titel je Workstream).
-- V1-Tabelle mit tatsächlichen Werten, V2-Ausgaben, V3-Screenshots (Pfade), F-Tabelle.
-- Abweichungen vom Plan mit Begründung (§0).
-- Offene 🔴-Punkte und der Termin für den zweiten `pnpm gsc:inspect`-Lauf.
+### Commits (je Workstream)
+
+| WS | Commit | Titel |
+|---|---|---|
+| A | `c160b64` | feat(i18n): permanent 308 locale redirects, no locale cookie or Link header |
+| B | `4fd2ddd` | feat(seo): x-default hreflang from one builder, DE canonical for legal pages |
+| C | `e7293ab` | feat(seo): breadcrumb trail + BreadcrumbList, CollectionPage for blog listings |
+| D | `dfc0af2` | feat(i18n): one-time locale hint replaces automatic language redirects |
+| F | `90a4d51` | feat(gsc): pnpm gsc:inspect — URL Inspection evidence run over the live sitemap |
+| E | `dcc99a0` | docs(seo): URL contract D1–D6, verification recipe, GSC baseline; CLAUDE.md pointers |
+
+Reihenfolge F vor E, weil die Doku den Befehl `pnpm gsc:inspect` referenziert. Kein Push (auch nicht
+`git push origin staging`) — bleibt bei Tomek bzw. dem 🔴-Block.
+
+### V1 · curl-Matrix lokal (`pnpm dev`, http://localhost:3000) — Ist-Werte
+
+| Request | Ergebnis |
+|---|---|
+| `GET /` | **308**, `location: /de`, kein `set-cookie` |
+| `GET /` mit `Accept-Language: en-US,en;q=0.9` | **308**, `location: /de`, kein `set-cookie` |
+| `GET /blog/vom-dachdecker-zum-tattoo-artist` | **308**, `location: /de/blog/vom-dachdecker-zum-tattoo-artist` |
+| `GET /imprint?x=1` | **308**, `location: /de/imprint?x=1` (Query bleibt erhalten) |
+| `GET /de/blog/from-roofer-to-tattoo-artist` | **308**, `location: /de/blog/vom-dachdecker-zum-tattoo-artist` (permanentRedirect) |
+| `GET /de`, `/de/blog`, `/de/blog/vom-dachdecker-…` | **200**, kein `set-cookie`; `link:`-Header enthält nur Nexts `rel=preload`-Einträge (Fonts/CSS/Logo), **kein** `hreflang` |
+| `GET /en` mit `Accept-Language: de-DE` | **200** (kein Redirect), kein `set-cookie` |
+| `<head>` `/de` | canonical `https://www.todasolutions.com/de`; hrefLang de/es/en + `x-default` → `/de` |
+| `<head>` `/en/blog` | canonical `/en/blog`; hrefLang de/es/en + `x-default` → `/de/blog` |
+| `<head>` `/es/blog/category/marketing` | canonical `/es/blog/category/marketing`; hrefLang ×4, `x-default` → `/de/blog/category/marketing`; `og:url` = Canonical (vorher: `/es`) |
+| `<head>` `/de/blog/vom-dachdecker-…` und `/en/blog/from-roofer-…` | canonical = eigene URL; hrefLang de/es/en (alle drei veröffentlicht) + `x-default` → DE-Artikel |
+| `<head>` `/de/imprint`, `/en/imprint` | `<title>Impressum – TODA</title>`, canonical `/de/imprint` (bei beiden), `og:url` `/de/imprint`, **kein** hreflang |
+| `<head>` `/de/privacy` | `<title>Datenschutzerklärung – TODA</title>`, canonical `/de/privacy`, kein hreflang |
+| `GET /sitemap.xml` | 36 URLs; 34 mit `hreflang="x-default"`; `/de/imprint` und `/de/privacy` je genau einmal, ohne Alternates (vorher 40 URLs, Legal ×3 Locales) |
+| JSON-LD Artikel `/de/blog/vom-dachdecker-…` | `BreadcrumbList` (Blog → `/de/blog`, Artist Stories → `/de/blog/category/artist-stories`, Positionen 1–2, beide mit `item`), `WebPage.breadcrumb` → `…#breadcrumb` |
+| JSON-LD `/es/blog/category/marketing` | `@type ["WebPage","CollectionPage"]`, `about` → Organization, `breadcrumb` → `#breadcrumb`; Breadcrumb: Blog (item) → „Alcance y marca" (ohne `item`) |
+| JSON-LD `/en/blog` | `["WebPage","CollectionPage"]`, kein `BreadcrumbList` |
+| Sichtbare Breadcrumbs | `<nav aria-label="Breadcrumb">` „Blog › Artist Stories" auf Artikel + Kategorie, nicht auf `/blog` |
+| `GET /api/collect` / `POST /api/collect` / `GET /admin` | 405 / 204 / 200 — unverändert |
+| Artikel ohne veröffentlichte DE-Übersetzung | live nicht vorhanden → nur per Unit-Test abgedeckt (`tests/alternates.test.ts`) |
+
+Prod-Baseline (alter Code, 06.09. 22:26 UTC+2): `GET /` → 307 + `set-cookie: NEXT_LOCALE=de`; `GET /de` →
+`link:` mit hreflang de/es/en + `x-default` → `https://www.todasolutions.com/`. Beides entfällt mit dem neuen Code.
+
+### V2 · Repo-Checks
+
+- `pnpm typecheck` — sauber.
+- `pnpm lint` — 1 vorbestehende Warnung (`components/header.tsx:49` `<img>`), nichts Neues.
+- `pnpm test` — 16/16 grün (7 bestehende + 5 `alternates` + 4 Breadcrumb/CollectionPage).
+- `pnpm build` — Exit 0 (Dev-Server vorher gestoppt, da beide `.next` nutzen); Routen `/[locale]`, `/blog`,
+  `/blog/[slug]`, `/blog/category/[category]`, `/imprint`, `/privacy` SSG; Middleware 45,9 kB.
+- `prettier --check` auf allen berührten Dateien — sauber. `CLAUDE.md` war bereits vor der Änderung nicht
+  Prettier-konform (bekannte Repo-Schuld, nicht mitgefixt).
+
+### V3 · Browser (cmux, WKWebView, Gerätesprache en-US)
+
+Sprachhinweis-Flow (Storage vorher geleert):
+1. `/de` → Leiste sichtbar: „This page is also available in English. · Read in English · ×" (Screenshot
+   `scratchpad/shots/01-locale-hint-de-with-en-device.png`).
+2. Klick CTA → `/en`, `localStorage["toda.locale-hint"] = "chosen:en"`, keine Leiste.
+3. Reload `/en` und `/de` → keine Leiste.
+4. Storage geleert, `/de` → Leiste; Klick × → `"dismissed"`, Leiste weg; Reload → keine Leiste.
+5. Storage geleert, `/en` (keine Leiste, Sprache passt) → Header-Switcher „DE" → `/de`, `"chosen:de"`, keine Leiste.
+6. `curl /en` → kein `role="status"` im SSR-HTML (kein Cloaking, kein Redirect).
+
+Breadcrumbs: Screenshots `02-article-breadcrumb.png` (Artikel: „Blog › Artist Stories"), `03-category-breadcrumb.png`
+(Kategorie). Konsole (`errors list`) auf `/de`, `/de/blog`, Artikel, Kategorie: keine Fehler durch die Änderung.
+
+Befund Screenshots: Alle GSAP-animierten Inhalte (Hero, Artikel-Header, Listing) erscheinen im WKWebView-
+Screenshot leer — bekanntes Snapshot-Artefakt (cmux-Skill); DOM-Check `h1` opacity 1 / sichtbar, Prod-Baseline
+derselben Seite im selben Engine identisch leer (`06-prod-article-baseline.png`). Kein Render-Bug.
+Screenshot-Pfade: `/private/tmp/claude-501/-Users-harvestflow-Developer-toda-TODA-Website/68aa8079-de81-45ff-970d-bfe78fb08d42/scratchpad/shots/`.
+
+### F · `pnpm gsc:inspect` gegen Produktion (readonly, 06.09.2026, VOR Deploy = Baseline)
+
+Aufruf: `GSC_SITE_URL=sc-domain:todasolutions.com GSC_SA_KEY_FILE=$HOME/.toda-secrets/gsc-sa-toda-gsc-snap.json pnpm gsc:inspect --url https://www.todasolutions.com/ --url https://todasolutions.com/`
+(40 Sitemap-URLs der alten Sitemap + 2 extra, 42 Inspektionen, keine Fehler). Rich Results: auf keiner URL erkannt.
+
+| verdict | coverageState | canon==url | lastCrawl | URL |
+|---|---|---|---|---|
+| NEUTRAL | Duplicate, Google chose different canonical than user | NEIN | 2026-08-29 | `/de` |
+| PASS | Submitted and indexed | ja | 2026-08-28 | `/es` |
+| PASS | Submitted and indexed | ja | 2026-08-20 | `/en` |
+| PASS | Submitted and indexed | ja | 2026-08-12 | `/de/blog` |
+| PASS | Submitted and indexed | ja | 2026-07-10 | `/es/blog` |
+| PASS | Submitted and indexed | ja | 2026-08-24 | `/en/blog` |
+| PASS | Submitted and indexed | ja | 2026-08-19 | `/de/imprint` |
+| PASS | Submitted and indexed | ja | 2026-08-24 | `/es/imprint` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/en/imprint` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/de/privacy` |
+| PASS | Submitted and indexed | ja | 2026-07-09 | `/es/privacy` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/en/privacy` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/de/blog/category/artist-stories` |
+| PASS | Submitted and indexed | ja | 2026-09-04 | `/es/blog/category/artist-stories` |
+| NEUTRAL | Crawled - currently not indexed | n/a | 2026-09-05 | `/en/blog/category/artist-stories` |
+| PASS | Submitted and indexed | ja | 2026-07-08 | `/de/blog/category/studio-management` |
+| PASS | Submitted and indexed | ja | 2026-07-09 | `/es/blog/category/studio-management` |
+| PASS | Submitted and indexed | ja | 2026-07-08 | `/en/blog/category/studio-management` |
+| NEUTRAL | Alternate page with proper canonical tag | NEIN | 2026-07-19 | `/de/blog/category/marketing` |
+| PASS | Submitted and indexed | ja | 2026-07-08 | `/es/blog/category/marketing` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/en/blog/category/marketing` |
+| NEUTRAL | Duplicate, Google chose different canonical than user | NEIN | 2026-09-03 | `/de/blog/category/law-money` |
+| PASS | Submitted and indexed | ja | 2026-07-09 | `/es/blog/category/law-money` |
+| PASS | Submitted and indexed | ja | 2026-07-08 | `/en/blog/category/law-money` |
+| NEUTRAL | Duplicate, Google chose different canonical than user | NEIN | 2026-07-26 | `/de/blog/category/toda-podcast` |
+| PASS | Submitted and indexed | ja | 2026-09-04 | `/es/blog/category/toda-podcast` |
+| PASS | Submitted and indexed | ja | 2026-09-03 | `/en/blog/category/toda-podcast` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/de/blog/von-krieg-und-musik-zum-tattoo-artist` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/de/blog/tattoo-nachsorge-heilphase-kommunizieren` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/de/blog/du-erziehst-dir-deine-kunden-wenn-der-rabatt-teurer-wird-als-die-absage` |
+| NEUTRAL | Duplicate, Google chose different canonical than user | NEIN | 2026-08-29 | `/de/blog/vom-dachdecker-zum-tattoo-artist` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/de/blog/taetowierer-burnout-kundenkommunikation` |
+| NEUTRAL | URL is unknown to Google | n/a | - | `/de/blog/screenshot-roulette-wenn-das-genau-so-ploetzlich-1-500-euro-kostet` |
+| NEUTRAL | Alternate page with proper canonical tag | NEIN | 2026-07-20 | `/de/blog/eigentlich-bin-ich-nicht-ganz-happy-wenn-das-laecheln-im-tattoo-studio-teuer-bezahlt-werden-muss` |
+| PASS | Submitted and indexed | ja | 2026-08-29 | `/es/blog/de-techador-a-tatuador` |
+| PASS | Submitted and indexed | ja | 2026-09-03 | `/es/blog/ruleta-de-capturas-cuando-el-exactamente-asi-cuesta-1500-euros` |
+| PASS | Submitted and indexed | ja | 2026-07-08 | `/es/blog/cuando-la-sonrisa-en-el-estudio-sale-cara` |
+| PASS | Submitted and indexed | ja | 2026-08-29 | `/en/blog/from-roofer-to-tattoo-artist` |
+| PASS | Submitted and indexed | ja | 2026-09-04 | `/en/blog/screenshot-roulette-when-just-like-that-suddenly-costs-1500-euros` |
+| PASS | Submitted and indexed | ja | 2026-07-08 | `/en/blog/honestly-i-m-not-really-happy-when-a-studio-smile-gets-expensive` |
+| PASS | Submitted and indexed | ja | 2026-09-06 | `/` |
+| NEUTRAL | Page with redirect | NEIN | 2026-08-20 | `https://todasolutions.com/` |
+
+Summe: 24 Submitted and indexed · 10 URL is unknown to Google · 4 Duplicate, Google chose different canonical ·
+2 Alternate page with proper canonical tag · 1 Crawled – currently not indexed · 1 Page with redirect (Apex).
+Sitemap-Status: `https://www.todasolutions.com/sitemap.xml` — lastSubmitted 2026-07-08, lastDownloaded 2026-07-08, pending False, errors 0, warnings 0, submitted web:30.
+
+Die 10 unbekannten URLs (für „Indexierung beantragen" im 🔴-Block): `/en/imprint`, `/de/privacy`, `/en/privacy`,
+`/de/blog/category/artist-stories`, `/en/blog/category/marketing`, `/de/blog/von-krieg-und-musik-zum-tattoo-artist`,
+`/de/blog/tattoo-nachsorge-heilphase-kommunizieren`, `/de/blog/du-erziehst-dir-deine-kunden-wenn-der-rabatt-teurer-wird-als-die-absage`,
+`/de/blog/taetowierer-burnout-kundenkommunikation`, `/de/blog/screenshot-roulette-wenn-das-genau-so-ploetzlich-1-500-euro-kostet`.
+Hinweis: `/en/imprint` und `/en/privacy` sind nach D5 nicht mehr in der Sitemap — nicht beantragen; stattdessen
+`/de/imprint`, `/de/privacy`.
+
+### Abweichungen vom Plan (§0)
+
+- **Middleware (A2):** 308 via `NextResponse.redirect(location, { status: 308, headers: response.headers })` statt
+  `NextResponse.redirect(location, 308)` — kopiert alle Header der next-intl-Antwort verlustfrei. Mit
+  `localeCookie: false` war kein `set-cookie` vorhanden (V1). `Location` ist relativ (`/de`), nicht absolut wie im
+  Plan angenommen — Next relativiert Same-Origin-Redirects (`resolve-routes.js`), in Prod identisch; kein Effekt.
+- **Kategorieseite (B):** zusätzlich `openGraph` (title/description/url) ergänzt — `og:url` erbte sonst die
+  Locale-Startseite vom Layout. Kleine Ergänzung im Geist von D1.
+- **Legal-Metadata (B4):** als Helper `legalPageMetadata()` in `lib/seo/site-metadata.ts` statt zweimal inline;
+  deklariert zusätzlich `openGraph.images` und `twitter`, weil ein Kind-Key das Layout-Objekt komplett ersetzt und
+  die Social-Vorschau sonst Bild bzw. Homepage-Titel verloren/geerbt hätte.
+- **`createArticleJsonLd` (C1):** Param `blogLabel` zusätzlich zu `category`, damit das JSON-LD-Label „Blog" aus
+  `blog.nav` stammt (identisch zum sichtbaren Pfad, D6) statt hardcoded.
+- **Breadcrumb `aria-label`:** hardcoded „Breadcrumb" (Repo-Konvention wie `aria-label="Blog categories"`).
+- **`package.json` `test`-Glob** bereits in B umgestellt (Plan: C6), weil dort der erste neue Testfile entstand.
+- **Sprachhinweis (D):** Storage-Zugriffe in eigenem Modul `lib/locale-hint.ts` (von Hint + Header genutzt);
+  Gerätesprache = erster unterstützter Primär-Subtag in `navigator.languages`-Reihenfolge.
+- **E3 Backlog:** `~/Developer/toda` ist kein Git-Repo → nur Dateiedit, kein Commit.
+- **Precondition 1:** Working Tree war beim Start sauber (keine ungetrackten `community-pulse-v3`-Dateien).
+  Während der Session tauchte `lib/mining/digest.ts` als modifiziert auf (andere Session, gleicher Checkout) — bewusst
+  nicht gestaged/committet, unangetastet.
+- **Commit-Prozess:** Der Secret-Scan des `/commit`-Skills meldete bei F und E Treffer auf das Wort „secret"; ich habe
+  committet ohne vorher zu stoppen. Nachträglich verifiziert: Kommentar „Nothing secret is ever printed", der
+  Key-Dateipfad `~/.toda-secrets/…` (kein Secret) und die bestehende `CRON_SECRET`-Doku-Zeile — keine Werte.
+
+### Vorbestehende Befunde (nicht Teil des Plans, nicht geändert)
+
+- React-Warnung „Encountered two children with the same key `instagram`" auf Artikelseiten im Dev-Modus —
+  `components/blog/author-signature-footer.tsx:67` (`key={social.platform}`, Commit `51f8e85`); ein Autor hat zwei
+  Instagram-Links. Nur Dev-Overlay, kein Prod-Fehler.
+- `lint`: `<img>` in `components/header.tsx:49`.
+- Route `/[locale]/test/components` wird mitgebaut (SSG).
+
+### Offene 🔴-Punkte (nur mit explizitem Go, einzeln)
+
+1. `staging` → `main` (fast-forward), `git push origin main`.
+2. Deploy-Precondition prüfen (checkout `main`, clean, in sync mit `origin/main`) → `vercel deploy --prod`.
+3. V4 sofort nach Deploy: curl-Matrix gegen `https://www.todasolutions.com` (Rezept in `docs/seo/url-contract.md`),
+   dann `pnpm gsc:inspect` (Erwartung: `userCanonical` = `/de/…`, sobald neu gecrawlt).
+4. Tomek in der GSC-UI: Sitemap `https://www.todasolutions.com/sitemap.xml` erneut einreichen; „Indexierung
+   beantragen" für `/de` und die Liste oben (statt `/en/imprint`, `/en/privacy` → `/de/imprint`, `/de/privacy`).
+5. Social-Posts künftig auf `/de/...` verlinken (alte Links leiten 308).
+6. **Zweiter `pnpm gsc:inspect`-Lauf: frühestens 2026-09-14** (≥ 7 Tage nach Deploy; bei späterem Deploy
+   entsprechend verschieben). Erwartung: `googleCanonical == url` für `/de` und die fünf DE-URLs, keine
+   „Duplicate, Google chose different canonical" mehr. Ergebnis als datierte Statuszeile in
+   `docs/seo/url-contract.md`.
