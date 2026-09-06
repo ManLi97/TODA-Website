@@ -6,7 +6,13 @@ import "server-only";
 
 import { readFileSync } from "node:fs";
 import { JWT } from "google-auth-library";
-import type { QueryRequest, SearchAnalyticsResponse } from "./types";
+import type {
+  QueryRequest,
+  SearchAnalyticsResponse,
+  SitemapsListResponse,
+  UrlInspectionResponse,
+  UrlInspectionResult,
+} from "./types";
 
 const SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
 
@@ -53,5 +59,29 @@ export async function searchAnalyticsQuery(
     method: "POST",
     data: body,
   });
+  return res.data;
+}
+
+// Inspect one URL's status in the Google index (URL Inspection API). The
+// readonly scope is sufficient. `siteUrl` is the property (sc-domain:… or
+// URL-prefix with trailing slash); `inspectionUrl` must belong to it.
+export async function inspectUrl(
+  siteUrl: string,
+  inspectionUrl: string
+): Promise<UrlInspectionResult> {
+  const res = await getClient().request<UrlInspectionResponse>({
+    url: "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect",
+    method: "POST",
+    data: { inspectionUrl, siteUrl, languageCode: "en-US" },
+  });
+  return res.data.inspectionResult ?? {};
+}
+
+// List the sitemaps submitted for a property with their processing status.
+export async function listSitemaps(siteUrl: string): Promise<SitemapsListResponse> {
+  const url = `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(
+    siteUrl
+  )}/sitemaps`;
+  const res = await getClient().request<SitemapsListResponse>({ url, method: "GET" });
   return res.data;
 }

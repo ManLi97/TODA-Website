@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "gsc:backfill": "tsx --conditions=react-server scripts/gsc-backfill.ts",
+    "gsc:inspect": "tsx --conditions=react-server scripts/gsc-inspect.ts",
     "mining:sync": "tsx --conditions=react-server scripts/mining-sync.ts",
     "pulse:quality": "tsx --conditions=react-server scripts/pulse-quality.ts",
     "blog:draft-insert": "tsx --conditions=react-server scripts/blog-draft-insert.ts"

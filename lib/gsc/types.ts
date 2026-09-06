@@ -49,3 +49,43 @@ export type GscPerfRow = {
   position: number | null;
   data_state: DataState;
 };
+
+// ── URL Inspection API (urlInspection/index:inspect) — only the fields we read.
+// API reference: https://developers.google.com/webmaster-tools/v1/urlInspection.index/inspect
+export type UrlInspectionResult = {
+  inspectionResultLink?: string;
+  indexStatusResult?: {
+    verdict?: string; // PASS | PARTIAL | FAIL | NEUTRAL | VERDICT_UNSPECIFIED
+    coverageState?: string; // human-readable, e.g. "Submitted and indexed"
+    indexingState?: string;
+    lastCrawlTime?: string;
+    googleCanonical?: string;
+    userCanonical?: string;
+    referringUrls?: string[];
+    sitemap?: string[];
+  };
+  richResultsResult?: {
+    verdict?: string;
+    detectedItems?: { richResultType?: string }[];
+  };
+};
+
+export type UrlInspectionResponse = {
+  inspectionResult?: UrlInspectionResult;
+};
+
+// ── Sitemaps: list — submitted sitemaps and their processing status.
+// API reference: https://developers.google.com/webmaster-tools/v1/sitemaps/list
+export type SitemapResource = {
+  path: string;
+  lastSubmitted?: string;
+  lastDownloaded?: string;
+  isPending?: boolean;
+  errors?: number;
+  warnings?: number;
+  contents?: { type: string; submitted: number; indexed?: number }[];
+};
+
+export type SitemapsListResponse = {
+  sitemap?: SitemapResource[];
+};
