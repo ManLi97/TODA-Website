@@ -1,5 +1,5 @@
 // DeepAPI client for the mining battery (server-only). Raw fetch, no SDK.
-// Protocol per the deepapi skill (pinned 2026-08-29): Bearer auth, Content-Type,
+// Protocol per the deepapi skill (pinned 2026-09-06): Bearer auth, Content-Type,
 // per-POST Idempotency-Key, X-DeepAPI-Skill-Version — and `next`-polling: follow the
 // GET /v1/requests/{id} action while it is present, EVEN when status is already
 // "succeeded" (a settling run returns succeeded with output null and a polling next).
@@ -100,6 +100,22 @@ export async function runScrape(
   return final;
 }
 
+// Zero-spend preview (--dry-cost): the exact credit hold the real call would place.
+export async function dryRunCost(path: string, body: Record<string, unknown>): Promise<number> {
+  const res = await fetch(`${baseUrl()}${path}`, {
+    method: "POST",
+    headers: headers(true, `dry:${Date.now()}:${Math.random().toString(36).slice(2)}`),
+    body: JSON.stringify({ ...body, dryRun: true }),
+  });
+  const env = (await res.json()) as DeepApiEnvelope;
+  if (!res.ok || env.error) {
+    throw new Error(
+      `DeepAPI dryRun ${path} failed (${res.status}): ${env.error?.code ?? ""} ${env.error?.message ?? ""}`
+    );
+  }
+  return (env.estimate?.maxDebitMicrousd ?? 0) / 1_000_000;
+}
+
 // Recovery path (D8): fetch a finished request's envelope by id — free.
 export async function getRequest(requestId: string): Promise<DeepApiEnvelope> {
   const deadline = Date.now() + DEEPAPI_DEADLINE_MS;
@@ -107,4 +123,17 @@ export async function getRequest(requestId: string): Promise<DeepApiEnvelope> {
   if (!res.ok) throw new Error(`DeepAPI get request ${requestId} failed: ${res.status}`);
   const env = (await res.json()) as DeepApiEnvelope;
   return pollToFinal(env, deadline, `request ${requestId}`);
+}
+
+// GET /v1/balance (free) → available USD. Spend-ledger delta = before − after.
+export async function getBalance(): Promise<number> {
+  const res = await fetch(`${baseUrl()}/v1/balance`, { headers: headers(false) });
+  if (!res.ok) throw new Error(`DeepAPI balance failed: ${res.status}`);
+  const json = (await res.json()) as {
+    availableMicrousd?: number;
+    balance?: { availableMicrousd?: number };
+  };
+  const micro = json.availableMicrousd ?? json.balance?.availableMicrousd;
+  if (typeof micro !== "number") throw new Error("DeepAPI balance: availableMicrousd missing");
+  return micro / 1_000_000;
 }

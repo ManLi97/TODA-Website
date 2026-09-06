@@ -1,383 +1,326 @@
-// Community-Pulse battery → Supabase ingest (server-only). Runs the weekly DeepAPI
-// battery (Phase 1) + YouTube-Data-API comment scrape (Phase 2), maps whitelisted
-// fields into topic_signals, records each request in mining_runs (snapshot /
-// append-only), and runs the body retention sweep. Scoring is NOT here — it is the
-// deterministic SQL view topic_cluster_scores. See docs/blog/topic-radar.md.
+// Community-Pulse battery orchestrator (server-only). Phase 1 = DeepAPI specs ∥
+// competitor reviews (Apple RSS, Google Play, Trustpilot) ∥ SerpApi (trends, PAA);
+// Phase 2 = comment targets from this week's rows in the DB (comments.ts); then the
+// 30-day body retention sweep. Every failure becomes a failed mining_runs row /
+// RunOutcome — visible gaps, never silent ones. Scoring is NOT here — it is the
+// deterministic SQL view topic_cluster_scores; enrichment and digest live in
+// enrich.ts / digest.ts. See docs/blog/topic-radar.md ("Methode v3").
 import "server-only";
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import type { SupabaseClient } from "@supabase/supabase-js";
+
 import {
+  APPLE_STOREFRONTS,
   BATTERY,
   COVERAGE_ALERT_PCT,
+  PLAY_COUNTRIES,
   RETENTION_DAYS,
-  UPSERT_CHUNK,
-  YT_COMMENTS_SOURCE_KEY,
-  YT_COMMENT_VIDEOS,
-  YT_COMMENTS_MAX_RESULTS,
+  REVIEW_TARGETS,
+  SERP_PAA_QUERIES,
+  SERP_TREND_SEEDS,
   idempotencyKey,
   isoWeek,
+  slug,
 } from "./config";
 import type { SourceSpec } from "./config";
-import { DeepApiError, getRequest, runScrape } from "./deepapi";
-import { mapSpecItems, mapYtApiCommentThread, selectYtCommentTargets } from "./mappers";
-import { fetchCommentThreads, hasYoutubeKey } from "./youtube";
-import type {
-  IngestMeta,
-  MiningSyncResult,
-  RawYoutubeSearchVideo,
-  RunOutcome,
-  TopicSignalRow,
-} from "./types";
+import { COMMENT_PLATFORMS, COMMENT_SLOT, runComments } from "./comments";
+import type { CommentPlatform } from "./comments";
+import { DeepApiError, dryRunCost, getRequest } from "./deepapi";
+import { deepApiMeta, emptyOutcome, ingestOutput, recordFailedRun, runSource } from "./ingest";
+import {
+  mapAppleReview,
+  mapPlayReview,
+  mapSerpQuestion,
+  mapSerpTrend,
+  mapTrustpilotReview,
+} from "./mappers";
+import { fetchAppleReviews, fetchPlayReviews, fetchTrustpilotReviews } from "./reviews";
+import { googlePaa, googleTrendsRelated, hasSerpApiKey } from "./serpapi";
+import type { IngestMeta, MiningSyncResult, RunOutcome, TopicSignalRow } from "./types";
 
-// --- Stats -------------------------------------------------------------------
+// --- Phase-1 jobs: reviews + SerpApi ------------------------------------------
 
-// Generalised coverage (v2): broad = % mapped rows carrying scorable engagement;
-// context/seeded = % mapped rows carrying title AND post_url (audit-linkable).
-export function computeCoveragePct(rows: TopicSignalRow[], pass: IngestMeta["pass"]): number {
-  if (rows.length === 0) return 0;
-  const good =
-    pass === "broad"
-      ? rows.filter((r) => r.engagement !== null)
-      : rows.filter((r) => r.title && r.post_url);
-  return Math.round((good.length / rows.length) * 10000) / 100;
-}
+export type BatteryJob = { key: string; run: () => Promise<RunOutcome> };
 
-// Scraped text is untrusted input, and PostgREST parses the whole row payload as
-// JSON: a lone UTF-16 surrogate (a truncated emoji half) fails the entire chunk
-// with "invalid input syntax for type json", and Postgres additionally rejects
-// NUL (U+0000) in text/jsonb. toWellFormed() replaces lone surrogates with U+FFFD.
-// First hit: a YouTube comment, 2026-08-29.
-const cleanString = (s: string) => s.toWellFormed().replaceAll(String.fromCharCode(0), "");
-function stripNullBytes(row: TopicSignalRow): TopicSignalRow {
-  return {
-    ...row,
-    title: cleanString(row.title),
-    source: cleanString(row.source),
-    body: row.body === null ? null : cleanString(row.body),
-    matched_term: row.matched_term === null ? null : cleanString(row.matched_term),
-    metrics:
-      row.metrics === null
-        ? null
-        : (Object.fromEntries(
-            Object.entries(row.metrics).map(([k, v]) => [
-              cleanString(k),
-              typeof v === "string" ? cleanString(v) : v,
-            ])
-          ) as TopicSignalRow["metrics"]),
-  };
-}
+const meta = (
+  partial: Pick<IngestMeta, "provider" | "sourceKey" | "actor" | "input"> & { timeWindow?: string },
+  week: string
+): IngestMeta => ({
+  ...partial,
+  pass: "context",
+  timeWindow: partial.timeWindow ?? "n/a",
+  label: partial.sourceKey,
+  isoWeek: week,
+  dedupe: true,
+});
 
-// A single upsert statement cannot carry two rows with the same conflict key, so
-// dedupe on external_id first (last write wins).
-function dedupeByExternalId(rows: TopicSignalRow[]): TopicSignalRow[] {
-  const map = new Map<string, TopicSignalRow>();
-  for (const r of rows) map.set(r.external_id, r);
-  return [...map.values()];
-}
+const salted = (id: string, salt?: string) => (salt ? `${id}:${salt}` : id);
 
-// --- Ingest ------------------------------------------------------------------
-
-function emptyOutcome(meta: IngestMeta, datasetId: string | null): RunOutcome {
-  return {
-    runId: null,
-    provider: meta.provider,
-    sourceKey: meta.sourceKey,
-    datasetId,
-    label: meta.label,
-    pass: meta.pass,
-    timeWindow: meta.timeWindow,
-    status: "failed",
-    itemCount: 0,
-    mappedCount: 0,
-    signalsWritten: 0,
-    fieldCoveragePct: 0,
-    error: null,
-  };
-}
-
-function runRowFields(meta: IngestMeta) {
-  return {
-    provider: meta.provider,
-    source_key: meta.sourceKey,
-    pass: meta.pass,
-    time_window: meta.timeWindow,
-    actor: meta.actor,
-    input: meta.input,
-  };
-}
-
-// Ingest one provider result into a mining_runs row + its topic_signals. Idempotent:
-// mining_runs upserts on dataset_id (provider ref), signals on (run_id, external_id) —
-// re-ingesting the same ref heals the same rows. Any throw becomes a failed
-// RunOutcome (per-run isolation), mirroring the gsc sync engine.
-export async function ingestOutput(
-  datasetId: string,
-  output: unknown,
-  spec: SourceSpec | null, // null → yt-comments (mapped by caller)
-  meta: IngestMeta,
-  premappedRows?: TopicSignalRow[],
-  rawItemCount?: number
-): Promise<RunOutcome> {
-  const supabase = createAdminClient();
-  const outcome = emptyOutcome(meta, datasetId);
-
-  try {
-    const { data: runRow, error: runErr } = await supabase
-      .from("mining_runs")
-      .upsert(
-        { ...runRowFields(meta), dataset_id: datasetId, status: "running" },
-        { onConflict: "dataset_id" }
-      )
-      .select("id")
-      .single();
-    if (runErr || !runRow)
-      throw new Error(`mining_runs upsert failed: ${runErr?.message ?? "no row"}`);
-    const runId = runRow.id as string;
-    outcome.runId = runId;
-
-    const mapped =
-      premappedRows?.map((r) => ({ ...r, run_id: runId })) ??
-      (spec ? mapSpecItems(spec, output, runId) : []);
-    const rows = dedupeByExternalId(mapped);
-    outcome.itemCount =
-      rawItemCount ??
-      (Array.isArray(output)
-        ? output.length
-        : ((output as { results?: unknown[] } | null)?.results?.length ?? 0));
-    outcome.mappedCount = rows.length;
-    outcome.fieldCoveragePct = computeCoveragePct(rows, meta.pass);
-
-    if (rows.length === 0) {
-      const msg = "run returned no mappable items";
-      await finalizeRun(supabase, runId, "failed", msg, outcome);
-      outcome.error = msg;
-      return outcome;
+// Never throws: every job resolves to a RunOutcome (failed rows stay visible).
+const guarded =
+  (m: IngestMeta, datasetId: string, fn: () => Promise<RunOutcome>) =>
+  async (): Promise<RunOutcome> => {
+    try {
+      return await fn();
+    } catch (err) {
+      return recordFailedRun(m, datasetId, err instanceof Error ? err.message : String(err));
     }
+  };
 
-    // Postgres/PostgREST reject NUL bytes and lone surrogates — scraped comment text can carry null
-    // bytes (first hit: a YouTube comment, 2026-08-29), which failed the whole chunk.
-    const sanitized = rows.map(stripNullBytes);
-
-    for (let i = 0; i < sanitized.length; i += UPSERT_CHUNK) {
-      const { error } = await supabase
-        .from("topic_signals")
-        .upsert(sanitized.slice(i, i + UPSERT_CHUNK), { onConflict: "run_id,external_id" });
-      if (error) throw new Error(`topic_signals upsert failed: ${error.message}`);
+function reviewJobs(week: string, salt?: string): BatteryJob[] {
+  const jobs: BatteryJob[] = [];
+  for (const t of REVIEW_TARGETS) {
+    for (const appId of t.apple) {
+      for (const sf of APPLE_STOREFRONTS) {
+        const key = `reviews/apple/${appId}/${sf}`;
+        const m = meta(
+          {
+            provider: "apple_rss",
+            sourceKey: key,
+            actor: "apple_rss:customerreviews",
+            input: { appId, storefront: sf },
+          },
+          week
+        );
+        const datasetId = salted(`apple:${week}:${appId}:${sf}`, salt);
+        jobs.push({
+          key,
+          run: guarded(m, datasetId, async () => {
+            const entries = await fetchAppleReviews(appId, sf);
+            const rows = entries
+              .map((e) => mapAppleReview(e, "pending", t.competitor, appId, sf))
+              .filter((r): r is TopicSignalRow => r !== null);
+            return ingestOutput(datasetId, entries, null, m, rows, entries.length);
+          }),
+        });
+      }
     }
-
-    await finalizeRun(supabase, runId, "succeeded", null, outcome);
-    outcome.status = "succeeded";
-    outcome.signalsWritten = rows.length;
-    return outcome;
-  } catch (err) {
-    outcome.error = err instanceof Error ? err.message : String(err);
-    if (outcome.runId) {
-      await finalizeRun(supabase, outcome.runId, "failed", outcome.error, outcome).catch(() => {});
+    for (const pkg of t.play) {
+      for (const country of PLAY_COUNTRIES) {
+        const key = `reviews/play/${pkg}`;
+        const m = meta(
+          {
+            provider: "google_play",
+            sourceKey: key,
+            actor: "google-play-scraper:reviews",
+            input: { appId: pkg, country, lang: "de" },
+          },
+          week
+        );
+        const datasetId = salted(`gplay:${week}:${pkg}:${country}`, salt);
+        jobs.push({
+          key,
+          run: guarded(m, datasetId, async () => {
+            const items = await fetchPlayReviews(pkg, country);
+            const rows = items
+              .map((i) => mapPlayReview(i, "pending", t.competitor, pkg, country))
+              .filter((r): r is TopicSignalRow => r !== null);
+            return ingestOutput(datasetId, items, null, m, rows, items.length);
+          }),
+        });
+      }
     }
-    return outcome;
+    for (const url of t.trustpilot) {
+      const key = `reviews/trustpilot/${t.competitor}`;
+      const m = meta(
+        {
+          provider: "deepapi",
+          sourceKey: key,
+          actor: "deepapi:/v1/scrape/extract",
+          input: { url },
+        },
+        week
+      );
+      jobs.push({
+        key,
+        run: async () => {
+          try {
+            const { reviews, requestId } = await fetchTrustpilotReviews(
+              url,
+              idempotencyKey(key, week, salt)
+            );
+            const rows = reviews
+              .map((r) => mapTrustpilotReview(r, "pending", t.competitor, url))
+              .filter((r): r is TopicSignalRow => r !== null);
+            return await ingestOutput(
+              requestId ?? salted(`trustpilot:${week}:${t.competitor}`, salt),
+              reviews,
+              null,
+              m,
+              rows,
+              reviews.length
+            );
+          } catch (err) {
+            const requestId = err instanceof DeepApiError ? err.requestId : null;
+            return recordFailedRun(m, requestId, err instanceof Error ? err.message : String(err));
+          }
+        },
+      });
+    }
   }
+  return jobs;
 }
 
-async function finalizeRun(
-  supabase: SupabaseClient,
-  runId: string,
-  status: "succeeded" | "failed",
-  error: string | null,
-  outcome: RunOutcome
-): Promise<void> {
-  const { error: e } = await supabase
-    .from("mining_runs")
-    .update({
-      status,
-      error,
-      item_count: outcome.itemCount,
-      post_count: outcome.mappedCount,
-      field_coverage_pct: outcome.fieldCoveragePct,
-    })
-    .eq("id", runId);
-  if (e) throw new Error(`mining_runs finalize failed: ${e.message}`);
+function serpJobs(week: string, salt?: string): BatteryJob[] {
+  const jobs: BatteryJob[] = [];
+  for (const seed of SERP_TREND_SEEDS) {
+    const key = `serp/trends/${slug(seed)}`;
+    const m = meta(
+      {
+        provider: "serpapi",
+        sourceKey: key,
+        actor: "serpapi:google_trends",
+        input: { q: seed, geo: "DE", date: "now 7-d", data_type: "RELATED_QUERIES" },
+        timeWindow: "week",
+      },
+      week
+    );
+    const datasetId = salted(`serpapi:${week}:google_trends:${slug(seed)}`, salt);
+    jobs.push({
+      key,
+      run: guarded(m, datasetId, async () => {
+        if (!hasSerpApiKey()) throw new Error("SERP_API_KEY not set");
+        const { rising, top } = await googleTrendsRelated(seed);
+        const rows = [
+          ...rising.map((i) => mapSerpTrend(i, "pending", seed, week, "rising")),
+          ...top.map((i) => mapSerpTrend(i, "pending", seed, week, "top")),
+        ].filter((r): r is TopicSignalRow => r !== null);
+        return ingestOutput(datasetId, { rising, top }, null, m, rows, rising.length + top.length);
+      }),
+    });
+  }
+  for (const q of SERP_PAA_QUERIES) {
+    const key = `serp/paa/${slug(q)}`;
+    const m = meta(
+      {
+        provider: "serpapi",
+        sourceKey: key,
+        actor: "serpapi:google",
+        input: { q, hl: "de", gl: "de", google_domain: "google.de" },
+      },
+      week
+    );
+    const datasetId = salted(`serpapi:${week}:google:${slug(q)}`, salt);
+    jobs.push({
+      key,
+      run: guarded(m, datasetId, async () => {
+        if (!hasSerpApiKey()) throw new Error("SERP_API_KEY not set");
+        const questions = await googlePaa(q);
+        const rows = questions
+          .map((i, pos) => mapSerpQuestion(i, "pending", q, pos + 1))
+          .filter((r): r is TopicSignalRow => r !== null);
+        return ingestOutput(datasetId, questions, null, m, rows, questions.length);
+      }),
+    });
+  }
+  return jobs;
 }
 
-// Record a run that never produced ingestible data. Upsert on dataset_id (when the
-// provider ref is known) so a later recovery ingest heals THIS row rather than
-// forking a new one; datasetId null → plain insert (the UNIQUE allows many NULLs).
-async function recordFailedRun(
-  meta: IngestMeta,
-  datasetId: string | null,
-  error: string
-): Promise<RunOutcome> {
-  const supabase = createAdminClient();
-  const { data, error: e } = await supabase
-    .from("mining_runs")
-    .upsert(
-      { ...runRowFields(meta), dataset_id: datasetId, status: "failed", error },
-      { onConflict: "dataset_id" }
-    )
-    .select("id")
-    .single();
-  const outcome = emptyOutcome(meta, datasetId);
-  outcome.runId = e ? null : (data?.id as string);
-  outcome.error = e ? `${error}; mining_runs write also failed: ${e.message}` : error;
-  return outcome;
+// Every Phase-1 job, keyed like mining_runs.source_key (prefix-filterable).
+export function phaseOneJobs(week: string, salt?: string): BatteryJob[] {
+  return [
+    ...BATTERY.map(
+      (spec): BatteryJob => ({
+        key: spec.key,
+        run: () => runSource(spec, week, salt).then((r) => r.outcome),
+      })
+    ),
+    ...reviewJobs(week, salt),
+    ...serpJobs(week, salt),
+  ];
 }
 
 // --- Battery -----------------------------------------------------------------
 
-function deepApiMeta(spec: SourceSpec): IngestMeta {
-  return {
-    provider: "deepapi",
-    sourceKey: spec.key,
-    pass: spec.pass,
-    timeWindow: spec.timeWindow,
-    actor: `deepapi:${spec.endpoint}`,
-    input: spec.body,
-    label: spec.key,
-  };
-}
-
-// Phase 1 for one spec: request → poll → ingest. Never throws.
-async function runSource(
-  spec: SourceSpec,
-  salt?: string
-): Promise<{ outcome: RunOutcome; output: unknown }> {
-  const meta = deepApiMeta(spec);
-  try {
-    const env = await runScrape(spec.endpoint, spec.body, idempotencyKey(spec.key, salt));
-    if (!env.requestId) throw new Error("DeepAPI returned no requestId");
-    const outcome = await ingestOutput(env.requestId, env.output, spec, meta);
-    return { outcome, output: env.output };
-  } catch (err) {
-    const requestId = err instanceof DeepApiError ? err.requestId : null;
-    const message = err instanceof Error ? err.message : String(err);
-    return { outcome: await recordFailedRun(meta, requestId, message), output: null };
-  }
-}
-
-function ytCommentsMeta(videoId: string | null): IngestMeta {
-  return {
-    provider: "youtube_data_api",
-    sourceKey: YT_COMMENTS_SOURCE_KEY,
-    pass: "context",
-    timeWindow: "n/a",
-    actor: "youtube_data_api:commentThreads",
-    input: videoId ? { videoId, maxResults: YT_COMMENTS_MAX_RESULTS, order: "relevance" } : null,
-    label: videoId ? `yt-comments/${videoId}` : "yt-comments",
-  };
-}
-
-// Phase 2: comment scrape for one video via the Data API (1 quota unit / 100
-// comments). Provider ref is deterministic per ISO week, so a same-week retry
-// heals the same row.
-async function runYtComments(videoId: string): Promise<RunOutcome> {
-  const meta = ytCommentsMeta(videoId);
-  const datasetId = `ytapi:${isoWeek()}:comments:${videoId}`;
-  try {
-    const threads = await fetchCommentThreads(videoId);
-    const rows = threads
-      .map((t) => mapYtApiCommentThread(t, "pending", videoId))
-      .filter((r): r is TopicSignalRow => r !== null);
-    return await ingestOutput(datasetId, threads, null, meta, rows, threads.length);
-  } catch (err) {
-    return recordFailedRun(meta, datasetId, err instanceof Error ? err.message : String(err));
-  }
-}
-
 export type BatteryOptions = {
-  // Restrict Phase 1 to specs whose key equals or starts with this prefix
-  // (e.g. "yt-search" or "yt-search/ki-tattoo"). "yt-comments" runs Phase 2 only
-  // (fixed YT_COMMENT_VIDEOS list — dynamic targets need the yt-search phase).
+  // Restrict to jobs whose key equals or starts with this prefix (e.g. "yt-search",
+  // "reviews/apple", "serp"). A comment slot ("yt-comments", "tiktok-comments",
+  // "ig-comments", "reddit-comments") runs Phase 2 for that platform only, from
+  // this week's rows in the DB.
   source?: string;
-  // Salt for the idempotency keys (--fresh): forces new DeepAPI runs this week.
+  // Salt for the idempotency keys / provider refs (--fresh): force new runs this week.
   salt?: string;
+  week?: string;
+  // Skip Phase 2 (the cron chain runs it as its own step).
+  skipComments?: boolean;
 };
 
 const matchesFilter = (key: string, filter: string) =>
   key === filter || key.startsWith(`${filter}/`);
 
-// Full battery: Phase 1 = all DeepAPI specs in parallel (one mining_runs row per
-// request), Phase 2 = yt-comments targets picked from the Phase-1 yt-search output.
-// Every failure becomes a failed mining_runs row / RunOutcome — visible gaps, never
-// silent ones.
+export function knownSlots(): string[] {
+  const keys = phaseOneJobs("2000-W01").map((j) => j.key.split("/")[0]);
+  return [...new Set([...keys, ...Object.values(COMMENT_SLOT)])];
+}
+
+// Full battery: Phase 1 = all jobs in parallel (one mining_runs row per request),
+// Phase 2 = comment targets of the week from the DB.
 export async function runBattery(options: BatteryOptions = {}): Promise<RunOutcome[]> {
   const { source, salt } = options;
-  const commentsOnly = source === YT_COMMENTS_SOURCE_KEY;
-  const specs = commentsOnly
+  const week = options.week ?? isoWeek();
+  const commentPlatform = source
+    ? (COMMENT_PLATFORMS.find((p) => COMMENT_SLOT[p] === source) ?? null)
+    : null;
+  const jobs = commentPlatform
     ? []
     : source
-      ? BATTERY.filter((s) => matchesFilter(s.key, source))
-      : BATTERY;
-  if (!commentsOnly && specs.length === 0) {
+      ? phaseOneJobs(week, salt).filter((j) => matchesFilter(j.key, source))
+      : phaseOneJobs(week, salt);
+  if (!commentPlatform && jobs.length === 0) {
     throw new Error(
-      `--source ${source} matches no battery slot; known: ` +
-        `${[...new Set(BATTERY.map((s) => s.key.split("/")[0]))].join(", ")}, yt-comments`
+      `--source ${source} matches no battery slot; known: ${knownSlots().join(", ")}`
     );
   }
 
-  const settled = await Promise.allSettled(specs.map((spec) => runSource(spec, salt)));
-  const outcomes: RunOutcome[] = [];
-  const searchItems: RawYoutubeSearchVideo[] = [];
-  let ytSearchSucceeded = 0;
-  settled.forEach((s, i) => {
-    if (s.status === "fulfilled") {
-      outcomes.push(s.value.outcome);
-      if (specs[i].kind === "yt-search" && s.value.outcome.status === "succeeded") {
-        ytSearchSucceeded += 1;
-        if (Array.isArray(s.value.output))
-          searchItems.push(...(s.value.output as RawYoutubeSearchVideo[]));
-      }
-    } else {
-      const failed = emptyOutcome(deepApiMeta(specs[i]), null);
-      failed.error = s.reason instanceof Error ? s.reason.message : String(s.reason);
-      outcomes.push(failed);
-    }
+  const settled = await Promise.allSettled(jobs.map((j) => j.run()));
+  const outcomes: RunOutcome[] = settled.map((s, i) => {
+    if (s.status === "fulfilled") return s.value;
+    const failed = emptyOutcome(
+      meta({ provider: "deepapi", sourceKey: jobs[i].key, actor: "battery", input: null }, week),
+      null
+    );
+    failed.error = s.reason instanceof Error ? s.reason.message : String(s.reason);
+    return failed;
   });
 
-  // Phase 2 runs for the full battery and for --source yt-search / yt-comments.
-  const wantsComments = !source || commentsOnly || source.startsWith("yt-search");
+  const wantsComments = !options.skipComments && (!source || commentPlatform !== null);
   if (wantsComments) {
-    if (!hasYoutubeKey()) {
-      outcomes.push(await recordFailedRun(ytCommentsMeta(null), null, "YOUTUBE_API_KEY not set"));
-    } else if (commentsOnly) {
-      if (YT_COMMENT_VIDEOS.length === 0) {
-        throw new Error(
-          "--source yt-comments needs YT_COMMENT_VIDEOS (fixed list) — dynamic targets " +
-            "come from the yt-search phase; run the full battery or --source yt-search"
-        );
-      }
-      for (const videoId of YT_COMMENT_VIDEOS) outcomes.push(await runYtComments(videoId));
-    } else if (ytSearchSucceeded === 0) {
-      // All searches dead → one visible failed row instead of a silent gap.
-      outcomes.push(
-        await recordFailedRun(
-          ytCommentsMeta(null),
-          null,
-          "all yt-search sources failed — no comment targets"
-        )
-      );
-    } else {
-      const targets = selectYtCommentTargets(searchItems);
-      const commentOutcomes = await Promise.allSettled(targets.map((v) => runYtComments(v)));
-      for (const c of commentOutcomes) {
-        if (c.status === "fulfilled") outcomes.push(c.value);
-        else {
-          const failed = emptyOutcome(ytCommentsMeta(null), null);
-          failed.error = c.reason instanceof Error ? c.reason.message : String(c.reason);
-          outcomes.push(failed);
-        }
-      }
-    }
+    const platforms: CommentPlatform[] | undefined = commentPlatform
+      ? [commentPlatform]
+      : undefined;
+    outcomes.push(...(await runComments({ week, salt, platforms })));
   }
-
   return outcomes;
 }
 
 // Recovery (D8): re-ingest a finished DeepAPI request by id into its battery slot.
-export async function ingestRequest(requestId: string, sourceKey: string): Promise<RunOutcome> {
+export async function ingestRequest(
+  requestId: string,
+  sourceKey: string,
+  week = isoWeek()
+): Promise<RunOutcome> {
   const spec = BATTERY.find((s) => s.key === sourceKey);
-  if (!spec) throw new Error(`--source ${sourceKey} is not a battery slot key`);
+  if (!spec) throw new Error(`--source ${sourceKey} is not a Phase-1 DeepAPI slot key`);
   const env = await getRequest(requestId);
-  return ingestOutput(requestId, env.output, spec, deepApiMeta(spec));
+  return ingestOutput(requestId, env.output, spec, deepApiMeta(spec, week));
+}
+
+// --dry-cost: dryRun every Phase-1 DeepAPI spec (free) and sum the holds; Phase 2 is
+// estimated from config (targets × maxItems × unit) because its targets don't exist yet.
+export async function dryCost(source?: string): Promise<{
+  specs: { key: string; holdUsd: number }[];
+  phaseOneUsd: number;
+  phaseTwoEstimateUsd: number;
+}> {
+  const specs: SourceSpec[] = source
+    ? BATTERY.filter((s) => matchesFilter(s.key, source))
+    : BATTERY;
+  const holds = await Promise.all(
+    specs.map(async (s) => ({ key: s.key, holdUsd: await dryRunCost(s.endpoint, s.body) }))
+  );
+  const phaseOneUsd = holds.reduce((n, h) => n + h.holdUsd, 0);
+  const phaseTwoEstimateUsd = 5 * 30 * 0.004 + 5 * 30 * 0.00625 + 3 * 40 * 0.00625; // tiktok + ig + reddit comments
+  return { specs: holds, phaseOneUsd, phaseTwoEstimateUsd };
 }
 
 // --- Retention + summary -----------------------------------------------------
@@ -397,12 +340,16 @@ export async function redactExpiredBodies(days = RETENTION_DAYS): Promise<number
   return data?.length ?? 0;
 }
 
-function summarize(runs: RunOutcome[], bodiesRedacted: number): MiningSyncResult {
+export function summarize(runs: RunOutcome[], bodiesRedacted: number): MiningSyncResult {
   const warnings: string[] = [];
   const errors: string[] = [];
   for (const r of runs) {
     if (r.status === "failed") errors.push(`${r.label}: ${r.error ?? "unknown error"}`);
-    else if (r.pass === "broad" && r.fieldCoveragePct < COVERAGE_ALERT_PCT) {
+    else if (
+      r.pass === "broad" &&
+      r.signalsWritten > 0 &&
+      r.fieldCoveragePct < COVERAGE_ALERT_PCT
+    ) {
       warnings.push(
         `${r.label}: field coverage ${r.fieldCoveragePct}% below ${COVERAGE_ALERT_PCT}%`
       );

@@ -13,14 +13,18 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "gsc:backfill": "tsx --conditions=react-server scripts/gsc-backfill.ts",
-    "mining:sync": "tsx --conditions=react-server scripts/mining-sync.ts"
+    "mining:sync": "tsx --conditions=react-server scripts/mining-sync.ts",
+    "pulse:quality": "tsx --conditions=react-server scripts/pulse-quality.ts",
+    "blog:draft-insert": "tsx --conditions=react-server scripts/blog-draft-insert.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.124.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.105.3",
     "@vercel/analytics": "^2.0.1",
     "embla-carousel-react": "^8.6.0",
     "google-auth-library": "^10.9.0",
+    "google-play-scraper": "^10.1.3",
     "gsap": "^3.15.0",
     "isbot": "^5.2.0",
     "lucide-react": "^1.17.0",
@@ -36,7 +40,8 @@
     "remark-rehype": "^11.1.2",
     "server-only": "^0.0.1",
     "sharp": "^0.34.5",
-    "unified": "^11.0.5"
+    "unified": "^11.0.5",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.4",
