@@ -744,3 +744,11 @@ quality-2026-W36-lauf1.json`, Protokoll `loop-2026-W36.md`.
   Structured Outputs — Anthropic lehnt das Digest-Schema als „compiled grammar too large"
   ab, und 16 k `max_tokens` ohne Streaming schnitt das JSON ab (Thinking teilt sich das
   Budget). Klassifikation bleibt Structured Outputs.
+
+**Lauf 2 (20:53–21:14 UTC):** geänderte Slots mit neuen Body-Hash-Keys (yt-search 11 neu,
+tiktok-search 19 neu, serp/trends 65 gefiltert), Kommentare (2 neue TikTok-Ziele, YouTube-
+Ziel-Neuauswahl nach Anker-Fix: Wahlvideo raus), Enrich 222 Zeilen (1,12 $). Rubrik Ebene 2
+weiter grün: useful_de 791, Fragen de 105, Beschwerden+Wünsche de 115, Trend-Gate-Cluster 15
+(`.claude/plans/community-pulse-v3/quality-2026-W36-lauf2.json`). Spend gesamt ≈ 26 $ von 40 $.
+Offen für Lauf 3 (nächste Woche, Cron): Kommentar-Ziele nach Video-Verdikt wählen (RTL-Sozial-
+Reportage lieferte 69 % off_topic trotz „Tattoos" im Titel); Batch API für den Enrich-Schritt.
