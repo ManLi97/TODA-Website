@@ -6,13 +6,12 @@
 import "server-only";
 
 import Anthropic from "@anthropic-ai/sdk";
-import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 
 import { createAdminClient } from "@/lib/supabase/admin";
 
 import { DIGEST_MODEL, PROMPT_VERSION, REVIEW_TARGETS, isoWeek, isoWeekStart } from "./config";
-import { usageCost, zeroCost } from "./enrich";
+import { addCost, usageCost, zeroCost } from "./enrich";
 import type { UsageCost } from "./enrich";
 
 // --- Schema (Richtwert per plan; bounded lists) ------------------------------------
@@ -247,25 +246,71 @@ export async function generateDigest(
 ): Promise<{ digest: Digest; digest_md: string; cost: UsageCost; inputSignalCount: number }> {
   const input = await buildDigestInput(week);
   const counts = (input.pulse.counts ?? {}) as { signals?: number };
-  const response = await client.messages.parse({
-    model: DIGEST_MODEL,
-    max_tokens: 16000,
-    output_config: { effort: "high", format: zodOutputFormat(DigestSchema) },
-    system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
-    messages: [
-      {
+  // Structured Outputs rejected this schema ("compiled grammar is too large", 2026-09-06),
+  // so the synthesis asks for plain JSON against the zod JSON schema and validates
+  // client-side; one retry carries the validation error back to the model.
+  const jsonSchema = JSON.stringify(z.toJSONSchema(DigestSchema));
+  const messages: Anthropic.MessageParam[] = [
+    {
+      role: "user",
+      content:
+        `ISO-Woche ${week}. Antworte AUSSCHLIESSLICH mit einem JSON-Objekt (kein Markdown, keine ` +
+        `Code-Fences), das exakt diesem JSON-Schema entspricht:\n${jsonSchema}\n\nEingabedaten:\n${JSON.stringify(input)}`,
+    },
+  ];
+  let cost = zeroCost();
+  let parsed: Digest | null = null;
+  let lastError = "";
+  for (let attempt = 0; attempt < 2 && !parsed; attempt += 1) {
+    // Streaming + 64k: adaptive thinking at effort high shares max_tokens with the
+    // answer — 16k cut the JSON mid-string (2026-09-06).
+    const response = await client.messages
+      .stream({
+        model: DIGEST_MODEL,
+        max_tokens: 64000,
+        output_config: { effort: "high" },
+        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+        messages,
+      })
+      .finalMessage();
+    cost = addCost(cost, usageCost(response.usage));
+    if (response.stop_reason !== "end_turn") {
+      console.warn(
+        `[digest] stop_reason ${response.stop_reason} (output ${response.usage.output_tokens} tokens)`
+      );
+    }
+    const text = response.content
+      .filter((b): b is Anthropic.TextBlock => b.type === "text")
+      .map((b) => b.text)
+      .join("")
+      .trim()
+      .replace(/^```(?:json)?\s*/i, "")
+      .replace(/\s*```$/, "");
+    try {
+      const result = DigestSchema.safeParse(JSON.parse(text));
+      if (result.success) parsed = result.data;
+      else
+        lastError = result.error.issues
+          .slice(0, 8)
+          .map((i) => `${i.path.join(".")}: ${i.message}`)
+          .join("; ");
+    } catch (err) {
+      lastError = `JSON parse failed: ${err instanceof Error ? err.message : String(err)}`;
+    }
+    if (!parsed) {
+      console.warn(`[digest] attempt ${attempt + 1} invalid: ${lastError.slice(0, 300)}`);
+      messages.push({ role: "assistant", content: text.slice(0, 20000) });
+      messages.push({
         role: "user",
-        content: `ISO-Woche ${week}. Eingabedaten:\n${JSON.stringify(input)}`,
-      },
-    ],
-  });
-  const cost = response.usage ? usageCost(response.usage) : zeroCost();
-  if (!response.parsed_output) {
-    throw new Error(
-      `digest synthesis produced no parseable output (stop_reason ${response.stop_reason})`
-    );
+        content: `Das JSON war ungültig (${lastError.slice(0, 1500)}). Gib das vollständige, korrigierte JSON-Objekt zurück — nur JSON.`,
+      });
+    }
   }
-  const digest = { ...response.parsed_output, week };
+  if (!parsed)
+    throw new Error(
+      `digest synthesis produced no valid JSON after 2 attempts: ${lastError.slice(0, 300)}`
+    );
+  const digest = { ...parsed, week };
   const digest_md = renderDigestMd(digest);
 
   const supabase = createAdminClient();
