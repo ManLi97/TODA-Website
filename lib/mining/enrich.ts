@@ -16,6 +16,7 @@ import {
   CLUSTER_REGISTRY,
   ENRICH_BATCH,
   ENRICH_BODY_MAX_CHARS,
+  ENRICH_CONCURRENCY,
   ENRICH_MODEL,
   PROMPT_VERSION,
   QUOTE_MAX_CHARS,
@@ -78,6 +79,8 @@ audience: artist = Tätowierer/Studio spricht oder wird als Zielgruppe adressier
 is_discussion: true bei Meinung, Frage, Erfahrung, Beschwerde, Wunsch, Lob, Branchennews; false bei reinem Showcase ("done by me", Bild ohne Text), Werbung, Giveaways, Spam, Ein-Wort-Kommentaren, Job-Anzeigen ohne Aussage.
 
 signal_type: question (eine echte Frage), complaint (Beschwerde/Frust/Schmerzpunkt), wish (Wunsch/Verbesserungsvorschlag), praise (Lob/Zufriedenheit), experience (Erfahrungsbericht/Meinung ohne Frage), news (Branchen-/Gesetzes-/Event-News), promo (Werbung, Angebot, Giveaway, Job-/Guest-Spot-Anzeige), other.
+
+Konsistenzregeln: signal_type=other ⇒ is_discussion=false (z. B. SEO-/Ratgeber-Artikel, Wikipedia, Landing-Pages, Firmen-Blogs — das sind keine Community-Stimmen); signal_type=promo ⇒ is_discussion=false; news = redaktioneller/behördlicher Beitrag mit einer Neuigkeit (Gesetz, Urteil, Studie, Event), nicht jeder Artikel. Eine echte Stimme (Forum, Kommentar, Reddit, Video-Caption mit Meinung, Review) ist question/complaint/wish/praise/experience und is_discussion=true.
 
 cluster: NUR ein Slug aus der Registry unten, sonst null. Bei einer Diskussion ohne passenden Slug: cluster=null und cluster_proposal mit einem kurzen kebab-case-Label (Registry-Erweiterung wird separat entschieden). Nicht-Diskussionen: cluster=null, cluster_proposal=null.
 
@@ -297,15 +300,23 @@ export async function runEnrichment(
       stoppedBy = "maxRows";
       break;
     }
-    const limit = opts.maxRows
-      ? Math.min(ENRICH_BATCH, opts.maxRows - classified - failedIds.size)
-      : ENRICH_BATCH;
-    const rows = await pendingSignals({ week: opts.week, limit, offset: failedIds.size });
+    const want = opts.maxRows
+      ? Math.min(ENRICH_BATCH * ENRICH_CONCURRENCY, opts.maxRows - classified - failedIds.size)
+      : ENRICH_BATCH * ENRICH_CONCURRENCY;
+    const rows = await pendingSignals({ week: opts.week, limit: want, offset: failedIds.size });
     if (rows.length === 0) break;
 
-    const { verdicts, cost: callCost } = await classifyBatch(rows, client);
-    calls += 1;
-    cost = addCost(cost, callCost);
+    // One round = up to ENRICH_CONCURRENCY parallel calls of ENRICH_BATCH rows each.
+    const chunks: PendingSignal[][] = [];
+    for (let i = 0; i < rows.length; i += ENRICH_BATCH)
+      chunks.push(rows.slice(i, i + ENRICH_BATCH));
+    const results = await Promise.all(chunks.map((chunk) => classifyBatch(chunk, client)));
+    const verdicts = new Map<string, Verdict>();
+    for (const r of results) {
+      calls += 1;
+      cost = addCost(cost, r.cost);
+      for (const [k, v] of r.verdicts) verdicts.set(k, v);
+    }
 
     const inserts: ClassificationRow[] = [];
     for (const r of rows) {

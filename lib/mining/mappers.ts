@@ -441,8 +441,7 @@ export function mapSerpQuestion(
 
 // Map one DeepAPI output array through the spec's whitelist mapper. `source` for
 // query-/hashtag-/video-scoped specs comes from the spec; reddit/yt-channel rows
-// derive it from the item (subreddit / @handle). Applies the spec's client-side
-// freshness window (maxAgeDays) for endpoints without `since`.
+// derive it from the item (subreddit / @handle).
 export function mapSpecItems(spec: SourceSpec, output: unknown, runId: string): TopicSignalRow[] {
   const items = Array.isArray(output)
     ? output
@@ -480,10 +479,16 @@ export function mapSpecItems(spec: SourceSpec, output: unknown, runId: string): 
         return mapWebResult(item as RawWebResult, runId, spec.source ?? "web");
     }
   });
-  const mapped = rows.filter((r): r is TopicSignalRow => r !== null);
-  if (!spec.maxAgeDays) return mapped;
+  return rows.filter((r): r is TopicSignalRow => r !== null);
+}
+
+// Client-side freshness window (maxAgeDays) for endpoints without `since`. Applied by
+// the ingest AFTER mapping so stale-but-mappable items count as filtered, not as
+// "no mappable items" (which flags contract drift).
+export function applyFreshness(spec: SourceSpec, rows: TopicSignalRow[]): TopicSignalRow[] {
+  if (!spec.maxAgeDays) return rows;
   const cutoff = Date.now() - spec.maxAgeDays * 86400000;
-  return mapped.filter((r) => r.posted_at === null || Date.parse(r.posted_at) >= cutoff);
+  return rows.filter((r) => r.posted_at === null || Date.parse(r.posted_at) >= cutoff);
 }
 
 // --- Comment target selection (Phase 2) ----------------------------------------

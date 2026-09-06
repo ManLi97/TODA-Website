@@ -12,7 +12,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { DEDUPE_CHUNK, UPSERT_CHUNK, idempotencyKey, isoWeek } from "./config";
 import type { SourceSpec } from "./config";
 import { DeepApiError, runScrape } from "./deepapi";
-import { mapSpecItems } from "./mappers";
+import { applyFreshness, mapSpecItems } from "./mappers";
 import type { IngestMeta, Platform, RunOutcome, TopicSignalRow } from "./types";
 
 // --- Stats -------------------------------------------------------------------
@@ -189,10 +189,12 @@ export async function ingestOutput(
     }
 
     const platform = mapped[0]?.platform ?? spec?.platform;
+    const fresh = spec ? applyFreshness(spec, mapped) : mapped;
     const rows =
-      meta.dedupe && platform && mapped.length > 0
-        ? await dedupeAgainstDb(supabase, platform, mapped, runId)
-        : mapped;
+      meta.dedupe && platform && fresh.length > 0
+        ? await dedupeAgainstDb(supabase, platform, fresh, runId)
+        : fresh;
+    // dedupedCount = rows dropped as stale (freshness window) or already known (D2).
     outcome.dedupedCount = mapped.length - rows.length;
     outcome.fieldCoveragePct = computeCoveragePct(rows, meta.pass);
     outcome.signalsWritten = rows.length;

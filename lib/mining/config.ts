@@ -411,8 +411,9 @@ export const SERP_PAA_QUERIES = [
 
 export const ENRICH_MODEL = "claude-opus-5";
 export const DIGEST_MODEL = "claude-opus-5";
-export const PROMPT_VERSION = "v3.0";
+export const PROMPT_VERSION = "v3.1";
 export const ENRICH_BATCH = 25; // rows per classification call
+export const ENRICH_CONCURRENCY = 4; // parallel classification calls per round
 export const ENRICH_BODY_MAX_CHARS = 1500;
 export const QUOTE_MAX_CHARS = 280;
 // Anthropic list prices (USD per 1M tokens) for the spend ledger.
