@@ -12,8 +12,13 @@ DeepAPI-Guthaben vor Aufladung: 8,93 $ (18:xx). Nach Aufladung + FB-Batch 1: ≈
 | 4 | 06.09. 17:10 UTC | Build-Session Start: `GET /v1/balance` = 45,835293 $ | 0 | 0 | ≈2,80 | balance.sh |
 | 5 | 06.09. 17:10–18:30 UTC | Kontrakt-Pins: capabilities (13), openapi.json, 1 dryRun, `--dry-cost` (Phase 1 = 9,815 $ Holds), Apple-RSS/Play-Fetches | 0 (alles frei) | 0 | ≈2,80 | dryRun-Envelopes `debitMicrousd 0` |
 | 6 | 06.09. ~17:40 UTC | SerpApi-Shape-Pins: 2 Suchen (google_trends, google) | 0 | 0 | ≈2,80 | account.json: 248/250 übrig |
+| 7 | 06.09. 18:04–18:12 UTC | Testlauf 1 (voll): Phase 1 + Phase 2, 77 Runs, 1251 neue Zeilen | 6,15 (45,835 → 39,686) | 0 | ≈8,95 | run1-battery.log, `--balance` |
+| 8 | 06.09. 18:16 UTC | E4-Beweis `reviews/apple/1526690381/gb --fresh` + Heal `ig-hashtags/taetowierer` (Replay) | 0 | 0 | ≈8,95 | frei / idempotent |
+| 9 | 06.09. 18:17 UTC | Enrich 50 Zeilen (v3.0, 2 Calls, 9,7k in / 8,1k out, Cache 3,4k) | 0 | 0,27 | ≈9,22 | enrich-50.log |
+| 10 | 06.09. 18:19–18:27 UTC | Reclassify v3.0→v3.1, 1000 Zeilen (≈ 40 Calls) bis Anthropic-Guthaben leer | 0 | ≈5,5 (Schätzung) | ≈14,7 | enrich-full.log (400 credit balance too low) |
+| 11 | 06.09. 18:21 UTC | Kette E2E lokal (Batterie + Comments als Replay) | 0 (39,686 unverändert) | 0 | ≈14,7 | pulse_jobs |
 
 Regel: vor jedem bezahlten Lauf `--dry-cost`; nach jedem Lauf `pnpm mining:sync --balance` (frei) → Zeile hier.
 
-Stand nach Build-Phase (06.09. ~18:30 UTC): DeepAPI-Balance 45,84 $ (unverändert); kumuliert ≈ 2,80 $ von 40 $ → Rest ≈ 37 $.
+Stand 06.09. 18:27 UTC: DeepAPI-Balance 39,69 $; kumuliert ≈ 14,7 $ von 40 $ → Rest ≈ 25 $. **Blocker: Anthropic-Guthaben leer** — Rest-Enrich (871 Zeilen ≈ 4,8 $) + Digest (≈ 0,5 $) + Lauf 2 passen in den Rest.
 Erwartung Testlauf 1 (voll): DeepAPI ≤ 12,10 $ (Holds; Debits meist darunter) + Anthropic ≈ 6–10 $ → nach Lauf 1 ≈ 18–25 $ kumuliert.
