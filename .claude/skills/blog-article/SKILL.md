@@ -110,7 +110,7 @@ Ablauf:
    blog_post_translations t` — behandelte Themen scheiden aus oder
    brauchen einen neuen Winkel.
 6. **Such-Validierung:** Top-Kandidaten mit SerpApi-Suchvolumen prüfen
-   (google.de, `SERP_API_KEY`) + DeepAPI `seo.rank`/`seo.audit` als
+   (google.de, `SERPAPI_API_KEY`) + DeepAPI `seo.rank`/`seo.audit` als
    SERP-Read (wer rankt zum Thema, wie stark?). DeepAPI `seo.keyword` ist
    für DE tot (gemessen 29.08.) — nicht verwenden. Die DACH-Kontext-Zeilen
    aus Strom A (TikTok-/YT-Kommentare, Web) sind qualitatives

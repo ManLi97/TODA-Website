@@ -9,12 +9,12 @@ import "server-only";
 import type { RawSerpQuestion, RawSerpTrendQuery } from "./types";
 
 export function hasSerpApiKey(): boolean {
-  return Boolean(process.env.SERP_API_KEY);
+  return Boolean(process.env.SERPAPI_API_KEY);
 }
 
 async function serp<T>(params: Record<string, string>): Promise<T> {
-  const key = process.env.SERP_API_KEY;
-  if (!key) throw new Error("SERP_API_KEY not set");
+  const key = process.env.SERPAPI_API_KEY;
+  if (!key) throw new Error("SERPAPI_API_KEY not set");
   const qs = new URLSearchParams({ ...params, api_key: key });
   const res = await fetch(`https://serpapi.com/search.json?${qs.toString()}`);
   const json = (await res.json()) as T & { error?: string };

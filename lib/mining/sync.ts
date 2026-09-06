@@ -179,7 +179,7 @@ function serpJobs(week: string, salt?: string): BatteryJob[] {
     jobs.push({
       key,
       run: guarded(m, datasetId, async () => {
-        if (!hasSerpApiKey()) throw new Error("SERP_API_KEY not set");
+        if (!hasSerpApiKey()) throw new Error("SERPAPI_API_KEY not set");
         const { rising, top } = await googleTrendsRelated(seed);
         const rows = [
           ...rising.map((i) => mapSerpTrend(i, "pending", seed, week, "rising")),
@@ -204,7 +204,7 @@ function serpJobs(week: string, salt?: string): BatteryJob[] {
     jobs.push({
       key,
       run: guarded(m, datasetId, async () => {
-        if (!hasSerpApiKey()) throw new Error("SERP_API_KEY not set");
+        if (!hasSerpApiKey()) throw new Error("SERPAPI_API_KEY not set");
         const questions = await googlePaa(q);
         const rows = questions
           .map((i, pos) => mapSerpQuestion(i, "pending", q, pos + 1))

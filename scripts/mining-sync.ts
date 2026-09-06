@@ -26,7 +26,7 @@
 //
 // Env (loaded from .env.local): NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
 // DEEPAPI_API_BASE_URL + DEEPAPI_API_KEY (or `source ~/.deepapi/env`), YOUTUBE_API_KEY,
-// SERP_API_KEY, ANTHROPIC_API_KEY (enrich/digest). Missing keys = visible failed rows.
+// SERPAPI_API_KEY, ANTHROPIC_API_KEY (enrich/digest). Missing keys = visible failed rows.
 import { runComments } from "@/lib/mining/comments";
 import { isoWeek } from "@/lib/mining/config";
 import { getBalance } from "@/lib/mining/deepapi";

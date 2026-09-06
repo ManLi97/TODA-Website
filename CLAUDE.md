@@ -222,7 +222,7 @@ a time-series source in the shared **toda-company** DB (`znocynswpsfckyfumema`).
   CLI mirror `pnpm mining:sync` (`--source <key>`, `--comments`, `--enrich`, `--digest`, `--reclassify
   <version>`, `--quality`, `--dry-cost`, `--balance`, `--request <id> --source <key>`, `--fresh`, `--week`) +
   `pnpm pulse:quality`. Idempotency keys `toda-mining:v3:{isoWeek}:{slot}`. Needs `DEEPAPI_*`,
-  `YOUTUBE_API_KEY`, `SERP_API_KEY`, `ANTHROPIC_API_KEY` (missing key = visible failed row / failed job).
+  `YOUTUBE_API_KEY`, `SERPAPI_API_KEY`, `ANTHROPIC_API_KEY` (missing key = visible failed row / failed job).
   Methodology: `docs/blog/topic-radar.md` ("Methode v3"); test-run rubric `.claude/plans/community-pulse-v3/`.
 
 ## Key patterns
@@ -293,7 +293,7 @@ Required in `.env.local`:
   local dev: `source ~/.deepapi/env`)
 - `YOUTUBE_API_KEY` — YouTube Data API v3 for yt-comments (battery Phase 2 + on-demand skill scrapes;
   missing → yt-comments becomes a visible failed mining_runs row)
-- `SERP_API_KEY` — SerpApi for the battery slots `serp/trends/*` + `serp/paa/*` (~8 searches/week) and German
+- `SERPAPI_API_KEY` — SerpApi for the battery slots `serp/trends/*` + `serp/paa/*` (~8 searches/week) and German
   search volumes in skill runs
 - `ANTHROPIC_API_KEY` — Claude Opus 5 for the enrichment + digest steps (server-only)
 - `PULSE_BASE_URL` — optional chain base URL when `VERCEL_PROJECT_PRODUCTION_URL` is absent (defaults to the request origin)
