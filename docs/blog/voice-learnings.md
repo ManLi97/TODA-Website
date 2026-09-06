@@ -137,6 +137,20 @@ Schluss-Signatur einsetzen.
   künftig bei Rechts-/Geld-Themen einen solchen Rubrik-Tag mitliefern. **DE
   hat einen Tippfehler: `Rech-und-Kohle` → soll `Recht-und-Kohle`.** Tomek
   beim Publish-Review nennen (Skill ändert keine bestehenden Posts).
+- **06.09.2026 — Artist-Stimme = GESPROCHENE Stimme (`/artist-story` Lauf 2,
+  Rita „CATO“):** Fassung 1 war sauber belegt, aber in „unserer" Schreibstimme
+  (Ø 13,3 W/Satz, Nebensatzketten) und begann mit einer Kindheits-Anekdote
+  (Heft). Tomeks Korrektur: die Stimme des Artists ist die aus seinen
+  Videos — bei ihr warm, kurz, selbstironisch, fehlerbehaftet — und die
+  starke Geschichte (Krieg → Neuanfang) gehört nach vorn, nicht in eine
+  „lange Zeit gar nichts"-Sektion. Fassung 2: Ø 9,5 W/Satz, Fragen, die sie
+  sich selbst beantwortet, drei nahezu wörtliche Reel-Zeilen (inkl. ihr
+  eigener Witz „Ja, manchmal sind wir alle so dumm."), das Wort „scheiße"
+  aus ihrem O-Ton als Überschrift. Muster: **O-Ton-Zeilen unverändert
+  einbauen schlägt jede Umformulierung; Reels/Voice-Memos vor dem Schreiben
+  transkribieren, Satzlänge am Sprechrhythmus messen; das Ereignis mit den
+  höchsten Stakes trägt den Lede.** Die Artistin hat Fassung 2 ohne
+  Änderungswunsch freigegeben.
 - **29.08.2026 — Artist-Korrektur (`/artist-story` Lauf 1):** Einzige
   Korrektur von Markus Vossi an seiner Story: Der Text hatte „nach der
   Ausbildung sofort weg" verdichtet — real hat er noch ~1 Jahr als
@@ -166,3 +180,4 @@ Schluss-Signatur einsetzen.
 | vom-dachdecker-zum-tattoo-artist (Artist-Story, Toddcast #1) | ✅ | — | **Draft 29.08.2026, noch am selben Tag von Tomek publiziert** (mit leichtem Edit: 5030→5065 Zeichen — beim nächsten Lauf 0 diffen). Erster `/artist-story`-Insert nach dokumentiertem Artist-Go (Markus Vossi); Artist-Korrektur eingearbeitet (s. Feedback-Signale). Eigener Autor-Datensatz + Avatar/Cover in Storage; Kategorie nachträglich auf `artist-stories` umgezogen. |
 | from-roofer-to-tattoo-artist EN + de-techador-a-tatuador ES | ✅ | — | **29.08.2026 direkt published** (explizite Anweisung Tomek) — 1:1-Übersetzungen der freigegebenen DE-Fassung, Ton unverändert; ES-Terminologie „tatuador" analog Bestand. |
 | tattoo-preise-rabatte-unter-wert-verkaufen (Toddcast-Recycling #2, Rabatte & Preisspirale) | ✅ | — | **neuer Draft 29.08.2026** — zweiter `/podcast-article`-Lauf, R1–R10 geprüft (634 W, 1 Emoji, 0 Ausrufezeichen, 1 TODA-Mention, 2 interne Links), Embed `_zy3a1RIaWE`@3899s, Kategorie `law-money`. Insert über Repo-Script + Service-Role (Plugin-MCP-Schreibweg retired). **Erster `/podcast-article`-Artikel, den Tomek liest** — seine Korrekturen sind das Lernsignal für Lauf 0 des nächsten Laufs. Wartet auf Publish. |
+| von-der-musik-zum-tattoo-artist (Artist-Story, Rita „CATO“ — ohne Podcast-Folge) | ✅ | — | **Draft 06.09.2026 nach dokumentiertem Artist-Go** — zweiter `/artist-story`-Lauf, erster ohne gemeinsamen Dreh (Material: ihr eigener Text + 3 selbst transkribierte Reels + Feed-Scrape). 793 W, 0 Emojis, 0 Ausrufezeichen, Ø 9,5 W/Satz. Eigener Autor-Datensatz `rita-cato` + Avatar/Cover in Storage, Kategorie `artist-stories`. Fassung 1 → 2 vor der Freigabe auf Tomeks Voice-Korrektur (s. Feedback-Signale 06.09.2026). Wartet auf Publish. |
