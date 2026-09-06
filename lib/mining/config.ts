@@ -341,11 +341,11 @@ export const BATTERY: SourceSpec[] = [
   ),
 ];
 
-// Topic anchor for comment targets and SERP trend rows: run 1 picked a German video
-// with 100 off-topic comments purely by comment count, and Google "rising" queries
-// were mostly celebrity noise. A candidate must mention the domain somewhere.
-export const TOPIC_HINT =
-  /tattoo|tätow|taetow|tatuaj|tatuag|\bink\b|stech|studio|anzahlung|deposit|no.?show|termin|kunde|client|artist|nadel|needle|lehrling|apprentice|farbe|stencil/i;
+// Topic anchor for comment targets and SERP trend rows — strong domain words only.
+// Run 1 picked a German election video with 100 off-topic comments purely by comment
+// count; run 2 showed the search QUERY must not count as evidence (it always matches),
+// so search rows are tested on title + body, reddit/IG rows on peer group + title + body.
+export const TOPIC_HINT = /tattoo|tätow|taetow|tatuaj|tatuag|\bink\b|stech/i;
 
 // --- Phase 2: dynamic comment targets (lib/mining/comments.ts) ---------------
 

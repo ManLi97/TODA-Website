@@ -530,7 +530,11 @@ export function selectCommentTargets(
       .toLowerCase();
     if (handle && refHandles.has(handle)) continue;
     if (platform === "instagram" && LEAD_MAGNET.test(`${r.title} ${r.body ?? ""}`)) continue;
-    if (!TOPIC_HINT.test(`${r.source} ${r.title} ${r.body ?? ""}`)) continue; // run 1: 100/100 off-topic
+    const topicText =
+      platform === "youtube" || platform === "tiktok"
+        ? `${r.title} ${r.body ?? ""}` // the search query (source) always matches — never count it
+        : `${r.source} ${r.title} ${r.body ?? ""}`;
+    if (!TOPIC_HINT.test(topicText)) continue;
     if ((Number(r.metrics?.comments) || 0) <= 0) continue;
     byId.set(r.external_id, r);
   }

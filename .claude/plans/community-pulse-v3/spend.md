@@ -19,7 +19,9 @@ DeepAPI-Guthaben vor Aufladung: 8,93 $ (18:xx). Nach Aufladung + FB-Batch 1: ≈
 | 11 | 06.09. 18:21 UTC | Kette E2E lokal (Batterie + Comments als Replay) | 0 (39,686 unverändert) | 0 | ≈14,7 | pulse_jobs |
 | 12 | 06.09. 20:24–20:40 UTC | Rest-Enrich 897 Zeilen v3.1 (Tomek, nach Top-up) | 0 | 4,82 | ≈19,5 | Task-Output (classified 897, remaining 0) |
 | 13 | 06.09. 20:41–21:05 UTC | Digest: 2 Fehlversuche (Grammar-Limit / Truncation, ≈ 0,6 geschätzt) + Erfolg 1,14 | 0 | ≈1,7 | ≈21,3 | digest.log, digest2.log, pulse_digests.cost_usd |
+| 14 | 06.09. 20:53–21:00 UTC | Lauf 2: yt-search ×5 + tiktok-search ×2 (neue Body-Hash-Keys) + serp/trends (Quota) + Kommentare (2 neue TikTok-Ziele, Rest Replay) | 3,64 (39,686 → 36,045) | 0 | ≈24,9 | run2-sources.log, run2-comments.log |
+| 15 | 06.09. 21:08–21:14 UTC | Lauf 2: yt-comments Neuauswahl (Data API, frei) + Enrich 222 neue Zeilen | 0 | 1,12 | ≈26,0 | run2-ytc.log, run2-enrich.log |
 
 Regel: vor jedem bezahlten Lauf `--dry-cost`; nach jedem Lauf `pnpm mining:sync --balance` (frei) → Zeile hier.
 
-Stand 06.09. ~21:10 UTC: DeepAPI-Balance 39,69 $; kumuliert ≈ 21,3 $ von 40 $ → Rest ≈ 18,7 $. Lauf 2 (geänderte Slots: yt-search ×5 + tiktok-search ×2 mit neuem Body-Hash ≈ 4,5 $, Kommentare ≈ 1 $, Enrich neue Zeilen ≈ 1,5 $, Digest ≈ 1,2 $) ≈ 8 $ → erwartet ≈ 29 $.
+Stand 06.09. ~21:15 UTC: DeepAPI-Balance 36,05 $; kumuliert ≈ 26,0 $ von 40 $ → Rest ≈ 14 $. Offen: Digest-Neugenerierung nach Migration v3.1 (≈ 1,2 $).
