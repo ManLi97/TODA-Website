@@ -190,22 +190,30 @@ a time-series source in the shared **toda-company** DB (`znocynswpsfckyfumema`).
   `scripts/gsc-backfill.ts` (`pnpm gsc:backfill`, off-Vercel) does the one-time ~16-month backfill
   (`dataState=final`). The `dimension='total'` rows carry the authoritative daily totals (per-dimension
   sums are lower — GSC drops anonymized queries).
-- **Community-pulse topic mining v2** (Strom A of `/blog-article` + consumed by the marketing repo's
-  `/community-voices` — NOT the dashboard) → `mining_runs` / `topic_signals` / `topic_classifications` +
-  the `topic_cluster_scores` view. `lib/mining/*` runs a FIXED weekly multi-source battery
-  (`lib/mining/config.ts` = source of truth): DeepAPI scrapes (reddit broad, YouTube search + reference
-  channels, IG hashtags, TikTok search/comments, web) + YouTube Data API v3 `commentThreads` (free quota;
-  never its expensive `search`). **Whitelist mappers** per source (no author/commenter identities, ever;
-  `body` on a 30-day TTL), snapshot/append-only semantics (one `mining_runs` row per request,
-  `dataset_id` = provider ref: DeepAPI requestId | `ytapi:{isoWeek}:comments:{videoId}`; `topic_signals`
-  keyed `(run_id, external_id)`). Scoring stays **deterministic in SQL** (`security_invoker` view;
-  `engagement` column is non-NULL only for scorable rows: reddit broad = upvotes + 2*comments, yt channel
-  reference rows = views — everything else is qualitative context with raw numbers in `metrics` jsonb).
-  Deterministic idempotency keys (`toda-mining:{isoWeek}:{sourceKey}`) make same-week retries free.
-  `app/api/cron/mining-sync/route.ts` (Vercel cron Monday 06:00 UTC in `vercel.json`) +
-  `scripts/mining-sync.ts` (`pnpm mining:sync`; `--source <key>`, recovery `--request <id> --source <key>`,
-  `--fresh`, `--retention-only`). Needs `DEEPAPI_API_BASE_URL`/`DEEPAPI_API_KEY` (+ `YOUTUBE_API_KEY` for
-  yt-comments; missing key = visible failed row). Methodology: `docs/blog/topic-radar.md`.
+- **Community-pulse pipeline v3** (Strom A of `/blog-article` + consumed by the marketing repo's
+  `/community-voices` and the clip selection — NOT the dashboard). Three layers in the shared DB:
+  **Erhebung** `mining_runs` / `topic_signals` → **Verdichtung** `topic_classifications` (per-row LLM
+  verdict: `audience`, `signal_type`, `language`, `cluster`, anonymised `quote`, `question`, `feature`,
+  `classified_by`/`model`/`prompt_version`) → **Digest** `pulse_digests` (one jsonb + md per ISO week);
+  plus `pulse_jobs` (chain lock), views `pulse_pending_signals` / `pulse_cluster_weekly` and SQL functions
+  `pulse_claim_job` / `pulse_digest_input` / `pulse_quality_report`. `lib/mining/*` runs a FIXED weekly
+  battery (`lib/mining/config.ts` = source of truth): DeepAPI (YouTube search + reference channels, Reddit
+  search/broad/comments, IG hashtags/accounts/comments, TikTok search/comments, FB groups, web) + YouTube
+  Data API v3 `commentThreads` (free; never its `search`) + competitor reviews (Apple RSS, `google-play-scraper`,
+  Trustpilot via DeepAPI extract — only the 5 profiled competitors, never attributed in the digest) + SerpApi
+  (google_trends DE, People-also-ask). **"Only new" (D2):** API `since` filters where they exist, otherwise
+  ingest dedupe on `(platform, external_id)` across runs (yt-channels + serp/trends stay snapshot slots);
+  0 new rows = `succeeded`. **Comment targets are dynamic** (top German posts of the week per platform from
+  the DB). **Whitelist mappers** (no author/commenter/reviewer identities, ever; `body` 30-day TTL, the LLM
+  `quote` is permanent). `engagement` is non-NULL for every platform row (formulas in `mappers.ts`; web/serp/
+  reviews NULL) so `topic_cluster_scores` (unchanged) scores all sources. Chain (D9): cron `mining-sync`
+  (Monday 06:00 UTC, `vercel.json`) → `pulse-worker?step=comments` → `enrich` (self-retrigger) → `digest`;
+  every route answers 202 and works in `after()`, `pulse_claim_job` refuses a running step < 15 min (409).
+  CLI mirror `pnpm mining:sync` (`--source <key>`, `--comments`, `--enrich`, `--digest`, `--reclassify
+  <version>`, `--quality`, `--dry-cost`, `--balance`, `--request <id> --source <key>`, `--fresh`, `--week`) +
+  `pnpm pulse:quality`. Idempotency keys `toda-mining:v3:{isoWeek}:{slot}`. Needs `DEEPAPI_*`,
+  `YOUTUBE_API_KEY`, `SERP_API_KEY`, `ANTHROPIC_API_KEY` (missing key = visible failed row / failed job).
+  Methodology: `docs/blog/topic-radar.md` ("Methode v3"); test-run rubric `.claude/plans/community-pulse-v3/`.
 
 ## Key patterns
 
@@ -265,9 +273,13 @@ Required in `.env.local`:
 - `GSC_SITE_URL` — Search Console property (`sc-domain:todasolutions.com` or `https://www.todasolutions.com/`)
 - `GSC_SA_KEY` — GSC service-account JSON key as a string (Vercel Production)
 - `GSC_SA_KEY_FILE` — path to the GSC service-account JSON key file (local dev)
-- `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync` and `/api/cron/mining-sync`
+- `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync`, `/api/cron/mining-sync` and
+  `/api/cron/pulse-worker` (the chain sends it to itself)
 - `DEEPAPI_API_BASE_URL` / `DEEPAPI_API_KEY` — DeepAPI for the community-pulse battery (server-only;
   local dev: `source ~/.deepapi/env`)
 - `YOUTUBE_API_KEY` — YouTube Data API v3 for yt-comments (battery Phase 2 + on-demand skill scrapes;
   missing → yt-comments becomes a visible failed mining_runs row)
-- `SERP_API_KEY` — SerpApi for German search volumes in skill runs (not used by the cron)
+- `SERP_API_KEY` — SerpApi for the battery slots `serp/trends/*` + `serp/paa/*` (~8 searches/week) and German
+  search volumes in skill runs
+- `ANTHROPIC_API_KEY` — Claude Opus 5 for the enrichment + digest steps (server-only)
+- `PULSE_BASE_URL` — optional chain base URL when `VERCEL_PROJECT_PRODUCTION_URL` is absent (defaults to the request origin)

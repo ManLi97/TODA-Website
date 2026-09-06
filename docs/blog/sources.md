@@ -67,6 +67,12 @@ dreier Fragen bewertet:
    wenn nein, aber inhaltlich wertvoll → **nur qualitativ** (Stimmung,
    kein Scoring).
 
+4. **Nur-Neues-Fähigkeit (seit v3):** Liefert der Kanal Woche zu Woche
+   neue Zeilen — per API-Zeitfilter (`since`) oder weil der Ingest-Dedupe
+   auf `(platform, external_id)` genug Neues übrig lässt? Richtwert ≥ 70 %
+   neue Zeilen je Lauf (außer Snapshot-Slots). Ein Kanal, der nach zwei
+   Läufen nur Bekanntes wiederholt, ist Re-Scrape, kein Signal → raus.
+
 Verdikt (aufgenommen quantitativ / aufgenommen qualitativ / raus) wird
 hier in der Tabelle bzw. unter „Bewusst ausgeschlossen" dokumentiert,
 der Test-Lauf im `topic-radar.md`. Wackelkandidaten fliegen nach zwei
@@ -84,18 +90,26 @@ Ausfälle in Folge durch residential-gedrosselte Detail-Extraktion) und
 
 ## Tier 3 — Community-Signal (nur Themenfindung & Stimmung)
 
-Erhebung: zentrale Wochen-Batterie (Pipeline v2, `lib/mining/config.ts` =
-Quelle der Wahrheit; Cron Mo 06:00 UTC → `mining_runs`/`topic_signals`).
-Skills lesen die DB, sie scrapen nicht ad hoc.
+Erhebung: zentrale Wochen-Batterie (Pipeline v3 seit 09/2026, `lib/mining/config.ts` =
+Quelle der Wahrheit; Kette Mo 06:00 UTC → `mining_runs`/`topic_signals` →
+LLM-Verdichtung `topic_classifications` → Wochen-Digest `pulse_digests`; Methode in
+`topic-radar.md`). Skills lesen den Digest zuerst und Zeilen zum Belegen — sie scrapen
+nicht ad hoc. Seit v3 tragen alle Plattform-Zeilen `engagement` (Formel je Plattform)
+und sind scorebar; Web/SERP/Reviews bleiben qualitativ (`engagement NULL`).
 
 | Quelle | Was sie liefert | Zugriff | Notizen |
 |---|---|---|---|
-| r/TattooArtists | Schmerzpunkte arbeitender Artists (EN, US-lastig) | Batterie `reddit-broad` (DeepAPI `/v1/scrape/reddit/posts`, top/month) | Quantitative Diskussions-Baseline, Label **Hypothese** (EN→DACH-Übertragung). Einzige scorebare Reddit-Quelle seit v2. |
-| TikTok-Kommentare unter DE-Artist-Education-Content | Echte DACH-Stimmen (Fragen, Einwände, Schmerzpunkte) | Batterie `tiktok-comments` (feste Video-Liste `TIKTOK_COMMENT_VIDEOS` in `lib/mining/config.ts`) | Gemessen 29.08.: bestes DACH-Signal. **Nur qualitativ** (engagement NULL) — Kontext-Zeilen, nie gescored. |
-| YouTube-Kommentare DACH-Kanäle | Insider-Stimmung arbeitender Artists (DACH) | Batterie `yt-comments` (YouTube Data API v3 `commentThreads`, `order=relevance`, kostenlos; Ziel-Videos aus der yt-search-Phase) + on demand via `lib/mining/youtube.ts` | **Nur qualitativ.** Nie die Data-API-`search` benutzen (100 Einheiten/Call) — Video-IDs kommen aus DeepAPI-yt-search. |
-| Öffentliche Facebook-Gruppen | DACH-Artist-Diskussionen | Qualitativ; DACH-Artist-Gruppen sind überwiegend privat → FB-Stimmen kommen v. a. als Websuche-Snippets herein und werden so gelabelt | Kuratierte Gruppenliste = separater Discovery-Lauf (offen). |
-| Web-Snippets (Foren, Fachpresse) | Was Plattform-Endpoints nicht sehen | Batterie `web` (DeepAPI `/v1/search/web`, 5 feste Query-Varianten) | **Nur qualitativ.** Survivorship-Bias einkalkulieren (Suche zeigt Gewinner). |
-| Google-Suchvalidierung | Wird das Thema auch *gesucht*? (SEO-Check) | SerpApi (google.de, `SERP_API_KEY`) + DeepAPI `seo.rank`/`seo.audit` als SERP-Read — in Skill-Läufen, nicht im Cron | Validierung der Top-Themen, kein eigenes Signal. DeepAPI `seo.keyword` ist für DE tot (gemessen 29.08.). |
+| r/TattooArtists | Schmerzpunkte arbeitender Artists (EN, US-lastig) | Batterie `reddit-broad` (DeepAPI `/v1/scrape/reddit/posts`, top/**week**) | Quantitative Diskussions-Baseline, Label **Hypothese** (EN→DACH-Übertragung). Seit v3 ergänzt durch `reddit-comments/*` (Top-3-Threads der Woche). |
+| Reddit-Suche DE/EN | Deutsche Artist-Signale außerhalb der Artist-Subs + EN-Anker | Batterie `reddit-search/de` („Tätowierer", „Tattoo Studio", „tätowieren lernen") und `reddit-search/en` (DeepAPI `/v1/scrape/reddit/search`, `since: week`, `sort: new`) | Neu in v3 (06.09.2026). Wert im Testlauf-Loop messen. |
+| YouTube-Suche DE | Klick-Nachfrage DE, Kandidaten für Kommentar-Scrapes | Batterie `yt-search/*` (5 feste Queries, `since: week`, `sort: date`) | Seit v3 mit `engagement = views` scorebar (Peer-Group = Query). |
+| YouTube-Referenzkanäle | x-Ratio-Basis (Kanalmedian) | Batterie `yt-channels` (@inkarea, @honesttattooerpodcast, `since: month`) | Snapshot-Slot (Wiederholung Absicht). |
+| YouTube-Kommentare | Insider-Stimmung arbeitender Artists (DACH) | Batterie `yt-comments/*` (YouTube Data API v3 `commentThreads`, `order=relevance`, kostenlos; **Ziele dynamisch:** Top 5 DE-Videos der Woche nach Kommentaren, Referenzkanäle raus) + on demand via `lib/mining/youtube.ts` | Nie die Data-API-`search` benutzen (100 Einheiten/Call) — Video-IDs kommen aus `yt-search`. `engagement = likes + 2·replies`. |
+| TikTok-Suche + Kommentare | Trend-Früherkennung (Endkunden-lastig) + echte DACH-Stimmen | Batterie `tiktok-search/*` (2 DE-Queries, `since: week`, `sort: latest`) + `tiktok-comments/*` (**dynamisch:** Top 5 DE-Videos der Woche nach Kommentaren; feste Video-Liste seit v3 entfallen) | Gemessen 29.08.: Kommentare bestes DACH-Signal. Seit v3 scorebar. |
+| Instagram-Hashtags + kuratierte Accounts | Angebotsseite, Szene-Optik; Verbands-/Kampagnen-/Podcast-Posts | Batterie `ig-hashtags/*` (3 DACH-Hashtags, Frische ≤ 14 Tage client-seitig) + `ig-accounts` (12 kuratierte DACH-Accounts, `since: week`; Liste in `config.ts`) + `ig-comments/*` (Top 5 DE-Posts der Woche, Lead-Magnet-Captions ausgeschlossen) | IG-Accounts neu in v3 (Recherche 06.09.: 37 geprüft, 18 gescrapt, ~5 liefern Diskussion). Kommentare: nur erste Seite (≈ 9) erreichbar — kleiner Slot. |
+| Öffentliche Facebook-Gruppen | Job-/Guest-Spot-/Marktplatz-Posts + vereinzelte Meinungsposts (DE/EN) | Batterie `fb-groups/*` (5 öffentliche Gruppen, DeepAPI `/v1/scrape/facebook/groups`, Text-Hash-Dedupe, Posts ohne Text verworfen) | Neu in v3 (Recherche 06.09.: 19 Gruppen geprüft, 13 lesbar; alle deutschen „nur für Tätowierer"-Gruppen privat). Wert im Loop messen, Slots ohne Nutzen streichen; zwei Läufe `no_results` = privat geworden. |
+| Mitbewerber-Reviews | Schmerzpunkte mit Booking-/Kalender-/Payment-Software (Feature-Ebene) | Batterie `reviews/apple/{appId}/{sf}` (Apple-RSS, frei, de/at/ch/gb/us), `reviews/play/{pkg}` (`google-play-scraper`, frei), `reviews/trustpilot/tattoodo` (DeepAPI extract) — nur inckd, Tattoodo, Taddoo, STYNG (MyInkConnect: keine App) | Neu in v3. **Nur unattribuiert verwenden** (`toda-context.md` Regel 9): `source` = Mitbewerber-Slug bleibt in der DB, der Digest aggregiert je `feature` ohne Namen. Wochen-Delta klein (Nischen-Apps). |
+| Google-Suchnachfrage DE | Rising/Top-Queries um „Tattoo"/„Tätowierer"/„Tattoo Studio" + People-also-ask-Fragen | Batterie `serp/trends/*` (SerpApi `google_trends`, geo DE, 7 Tage, Wochen-Snapshot) + `serp/paa/*` (SerpApi `google`, google.de, 5 DE-Queries, Fragetext-Hash-Dedupe) | Neu in v3 (~8 Suchen/Woche, Free-Plan 250/Monat). Validierung + Fragen-Signal, kein Diskussions-Signal. SerpApi weiter für Suchvolumen in Skill-Läufen; DeepAPI `seo.keyword` ist für DE tot (29.08.). |
+| Web-Snippets (Foren, Fachpresse) | Was Plattform-Endpoints nicht sehen | Batterie `web/*` (DeepAPI `/v1/search/web`, 5 feste Query-Varianten, URL-Hash-Dedupe) | **Nur qualitativ.** Survivorship-Bias einkalkulieren (Suche zeigt Gewinner). |
 
 ### Bewusst ausgeschlossen
 

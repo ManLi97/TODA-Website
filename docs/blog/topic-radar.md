@@ -5,7 +5,82 @@ nachprüfbar — welche Daten gescrapt wurden, wie gescort wurde, warum
 ein Topic gewonnen hat. **Append-only:** pro Mining-Lauf ein datierter
 Eintrag, alte Einträge werden nie umgeschrieben.
 
-## Methode v2 (Stand 2026-08)
+## Methode v3 (Stand 2026-09) — drei Schichten, eine DB
+
+Pipeline v3 (gebaut 2026-09-06, Plan `.claude/plans/community-pulse-v3.md`)
+ersetzt v2 an drei Stellen, die v2 nie geliefert hat: **Wochen-Delta**
+(v2: 2–50 % neue Zeilen je Slot, Re-Scrape fester Listen), **Verdichtung**
+(v2: 3626 Signale, 60 klassifiziert, Score-View leer) und **DACH-Signal
+im Score** (v2: nur Reddit-EN + Kanal-Views scorebar).
+
+- **Schicht 1 — Erhebung** (`mining_runs`/`topic_signals`, Kette Mo 06:00 UTC:
+  `mining-sync` → `pulse-worker?step=comments`): Batterie v3 in
+  `lib/mining/config.ts` (Quelle der Wahrheit). **Nur-Neues-Doktrin (D2):**
+  jeder Slot nutzt den Zeitfilter der API, wo er existiert (`since: week`);
+  wo keiner existiert (IG-Hashtag, FB-Gruppen, Kommentare, Reviews, Web,
+  PAA) filtert der Ingest Zeilen heraus, deren `(platform, external_id)`
+  bereits in einem anderen Run liegt (Abfrage per Kandidaten-IDs in
+  100er-Chunks). Ein Run mit Roh-Items > 0 und 0 neuen Zeilen ist
+  `succeeded` (`post_count 0`). Ausnahmen mit Snapshot-Semantik:
+  `yt-channels` (Views-Zeitreihe = Median-Basis) und `serp/trends`
+  (Wochen-Snapshot der Rising/Top-Queries). **Kommentar-Ziele dynamisch
+  (D3):** je Plattform die Top-N deutschsprachigen Treffer der Woche nach
+  Kommentarzahl (YouTube 5 via Data API, TikTok 5, Instagram 5, Reddit 3),
+  Referenzkanäle und IG-Lead-Magnet-Captions ausgeschlossen. Neue Slots:
+  `reddit-search/de|en`, `ig-accounts` (kuratierte DACH-Accounts),
+  `fb-groups/*` (5 öffentliche Gruppen, Text-Hash-Dedupe), `reviews/apple|
+  play|trustpilot` (nur die 5 profilierten Mitbewerber; `source` = Mitbewerber-
+  Slug, im Digest nie attribuiert), `serp/trends/*` + `serp/paa/*` (SerpApi).
+- **Engagement für alle Zeilen (D4)** — feste Formel je Plattform
+  (`lib/mining/mappers.ts`, Spalten-Kommentar in der DB): Reddit-Post
+  `score + 2·comments`, Kommentare `likes + 2·replies` (Reddit-Kommentar
+  `score`), YouTube-Video `views`, TikTok-Video `plays/100 + likes +
+  2·comments + 3·shares`, IG-Post `likes + 2·comments (+ views/100 bei
+  Video)`, FB-Post `reactions + 2·comments + 3·shares`; Web/SERP/Reviews
+  `NULL` (Rating/Trend-Werte in `metrics`). `topic_cluster_scores` bleibt
+  unverändert und scort dadurch alle Quellen (per-(run, source)-Median →
+  Outlier → Σ).
+- **Schicht 2 — Verdichtung** (`topic_classifications`, Schritt `enrich`):
+  jede offene Zeile (View `pulse_pending_signals`) bekommt ein Claude-Verdikt
+  (Opus 5, Structured Outputs, 25 Zeilen je Call): `language`, `audience`
+  (artist | endkunde | mixed | off_topic — Endkunden-Signale werden gelabelt,
+  nie verworfen), `is_discussion`, `cluster` (nur Registry-Slug, sonst NULL) +
+  `cluster_proposal`, `signal_type` (question | complaint | wish | praise |
+  experience | news | promo | other), `quote` (≤ 280 Z., wörtlich,
+  anonymisiert — bleibt dauerhaft, `body` behält die 30-Tage-TTL), `question`,
+  `feature` (nur Reviews), `confidence`; `classified_by = 'llm'`, `model`,
+  `prompt_version`. `on conflict do nothing` — der Cron überschreibt nie;
+  Skills dürfen bewusst überschreiben (`where classified_by = 'llm'`).
+- **Schicht 3 — Digest** (`pulse_digests`, Schritt `digest`, je ISO-Woche):
+  SQL-Aggregate (`pulse_digest_input`: Cluster mit Δ zu 4 Vorwochen aus
+  `pulse_cluster_weekly`, Fragen, Beschwerden/Wünsche/Lob/Erfahrungen/News,
+  Top-Videos mit x-Ratio, Review-Feedback je Feature OHNE Mitbewerber-Namen,
+  SERP-Zeilen, Cluster-Vorschläge, Top-Zitate) + Erstanbieter-Reads (TODAs
+  IG-Kommentare ohne Username, `post_insights`-Top-Posts, GSC-Query-Deltas)
+  → Claude-Synthese (Opus 5, effort high, Schema in `lib/mining/digest.ts`)
+  → `digest` (jsonb) + deterministisch gerendertes `digest_md`. Konsumenten
+  (`/blog-article`, `/community-voices`, Clip-Auswahl) lesen den Digest
+  zuerst, Zeilen nur zum Belegen (`evidence_ids` = `run_id|external_id`).
+- **Kette + Lock (D9):** Routen antworten 202 und arbeiten in `after()`;
+  `pulse_jobs` (UNIQUE `(iso_week, step)`, `pulse_claim_job()`) verhindert
+  Doppel-Läufe (< 15 min `running` → 409). CLI-Spiegel: `pnpm mining:sync`
+  (`--source`, `--comments`, `--enrich`, `--digest`, `--reclassify`,
+  `--quality`, `--dry-cost`, `--balance`). Idempotency-Keys
+  `toda-mining:v3:{isoWeek}:{slot}` machen Wiederholungen derselben Woche
+  spendfrei.
+- **Registry-Erweiterungsprozess:** `cluster_proposal` mit ≥ 5 Treffern in
+  2 Wochen (der Digest listet sie unter `cluster_proposals`) → Aufnahme-
+  Kandidat; Entscheidung im Lauf-Eintrag; neuer Slug am Ende der Registry
+  hier UND in `lib/mining/config.ts` (`CLUSTER_REGISTRY`), nie umbenennen.
+- **Qualität statt „Cron grün":** Rubrik `.claude/plans/community-pulse-v3/
+  quality-rubrik.md`, Bericht `pnpm mining:sync --quality [--week]`
+  (`pulse_quality_report`). Slots ohne Nutzen fliegen nach zwei Läufen.
+- `reddit-seeded` ist historisch (Apify, bis 08/2026) — Seeded-Zeilen bleiben
+  Recall-Kontext, nie im Score.
+
+Ströme B (DACH-Radar) und C (SEO-Gap-Liste) gelten unverändert (siehe v2).
+
+## Methode v2 (Stand 2026-08 — historisch; Erhebungs-Doktrin gilt weiter, Klassifikation/Scoring durch v3 ersetzt)
 
 Drei Ströme:
 
@@ -168,6 +243,12 @@ Ergänzung im Lauf-Eintrag festhalten.
 | `client-conflict` | Kundenkonflikte, schwierige Gespräche, Grenzen |
 | `copyright-design` | Urheberrecht, Design-Eigentum, Referenzen/Copycats |
 | `aftercare` | Nachsorge-/Heilphasen-Kommunikation |
+| `career-entry` | Tätowierer werden, Ausbildung, Lehre, Selbstlernen, Einstieg (v3, 2026-09-06) |
+| `business-studio` | Selbstständigkeit, Studio eröffnen, Miete, Steuern, Umsatz, Guest Spots, Jobs (v3) |
+| `regulation-hygiene` | Gesetze, Hygiene, Zertifikate, Verbände, REACH/Farben, Behörden (v3) |
+| `expectation-vs-result` | Briefing, Abnahme, Erwartung vs. Ergebnis, Motivwahl (v3) |
+| `coverup-removal` | Cover-up, Korrektur, Entfernung, Lasern (v3) |
+| `technique-equipment` | Technik, Maschinen, Nadeln, Farben, Material, Handwerk (v3) |
 
 ---
 
@@ -572,3 +653,57 @@ laufen 2 Läufe als „neu“, Deltas erst ab Lauf 3):**
 `web/eigenes…` **88 % DE**; `yt-search/taetowierer-deutschland` **67 % DE**;
 `tiktok-search/taetowierer-alltag` **50 % DE**; neues TikTok-Video 57 % DE
 mit echten Inhalten. Run-IDs im `mining_runs`-Log dieser Nacht.
+
+## Lauf 2026-09-06 — Community-Puls v3 gebaut (Wochen-Delta + LLM-Verdichtung + Wochen-Digest)
+
+**Anlass:** Pipeline v2 lief technisch sauber (Cron 31.08.: 23/23 Slots), lieferte
+aber keine nutzbare Grundlage — 3626 Signale seit 28.08., 60 klassifiziert (alle
+`cluster NULL`), Score-View leer; Wochen-Delta je Slot 2–50 % (feste Listen ohne
+Zeitfilter); DACH-Signal saß in den nicht-scorebaren Quellen. Plan + Fakten:
+`.claude/plans/community-pulse-v3.md` + `community-pulse-v3/{facts,quality-rubrik,spend}.md`.
+Methode oben („Methode v3").
+
+**Gebaut (06.09.):** Migration `20260906171527_community_pulse_v3.sql` (Provider/
+Plattform-Checks erweitert, `mining_runs.iso_week`, globaler Dedupe-Index,
+Engagement-Backfill aus `metrics`, `topic_classifications`-Verdichtungsfelder,
+`pulse_digests`, `pulse_jobs`, Views `pulse_pending_signals`/`pulse_cluster_weekly`,
+Funktionen `pulse_claim_job`/`pulse_digest_input`/`pulse_quality_report`); Code
+`lib/mining/{config,types,mappers,ingest,comments,sync,reviews,serpapi,jobs,enrich,
+digest,quality,chain}.ts`, Routen `mining-sync` (202 + `after()`) + `pulse-worker`,
+CLI `pnpm mining:sync` v3 + `pnpm pulse:quality`, Blog-Insert-Skript
+`scripts/blog-draft-insert.ts` (CLI-Regime statt Write-MCP).
+
+**Kontrakt-Pins (frei, 06.09.):** DeepAPI `openapi.json` Response-Beispiele für
+reddit/search+comments+posts, instagram/posts+comments+hashtag, facebook/groups,
+extract, youtube/search+channel, tiktok/search+comments, search/web; Stückpreise
+aus `GET /v1/capabilities` (yt search 0.025, yt channel 0.0125, reddit 0.0125
+[min 0.10/Run], reddit comment 0.00625, ig hashtag 0.0125, ig post/comment 0.00625,
+tiktok video 0.01, tiktok comment 0.004, fb post 0.02, web 0.005/Suche, extract
+0.015/Seite); `--dry-cost` Phase 1 = 9,82 $ Holds (Caps), Phase 2 ≈ 2,29 $
+geschätzt. Apple-RSS `inckd/gb` 28 Einträge (Felder `id`, `im:rating`, `im:version`,
+`im:voteCount`, `updated`, `title`, `content` — `author` nie deklariert); Google Play
+`taddoo/de` 1 Review (Felder `id, date, score, title, text, thumbsUp, version,
+replyText`; `userName`/`userImage` nie deklariert); STYNG Play antwortete ohne
+Fehler (leer statt 404 — Abweichung vom Plan, unkritisch). SerpApi (2 Suchen,
+Free-Plan 248/250 übrig): `related_queries.rising[]/top[] {query, value,
+extracted_value, link}`; `related_questions[] {question, type, snippet?, title?,
+link?}` — `ai_overview`-Items tragen nur `question` + `type`.
+
+**Registry erweitert (bewusst, v3):** `career-entry`, `business-studio`,
+`regulation-hygiene`, `expectation-vs-result`, `coverup-removal`,
+`technique-equipment` — Begründung: die Batterie-Queries („Tätowierer werden",
+„Studio eröffnen") und die Cluster der Läufe 06-11 (K1/K3/C3/C4) hatten keinen
+Slug; ohne ihn wären die häufigsten Diskussionsthemen der Erhebung
+`cluster NULL` geblieben. Spiegel in `lib/mining/config.ts`.
+
+**Verifikation Build-Phase:** Migration v1→v2→v3 auf lokalem Postgres 17
+(Docker) angewandt, Lock-Semantik (Claim/Refuse/Stale-Reclaim), Views,
+`pulse_digest_input` und `pulse_quality_report` auf Fixture-Daten geprüft;
+Funktions-Privilegien: anon/authenticated ohne EXECUTE, service_role mit.
+Unit-Assertions (Mapper gegen Beispiel-Outputs, Engagement-Formeln, Identitäts-
+felder strukturell unerreichbar, FB-Text-Hash-Dedupe, IG-Frische-Filter,
+Kommentar-Ziel-Auswahl inkl. Lead-Magnet-Filter, ISO-Wochen-Helfer,
+Digest-Markdown) grün; `pnpm typecheck` + `pnpm lint` grün.
+**Offen bis zum `supabase db push` durch Tomek:** Testlauf-Loop (E3–E8), Kette
+end-to-end, Handprüfung der Verdikte, Digest-Lesung — Ergebnisse folgen als
+eigener Lauf-Eintrag.

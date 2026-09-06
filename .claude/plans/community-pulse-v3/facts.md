@@ -55,3 +55,15 @@
 - Apple-RSS je Storefront: inckd gb = 28 Einträge (jüngste 1★ 2026-08-19, 08-17, 07-04, 06-21), inckd ch = 3, inckd de/at/us = 0; tattoodo de = 16; taddoo de/ch/at/us/gb = 0. → Storefront-Liste de,at,ch,gb,us je App abfragen; leer = frei.
 - Google Play via npm `google-play-scraper` 10.1.3 (inoffiziell, frei; Scratchpad-Test): gplay.reviews({appId, lang:'de', country:'de', sort: NEWEST, num}) → taddoo 1 Review (2026-07-30, DE, 5★), inckd 10 (DE), tattoodo 10 + nextPaginationToken. Felder: id, userName+userImage (Identität, strippen), date, score, title, text, thumbsUp, version, replyDate/replyText (Dev-Antwort). Bruch-Risiko inoffiziell → failed-Row sichtbar, kein stiller Ausfall.
 - SerpApi (Tomek-Check 06.09. via account.json): Free Plan, 250 Suchen/Monat, 250 übrig, 0 genutzt, Rate-Limit 250/h. Wochen-Slot ≈ 8 Suchen → ≈ 35/Monat, passt.
+
+## Build-Session 06.09. (17:10–18:50 UTC) — neue verifizierte Fakten
+- DeepAPI `GET /v1/capabilities?capability=<slug>` liefert Request-Schema + Pricing, aber KEIN Output-Item-Schema; Output-Felder stehen in `https://deepapi.co/openapi.json` (Response-Examples je Pfad) → dort gepinnt (Scratchpad `deepapi-output-fields.md`). dryRun-Envelope: `estimate.{maxDebitMicrousd,maxDebitUsd,basis}`, `debitMicrousd 0`.
+- Stückpreise (capabilities): yt search 0.025 · yt channel 0.0125 · reddit search/posts 0.0125 (min 0.10/Run) · reddit comments 0.00625 (min 0.10) · ig hashtag 0.0125 · ig posts/comments 0.00625 · tiktok search 0.01 · tiktok comments 0.004 · fb groups 0.02 · web 0.005/Suche · extract 0.015/Seite. `--dry-cost` Phase 1 = 9,815 $ Holds (Caps), Phase 2 ≈ 2,29 $.
+- DeepAPI Skill-Version aktuell `e8dfb0e92258` (Config-Header nachgezogen; v2 hatte `b18c96c6e053`).
+- SerpApi: **Free Plan**, 250 Suchen/Monat (248 übrig nach 2 Pins). `related_queries.{rising,top}[] {query,value,extracted_value,link,serpapi_link}`; `related_questions[]` — `ai_overview`-Items nur `question`+`type`, klassische Items mit `snippet,title,link,date`.
+- Google Play `com.styng.artattoo`: `google-play-scraper` wirft KEINEN Fehler (kein 404 wie im Plan angenommen) → wird ein succeeded-Run mit 0 Items.
+- Postgres 17.6 live; `to_date('2026-W36','IYYY-"W"IW')` = 2026-08-31; Migration v1→v2→v3 lokal (Docker `postgres:17`) sauber, Lock/Views/Funktionen mit Fixture geprüft.
+- Stubs: 48 lokale Migrationsdateien = 48 remote Versionen → `db push --dry-run` muss genau `20260906171527_community_pulse_v3` listen.
+- Mirror-Diff v2: die toda-company-Kopie der v2-Migration ist NICHT byte-identisch zur Website-Datei (Header + Leerzeilen-Formatierung) — Mirror-Regel = Read-back-Body aus `schema_migrations`, nicht die Website-Datei.
+- `format:check` war schon vor v3 rot (37 Dateien: docs/blog/originals, Skills, Pläne, einige Components); `.prettierignore` um `docs/blog/originals/` ergänzt (C8). Alle v3-Dateien sind Prettier-clean.
+- `next lint` Warnung `components/header.tsx` `<img>` ist Bestand (nicht v3).

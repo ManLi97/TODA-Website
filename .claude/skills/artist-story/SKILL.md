@@ -160,7 +160,9 @@ das ist Teil des Versprechens.
 
 1. Korrekturwünsche des Artists einarbeiten (→ Lern-Signal für Lauf 0),
    Vorschau aktualisieren, wenn nötig erneut zeigen.
-2. **Insert** wie `/blog-article` 2.3 (Draft, `published_at` NULL) +
+2. **Insert** wie `/blog-article` 2.3 (CLI-Regime: Draft-JSON mit
+   `author_slug` → Pre-Action-Report → `pnpm blog:draft-insert <draft.json>`;
+   Draft, `published_at` NULL) +
    **Snapshot-Pflicht** `docs/blog/originals/<slug>.md` — Snapshot enthält
    den Artikel **plus die Quellen-Nachweis-Liste** aus Lauf 2;
    Registrierung im `voice-learnings.md`-Log. Cover in den

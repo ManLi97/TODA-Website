@@ -167,3 +167,12 @@ Die Formatwahl gehört begründet in den Report. Palette:
    Zielgruppe sucht das Wort, das wir in der Ansprache nie benutzen. Im
    Fließtext, in Titeln und in der Ansprache gilt absolut „Tattoo
    Artist(s)" (Marketing-Baukasten, `language/terminology.md`).
+9. **Mitbewerber-Review-Schmerzpunkte nur unattribuiert.** Der Community-Puls
+   liest App-Store-/Play-/Trustpilot-Reviews der direkten Mitbewerber
+   (`competitor_feedback` im Wochen-Digest, `feature`-Spalte). Ihre
+   Schmerzpunkte dürfen als Branchen-Stimmung erscheinen („viele Artists
+   berichten, dass Kalender-Sync …"), aber nie mit App- oder Firmenname,
+   nie als Vergleich, nie als Zitat mit Absender. Wir machen niemanden
+   runter; Vergleiche nur im Respekt-Format (Marketing-Baukasten
+   `/Users/harvestflow/Developer/toda/marketing/strategy/claims.md`,
+   `language/writing-rules.md`).

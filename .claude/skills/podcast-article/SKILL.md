@@ -140,10 +140,12 @@ Felder `title`/`slug`/`excerpt`/`tags`/`seo_*`). **Podcast-spezifisch:**
 - Rechtsthemen: kursiver Disclaimer als letzter Absatz wie `/blog-article`.
 
 ### 2.3 Draft in die DB + Embed-Felder
-Insert wie `/blog-article` 2.3 (geteiltes Supabase-Projekt `znocynswpsfckyfumema`,
-Schreib-MCP `mcp__plugin_supabase_supabase__execute_sql`, nur INSERT in
-`blog_posts` + `blog_post_translations`, `status='draft'`), **plus die drei
-Embed-Spalten:**
+Insert wie `/blog-article` 2.3 (CLI-Regime: Draft-JSON → Pre-Action-Report →
+`pnpm blog:draft-insert <draft.json>`, Repo-Skript `scripts/blog-draft-insert.ts`
+mit Service-Role, nur INSERT in `blog_posts` + `blog_post_translations`,
+`status='draft'`), **plus die drei Embed-Felder im JSON** (`youtube_id`,
+`video_start_seconds`, `video_published_at`). Das SQL zeigt, was das Skript
+schreibt — es wird nicht mehr von Hand ausgeführt:
 
 ```sql
 with p as (

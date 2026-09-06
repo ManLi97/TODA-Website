@@ -18,8 +18,11 @@ be honoured (read when in doubt — do not duplicate it here):
 
 - **Repo-owned tables only.** This repo (toda-website) owns: `blog_categories`, `blog_posts`,
   `blog_post_translations`, `blog_authors`, `analytics_events`, `gsc_performance_daily`,
-  `mining_runs`, `topic_signals`, `topic_classifications` (+ view `topic_cluster_scores`) + storage
-  buckets `blog-covers`, `blog-authors`. **Every other table is FOREIGN → tabu**: no DDL, no DML,
+  `mining_runs`, `topic_signals`, `topic_classifications`, `pulse_digests`, `pulse_jobs` (+ views
+  `topic_cluster_scores`, `pulse_pending_signals`, `pulse_cluster_weekly`; functions `pulse_claim_job`,
+  `pulse_digest_input`, `pulse_quality_report`) + storage buckets `blog-covers`, `blog-authors`.
+  Foreign tables the pipeline READS (never writes): `instagram_interactions`, `post_insights`,
+  `gsc_performance_daily` (the last one is repo-own). **Every other table is FOREIGN → tabu**: no DDL, no DML,
   no drop/truncate, ever. Full matrix: `db-ownership.md`.
 - **toda-company is the schema authority.** Its `supabase/migrations/` is the **full, byte-exact
   mirror** of the live project. A migration you apply is not "done" until it is mirrored there (§4).
@@ -90,8 +93,11 @@ The load-bearing part. Per `db-ownership.md`:
 
 ## 5. DML (data writes, not schema)
 
-Repo-owned tables only, via the plugin `execute_sql`. **Precise `where` is mandatory** — never a bare
-`delete`/`update` on live data (safety doc). Pre-action report first. Gotcha: a data-modifying CTE and
+Repo-owned tables only, via a **repo script run with the service role** (CLI regime — the plugin
+write-MCP is retired): `pnpm blog:draft-insert <draft.json>` (blog drafts of the three content skills),
+`pnpm mining:sync --reclassify <version>` (delete + re-run llm verdicts), or a small one-off script under
+`scripts/` for anything else. **Precise `where` is mandatory** — never a bare `delete`/`update` on live
+data. Pre-action report first, Tomek runs it or green-lights the run. Gotcha: a data-modifying CTE and
 its sibling subqueries read the same pre-statement MVCC snapshot, so confirm the result with a SEPARATE
 follow-up SELECT, not counts computed inside the same statement.
 

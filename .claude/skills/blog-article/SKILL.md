@@ -45,60 +45,62 @@ Bevor irgendetwas anderes passiert:
 Methode und Scoring-Formel stehen in `topic-radar.md` (Pflichtlektüre).
 Ablauf:
 
-1. **Strom A — Community-Puls aus der DB lesen (Freshness-Gate zuerst).**
-   Strom A ist zentrale Infrastruktur: die wöchentliche Quellen-Batterie
-   (DeepAPI: Reddit broad, YouTube-Suche/-Referenzkanäle, IG-Hashtags,
-   TikTok-Suche/-Kommentare, Web + YouTube-Data-API-Kommentare) läuft als
-   Daten-Pipeline (`lib/mining/*` → `mining_runs`/`topic_signals`, Cron
-   Mo 06:00 UTC; Batterie-Quelle der Wahrheit: `lib/mining/config.ts`) —
-   dieser Skill scrapt nicht ad hoc, sondern liest die DB. `/community-voices`
-   (Marketing-Repo) liest denselben Datenbestand.
-   - **Freshness-Gate:** Der jüngste `succeeded`-Run je Kern-`source_key`
-     (`reddit-broad`, `yt-channels`, `yt-search`, mind. eine Context-Quelle)
-     muss ≤ 8 Tage alt sein; broad-Runs zusätzlich `field_coverage_pct ≥ 80`.
-     Sonst degradierter Fallback: dokumentiertes Signal (wie beim
-     Scrape-Ausfall 16.06.) ODER Nachlauf via `pnpm mining:sync`
-     (bzw. `--source <key>`), Recovery eines hängengebliebenen Requests via
-     `pnpm mining:sync --request <deepapiRequestId> --source <key>`,
-     bevor es weitergeht.
-   - **Unklassifizierte Zeilen ziehen:** `topic_signals` der jüngsten Runs
-     left-join `topic_classifications` (noch offene Verdikte). Scorebar sind
-     nur Zeilen mit `engagement is not null` (Reddit broad + Kanal-Referenz);
-     Zeilen mit `engagement NULL` (Suchen, Hashtags, Kommentare, Web) sind
-     **qualitativer DACH-Kontext** — Entscheidungssignal neben den Scores,
-     nie selbst gescored.
-   - **Seeded-Rows** (`is_seeded = true`) sind **nur qualitativer
-     Recall-Kontext** für den Writer — sie fließen NIE in Median, Score
-     oder Trend-Gate (Begründung in `topic-radar.md`).
+1. **Strom A — Community-Puls aus der DB lesen (Digest zuerst, Zeilen zum Belegen).**
+   Strom A ist zentrale Infrastruktur: die Wochen-Batterie v3 (DeepAPI:
+   YouTube-Suche/-Referenzkanäle, Reddit-Suche/-broad, IG-Hashtags/-Accounts,
+   TikTok-Suche, FB-Gruppen, Web; Kommentare je Plattform dynamisch aus den
+   Wochen-Treffern; Mitbewerber-Reviews Apple/Play/Trustpilot; SerpApi
+   Trends/PAA) läuft als Kette Mo 06:00 UTC (`battery → comments → enrich →
+   digest`; `lib/mining/*`, Batterie-Quelle der Wahrheit `lib/mining/config.ts`):
+   Erhebung (`mining_runs`/`topic_signals`, nur Neues je Woche) → LLM-Verdichtung
+   je Zeile (`topic_classifications`: `audience`, `signal_type`, `language`,
+   `cluster`, `quote`, `question`, `feature`) → Wochen-Digest (`pulse_digests`).
+   `/community-voices` (Marketing-Repo) liest denselben Bestand. Dieser Skill
+   scrapt nicht ad hoc, er liest — in dieser Reihenfolge:
+   - **Freshness-Gate:** `select iso_week, generated_at, headline from
+     pulse_digests order by generated_at desc limit 1` — der jüngste Digest muss
+     ≤ 8 Tage alt sein. Sonst `pulse_jobs` der Woche lesen (`step, status, error,
+     result`) und die Kette nachlaufen lassen (`pnpm mining:sync`, `--comments`,
+     `--enrich`, `--digest`; Recovery `--request <deepapiRequestId> --source
+     <key>`), bevor es weitergeht — oder dokumentierter degradierter Fallback.
+   - **Digest lesen:** `digest_md` + `digest` (jsonb) der jüngsten Woche —
+     `top_topics` (mit Δ zu den 4 Vorwochen), `questions`, `complaints`/`wishes`/
+     `praise`, `videos` (x-Ratio), `competitor_feedback` (unattribuiert),
+     `first_party`, `quotes`, `candidates`, `gaps`. Das ist die Themen-Shortlist.
+   - **Zeilen zum Belegen:** je Kandidat die `evidence_ids` (`run_id|external_id`)
+     gegen `topic_signals` + `topic_classifications` auflösen (Titel, Quelle,
+     `posted_at`, `quote`, `engagement`); Cluster-Verlauf aus
+     `pulse_cluster_weekly`, Ausreißer je Run aus `topic_cluster_scores`.
+   - Endkunden-Signale (`audience = 'endkunde'`) sind Kontext, nie
+     Discovery-Beleg; Reddit-EN bleibt Label **Hypothese**; `is_seeded`-Zeilen
+     bleiben Recall-Kontext.
    - **YouTube-Kommentare on demand** (aktuelle Business-Episoden der
-     Podcast-Kanäle, nur qualitativ): Data-API-Helper
-     `lib/mining/youtube.ts` (`commentThreads`, `order=relevance` — nie
-     die teure Data-API-`search`); Video-IDs aus den yt-search-Zeilen der
-     DB oder via DeepAPI `POST /v1/scrape/youtube/search`.
+     Podcast-Kanäle, nur qualitativ): Data-API-Helper `lib/mining/youtube.ts`
+     (`commentThreads`, `order=relevance` — nie die teure Data-API-`search`);
+     Video-IDs aus den yt-search-Zeilen der DB.
    Wochen-Doppelungen fängt der Dedup-Check (Schritt 5) plus der Abgleich
    mit den letzten Radar-Einträgen ab.
-2. **Klassifizieren + Scores lesen** — der einzige verbleibende manuelle,
-   auditierbare Schritt:
-   - **Klassifikation:** Jeden offenen Post als INSERT in
-     `topic_classifications` schreiben (Schreib-MCP
-     `mcp__plugin_supabase_supabase__execute_sql`): `is_discussion` (bool),
-     `cluster` (**kanonischer Slug aus der Cluster-Label-Registry in
-     `topic-radar.md`** — NULL = Diskussion ohne Cluster), optional `note`.
-     Keine Freitext-Labels erfinden: near-duplicate Slugs zersplittern den
-     Score (siehe Registry). **Immer `on conflict (run_id, external_id)
-     do nothing`** — `/community-voices` klassifiziert dieselben Runs;
-     die erste Klassifikation steht.
-   - **Kanal-Zeilen-Pflicht (x-Ratio-Basis):** Werden Zeilen eines
-     `yt-channels`-Runs klassifiziert, dann IMMER **alle 30 Zeilen je Kanal**
-     desselben Runs (`is_discussion = true`, `cluster NULL` als Default;
-     Cluster nur bei thematischem Video) — sonst verschiebt sich der
-     Kanalmedian und die x-Ratios der View werden falsch.
-   - **Scores lesen:** `topic_cluster_scores` für die betreffenden
-     `run_id`s abfragen — die View rechnet Median + Outlier + Σ
-     **deterministisch in SQL** (Formel unverändert), kein manuelles
-     Median-/Σ-Rechnen mehr. **Zielgruppen-Gate, Trend-Gate (≥ 3 Posts)
-     und Cross-Source** wendet der Skill weiterhin selbst an
-     (Zielgruppen-Gate → `toda-context.md`, „Für wen wir schreiben").
+2. **Override nur bei Bedarf** — klassifiziert wird von der Pipeline:
+   - Der Cron schreibt jede Zeile mit `classified_by = 'llm'` (`model`,
+     `prompt_version`) und überschreibt nie. Widerspricht ein Verdikt der
+     Registry-Logik (falscher Cluster, falsche `audience`, Zitat nicht anonym),
+     darf der Skill die Zeile **bewusst** überschreiben: `update
+     topic_classifications set … where run_id = … and external_id = … and
+     classified_by = 'llm'` — als kleines Repo-Skript (Service-Role, CLI-Regime,
+     kein Write-MCP) nach Pre-Action-Report, im Lauf-Eintrag dokumentiert.
+   - **Cluster nur aus der Registry** (`lib/mining/config.ts`
+     `CLUSTER_REGISTRY` = `topic-radar.md`): `cluster_proposal` mit ≥ 5 Treffern
+     in 2 Wochen ist ein Aufnahme-Kandidat — Entscheidung im Lauf-Eintrag, dann
+     Registry in beiden Dateien erweitern. Nie Freitext-Cluster schreiben.
+   - **Kanal-Zeilen-Pflicht** gilt für Overrides weiter: wer eine
+     `yt-channels`-Zeile eines Runs anfasst, hält alle Zeilen des Runs
+     konsistent (`is_discussion = true`, `cluster NULL` außer bei thematischem
+     Video) — sonst kippt der Kanalmedian der View.
+   - **Scores lesen:** `topic_cluster_scores` je `run_id` und
+     `pulse_cluster_weekly` je Woche rechnen deterministisch in SQL.
+     **Zielgruppen-Gate, Trend-Gate (≥ 3 Zeilen über ≥ 2 Quellen) und
+     Cross-Source** wendet der Skill weiterhin selbst an (Zielgruppen-Gate →
+     `toda-context.md`, „Für wen wir schreiben").
 3. **Strom B checken:** tattoo-recht.de (+ ggf. weitere Tier-1/2-News)
    per WebFetch auf neue Urteile/Updates prüfen.
 4. **Strom C ziehen:** nächster offener Eintrag der Ziel-Liste in
@@ -201,25 +203,32 @@ Format (Konvention der bestehenden Posts):
 
 ### 2.3 Draft in die DB schreiben
 
-Geteiltes Supabase-Projekt `znocynswpsfckyfumema`, via Supabase-MCP
-**mit Schreibzugriff** (`mcp__plugin_supabase_supabase__execute_sql`
-mit `project_id` — der Standard-Supabase-MCP ist read-only). Nur
-INSERTs in `blog_posts` + `blog_post_translations`, niemals DDL,
-niemals UPDATE/DELETE an fremden Zeilen.
+Geteiltes Supabase-Projekt `znocynswpsfckyfumema` — **CLI-Regime** (der
+Plugin-Write-MCP ist abgeschafft): der Draft geht als JSON-Datei durch das
+Repo-Skript `scripts/blog-draft-insert.ts` (Service-Role in-process, nur
+INSERT in `blog_posts` + `blog_post_translations`, niemals DDL, niemals
+UPDATE/DELETE). Ablauf: Draft-JSON ins Scratchpad schreiben →
+**Pre-Action-Report** (Ziel prod, Kategorie, Locale, Slug, Länge) → Tomek
+führt aus oder gibt den Lauf frei → `pnpm blog:draft-insert <draft.json>` →
+Ausgabe `post_id`, `id`, `slug`, `content_length` (= Read-back-Beleg).
 
-```sql
--- Kategorie wählen (vorher: select id, slug from blog_categories;)
-with p as (
-  insert into public.blog_posts (category_id) values ('<category_id>') returning id
-)
-insert into public.blog_post_translations
-  (post_id, locale, slug, title, excerpt, content_md, tags, seo_title, seo_description, status)
-select id, 'de', '<slug>', '<title>', '<excerpt>',
-       $md$<content_md>$md$,
-       array['Tag1','Tag2'], '<seo_title>', '<seo_description>', 'draft'
-from p
-returning post_id, id, slug;
+```json
+{
+  "category_slug": "<blog_categories.slug>",
+  "locale": "de",
+  "slug": "<slug>",
+  "title": "<title>",
+  "excerpt": "<excerpt>",
+  "content_md": "<content_md>",
+  "tags": ["Tag1", "Tag2"],
+  "seo_title": "<seo_title>",
+  "seo_description": "<seo_description>"
+}
 ```
+
+Optional im JSON: `youtube_id`, `video_start_seconds`, `video_published_at`
+(`/podcast-article`), `author_slug` (`/artist-story`), `category_id` /
+`author_id` statt der Slugs.
 
 `status = 'draft'`, `published_at` bleibt NULL. Cover-Bild leer lassen —
 setzt Tomek beim Publish im Admin.
