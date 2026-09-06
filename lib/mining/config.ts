@@ -17,6 +17,8 @@
 // openapi.json examples + dryRun, 2026-09-06). Unit prices are the documented
 // "typicalPriceLabel"s; maxCostUsd = maxItems × unit × 1.2 so the default caps never
 // cut a run silently (tiktok/search default cap 0.10 = 10 videos!).
+import { createHash } from "node:crypto";
+
 import type { Pass, Platform } from "./types";
 
 // Discriminates which whitelist mapper handles a spec's raw items (mappers.ts).
@@ -134,32 +136,17 @@ export const FB_GROUPS: { slug: string; url: string; maxItems: number; note: str
     slug: "tattoo-circle-schweiz",
     url: "https://www.facebook.com/groups/533789960065520/",
     maxItems: 20,
-    note: "DE, Meinungs- + Marktsignal",
-  },
-  {
-    slug: "job-boerse-b",
-    url: "https://www.facebook.com/groups/764337886989060/",
-    maxItems: 20,
-    note: "Tattoo Artist`s Job-Börse B, DE/EN",
-  },
-  {
-    slug: "job-boerse-a",
-    url: "https://www.facebook.com/groups/1381734435465160/",
-    maxItems: 20,
-    note: "Tattoo Artist`s Job-Börse A, EN/DE",
+    note: "DE, Meinungs- + Marktsignal (run 1: 3 of 15 useful)",
   },
   {
     slug: "tattoobedarf",
     url: "https://www.facebook.com/groups/945174772295241/",
     maxItems: 5,
-    note: "Tattoobedarf für Tätowierer, DE, artist-only",
+    note: "Tattoobedarf für Tätowierer, DE, artist-only (run 1: 0 of 4 useful — one more run)",
   },
-  {
-    slug: "tattoo-piercing-job-forum",
-    url: "https://www.facebook.com/groups/256111117762857/",
-    maxItems: 20,
-    note: "Tattoo and Piercing Job Forum, EN/DE",
-  },
+  // Removed after run 1 (2026-09-06, 0 useful rows, 100 % job/guest-spot promo):
+  // job-boerse-b 764337886989060, job-boerse-a 1381734435465160,
+  // tattoo-piercing-job-forum 256111117762857.
 ];
 
 // Open-web variants: forums, trade press (feelfarbig, Tattoo Spirit), what platform
@@ -199,7 +186,7 @@ export const BATTERY: SourceSpec[] = [
       body: {
         query: q,
         since: "week",
-        sort: "date",
+        sort: "relevance", // run 1: sort "date" pulled 11-12 off-topic videos per query
         maxItems: 20,
         maxCostUsd: costCap(20, UNIT_PRICE.ytSearch),
       },
@@ -312,7 +299,7 @@ export const BATTERY: SourceSpec[] = [
       body: {
         query: q,
         since: "week",
-        sort: "latest",
+        sort: "relevance", // run 1: "latest" pulled 11 of 26 off-topic for "Tätowierer Alltag"
         maxItems: 30,
         maxCostUsd: costCap(30, UNIT_PRICE.tiktokVideo),
       },
@@ -353,6 +340,12 @@ export const BATTERY: SourceSpec[] = [
     })
   ),
 ];
+
+// Topic anchor for comment targets and SERP trend rows: run 1 picked a German video
+// with 100 off-topic comments purely by comment count, and Google "rising" queries
+// were mostly celebrity noise. A candidate must mention the domain somewhere.
+export const TOPIC_HINT =
+  /tattoo|tätow|taetow|tatuaj|tatuag|\bink\b|stech|studio|anzahlung|deposit|no.?show|termin|kunde|client|artist|nadel|needle|lehrling|apprentice|farbe|stencil/i;
 
 // --- Phase 2: dynamic comment targets (lib/mining/comments.ts) ---------------
 
@@ -451,6 +444,16 @@ export const CLUSTER_REGISTRY: { slug: string; covers: string }[] = [
   { slug: "expectation-vs-result", covers: "Briefing, Abnahme, Erwartung vs. Ergebnis, Motivwahl" },
   { slug: "coverup-removal", covers: "Cover-up, Korrektur, Entfernung, Lasern" },
   { slug: "technique-equipment", covers: "Technik, Maschinen, Nadeln, Farben, Material, Handwerk" },
+  {
+    slug: "software-tools",
+    covers:
+      "Apps, Booking-/Kalender-/CRM-Software, Stabilität, Bedienung, Gebühren, fehlende Features (v3.1, Lauf 1: 65 Vorschläge)",
+  },
+  {
+    slug: "stigma-perception",
+    covers:
+      "Gesellschaftliche Wahrnehmung, Stigma, Akzeptanz, Medienbild, Selbstbild mit Tattoos (v3.1, Lauf 1: 81 Vorschläge)",
+  },
 ];
 export const REVIEW_FEATURES = [
   "booking",
@@ -484,8 +487,22 @@ export const DEEPAPI_DEFAULT_POLL_SECS = 5;
 // so a same-week retry heals the same mining_runs row without double spend. The "v3"
 // prefix keeps a v3 test in the same ISO week off the v2 cron's replays.
 // `salt` (--fresh) deliberately forces a new run.
-export function idempotencyKey(sourceKey: string, week = isoWeek(), salt?: string): string {
-  return `toda-mining:v3:${week}:${sourceKey}${salt ? `:${salt}` : ""}`;
+export function idempotencyKey(
+  sourceKey: string,
+  week = isoWeek(),
+  salt?: string,
+  body?: Record<string, unknown>
+): string {
+  const spec = body ? `:${bodyHash(body)}` : "";
+  return `toda-mining:v3:${week}:${sourceKey}${spec}${salt ? `:${salt}` : ""}`;
+}
+
+// 8-hex fingerprint of a request body (sorted keys) — part of the idempotency key so a
+// config change (query, sort, cap) produces a new DeepAPI run while an unchanged spec
+// keeps replaying for free within the week.
+export function bodyHash(body: Record<string, unknown>): string {
+  const canon = JSON.stringify(body, Object.keys(body).sort());
+  return createHash("sha256").update(canon).digest("hex").slice(0, 8);
 }
 
 // ISO-8601 week label, e.g. "2026-W35" (UTC-based). Matches Postgres

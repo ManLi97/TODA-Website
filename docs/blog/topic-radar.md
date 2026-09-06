@@ -249,6 +249,8 @@ Ergänzung im Lauf-Eintrag festhalten.
 | `expectation-vs-result` | Briefing, Abnahme, Erwartung vs. Ergebnis, Motivwahl (v3) |
 | `coverup-removal` | Cover-up, Korrektur, Entfernung, Lasern (v3) |
 | `technique-equipment` | Technik, Maschinen, Nadeln, Farben, Material, Handwerk (v3) |
+| `software-tools` | Apps, Booking-/Kalender-/CRM-Software: Stabilität, Bedienung, Gebühren, fehlende Features (v3.1, Lauf 1: 65 Vorschläge app-stability/-usability/-reliability) |
+| `stigma-perception` | Gesellschaftliche Wahrnehmung, Stigma, Akzeptanz, Medienbild, Selbstbild mit Tattoos (v3.1, Lauf 1: 81 Vorschläge in 6 Varianten) |
 
 ---
 
@@ -707,3 +709,38 @@ Digest-Markdown) grün; `pnpm typecheck` + `pnpm lint` grün.
 **Offen bis zum `supabase db push` durch Tomek:** Testlauf-Loop (E3–E8), Kette
 end-to-end, Handprüfung der Verdikte, Digest-Lesung — Ergebnisse folgen als
 eigener Lauf-Eintrag.
+
+## Lauf 2026-09-06 (abends) — Testlauf-Loop W36: Lauf 1 → Anpassungen → Lauf 2
+
+**Lauf 1 (Erhebung 18:04 UTC, Verdichtung bis 20:40 UTC, Digest 21:05 UTC):** 77 Runs, 1251
+neue Zeilen (Dedupe-Beweis: Apple-Slot mit `--fresh` → 28/28 bekannt, 0 neu, succeeded); 1897
+W36-Zeilen mit Prompt v3.1 klassifiziert (zwei Handprüfungen: 50 Zeilen v3.0 → Konsistenzregel
+für Ratgeber-Artikel; 18 Nicht-Web-Zeilen v3.1: 18/18 vertretbar); erster Digest
+(`pulse_digests` 2026-W36, 1,14 $, 25 k Zeichen Markdown, 9 Themen, 15 Fragen, 20 Zitate,
+8 Content-Kandidaten, keine Mitbewerber-Namen, Erstanbieter-Block gefüllt, alle
+`evidence_ids` der Themen auflösbar). Rubrik Ebene 2 komplett grün: useful_de 729 (≥ 300),
+Trend-Gate-Cluster 15 (≥ 5), Fragen de 89 (≥ 40), Beschwerden+Wünsche de 100 (≥ 40),
+Review-Zeilen 239, Identitätsfelder 0. Bericht: `.claude/plans/community-pulse-v3/
+quality-2026-W36-lauf1.json`, Protokoll `loop-2026-W36.md`.
+
+**Rote Zellen Ebene 1 → Maßnahmen für Lauf 2 (Config, `lib/mining/config.ts`):**
+- `yt-comments/TZVxJwJH0HU` 100/100 off_topic, `yt-search` 11–12 off_topic je Query,
+  `tiktok-search/taetowierer-alltag` 11/26 → Suchen auf `sort: relevance` (bleibt `since:
+  week`); Kommentar-Ziele und Trend-Queries brauchen einen Themen-Treffer (`TOPIC_HINT`).
+- `fb-groups`: 0 von 47 nützlich in den drei Job-Gruppen (100 % promo) → gestrichen;
+  `tattoo-circle-schweiz` (3/15) und `tattoobedarf` (0/4, ein Lauf mehr) bleiben.
+- `serp/trends`: 12/88 off_topic („peter maffay ehefrau" +3.200 %) → Regex-Filter im Mapper.
+- `ig-accounts` 2 Zeilen / 0 nützlich, `reddit-broad` 0 % DE (erwartet, Hypothese),
+  `reviews` %recent 0 (Erstbefüllung) → beobachten, keine Änderung.
+- Idempotency-Key trägt jetzt einen Body-Hash: geänderte Specs laufen neu, unveränderte
+  replayen (D8-Verfeinerung; ohne das hätte die Sort-Änderung den alten Request replayed).
+- Registry +2 (`software-tools`, `stigma-perception`) — beide Vorschlagsgruppen lagen in
+  Woche 1 weit über der 5-Treffer-Schwelle; Spiegel in `CLUSTER_REGISTRY`.
+- Digest-Input (Folge-Migration `20260906205136_community_pulse_v3_1_digest_input.sql`,
+  lokal auf Postgres 17 gegen v3 verifiziert): x-Ratio-Videoliste ohne off_topic/
+  unklassifizierte Zeilen (Lauf 1 listete Wrestling/Politik/Ernährung), SERP-Zeilen mit
+  `run_id` (zitierfähig).
+- Technische Abweichung: Digest-Synthese über gestreamtes JSON + Zod-Validierung statt
+  Structured Outputs — Anthropic lehnt das Digest-Schema als „compiled grammar too large"
+  ab, und 16 k `max_tokens` ohne Streaming schnitt das JSON ab (Thinking teilt sich das
+  Budget). Klassifikation bleibt Structured Outputs.

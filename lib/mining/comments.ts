@@ -54,7 +54,7 @@ export async function weekCandidates(week: string): Promise<CommentCandidate[]> 
   const { data, error } = await supabase
     .from("topic_signals")
     .select(
-      "external_id, platform, title, body, post_url, metrics, mining_runs!inner(source_key, iso_week, status)"
+      "external_id, platform, source, title, body, post_url, metrics, mining_runs!inner(source_key, iso_week, status)"
     )
     .eq("mining_runs.iso_week", week)
     .eq("mining_runs.status", "succeeded")

@@ -17,8 +17,9 @@ DeepAPI-Guthaben vor Aufladung: 8,93 $ (18:xx). Nach Aufladung + FB-Batch 1: ≈
 | 9 | 06.09. 18:17 UTC | Enrich 50 Zeilen (v3.0, 2 Calls, 9,7k in / 8,1k out, Cache 3,4k) | 0 | 0,27 | ≈9,22 | enrich-50.log |
 | 10 | 06.09. 18:19–18:27 UTC | Reclassify v3.0→v3.1, 1000 Zeilen (≈ 40 Calls) bis Anthropic-Guthaben leer | 0 | ≈5,5 (Schätzung) | ≈14,7 | enrich-full.log (400 credit balance too low) |
 | 11 | 06.09. 18:21 UTC | Kette E2E lokal (Batterie + Comments als Replay) | 0 (39,686 unverändert) | 0 | ≈14,7 | pulse_jobs |
+| 12 | 06.09. 20:24–20:40 UTC | Rest-Enrich 897 Zeilen v3.1 (Tomek, nach Top-up) | 0 | 4,82 | ≈19,5 | Task-Output (classified 897, remaining 0) |
+| 13 | 06.09. 20:41–21:05 UTC | Digest: 2 Fehlversuche (Grammar-Limit / Truncation, ≈ 0,6 geschätzt) + Erfolg 1,14 | 0 | ≈1,7 | ≈21,3 | digest.log, digest2.log, pulse_digests.cost_usd |
 
 Regel: vor jedem bezahlten Lauf `--dry-cost`; nach jedem Lauf `pnpm mining:sync --balance` (frei) → Zeile hier.
 
-Stand 06.09. 18:27 UTC: DeepAPI-Balance 39,69 $; kumuliert ≈ 14,7 $ von 40 $ → Rest ≈ 25 $. **Blocker: Anthropic-Guthaben leer** — Rest-Enrich (871 Zeilen ≈ 4,8 $) + Digest (≈ 0,5 $) + Lauf 2 passen in den Rest.
-Erwartung Testlauf 1 (voll): DeepAPI ≤ 12,10 $ (Holds; Debits meist darunter) + Anthropic ≈ 6–10 $ → nach Lauf 1 ≈ 18–25 $ kumuliert.
+Stand 06.09. ~21:10 UTC: DeepAPI-Balance 39,69 $; kumuliert ≈ 21,3 $ von 40 $ → Rest ≈ 18,7 $. Lauf 2 (geänderte Slots: yt-search ×5 + tiktok-search ×2 mit neuem Body-Hash ≈ 4,5 $, Kommentare ≈ 1 $, Enrich neue Zeilen ≈ 1,5 $, Digest ≈ 1,2 $) ≈ 8 $ → erwartet ≈ 29 $.

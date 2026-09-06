@@ -12,7 +12,7 @@
 //   reviews / web / serp NULL (rating / trend numbers live in metrics)
 import { createHash } from "node:crypto";
 
-import { COMMENT_TARGETS, YT_REFERENCE_CHANNELS, slug } from "./config";
+import { COMMENT_TARGETS, TOPIC_HINT, YT_REFERENCE_CHANNELS, slug } from "./config";
 import type { SourceKind, SourceSpec } from "./config";
 import type {
   Platform,
@@ -394,7 +394,7 @@ export function mapSerpTrend(
   week: string,
   kind: "rising" | "top"
 ): TopicSignalRow | null {
-  if (!item.query) return null;
+  if (!item.query || !TOPIC_HINT.test(item.query)) return null; // run 1: rising = celebrity noise
   const row = baseRow(
     runId,
     `trend:${week}:${slug(seed)}:${kind}:${sha16(item.query)}`,
@@ -506,6 +506,7 @@ const LEAD_MAGNET = /kommentier|schreib\w*\s+[^.!?]{0,40}\bkommentare\b|comment\
 export type CommentCandidate = {
   external_id: string;
   platform: Platform;
+  source: string; // peer group (subreddit / query / hashtag) — part of the topic test
   title: string;
   body: string | null;
   post_url: string | null;
@@ -529,6 +530,7 @@ export function selectCommentTargets(
       .toLowerCase();
     if (handle && refHandles.has(handle)) continue;
     if (platform === "instagram" && LEAD_MAGNET.test(`${r.title} ${r.body ?? ""}`)) continue;
+    if (!TOPIC_HINT.test(`${r.source} ${r.title} ${r.body ?? ""}`)) continue; // run 1: 100/100 off-topic
     if ((Number(r.metrics?.comments) || 0) <= 0) continue;
     byId.set(r.external_id, r);
   }

@@ -268,7 +268,11 @@ export async function runSource(
 ): Promise<{ outcome: RunOutcome; output: unknown }> {
   const meta = deepApiMeta(spec, week);
   try {
-    const env = await runScrape(spec.endpoint, spec.body, idempotencyKey(spec.key, week, salt));
+    const env = await runScrape(
+      spec.endpoint,
+      spec.body,
+      idempotencyKey(spec.key, week, salt, spec.body)
+    );
     if (!env.requestId) throw new Error("DeepAPI returned no requestId");
     const outcome = await ingestOutput(env.requestId, env.output, spec, meta);
     return { outcome, output: env.output };
