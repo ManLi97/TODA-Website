@@ -54,4 +54,4 @@
 ## Review-Pfade verifiziert (06.09., frei)
 - Apple-RSS je Storefront: inckd gb = 28 Einträge (jüngste 1★ 2026-08-19, 08-17, 07-04, 06-21), inckd ch = 3, inckd de/at/us = 0; tattoodo de = 16; taddoo de/ch/at/us/gb = 0. → Storefront-Liste de,at,ch,gb,us je App abfragen; leer = frei.
 - Google Play via npm `google-play-scraper` 10.1.3 (inoffiziell, frei; Scratchpad-Test): gplay.reviews({appId, lang:'de', country:'de', sort: NEWEST, num}) → taddoo 1 Review (2026-07-30, DE, 5★), inckd 10 (DE), tattoodo 10 + nextPaginationToken. Felder: id, userName+userImage (Identität, strippen), date, score, title, text, thumbsUp, version, replyDate/replyText (Dev-Antwort). Bruch-Risiko inoffiziell → failed-Row sichtbar, kein stiller Ausfall.
-- SerpApi-Quota-Check: Permission verweigert (source .env.local). Skript für Tomek: scratchpad/serpapi-quota.sh.
+- SerpApi (Tomek-Check 06.09. via account.json): Free Plan, 250 Suchen/Monat, 250 übrig, 0 genutzt, Rate-Limit 250/h. Wochen-Slot ≈ 8 Suchen → ≈ 35/Monat, passt.
