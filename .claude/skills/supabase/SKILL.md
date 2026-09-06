@@ -10,9 +10,9 @@ Supabase project **`znocynswpsfckyfumema`** is **shared** by three codebases and
 operational guide; the **authoritative governance** lives in the `toda-company` repo and MUST
 be honoured (read when in doubt — do not duplicate it here):
 
-- `~/Desktop/toda/toda-company/docs/db-ownership.md` — ownership matrix + the migration-mirror rule.
-- `~/Desktop/toda/toda-company/docs/supabase-mcp-safety.md` — the write guardrail (repo-scoped).
-- `~/.claude/docs/supabase-mcp-safety.md` — Tomek's global guardrail (pre-action report format).
+- `/Users/harvestflow/Developer/toda/toda-company/docs/db-ownership.md` — ownership matrix + the migration-mirror rule.
+- `/Users/harvestflow/Developer/toda/toda-company/docs/supabase-mcp-safety.md` — the write guardrail (repo-scoped).
+- `skill:supabase-write-regime` — Tomek's global guardrail (canonical; pre-action report format). The former `~/.claude/docs/supabase-mcp-safety.md` no longer exists.
 
 ## 1. Non-negotiables — worauf achten
 
@@ -72,7 +72,7 @@ identity, and check advisors after any change.
 
 The load-bearing part. Per `db-ownership.md`:
 
-1. **Mirror file** at `~/Desktop/toda/toda-company/supabase/migrations/<version>_<name>.sql`:
+1. **Mirror file** at `/Users/harvestflow/Developer/toda/toda-company/supabase/migrations/<version>_<name>.sql`:
    - **Line 1:** `-- OWNER: toda-website · mirrored <YYYY-MM-DD> from live project znocynswpsfckyfumema (supabase_migrations.schema_migrations) · applied <YYYY-MM-DD>`
    - **Line 2:** blank.
    - **Line 3+:** the `body` from step 5 — **byte-identical** to the live entry, ending exactly as
