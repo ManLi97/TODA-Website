@@ -1,12 +1,12 @@
 // Blog article — ISR. Unknown slugs 404; a slug that is published under
-// ANOTHER locale redirects to this locale's published sibling (heals the
-// language switcher, which swaps only the locale prefix) or, without a
-// published sibling, to the blog listing. hreflang alternates and JSON-LD
+// ANOTHER locale redirects permanently (308) to this locale's published
+// sibling (heals the language switcher, which swaps only the locale prefix)
+// or, without a published sibling, to the blog listing. hreflang alternates and JSON-LD
 // are computed from published sibling translations only — never link a draft.
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link, redirect } from "@/i18n/navigation";
+import { Link, permanentRedirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
 import { JsonLd } from "@/components/json-ld";
@@ -108,7 +108,7 @@ export default async function BlogArticlePage({ params }: Props) {
   if (!post) {
     const crossLocale = await resolveCrossLocaleSlug(slug, locale);
     if (crossLocale) {
-      redirect({
+      permanentRedirect({
         href: crossLocale.siblingSlug ? `/blog/${crossLocale.siblingSlug}` : "/blog",
         locale,
       });
