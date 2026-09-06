@@ -9,7 +9,12 @@ import {
   ENTITY_IDS,
   articleEntityId,
   articleUrl,
+  blogUrl,
+  breadcrumbEntityId,
+  categoryUrl,
   createArticleJsonLd,
+  createBlogListingJsonLd,
+  createCategoryJsonLd,
   createHomepageJsonLd,
   homepageUrl,
   personEntityId,
@@ -210,6 +215,8 @@ test("person-authored article links canonical entities without inventing affilia
         startSeconds: 42.9,
         publishedAt: "2026-07-31T09:00:00.000Z",
       },
+      blogLabel: "Blog",
+      category: { slug: "artist-stories", name: "Artist Stories" },
     })
   );
 
@@ -274,6 +281,8 @@ test("the current toda-team author resolves to Organization instead of Person", 
       author,
       authorImageUrl: "https://images.example/team.jpg",
       video: null,
+      blogLabel: "Blog",
+      category: null,
     })
   );
   const article = nodeById(document, articleEntityId(canonicalUrl));
@@ -286,6 +295,113 @@ test("the current toda-team author resolves to Organization instead of Person", 
   );
   assert.equal(
     document["@graph"].some((node) => node["@type"] === "VideoObject"),
+    false
+  );
+});
+
+test("article breadcrumb mirrors the visible trail Blog › Category without the article itself", () => {
+  const canonicalUrl = articleUrl("de", "mit-kategorie");
+  const document = parse(
+    createArticleJsonLd({
+      locale: "de",
+      slug: "mit-kategorie",
+      title: "Artikel",
+      description: "Beschreibung",
+      publishedAt: "2026-08-01T10:00:00.000Z",
+      updatedAt: "2026-08-01T10:00:00.000Z",
+      coverImageUrl: null,
+      author: null,
+      authorImageUrl: null,
+      video: null,
+      blogLabel: "Blog",
+      category: { slug: "marketing", name: "Reichweite & Marke" },
+    })
+  );
+  assertUniqueNodeIds(document);
+  const breadcrumbId = breadcrumbEntityId(canonicalUrl);
+  const webpage = nodeById(document, webpageEntityId(canonicalUrl));
+  const breadcrumb = nodeById(document, breadcrumbId);
+
+  assert.equal(referenceId(webpage.breadcrumb), breadcrumbId);
+  assert.equal(breadcrumb["@type"], "BreadcrumbList");
+  assert.deepEqual(breadcrumb.itemListElement, [
+    { "@type": "ListItem", position: 1, name: "Blog", item: blogUrl("de") },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Reichweite & Marke",
+      item: categoryUrl("de", "marketing"),
+    },
+  ]);
+});
+
+test("article without a category keeps a one-item Blog breadcrumb", () => {
+  const canonicalUrl = articleUrl("en", "no-category");
+  const document = parse(
+    createArticleJsonLd({
+      locale: "en",
+      slug: "no-category",
+      title: "Article",
+      description: "Description",
+      publishedAt: "2026-08-01T10:00:00.000Z",
+      updatedAt: "2026-08-01T10:00:00.000Z",
+      coverImageUrl: null,
+      author: null,
+      authorImageUrl: null,
+      video: null,
+      blogLabel: "Blog",
+      category: null,
+    })
+  );
+  const breadcrumb = nodeById(document, breadcrumbEntityId(canonicalUrl));
+  assert.deepEqual(breadcrumb.itemListElement, [
+    { "@type": "ListItem", position: 1, name: "Blog", item: blogUrl("en") },
+  ]);
+});
+
+test("category page emits a CollectionPage with a breadcrumb whose current item has no link", () => {
+  const canonicalUrl = categoryUrl("es", "marketing");
+  const document = parse(
+    createCategoryJsonLd({
+      locale: "es",
+      categorySlug: "marketing",
+      categoryName: "Alcance y marca",
+      blogLabel: "Blog",
+      title: "Alcance y marca – Blog",
+      description: "Descripción",
+    })
+  );
+  assertUniqueNodeIds(document);
+  assert.equal(document["@graph"].length, 5);
+  const breadcrumbId = breadcrumbEntityId(canonicalUrl);
+  const page = nodeById(document, webpageEntityId(canonicalUrl));
+  const breadcrumb = nodeById(document, breadcrumbId);
+
+  assert.deepEqual(page["@type"], ["WebPage", "CollectionPage"]);
+  assert.equal(page.url, canonicalUrl);
+  assert.equal(page.inLanguage, "es");
+  assert.equal(referenceId(page.isPartOf), ENTITY_IDS.website);
+  assert.equal(referenceId(page.about), ENTITY_IDS.organization);
+  assert.equal(referenceId(page.breadcrumb), breadcrumbId);
+  assert.deepEqual(breadcrumb.itemListElement, [
+    { "@type": "ListItem", position: 1, name: "Blog", item: blogUrl("es") },
+    { "@type": "ListItem", position: 2, name: "Alcance y marca" },
+  ]);
+});
+
+test("blog listing emits a CollectionPage and no breadcrumb", () => {
+  const canonicalUrl = blogUrl("de");
+  const document = parse(
+    createBlogListingJsonLd({ locale: "de", title: "Blog – TODA", description: "Beschreibung" })
+  );
+  assertUniqueNodeIds(document);
+  assert.equal(document["@graph"].length, 4);
+  const page = nodeById(document, webpageEntityId(canonicalUrl));
+  assert.deepEqual(page["@type"], ["WebPage", "CollectionPage"]);
+  assert.equal(page.url, canonicalUrl);
+  assert.equal("breadcrumb" in page, false);
+  assert.equal(
+    document["@graph"].some((node) => node["@type"] === "BreadcrumbList"),
     false
   );
 });

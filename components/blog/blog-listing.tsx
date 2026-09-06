@@ -5,9 +5,11 @@
 import { getTranslations } from "next-intl/server";
 import { PageSection } from "@/components/page-section";
 import { Animate } from "@/components/animate";
+import { Breadcrumbs } from "@/components/blog/breadcrumbs";
 import { CategoryPills } from "@/components/blog/category-pills";
 import { PostGrid } from "@/components/blog/post-grid";
 import { getCategories, getPublishedPosts } from "@/lib/blog/queries";
+import { categoryName } from "@/lib/blog/format";
 import type { BlogLocale } from "@/lib/blog/types";
 
 interface BlogListingProps {
@@ -21,6 +23,9 @@ export async function BlogListing({ locale, activeCategorySlug }: BlogListingPro
     getCategories(),
     getPublishedPosts(locale, activeCategorySlug),
   ]);
+  const activeCategory = activeCategorySlug
+    ? categories.find((category) => category.slug === activeCategorySlug)
+    : undefined;
 
   return (
     <PageSection
@@ -35,6 +40,15 @@ export async function BlogListing({ locale, activeCategorySlug }: BlogListingPro
       }
     >
       <div className="pt-14">
+        {activeCategory && (
+          <Breadcrumbs
+            items={[
+              { label: t("nav"), href: "/blog" },
+              { label: categoryName(activeCategory.name, locale) },
+            ]}
+            className="mb-group"
+          />
+        )}
         <Animate type="fade-up" duration={650}>
           <div className="max-w-2xl">
             <p className="type-eyebrow text-text-tertiary mb-group">{t("eyebrow")}</p>

@@ -6,7 +6,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link, permanentRedirect } from "@/i18n/navigation";
+import { permanentRedirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
 import { JsonLd } from "@/components/json-ld";
@@ -14,6 +14,7 @@ import { PageSection } from "@/components/page-section";
 import { SectionHeader } from "@/components/section-header";
 import { Animate } from "@/components/animate";
 import { ArticleHeader } from "@/components/blog/article-header";
+import { Breadcrumbs } from "@/components/blog/breadcrumbs";
 import { AuthorSignatureFooter } from "@/components/blog/author-signature-footer";
 import { PostGrid } from "@/components/blog/post-grid";
 import { ReadingProgress } from "@/components/blog/reading-progress";
@@ -28,7 +29,7 @@ import {
   resolveCrossLocaleSlug,
 } from "@/lib/blog/queries";
 import { renderMarkdown } from "@/lib/blog/markdown";
-import { formatDate } from "@/lib/blog/format";
+import { categoryName, formatDate } from "@/lib/blog/format";
 import type { BlogLocale } from "@/lib/blog/types";
 import { articleAlternates } from "@/lib/seo/alternates";
 import { createArticleJsonLd } from "@/lib/seo/structured-data";
@@ -119,6 +120,13 @@ export default async function BlogArticlePage({ params }: Props) {
   ]);
 
   const cover = coverImageUrl(post.coverImagePath);
+  const category = post.category
+    ? { slug: post.category.slug, name: categoryName(post.category.name, locale) }
+    : null;
+  const trail = [
+    { label: t("nav"), href: "/blog" },
+    ...(category ? [{ label: category.name, href: `/blog/category/${category.slug}` }] : []),
+  ];
   const jsonLd = createArticleJsonLd({
     locale,
     slug,
@@ -136,6 +144,8 @@ export default async function BlogArticlePage({ params }: Props) {
           publishedAt: post.videoPublishedAt,
         }
       : null,
+    blogLabel: t("nav"),
+    category,
   });
 
   return (
@@ -145,14 +155,7 @@ export default async function BlogArticlePage({ params }: Props) {
 
       <PageSection variant="base" id="article">
         <div className="pt-14">
-          <div className="mb-group mx-auto max-w-[760px]">
-            <Link
-              href="/blog"
-              className="type-caption hover:text-text-secondary inline-flex items-center gap-1.5 transition-colors duration-200"
-            >
-              ← {t("backToBlog")}
-            </Link>
-          </div>
+          <Breadcrumbs items={trail} className="mb-group mx-auto max-w-[760px]" />
 
           <ArticleHeader
             post={post}

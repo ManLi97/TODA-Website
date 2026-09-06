@@ -3,7 +3,7 @@ import type { Author, BlogLocale } from "@/lib/blog/types";
 import { SITE_URL, TODA_MONTHLY_PRICE, TODA_PRICE_CURRENCY, TODA_SOCIAL_URLS } from "@/lib/site";
 
 export type JsonLdNode = {
-  "@type": string;
+  "@type": string | string[];
   "@id"?: string;
   [property: string]: unknown;
 };
@@ -35,6 +35,14 @@ export function articleUrl(locale: BlogLocale, slug: string): string {
   return `${SITE_URL}/${locale}/blog/${slug}`;
 }
 
+export function blogUrl(locale: BlogLocale): string {
+  return `${SITE_URL}/${locale}/blog`;
+}
+
+export function categoryUrl(locale: BlogLocale, slug: string): string {
+  return `${SITE_URL}/${locale}/blog/category/${slug}`;
+}
+
 export function webpageEntityId(canonicalUrl: string): string {
   return `${canonicalUrl}#webpage`;
 }
@@ -49,6 +57,35 @@ export function videoEntityId(canonicalUrl: string): string {
 
 export function personEntityId(slug: string): string {
   return `${SITE_URL}/#person-${encodeURIComponent(slug.trim())}`;
+}
+
+export function breadcrumbEntityId(canonicalUrl: string): string {
+  return `${canonicalUrl}#breadcrumb`;
+}
+
+export type BreadcrumbItem = { name: string; url?: string };
+
+/**
+ * BreadcrumbList mirroring the visible trail (URL contract D6): positions
+ * start at 1, the current page is the last item and carries no `item`.
+ */
+export function createBreadcrumbNode({
+  id,
+  items,
+}: {
+  id: string;
+  items: BreadcrumbItem[];
+}): JsonLdNode {
+  return {
+    "@type": "BreadcrumbList",
+    "@id": id,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      ...(item.url && { item: item.url }),
+    })),
+  };
 }
 
 function createOrganizationNode(): JsonLdNode {
@@ -215,6 +252,8 @@ export function createArticleJsonLd({
   author,
   authorImageUrl,
   video,
+  blogLabel,
+  category,
 }: {
   locale: BlogLocale;
   slug: string;
@@ -230,10 +269,14 @@ export function createArticleJsonLd({
     startSeconds: number | null;
     publishedAt: string | null;
   } | null;
+  /** Visible "Blog" trail label (blog.nav) — the breadcrumb must match the UI. */
+  blogLabel: string;
+  category: { slug: string; name: string } | null;
 }): JsonLdDocument {
   const canonicalUrl = articleUrl(locale, slug);
   const webpageId = webpageEntityId(canonicalUrl);
   const articleId = articleEntityId(canonicalUrl);
+  const breadcrumbId = breadcrumbEntityId(canonicalUrl);
   const authorIsOrganization = !author || author.slug === TODA_TEAM_AUTHOR_SLUG;
   const authorId = authorIsOrganization ? ENTITY_IDS.organization : personEntityId(author.slug);
   const currentVideoId = video ? videoEntityId(canonicalUrl) : null;
@@ -247,7 +290,17 @@ export function createArticleJsonLd({
     inLanguage: locale,
     isPartOf: reference(ENTITY_IDS.website),
     mainEntity: reference(articleId),
+    breadcrumb: reference(breadcrumbId),
   };
+
+  // Trail = Blog › Category (both linked); the article itself is not an item.
+  const breadcrumb = createBreadcrumbNode({
+    id: breadcrumbId,
+    items: [
+      { name: blogLabel, url: blogUrl(locale) },
+      ...(category ? [{ name: category.name, url: categoryUrl(locale, category.slug) }] : []),
+    ],
+  });
 
   const article: JsonLdNode = {
     "@type": "Article",
@@ -286,9 +339,86 @@ export function createArticleJsonLd({
     "@graph": [
       ...createBaseNodes(),
       webpage,
+      breadcrumb,
       article,
       ...(person ? [person] : []),
       ...(videoObject ? [videoObject] : []),
+    ],
+  };
+}
+
+function createCollectionPageNode({
+  canonicalUrl,
+  title,
+  description,
+  locale,
+  breadcrumbId,
+}: {
+  canonicalUrl: string;
+  title: string;
+  description: string;
+  locale: BlogLocale;
+  breadcrumbId?: string;
+}): JsonLdNode {
+  return {
+    "@type": ["WebPage", "CollectionPage"],
+    "@id": webpageEntityId(canonicalUrl),
+    url: canonicalUrl,
+    name: title,
+    description,
+    inLanguage: locale,
+    isPartOf: reference(ENTITY_IDS.website),
+    about: reference(ENTITY_IDS.organization),
+    ...(breadcrumbId && { breadcrumb: reference(breadcrumbId) }),
+  };
+}
+
+/** /blog listing: base entities + CollectionPage. No breadcrumb (top of the trail). */
+export function createBlogListingJsonLd({
+  locale,
+  title,
+  description,
+}: {
+  locale: BlogLocale;
+  title: string;
+  description: string;
+}): JsonLdDocument {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      ...createBaseNodes(),
+      createCollectionPageNode({ canonicalUrl: blogUrl(locale), title, description, locale }),
+    ],
+  };
+}
+
+/** Category listing: CollectionPage + breadcrumb Blog › Category (current page, no item). */
+export function createCategoryJsonLd({
+  locale,
+  categorySlug,
+  categoryName,
+  blogLabel,
+  title,
+  description,
+}: {
+  locale: BlogLocale;
+  categorySlug: string;
+  categoryName: string;
+  blogLabel: string;
+  title: string;
+  description: string;
+}): JsonLdDocument {
+  const canonicalUrl = categoryUrl(locale, categorySlug);
+  const breadcrumbId = breadcrumbEntityId(canonicalUrl);
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      ...createBaseNodes(),
+      createCollectionPageNode({ canonicalUrl, title, description, locale, breadcrumbId }),
+      createBreadcrumbNode({
+        id: breadcrumbId,
+        items: [{ name: blogLabel, url: blogUrl(locale) }, { name: categoryName }],
+      }),
     ],
   };
 }

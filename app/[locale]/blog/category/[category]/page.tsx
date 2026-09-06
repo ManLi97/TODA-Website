@@ -7,6 +7,8 @@ import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
 import { localizedAlternates } from "@/lib/seo/alternates";
 import { BlogListing } from "@/components/blog/blog-listing";
+import { JsonLd } from "@/components/json-ld";
+import { createCategoryJsonLd } from "@/lib/seo/structured-data";
 import { getCategories } from "@/lib/blog/queries";
 import { categoryName } from "@/lib/blog/format";
 import type { BlogLocale } from "@/lib/blog/types";
@@ -59,12 +61,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogCategoryPage({ params }: Props) {
-  const { locale, category: categorySlug } = await params;
-  if (!routing.locales.includes(locale as BlogLocale)) notFound();
+  const { locale: rawLocale, category: categorySlug } = await params;
+  if (!routing.locales.includes(rawLocale as BlogLocale)) notFound();
+  const locale = rawLocale as BlogLocale;
   setRequestLocale(locale);
 
   const categories = await getCategories();
-  if (!categories.some((c) => c.slug === categorySlug)) notFound();
+  const category = categories.find((c) => c.slug === categorySlug);
+  if (!category) notFound();
 
-  return <BlogListing locale={locale as BlogLocale} activeCategorySlug={categorySlug} />;
+  const t = await getTranslations({ locale, namespace: "blog" });
+  const name = categoryName(category.name, locale);
+  const jsonLd = createCategoryJsonLd({
+    locale,
+    categorySlug,
+    categoryName: name,
+    blogLabel: t("nav"),
+    title: `${name} – ${t("metaTitle")}`,
+    description: t("metaDescription"),
+  });
+
+  return (
+    <>
+      <JsonLd document={jsonLd} />
+      <BlogListing locale={locale} activeCategorySlug={categorySlug} />
+    </>
+  );
 }

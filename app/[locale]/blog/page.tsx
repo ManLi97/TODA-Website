@@ -7,6 +7,8 @@ import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
 import { localizedAlternates } from "@/lib/seo/alternates";
 import { BlogListing } from "@/components/blog/blog-listing";
+import { JsonLd } from "@/components/json-ld";
+import { createBlogListingJsonLd } from "@/lib/seo/structured-data";
 import type { BlogLocale } from "@/lib/blog/types";
 
 export const revalidate = 3600;
@@ -40,9 +42,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPage({ params }: Props) {
-  const { locale } = await params;
-  if (!routing.locales.includes(locale as BlogLocale)) notFound();
+  const { locale: rawLocale } = await params;
+  if (!routing.locales.includes(rawLocale as BlogLocale)) notFound();
+  const locale = rawLocale as BlogLocale;
   setRequestLocale(locale);
 
-  return <BlogListing locale={locale as BlogLocale} />;
+  const t = await getTranslations({ locale, namespace: "blog" });
+  const jsonLd = createBlogListingJsonLd({
+    locale,
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+  });
+
+  return (
+    <>
+      <JsonLd document={jsonLd} />
+      <BlogListing locale={locale} />
+    </>
+  );
 }
