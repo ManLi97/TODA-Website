@@ -5,6 +5,7 @@
 // Client Component: needs useRouter for locale switching.
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter, usePathname } from "@/i18n/navigation";
+import { writeLocaleHint } from "@/lib/locale-hint";
 import { ONBOARDING_URL } from "@/lib/site";
 
 const LOCALES = ["de", "en", "es"] as const;
@@ -26,7 +27,10 @@ export function Header() {
   const tNav = useTranslations("home.nav");
   const onBlog = pathname.startsWith("/blog");
 
+  // A deliberate switch is a remembered choice — the locale hint must never
+  // nudge back in the other direction afterwards.
   const switchLocale = (next: SupportedLocale) => {
+    writeLocaleHint(`chosen:${next}`);
     router.replace(pathname, { locale: next });
   };
 

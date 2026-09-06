@@ -152,5 +152,22 @@
       "youtube": "YouTube",
       "facebook": "Facebook"
     }
+  },
+  "localeHint": {
+    "de": {
+      "text": "Diese Seite gibt es auch auf Deutsch.",
+      "cta": "Auf Deutsch lesen",
+      "dismiss": "Schließen"
+    },
+    "en": {
+      "text": "This page is also available in English.",
+      "cta": "Read in English",
+      "dismiss": "Close"
+    },
+    "es": {
+      "text": "Esta página también está disponible en español.",
+      "cta": "Leer en español",
+      "dismiss": "Cerrar"
+    }
   }
 }

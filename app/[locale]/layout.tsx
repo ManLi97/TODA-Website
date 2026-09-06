@@ -14,6 +14,7 @@ import { SITE_METADATA, type SiteLocale } from "@/lib/seo/site-metadata";
 import { SITE_URL } from "@/lib/site";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { LocaleHint } from "@/components/locale-hint";
 import { AnalyticsBeacon } from "@/components/analytics-beacon";
 import { AnalyticsEngagement } from "@/components/analytics-engagement";
 import "./globals.css";
@@ -114,6 +115,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Header />
           <main>{children}</main>
           <Footer />
+          <LocaleHint />
         </NextIntlClientProvider>
         <Analytics />
         <AnalyticsBeacon />
