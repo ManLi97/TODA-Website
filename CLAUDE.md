@@ -80,6 +80,7 @@ pnpm lint         # ESLint via next lint
 pnpm format       # Prettier write
 pnpm format:check # Prettier check (CI)
 pnpm gsc:inspect  # GSC URL-Inspection of every sitemap URL + sitemap status (readonly evidence)
+pnpm pulse:report # standalone HTML report of one week's Community-Pulse digest (--week, --out; reports/ is gitignored)
 ```
 
 ## Deployment

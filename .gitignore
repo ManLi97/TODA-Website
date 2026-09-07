@@ -40,3 +40,6 @@ supabase/.temp/
 # Service-account keys — never commit (real keys live in ~/.toda-secrets, outside the repo)
 gsc-sa-*.json
 *.service-account.json
+
+# Community-Pulse weekly HTML reports (generated via pnpm pulse:report, sent by mail)
+reports/
