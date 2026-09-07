@@ -202,7 +202,7 @@ export async function runComments(options: CommentsOptions = {}): Promise<RunOut
           await recordFailedRun(
             ytCommentsMeta(null, week),
             null,
-            `no yt-search rows for ${week} — no comment targets`
+            `no German-hinted YouTube video with comments among the ${week} search/channel rows — slot left empty by design`
           )
         );
         continue;
