@@ -777,5 +777,9 @@ fiel ohne deutsch-erkannten Kandidaten mit Kommentaren auf die kommentarstärkst
 (`MVE8pwvL1AI` Curly-Hair-Routine 100/100 off_topic). Fix: Fallback nur noch für Reddit;
 YouTube/TikTok/Instagram bleiben ohne Ziel leer (Regression in `unit.ts`). Die 193 Zeilen bleiben
 append-only in der DB, sind klassifiziert und fallen aus `useful` heraus.
+Beleg für den Fix (07:43 UTC, Kommentar-Schritt auf Production erneut ausgelöst, nach
+CRON_SECRET-Rotation + Redeploy): einziger neuer Run `yt-comments` = failed „keine
+deutsch-erkannten Ziele", 0 Signale; TikTok/IG/Reddit-Replays in dieselben Run-Zeilen, Woche
+weiter 455 Signale, 0 doppelte IDs, 0 offene Zeilen, Enrich 0 Calls.
 Beobachtung für W38: erste Woche ohne Test-Schatten — erwartet wieder ≈ 1000+ neue Zeilen.
 Rubrik: `.claude/plans/community-pulse-v3/quality-2026-W37-cron.json`.
