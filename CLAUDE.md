@@ -88,9 +88,10 @@ pnpm pulse:report --week 2026-W38  # "Community Pulse Report" = this: standalone
 **No Git auto-deploy** — GitHub pushes do NOT trigger Vercel builds. Production deploys
 run via CLI from the LOCAL tree: `vercel deploy --prod`. Precondition (global git
 workflow): checkout on `main`, clean, in sync with `origin/main` — verify first.
-Cron trigger for tests: Dashboard → Settings → Cron Jobs → Run (`CRON_SECRET` is a
-Sensitive env var — not pullable via `vercel env pull`, so external curl triggers need
-the value from Tomek's password manager, not from Vercel).
+Cron trigger for tests: Dashboard → Settings → Cron Jobs → Run, or curl with
+`Authorization: Bearer $CRON_SECRET`. The secret is a Sensitive env var (not pullable via
+`vercel env pull`); its value lives in `.env.local` since the 2026-09-07 rotation, and
+`scripts/rotate-cron-secret.sh` rotates it (then redeploy — functions bake it at build time).
 
 ## Architecture
 
