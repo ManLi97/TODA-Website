@@ -514,9 +514,12 @@ export type CommentCandidate = {
 };
 
 // Deterministic: dedupe by id, drop reference-channel videos (their comments would
-// double-count the channels we already median), drop IG lead magnets, prefer
-// German-hinted posts by comment count (fallback: overall top comments, so Phase 2
-// never starves), take the platform's top N.
+// double-count the channels we already median), drop IG lead magnets, take the
+// German-hinted posts with the most comments (platform's top N). No fallback to the
+// overall top except on Reddit (English subreddits are accepted there by design):
+// the first cron week (2026-W37) had zero German YouTube candidates with comments and
+// the old fallback pulled 193 English off-topic comments (hair care, geopolitics).
+// Starving Phase 2 is the cheaper failure — it shows as a missing slot, not as noise.
 export function selectCommentTargets(
   platform: keyof typeof COMMENT_TARGETS,
   rows: CommentCandidate[]
@@ -544,5 +547,6 @@ export function selectCommentTargets(
   const german = byComments.filter(
     (r) => r.metrics?.language === "de" || GERMAN_HINT.test(`${r.title} ${r.body ?? ""}`)
   );
-  return (german.length > 0 ? german : byComments).slice(0, COMMENT_TARGETS[platform]);
+  const ranked = platform === "reddit" && german.length === 0 ? byComments : german;
+  return ranked.slice(0, COMMENT_TARGETS[platform]);
 }

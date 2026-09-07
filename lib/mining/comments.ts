@@ -1,8 +1,9 @@
 // Phase 2 (server-only): dynamic comment targets per platform, chosen from THIS
 // week's Phase-1 rows in the DB (not from in-memory output — so the step runs on its
 // own: cron chain step `comments`, CLI --comments / --source <platform>-comments).
-// German-hinted posts with the most comments win (selectCommentTargets); reference
-// channels and IG lead magnets are excluded. YouTube comments come from the Data API
+// German-hinted posts with the most comments win (selectCommentTargets) — no fallback
+// to English top posts except on Reddit; reference channels and IG lead magnets are
+// excluded. YouTube comments come from the Data API
 // (free quota), TikTok/Instagram/Reddit comments from DeepAPI.
 import "server-only";
 

@@ -26,7 +26,10 @@ im Score** (v2: nur Reddit-EN + Kanal-Views scorebar).
   (Wochen-Snapshot der Rising/Top-Queries). **Kommentar-Ziele dynamisch
   (D3):** je Plattform die Top-N deutschsprachigen Treffer der Woche nach
   Kommentarzahl (YouTube 5 via Data API, TikTok 5, Instagram 5, Reddit 3),
-  Referenzkanäle und IG-Lead-Magnet-Captions ausgeschlossen. Neue Slots:
+  Referenzkanäle und IG-Lead-Magnet-Captions ausgeschlossen. Ohne
+  deutsch-erkannten Kandidaten mit Kommentaren bleibt der Slot leer — kein
+  Rückfall auf englische Top-Posts (Ausnahme Reddit, dort ist Englisch
+  akzeptiert; seit 2026-09-07). Neue Slots:
   `reddit-search/de|en`, `ig-accounts` (kuratierte DACH-Accounts),
   `fb-groups/*` (5 öffentliche Gruppen, Text-Hash-Dedupe), `reviews/apple|
   play|trustpilot` (nur die 5 profilierten Mitbewerber; `source` = Mitbewerber-
@@ -757,3 +760,22 @@ Reportage lieferte 69 % off_topic trotz „Tattoos" im Titel); Batch API für de
 W36-Digest darauf neu erzeugt (1,18 $, 2119 Signale, 7 Content-Kandidaten): Videoliste 8 Videos,
 alle klassifiziert, 0 off_topic; 128/128 Evidence-IDs auflösbar; keine Mitbewerbernamen. Test-Loop
 beendet bei ≈ 27,2 $ von 40 $. Ab W37 läuft die Kette per Cron (Montag 06:00 UTC).
+
+### Lauf 2026-09-07 (Cron, 2026-W37) — erster unbeaufsichtigter Kettenlauf
+
+**Technik:** alle vier Schritte `succeeded` in 10 Minuten (Batterie 06:00:43–06:01:26, 56 Runs;
+Kommentare 12 Runs, 1 failed `ig-comments/…` „no mappable items"; Enrich 455 Zeilen in 19 Calls,
+2,16 $; Digest 0,77 $, 455 Signale, 8 Kandidaten, 74/74 Evidence-IDs auflösbar, Videoliste
+0 off_topic, keine Mitbewerbernamen). DeepAPI 3,26 $ (36,05 → 32,78 $). Woche gesamt ≈ 6,2 $.
+
+**Inhalt dünn, wie erwartet + ein Fehler:** useful_de 19, Fragen de 7, Beschwerden+Wünsche de 0,
+Reviews 0 neu — die Samstags-Testläufe (W36) hatten die relevanten Treffer bereits, das
+Only-New-Dedupe ließ den Such-Schwanz übrig (`yt-search` 89 roh / 17 neu, darunter Vogue-
+Haarpflege, Geopolitik-Podcast, spanische/koreanische Clips). **Fehler:** `selectCommentTargets`
+fiel ohne deutsch-erkannten Kandidaten mit Kommentaren auf die kommentarstärksten Videos
+überhaupt zurück → 4 englische Off-Topic-Ziele, 193 Kommentare, 100 % off_topic/EN
+(`MVE8pwvL1AI` Curly-Hair-Routine 100/100 off_topic). Fix: Fallback nur noch für Reddit;
+YouTube/TikTok/Instagram bleiben ohne Ziel leer (Regression in `unit.ts`). Die 193 Zeilen bleiben
+append-only in der DB, sind klassifiziert und fallen aus `useful` heraus.
+Beobachtung für W38: erste Woche ohne Test-Schatten — erwartet wieder ≈ 1000+ neue Zeilen.
+Rubrik: `.claude/plans/community-pulse-v3/quality-2026-W37-cron.json`.
