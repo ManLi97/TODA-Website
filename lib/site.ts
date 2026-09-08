@@ -17,5 +17,5 @@ export const TODA_SOCIAL_URLS = {
 } as const;
 
 // Exact visible homepage offer. Keep numeric schema values locale-neutral.
-export const TODA_MONTHLY_PRICE = "24.99";
+export const TODA_MONTHLY_PRICE = "14.99";
 export const TODA_PRICE_CURRENCY = "EUR";
