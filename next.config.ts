@@ -20,6 +20,23 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "8mb",
     },
   },
+  // Umfrage-Werkzeug: /umfrage/<slug> serves public/umfrage/<slug>.html as-is
+  // (static HTML, no React, no locale prefix — middleware matcher excludes it).
+  // afterFiles runs after the filesystem check, so the pretty URL resolves to the
+  // public file; unknown slugs fall through to the 404.
+  async rewrites() {
+    return {
+      afterFiles: [{ source: "/umfrage/:slug([a-z0-9-]+)", destination: "/umfrage/:slug.html" }],
+    };
+  },
+  async headers() {
+    return [
+      {
+        source: "/umfrage/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);

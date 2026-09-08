@@ -18,7 +18,8 @@
     "pulse:quality": "tsx --conditions=react-server scripts/pulse-quality.ts",
     "pulse:report": "tsx --conditions=react-server scripts/pulse-report.ts",
     "pulse:override": "tsx --conditions=react-server scripts/pulse-override.ts",
-    "blog:draft-insert": "tsx --conditions=react-server scripts/blog-draft-insert.ts"
+    "blog:draft-insert": "tsx --conditions=react-server scripts/blog-draft-insert.ts",
+    "umfrage": "tsx --conditions=react-server scripts/umfrage.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.124.0",

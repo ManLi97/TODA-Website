@@ -3,8 +3,10 @@
 // 308 — unprefixed URLs must consolidate onto /de/... as the canonical target
 // (Google keeps the source of a temporary redirect in the index). The 308
 // copies all headers of the original redirect so nothing is lost.
-// Runs on all routes except static assets, Next.js internals, and the
-// non-localized /admin area (internal tool, English-only) and /api.
+// Runs on all routes except static assets, Next.js internals, the
+// non-localized /admin area (internal tool, English-only), /api, and /umfrage
+// (token-gated survey pages served as static HTML — German-only, never
+// locale-prefixed, see next.config.ts rewrites).
 import createMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
@@ -21,5 +23,5 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|_vercel|admin|api|.*\\..*).*)"],
+  matcher: ["/((?!_next|_vercel|admin|api|umfrage|.*\\..*).*)"],
 };

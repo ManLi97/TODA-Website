@@ -185,6 +185,15 @@ middleware.ts         # next-intl locale routing, every locale redirect rewritte
   `ADMIN_PASSWORD`. Every server action calls `requireAdmin()` itself — layouts
   do not protect actions. Swap to Supabase Auth later = replace `lib/admin/auth.ts`.
 
+## Umfrage-Werkzeug (token-gated surveys, no login)
+
+- **Route** `/umfrage/<slug>?p=<token>` → static `public/umfrage/<slug>.html` via `next.config.ts` rewrite (middleware
+  matcher excludes `umfrage`; `X-Robots-Tag: noindex` + robots disallow). **API** `app/api/umfrage/route.ts` (GET link
+  check / POST answers, service role; validation in `lib/umfrage/validate.ts`). **Script** `pnpm umfrage anlegen|teilnehmer|status`.
+- **Tables** (shared DB, owner toda-website, RLS on + zero policies): `surveys` → `survey_participants` (12×base62 token =
+  the authorisation) → `survey_responses` (one row per participant, re-submit overwrites). Results are read via read-only MCP
+  (plan `.claude/plans/umfrage-gratistermine.md` §9); new survey = new HTML file + `pnpm umfrage anlegen`.
+
 ## Analytics & Search Console (time-series for the Company Dashboard)
 
 First-party, cookieless, **snapshot / append-only** — never overwrite in realtime; the website is

@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gratistermine in TODA – deine Meinung</title>
+<style>
+  :root{
+    --bg:#000;--s1:#121212;--s2:#141414;--s3:#292929;--s4:#333;
+    --line:#383838;--t1:#fff;--t2:#a3a3a3;--t3:#7a7a7a;
+    --gold:#e8b73d;--gold-deep:#c8941a;--on-gold:#2b1e08;
+    --purple:#bba6e8;--on-purple:#231a33;
+    --green:#5fb082;--red:#b85450;--blue:#6b8cbe;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--t1);font:400 15px/1.5 Inter,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;letter-spacing:-.01em}
+  .wrap{max-width:780px;margin:0 auto;padding:28px 18px 80px}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+  h1{font-size:30px;line-height:1.1;font-weight:600;letter-spacing:-.025em;margin:10px 0 14px}
+  h2{font-size:22px;line-height:1.2;font-weight:600;letter-spacing:-.02em;margin:0 0 6px}
+  h3{font-size:17px;line-height:1.25;font-weight:600;letter-spacing:-.015em;margin:0 0 6px}
+  p{margin:0 0 12px;color:var(--t2)}
+  p.lead{color:var(--t1);font-size:17px}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:26px}
+  .brand .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--on-gold);font-weight:700;display:grid;place-items:center;font-size:15px;letter-spacing:-.02em}
+  .brand span{font-weight:600;letter-spacing:.08em;font-size:13px}
+  section{margin-top:44px}
+  .hair{height:1px;width:56px;background:var(--gold);opacity:.5;margin:8px 0 18px}
+  .card{background:var(--s2);border:1px solid var(--line);border-radius:18px;padding:18px}
+  .grid{display:grid;gap:12px}
+  @media(min-width:640px){.grid.cols3{grid-template-columns:repeat(3,1fr)}.grid.cols2{grid-template-columns:repeat(2,1fr)}}
+  .tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 9px;border:1px solid}
+  .tag.gold{color:var(--gold);border-color:rgba(232,183,61,.35);background:rgba(232,183,61,.12)}
+  .tag.purple{color:var(--purple);border-color:rgba(187,166,232,.4);background:rgba(187,166,232,.12)}
+  .tag.red{color:#e08a86;border-color:rgba(184,84,80,.45);background:rgba(184,84,80,.14)}
+  .tag.green{color:#8fd1ab;border-color:rgba(95,176,130,.45);background:rgba(95,176,130,.14)}
+  .tag.blue{color:#a6bde3;border-color:rgba(107,140,190,.45);background:rgba(107,140,190,.14)}
+  .today .card h3{display:flex;align-items:center;gap:8px}
+  .today p{font-size:14px;margin:0}
+  /* Problem story */
+  .story{background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px}
+  .bubble{background:var(--s3);border-radius:16px 16px 16px 4px;padding:12px 14px;max-width:520px;color:var(--t1);font-size:15px;margin:8px 0 14px}
+  .bubble small{display:block;color:var(--t3);font-size:12px;margin-bottom:4px}
+  .fix{display:grid;gap:10px;margin-top:8px}
+  .fix .row{display:grid;grid-template-columns:1fr;gap:6px;background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  @media(min-width:640px){.fix .row{grid-template-columns:200px 1fr;gap:14px;align-items:start}}
+  .fix .row b{font-weight:600;color:var(--t1)}
+  .fix .row span{color:var(--t2);font-size:14px}
+  .fix .row span em{color:#e08a86;font-style:normal}
+  /* Options */
+  .way{margin-top:22px;border:1px solid var(--line);border-radius:22px;background:var(--s2);overflow:hidden}
+  .way header{padding:18px 18px 12px;display:flex;gap:14px;align-items:flex-start}
+  .letter{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:700;font-size:18px;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--on-gold)}
+  .way header p{margin:4px 0 0;font-size:14px}
+  .steps{display:grid;gap:10px;padding:0 12px 12px}
+  @media(min-width:720px){.steps{grid-template-columns:repeat(3,1fr)}}
+  .step{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:12px}
+  .step .eyebrow{margin-bottom:8px;color:var(--t2)}
+  .phone{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:14px;padding:12px;font-size:13px;color:var(--t2)}
+  .phone .ttl{color:var(--t1);font-weight:600;font-size:13px;margin-bottom:8px}
+  .seg{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+  .seg i{font-style:normal;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:var(--t2);background:var(--s2)}
+  .seg i.on{border-color:var(--gold);color:var(--gold);background:rgba(232,183,61,.1)}
+  .field{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:6px 0;color:var(--t2)}
+  .field b{color:var(--t1);font-weight:600}
+  .field.new,.seg i.new,.line.new{outline:2px solid var(--purple);outline-offset:2px}
+  .hint{font-size:12px;color:var(--t3);margin-top:6px}
+  .line{background:var(--s2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:6px 0;color:var(--t2)}
+  .line b{color:var(--t1);font-weight:600}
+  .line.big b{font-size:15px}
+  .cal{display:flex;gap:10px;align-items:stretch;background:var(--s2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:6px 0}
+  .cal .bar{width:4px;border-radius:2px;background:var(--gold)}
+  .cal .bar.purple{background:var(--purple)}
+  .cal div{font-size:13px;color:var(--t2)}
+  .cal div b{display:block;color:var(--t1);font-weight:600}
+  .pro{display:grid;gap:10px;padding:4px 18px 18px}
+  @media(min-width:640px){.pro{grid-template-columns:1fr 1fr}}
+  .pro div{font-size:14px;color:var(--t2)}
+  .pro div b{display:block;color:var(--t1);font-weight:600;margin-bottom:3px}
+  .same{margin-top:18px;background:var(--s1);border:1px dashed var(--line);border-radius:16px;padding:14px 16px;font-size:14px;color:var(--t2)}
+  .legend{font-size:12px;color:var(--t3);margin-top:10px;display:flex;align-items:center;gap:8px}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:4px;outline:2px solid var(--purple);outline-offset:2px;background:var(--s2)}
+  /* Form */
+  .q{background:var(--s2);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin-top:12px}
+  .q h3{margin-bottom:10px}
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;gap:10px;align-items:flex-start;background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--t2)}
+  .opt:has(input:checked){border-color:var(--gold);color:var(--t1);background:rgba(232,183,61,.06)}
+  .opt input{margin:3px 0 0;accent-color:var(--gold);flex:none}
+  .q input[type=text],.q textarea{width:100%;background:var(--s1);border:1px solid var(--line);border-radius:12px;color:var(--t1);padding:10px 12px;font:inherit;margin-top:8px}
+  .q textarea{min-height:76px;resize:vertical}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:14px 22px;font:600 15px/1 inherit;cursor:pointer;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:var(--on-gold);margin-top:18px}
+  .btn:active{transform:scale(.98)}
+  .btn:disabled{opacity:.55;cursor:default}
+  .btn:disabled:active{transform:none}
+  .msg{margin-top:10px;font-size:14px;color:#e08a86;min-height:20px}
+  .greet{margin-top:12px;background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:16px 18px}
+  .greet h3{margin-bottom:4px}
+  .greet p{margin:0;font-size:14px}
+  .greet p.again{margin-top:8px;color:var(--gold)}
+  .notice{margin-top:12px}
+  .notice h3{margin-bottom:4px}
+  .notice p{margin:0;font-size:14px}
+  [hidden]{display:none!important}
+  footer{margin-top:40px;color:var(--t3);font-size:12px}
+  footer a{color:var(--t2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand"><div class="mark">T</div><span>TODA</span></div>
+  <div class="eyebrow">Kurze Umfrage · etwa 5 Minuten</div>
+  <h1>Gratistermine: Wie soll es für dich laufen?</h1>
+  <p class="lead">Viele von euch vergeben kostenlose Termine, vor allem zum Nachstechen. Dafür gibt es in TODA noch keinen sauberen Weg. Bevor wir etwas bauen, wollen wir von dir wissen, welcher Ablauf zu deinem Alltag passt.</p>
+  <p>Es gibt kein Richtig oder Falsch. Schau dir die drei Wege an und sag uns am Ende, was dir am liebsten wäre.</p>
+
+  <!-- ============ HEUTE ============ -->
+  <section class="today">
+    <div class="eyebrow">Ausgangslage</div>
+    <h2>So läuft es heute</h2>
+    <div class="hair"></div>
+    <div class="grid cols3">
+      <div class="card">
+        <h3>Buchungslink</h3>
+        <p>Du gibst Stunden und ca.-Preis an, dein Kunde sucht sich einen freien Slot. Der Preis muss mindestens 1 € sein. Eine Anzahlung wird automatisch verlangt, außer du hakst „Ohne Anzahlung" an.</p>
+      </div>
+      <div class="card">
+        <h3>Beratungstermin</h3>
+        <p>Ein Klick, fertig: immer 30 Minuten, immer kostenlos. Dein Kunde liest überall „Beratung": auf der Buchungsseite, in der Bestätigung und in der Erinnerung.</p>
+      </div>
+      <div class="card">
+        <h3>Termin selbst anlegen</h3>
+        <p>Du trägst den Termin direkt in deinen Kalender ein. Dauer und Preis sind frei, auch 0 €. Dein Kunde wählt aber keinen Slot, ihr sprecht den Termin selbst ab.</p>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="eyebrow">Das Problem</div>
+      <h3 style="margin-top:6px">Lisa will nachstechen</h3>
+      <div class="bubble"><small>Lisa · vor 2 Minuten</small>Hey! Das Tattoo ist super verheilt, nur an zwei Stellen ist die Farbe etwas raus. Kann ich zum Nachstechen kommen?</div>
+      <p style="margin-bottom:6px">Ein Nachstech-Termin ist bei dir kostenlos und dauert ein bis zwei Stunden. Was machst du heute in TODA?</p>
+      <div class="fix">
+        <div class="row"><b>Beratungstermin schicken</b><span>Lisa liest „Beratung · 30 Min." und fragt zurück: <em>„Ich brauche doch keine Beratung, ich will nur nachstechen."</em> Und 30 Minuten passen nicht.</span></div>
+        <div class="row"><b>Buchungslink mit 1 €</b><span>Lisa sieht „ca. 1 €" und wundert sich. Vergisst du „Ohne Anzahlung", zahlt sie tatsächlich 1 € Anzahlung. <em>Beides ist schon passiert.</em></span></div>
+        <div class="row"><b>Selbst eintragen</b><span>Du musst den Termin per Mail oder Insta hin- und herschreiben. Lisa kann sich keinen Slot aussuchen, und die Bestätigung kommt erst, wenn du fertig bist.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DREI WEGE ============ -->
+  <section>
+    <div class="eyebrow">Zur Auswahl</div>
+    <h2>Drei mögliche Wege</h2>
+    <div class="hair"></div>
+    <p>Alle drei lösen Lisas Fall. Sie unterscheiden sich darin, was du im Chat klickst und was Lisa danach sieht. Jeder Weg ist in drei Momenten gezeigt: du im Chat, dein Kunde, dein Kalender.</p>
+    <div class="legend"><i></i> Lila markiert, was gegenüber heute neu ist.</div>
+
+    <!-- WEG A -->
+    <article class="way">
+      <header>
+        <div class="letter">A</div>
+        <div>
+          <h3>Der Buchungslink darf 0 € sein</h3>
+          <p>Alles bleibt wie gewohnt, nur die Preisgrenze fällt. Bei 0 € gibt es automatisch keine Anzahlung. Der Beratungstermin bleibt, wie er ist.</p>
+        </div>
+      </header>
+      <div class="steps">
+        <div class="step">
+          <div class="eyebrow">1 · Du im Chat</div>
+          <div class="phone">
+            <div class="ttl">Antwort an Lisa</div>
+            <div class="seg"><i>Nachricht</i><i class="on">Buchungslink</i><i>Beratungstermin</i></div>
+            <div class="field"><span>Stunden (pro Session)</span><b>2</b></div>
+            <div class="field new"><span>ca.-Preis</span><b>0 €</b></div>
+            <div class="hint">0 € heißt kostenlos, es wird keine Anzahlung verlangt.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="eyebrow">2 · Lisa sieht</div>
+          <div class="phone">
+            <div class="ttl">Buchungsseite</div>
+            <div class="line big new"><b>2 Std. · kostenlos</b></div>
+            <div class="hint">Bestätigung und Erinnerung: „Dauer: 2 Std. · Preis: kostenlos"</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="eyebrow">3 · Dein Kalender</div>
+          <div class="phone">
+            <div class="cal"><div class="bar"></div><div><b>Sa 14:00 · Lisa M.</b>2 Std. · kostenlos</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="pro">
+        <div><b>Gut daran</b>Nichts Neues lernen, derselbe Buchungslink wie immer. Für jeden kostenlosen Anlass geeignet.</div>
+        <div><b>Bedenke</b>Lisa sieht nur „kostenlos", nicht wofür. Das erklärst du im Text. Eine 0 ist auch schnell aus Versehen eingetippt.</div>
+      </div>
+    </article>
+
+    <!-- WEG B -->
+    <article class="way">
+      <header>
+        <div class="letter">B</div>
+        <div>
+          <h3>„Gratistermin" statt „Beratungstermin"</h3>
+          <p>Der Beratungs-Knopf wird zum Gratistermin: immer kostenlos, aber du wählst die Dauer selbst. Eine Beratung ist dann einfach ein Gratistermin mit 30 Minuten.</p>
+        </div>
+      </header>
+      <div class="steps">
+        <div class="step">
+          <div class="eyebrow">1 · Du im Chat</div>
+          <div class="phone">
+            <div class="ttl">Antwort an Lisa</div>
+            <div class="seg"><i>Nachricht</i><i>Buchungslink</i><i class="on new">Gratistermin</i></div>
+            <div class="field new"><span>Dauer</span><b>2 Std.</b></div>
+            <div class="hint">Vorgeschlagen sind 30 Min. Immer kostenlos, nie eine Anzahlung.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="eyebrow">2 · Lisa sieht</div>
+          <div class="phone">
+            <div class="ttl">Buchungsseite</div>
+            <div class="line big new"><b>Gratistermin · 2 Std.</b></div>
+            <div class="hint">Bestätigung und Erinnerung: „Kostenloser Termin · Dauer: 2 Std."</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="eyebrow">3 · Dein Kalender</div>
+          <div class="phone">
+            <div class="cal"><div class="bar purple"></div><div><b>Sa 14:00 · Lisa M.</b>Gratis · 2 Std.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="pro">
+        <div><b>Gut daran</b>Ein eigener Knopf, keine Preis-Eingabe, kein Verwechseln mit bezahlten Terminen. Im Kalender auf einen Blick erkennbar.</div>
+        <div><b>Bedenke</b>Das Wort „Beratung" verschwindet aus TODA. Lisa sieht „Gratistermin", aber nicht, ob es eine Beratung oder ein Nachstechen ist.</div>
+      </div>
+    </article>
+
+    <!-- WEG C -->
+    <article class="way">
+      <header>
+        <div class="letter">C</div>
+        <div>
+          <h3>Gratistermin mit Anlass</h3>
+          <p>Wie B, plus ein Klick: Du sagst, wofür der Termin ist. Der Anlass steht dann überall, wo dein Kunde hinschaut, und in deinem Kalender.</p>
+        </div>
+      </header>
+      <div class="steps">
+        <div class="step">
+          <div class="eyebrow">1 · Du im Chat</div>
+          <div class="phone">
+            <div class="ttl">Antwort an Lisa</div>
+            <div class="seg"><i>Nachricht</i><i>Buchungslink</i><i class="on new">Gratistermin</i></div>
+            <div class="hint" style="margin:0 0 4px">Anlass</div>
+            <div class="seg" style="margin-top:0"><i>Beratung</i><i class="on new">Nachstechen</i><i>Sonstiges</i></div>
+            <div class="field new"><span>Dauer</span><b>2 Std.</b></div>
+            <div class="hint">Beratung schlägt 30 Min. vor, Nachstechen 1 Std. Immer kostenlos.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="eyebrow">2 · Lisa sieht</div>
+          <div class="phone">
+            <div class="ttl">Buchungsseite</div>
+            <div class="line big new"><b>Nachstechen · 2 Std. · kostenlos</b></div>
+            <div class="hint">Bestätigung: „Nachstechen · Dauer: 2 Std." Erinnerung: „Dein Nachstech-Termin ist morgen."</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="eyebrow">3 · Dein Kalender</div>
+          <div class="phone">
+            <div class="cal"><div class="bar purple"></div><div><b>Sa 14:00 · Lisa M.</b>Nachstechen · 2 Std.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="pro">
+        <div><b>Gut daran</b>Lisa weiß sofort, worum es geht. Du siehst im Kalender, ob Beratung oder Nachstechen ansteht.</div>
+        <div><b>Bedenke</b>Ein Klick mehr. Die Liste der Anlässe muss zu deinem Alltag passen. Was fehlt dir darin?</div>
+      </div>
+    </article>
+
+    <div class="same">
+      <b style="color:var(--t1)">Bei allen drei Wegen gleich:</b> Dein Kunde kann über dein Anfrage-Formular weiterhin keinen Gratistermin selbst anfragen, das entscheidest du. Erinnerungen und Absage-Link laufen wie bei jedem anderen Termin. Den Termin selbst anlegen kannst du weiterhin.
+    </div>
+  </section>
+
+  <!-- ============ FEEDBACK ============ -->
+  <section>
+    <div class="eyebrow">Deine Meinung</div>
+    <h2>Was passt zu deinem Alltag?</h2>
+    <div class="hair"></div>
+    <p>Kreuz an, was für dich stimmt. Am Ende schickst du deine Antworten mit einem Klick ab.</p>
+
+    <div class="greet" id="greet" hidden>
+      <h3 id="greet-h"></h3>
+      <p id="greet-p"></p>
+      <p class="again" id="greet-again" hidden>Du hast schon geantwortet. Erneut absenden überschreibt deine Antwort.</p>
+    </div>
+
+    <div class="card notice" id="notice" hidden>
+      <h3 id="notice-h"></h3>
+      <p id="notice-p"></p>
+    </div>
+
+    <form id="f" hidden onsubmit="event.preventDefault()">
+      <div class="q">
+        <h3>1 · Welcher Weg passt am besten zu dir?</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q1" value="A – Buchungslink darf 0 € sein"><span><b>A</b> · Der Buchungslink darf 0 € sein</span></label>
+          <label class="opt"><input type="radio" name="q1" value="B – Gratistermin statt Beratungstermin"><span><b>B</b> · Gratistermin statt Beratungstermin</span></label>
+          <label class="opt"><input type="radio" name="q1" value="C – Gratistermin mit Anlass"><span><b>C</b> · Gratistermin mit Anlass</span></label>
+          <label class="opt"><input type="radio" name="q1" value="anders"><span>Ein anderer Weg, nämlich:</span></label>
+        </div>
+        <input type="text" name="q1_text" placeholder="Wie würdest du es dir wünschen?">
+      </div>
+
+      <div class="q">
+        <h3>2 · Wie melden sich Nachstech-Kunden bei dir? <span class="tag blue">Mehrfach möglich</span></h3>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="q2" value="Neue Anfrage über mein TODA-Formular"><span>Neue Anfrage über mein TODA-Formular</span></label>
+          <label class="opt"><input type="checkbox" name="q2" value="Antwort auf den alten Mail-Verlauf"><span>Sie antworten auf den alten Mail-Verlauf</span></label>
+          <label class="opt"><input type="checkbox" name="q2" value="Instagram, WhatsApp oder Telefon"><span>Instagram, WhatsApp oder Telefon</span></label>
+          <label class="opt"><input type="checkbox" name="q2" value="Direkt im Studio"><span>Direkt im Studio, z. B. beim Nachschauen</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <h3>3 · Soll sich dein Kunde den Slot selbst aussuchen?</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q3" value="Ja, immer per Link"><span>Ja, am liebsten immer per Link</span></label>
+          <label class="opt"><input type="radio" name="q3" value="Nein, ich trage selbst ein"><span>Nein, ich trage Gratistermine lieber selbst ein</span></label>
+          <label class="opt"><input type="radio" name="q3" value="Kommt drauf an"><span>Kommt drauf an</span></label>
+        </div>
+        <input type="text" name="q3_text" placeholder="Worauf kommt es an?">
+      </div>
+
+      <div class="q">
+        <h3>4 · Beratungsgespräch: Wie lang?</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q4" value="Immer 30 Minuten passt"><span>Immer 30 Minuten, das passt</span></label>
+          <label class="opt"><input type="radio" name="q4" value="Dauer selbst wählen"><span>Die Dauer will ich selbst wählen</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <h3>5 · Soll dein Kunde sehen, wofür der Termin ist?</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q5" value="Ja, unbedingt"><span>Ja, unbedingt, z. B. „Nachstechen" auf der Buchungsseite</span></label>
+          <label class="opt"><input type="radio" name="q5" value="Egal, steht in meinem Text"><span>Egal, das steht ja in meinem Text</span></label>
+          <label class="opt"><input type="radio" name="q5" value="Nein"><span>Nein, lieber nur „kostenlos"</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <h3>6 · Wie hast du Gratistermine bisher gelöst? <span class="tag blue">Mehrfach möglich</span></h3>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="q6" value="Beratungstermin geschickt"><span>Beratungstermin geschickt</span></label>
+          <label class="opt"><input type="checkbox" name="q6" value="Buchungslink mit 1 €"><span>Buchungslink mit 1 € geschickt</span></label>
+          <label class="opt"><input type="checkbox" name="q6" value="Selbst im Kalender eingetragen"><span>Selbst im Kalender eingetragen</span></label>
+          <label class="opt"><input type="checkbox" name="q6" value="Außerhalb von TODA"><span>Außerhalb von TODA abgesprochen</span></label>
+        </div>
+      </div>
+
+      <div class="q">
+        <h3>7 · Welche kostenlosen Termine gibt es bei dir noch?</h3>
+        <p style="font-size:14px;margin-bottom:0">Außer Beratung und Nachstechen, z. B. Nachschauen, Stencil-Probe, Cover-up-Check.</p>
+        <textarea name="q7" placeholder="Deine Anlässe"></textarea>
+      </div>
+
+      <div class="q">
+        <h3>8 · Sonst noch etwas?</h3>
+        <textarea name="q8" placeholder="Alles, was dir dazu einfällt"></textarea>
+      </div>
+
+      <div class="q">
+        <h3>Dein Name oder Studio <span class="tag gold">optional</span></h3>
+        <input type="text" name="name" placeholder="Damit Tomek weiß, von wem die Antwort ist" style="margin-top:0">
+      </div>
+
+      <button class="btn" type="button" id="send">Antworten absenden</button>
+      <div class="msg" id="msg"></div>
+    </form>
+  </section>
+
+  <footer>TODA · Gratistermine · Entwurf zur Rückmeldung, September 2026. Nichts davon ist schon gebaut. Wir speichern nur deine Antworten und den Namen, den du oben freiwillig angibst, ausschließlich für diese Produktentscheidung. Löschen lassen kannst du sie jederzeit über tom@todasolutions.com. <a href="https://www.todasolutions.com/de/privacy">Datenschutz</a></footer>
+</div>
+
+<script>
+(function(){
+  // Slug = last path segment (/umfrage/<slug>), so a copied file needs no edit.
+  var SLUG=location.pathname.replace(/\/+$/,'').split('/').pop().replace(/\.html$/,''),TOKEN_RE=/^[A-Za-z0-9]{12}$/;
+  var f=document.getElementById('f'),greet=document.getElementById('greet'),notice=document.getElementById('notice'),
+      msg=document.getElementById('msg'),send=document.getElementById('send');
+  var token=new URLSearchParams(location.search).get('p')||'';
+
+  function card(h,p){f.hidden=true;document.getElementById('notice-h').textContent=h;document.getElementById('notice-p').textContent=p;notice.hidden=false;}
+  function invalid(){card('Dieser Link ist nicht gültig.','Bitte melde dich kurz bei Tomek.');}
+  function closed(){card('Die Umfrage ist beendet.','Danke!');}
+  function offline(){card('Verbindung fehlgeschlagen','Bitte lade die Seite neu.');}
+
+  function radio(n){var e=f.querySelector('input[name="'+n+'"]:checked');return e?e.value:'';}
+  function checks(n){var a=[];f.querySelectorAll('input[name="'+n+'"]:checked').forEach(function(e){a.push(e.value)});return a;}
+  function text(n){var e=f.querySelector('[name="'+n+'"]');return e?e.value.trim():'';}
+  function answers(){
+    return {q1:radio('q1'),q1_text:text('q1_text'),q2:checks('q2'),q3:radio('q3'),q3_text:text('q3_text'),
+            q4:radio('q4'),q5:radio('q5'),q6:checks('q6'),q7:text('q7'),q8:text('q8')};
+  }
+
+  var label='';
+  function greeting(d){
+    label=d.label;
+    document.getElementById('greet-h').textContent='Hallo '+d.label;
+    var when=new Intl.DateTimeFormat('de-DE',{weekday:'short',day:'numeric',month:'long'}).format(new Date(d.closesAt));
+    document.getElementById('greet-p').textContent='Antworten bis '+when;
+    document.getElementById('greet-again').hidden=!d.alreadyAnswered;
+    greet.hidden=false;
+  }
+
+  function load(){
+    if(!TOKEN_RE.test(token)){invalid();return;}
+    fetch('/api/umfrage?slug='+SLUG+'&token='+encodeURIComponent(token),{cache:'no-store'}).then(function(r){
+      return r.text().then(function(t){
+        if(r.status===200){var d=JSON.parse(t);greeting(d);if(d.closed){closed();}else{f.hidden=false;}return;}
+        if(r.status===404||r.status===400){invalid();return;}
+        offline();
+      });
+    }).catch(offline);
+  }
+
+  send.addEventListener('click',function(){
+    msg.textContent='';
+    if(!radio('q1')){msg.textContent='Bitte wähle bei Frage 1 einen Weg.';return;}
+    send.disabled=true;
+    fetch('/api/umfrage',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({slug:SLUG,token:token,name:text('name'),answers:answers()})
+    }).then(function(r){
+      return r.text().then(function(){
+        if(r.status===200){card('Danke, '+label+'!','Deine Antwort ist angekommen.');return;}
+        if(r.status===410){closed();return;}
+        if(r.status===404){invalid();return;}
+        msg.textContent='Hat nicht geklappt, bitte versuch es nochmal.';
+      });
+    }).catch(function(){msg.textContent='Hat nicht geklappt, bitte versuch es nochmal.';})
+      .then(function(){send.disabled=false;});
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

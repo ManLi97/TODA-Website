@@ -20,7 +20,8 @@ be honoured (read when in doubt — do not duplicate it here):
   `blog_post_translations`, `blog_authors`, `analytics_events`, `gsc_performance_daily`,
   `mining_runs`, `topic_signals`, `topic_classifications`, `pulse_digests`, `pulse_jobs` (+ views
   `topic_cluster_scores`, `pulse_pending_signals`, `pulse_cluster_weekly`; functions `pulse_claim_job`,
-  `pulse_digest_input`, `pulse_quality_report`) + storage buckets `blog-covers`, `blog-authors`.
+  `pulse_digest_input`, `pulse_quality_report`), `surveys`, `survey_participants`, `survey_responses`
+  (Umfrage-Werkzeug, `20260908090343`) + storage buckets `blog-covers`, `blog-authors`.
   Foreign tables the pipeline READS (never writes): `instagram_interactions`, `post_insights`,
   `gsc_performance_daily` (the last one is repo-own). **Every other table is FOREIGN → tabu**: no DDL, no DML,
   no drop/truncate, ever. Full matrix: `db-ownership.md`.
