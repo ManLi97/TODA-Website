@@ -200,7 +200,7 @@ Marketing-Repo: `/Users/harvestflow/Developer/toda/marketing/channels/instagram.
    **selbst ansehen** (Sichtpflicht wie 3.1).
 5. **Ablage — Desktop, nie Repo:** `~/Desktop/toda-post-<slug>/` mit den
    Slides + `posting-paket.md` (Caption 150–300 Zeichen ohne Link ·
-   1. Kommentar mit Artikel-Link · Story-Baustein mit Link-Sticker ·
+   1. Kommentar mit Artikel-Link · Story-Bausteine (→ Lauf 5/6) ·
    Collab-Einladung an den Artist als Standard-Empfehlung ·
    Share-Nachricht an den Artist · Timing/Messung). Das Template ist die
    Referenz, nicht der Output — PNGs werden nicht versioniert.
@@ -213,7 +213,8 @@ Marketing-Repo: `/Users/harvestflow/Developer/toda/marketing/channels/instagram.
 Gibt es zur Artist-Story eine **öffentliche Toddcast-Folge** — nicht immer
 der Fall, bei Vossi (2026-08-29) schon —, entsteht zusätzlich zum Carousel
 **ein Story-Bild, das auf die Folge zeigt**. Kein Ersatz für die
-Artikel-Story aus Lauf 4, sondern ein zweiter Baustein. Die Kanal- und
+Artikel-Story (Lauf 6), sondern ein zweiter Baustein; beide nie direkt
+hintereinander in dieselbe Kette. Die Kanal- und
 Format-Wahrheit liegt wie bei Lauf 4 im Marketing-Repo:
 `/Users/harvestflow/Developer/toda/marketing/channels/instagram.md`
 → „Podcast-Story" — Pflichtlektüre vor dem Bauen.
@@ -252,6 +253,59 @@ Format-Wahrheit liegt wie bei Lauf 4 im Marketing-Repo:
    zum Nachjustieren. Im `posting-paket.md` bekommt die Folge einen
    eigenen Story-Block: Bild, Sticker-Ziel (Folgen-URL), Sticker-Text.
 
+## Lauf 6 — Story-Baustein: der Artikel (immer)
+
+Zu **jedem** publizierten Artikel — Artist-Story oder nicht — entsteht ein
+Story-Bild, das auf den Artikel zeigt; bisher wurde dafür der Feed-Post in
+die Story gezogen, das zeigt den Post, nicht das Ziel. Erstlauf Rita „CATO"
+(2026-09-08). Die Format-Wahrheit liegt wie bei Lauf 4 und 5 im
+Marketing-Repo: `/Users/harvestflow/Developer/toda/marketing/channels/instagram.md`
+→ „Artikel-Story" — Pflichtlektüre vor dem Bauen.
+
+1. **Warum Website-Look.** Gleiche Logik wie Lauf 5: Die Story muss vor
+   dem Tap zeigen, wohin der Link führt — hier auf unsere eigene Seite.
+   Sie zeigt darum den echten Seitenkopf, wie er nach dem Tap erscheint:
+   Nav mit Sprachwahl und „Loslegen", Breadcrumb, Kategorie-Pill, Titel,
+   Datum + Lesezeit, Tags, Cover. Die Lesezeit ist das stärkste
+   „Artikel"-Signal. **Gold nur am Link-Cue**; kein Zitat, kein Teaser,
+   kein Todd — jedes weitere Element macht aus der Seite ein Plakat.
+2. **Wahrheitspflicht als Mechanismus.** Alle Werte kommen aus der
+   **publizierten URL**: Der Builder holt die Live-Seite und parst Titel,
+   Kategorie, Datum + Lesezeit, Tags, Cover (blog-covers-Bucket) und
+   Sprache aus dem SSR-HTML; kein HTTP 200 → kein Bild. Kein Mockup
+   eines unpublizierten Artikels. Der Titel wird nie gekürzt oder
+   umformuliert — bei langen Titeln (> 90 Zeichen) setzt der Builder die
+   Schrift auf 60 px, damit er dreizeilig bleibt (Richtwert; wird er
+   trotzdem vierzeilig, entscheidet der Sichtcheck).
+3. **Gilt für jeden Artikel.** Die Kategorie kommt von der Seite; ohne
+   Kategorie entfallen Pill und Breadcrumb-Segment. Bei Artist-Stories
+   zusätzlich den Artist per @-Mention in der Story taggen.
+4. **Technik:** `python3 assets/build-story-artikel.py <url> <ordner>
+   [--sticker "Text"]` — füllt `assets/story-artikel.html` (1080×1920,
+   Platzhalter im Kopf dokumentiert), rendert per headless Chrome und
+   legt zusätzlich den Kontroll-Render aus `assets/story-kontrolle.html`
+   (IG-Chrome, Sticker-Zone, Mock-Sticker) ins Scratchpad
+   (`$SCRATCHPAD`, sonst `/tmp`). Beide PNGs **selbst ansehen**
+   (Sichtpflicht wie 3.1, Lauf 4 und 5). Parsing-Anker sind die Klassen
+   aus `components/blog/article-header.tsx`; ändert sich das Markup,
+   bricht der Builder mit dem fehlenden Feld ab — dann Anker nachziehen,
+   nie von Hand raten.
+5. **Safe-Area ist Layout-Gesetz.** Instagram belegt oben und unten je
+   250 px, die Nav beginnt direkt darunter; **y 1500–1670 bleibt leer**
+   für den Link-Sticker, der Goldpfeil zeigt dorthin. Das Cover darf
+   unten vom Viewport-Fade angeschnitten werden — wie auf einem
+   Handy-Screen; die Bühne endet nie hart.
+6. **Ablage:** derselbe Desktop-Ordner wie Lauf 4 — `story-artikel.png`
+   (das Asset) plus `story-artikel.html` und `cover.jpg` zum
+   Nachjustieren; der Kontroll-Render bleibt im Scratchpad. Im
+   `posting-paket.md` ein eigener Story-Block: Bild, Sticker-Ziel mit
+   `?utm_source=instagram&utm_medium=story&utm_campaign=<slug>` (der
+   In-App-Browser liefert keinen verlässlichen Referrer), Sticker-Text
+   kurz und personenbezogen („Ritas ganze Story lesen"), Reihenfolge:
+   erst den Feed-Post in die Story ziehen (In-App-Verweis, kein Sticker),
+   die Artikel-Story ein paar Stunden später; die Podcast-Story nie
+   direkt davor oder danach.
+
 ## Harte Regeln
 
 - Alle Spine-Regeln aus `/blog-article` gelten (nie publizieren, nie
@@ -278,3 +332,10 @@ Nachweis-Liste, Superlativ-Entschärfung). Publiziert 29.08.2026 in de/en/es
 29.08.2026: erste Podcast-Story (`story-podcast.png`) zur live geschalteten
 Folge *Vom Dachdecker zum Tattoo-Artist — mehr Geld, mehr Freizeit*
 (`youtube.com/watch?v=_zy3a1RIaWE`) → daraus Lauf 5 codifiziert.
+
+Lauf 2 (2026-09-06): Rita „CATO", *„Meine Tattoos reden für sich selbst" —
+mein Weg von der Musik zum Tattoo Artist* (nur de; Einstieg B, ohne Folge).
+08.09.2026: Carousel-Paket und erste Artikel-Story (`story-artikel.png`,
+Ordner `~/Desktop/toda/TODA-Karussell-Story-CATO/`) → daraus Lauf 6
+codifiziert; der Builder reproduziert den Erstlauf pixelgleich aus der
+publizierten URL (AE 0 gegen den Referenz-Render).

@@ -339,6 +339,9 @@ Auswertungs-Log von `voice-learnings.md` registrieren.
      Tattoo Spirit)? Ja/nein + ein Satz warum.
    - **Lead-Magnet-Flag:** steckt eine Vorlage im Thema
      (→ Vorlagen-Format), auch wenn dieser Artikel keine ist?
+   - **Artikel-Story:** Story-Bild im Website-Look für den Link-Sticker —
+     `/artist-story` Lauf 6 baut es aus der publizierten URL; gilt für
+     jeden Artikel, nicht nur Artist-Stories.
 
 ## Harte Regeln
 

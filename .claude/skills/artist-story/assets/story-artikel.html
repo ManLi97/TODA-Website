@@ -1,0 +1,121 @@
+<!doctype html>
+<!--
+  Artikel-Story — Story-Template (Lauf 6 des Skills). 1080×1920, EIN PNG.
+  Referenz-Implementierung = Rita „CATO", Artist-Story publiziert 06.09.2026, Story gebaut 08.09.2026.
+
+  Job: Die Story sagt auf einen Blick „hinter dem Link liegt ein Artikel auf der TODA-Website" —
+  darum Website-Mimikry: sie zeigt den echten Seitenkopf, wie er nach dem Tap erscheint
+  (Nav, Breadcrumb, Kategorie-Pill, Titel, Datum + Lesezeit, Tags, Cover). Gold-Cue = einziger
+  Zusatz, zeigt auf die freie Sticker-Zone. Format-Wahrheit: marketing/channels/instagram.md → „Artikel-Story".
+
+  Platzhalter — ALLE füllt `build-story-artikel.py <url> <ordner>` aus der publizierten Seite
+  (manuelles Füllen ist nur der Fallback, wenn das Markup der Seite nicht mehr parsebar ist):
+    {{LOGO_B64}}    = public/TODA-LOGO.svg als base64
+    {{COVER_B64}}   = das ECHTE Cover des publizierten Artikels (blog-covers-Bucket) als JPEG-base64
+    {{KATEGORIE}}   = Kategorie-Name wie auf der Seite (z. B. Artist Stories); ohne Kategorie leer
+    {{CRUMB_HTML}}  = Breadcrumb-Segmente nach „Blog" (leer, wenn keine Kategorie)
+    {{PILL_HTML}}   = Kategorie-Pill (leer, wenn keine Kategorie)
+    {{TITEL}}       = der publizierte Titel, wörtlich — nie kürzen, nie umformulieren
+    {{META}}        = Datum + Lesezeit exakt wie auf der Seite („6. September 2026 · 4 Min. Lesezeit")
+    {{TAGS_HTML}}   = <span class="tag">#…</span> je Tag, in Seitenreihenfolge
+    {{LANG_HTML}}   = Sprachwahl der Nav, aktive Sprache mit class="on"
+    {{CUE}}         = Gold-Cue in der Artikelsprache
+    {{TITLE_SIZE}}  = 68px; bei langen Titeln (> 90 Zeichen, sonst vierzeilig) 60px
+
+  Harte Layout-Regeln (Safe-Area wie Podcast-Story, nicht verschieben):
+    - Instagram-Chrome belegt oben und unten je 250 px; die Seiten-Nav startet bei y=252.
+    - y 1500–1670 bleibt LEER — dort setzt Tomek den Link-Sticker; der Goldpfeil zeigt dorthin.
+    - Das Cover darf unten vom Viewport-Fade angeschnitten werden (wie auf einem Handy-Screen);
+      die Bühne endet mit dem Fade (ab y 1290, ab 1410 schwarz), nie hart.
+    - Kein Zitat, kein Teaser, kein Todd — jedes weitere Element macht aus der Seite ein Plakat.
+
+  Rendern:
+    chrome --headless=new --disable-gpu --hide-scrollbars \
+      --screenshot=story-artikel.png --window-size=1080,1920 \
+      --force-device-scale-factor=1 file://<story-artikel.html>
+  Danach: PNG SELBST ANSEHEN (Sichtpflicht wie Lauf 3.1, 4 und 5) + Kontroll-Render (story-kontrolle.html).
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#000; --txt:#fff; --txt2:#a3a3a3; --txt3:#6b6b6b;
+    --gold-200:#fce49b; --gold-400:#e8b73d; --gold-500:#c8941a; --on-gold:#2b1e08;
+    --purple-400:#cbb5ef;
+    --title-size:{{TITLE_SIZE}};
+  }
+  html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+  body{font-family:"Inter",-apple-system,"SF Pro Display",system-ui,sans-serif;font-feature-settings:"cv11","ss03";
+    color:var(--txt);-webkit-font-smoothing:antialiased}
+  .stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+
+  /* ---------- Website-Nav (y 252–352), exakt wie auf der Seite: Logo · Sprache · Loslegen ---------- */
+  .nav{position:absolute;top:252px;left:0;right:0;height:100px;padding:0 56px;display:flex;align-items:center;justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.92)}
+  .nav img{height:52px;display:block}
+  .nav .right{display:flex;align-items:center;gap:36px}
+  .lang{display:flex;align-items:center;gap:14px;font-size:24px;font-weight:600;letter-spacing:.02em;color:var(--txt3)}
+  .lang .on{color:var(--txt)}
+  .lang .sep{width:1px;height:26px;background:rgba(255,255,255,.18)}
+  .cta{height:62px;padding:0 34px;border-radius:31px;background:var(--gold-400);color:var(--on-gold);
+    font-size:24px;font-weight:700;letter-spacing:.06em;display:flex;align-items:center;text-transform:uppercase}
+
+  /* ---------- Seitenkopf ---------- */
+  .page{position:absolute;top:352px;left:56px;right:56px}
+  .crumbs{margin-top:36px;font-size:30px;color:var(--txt3);display:flex;align-items:center;gap:14px}
+  .crumbs .cur{color:var(--txt2)}
+  .pill{display:inline-flex;align-items:center;margin-top:28px;height:56px;padding:0 30px;border-radius:999px;
+    font-size:26px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-200);
+    border:2px solid rgba(200,148,26,.45);background:rgba(200,148,26,.10)}
+  h1{margin-top:28px;font-size:var(--title-size);line-height:1.08;font-weight:600;letter-spacing:-.025em;color:var(--txt)}
+  .meta{margin-top:26px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 26px;font-size:30px;line-height:1.4;color:var(--txt3)}
+  .meta .tag{color:var(--purple-400)}
+  .cover{margin-top:36px;width:968px;aspect-ratio:16/9;border-radius:22px;overflow:hidden;
+    border:1px solid rgba(200,148,26,.15);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  .cover img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* ---------- Viewport-Fade: die Seite läuft „unter dem Screen" weiter ---------- */
+  .fade{position:absolute;left:0;right:0;top:1290px;bottom:0;
+    background:linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,.9) 84px,#000 120px)}
+
+  /* ---------- Link-Cue: zeigt auf die freie Sticker-Zone (y 1500–1670) ---------- */
+  .cue{position:absolute;left:0;right:0;top:1396px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .cue .line{font-size:36px;font-weight:700;color:var(--gold-400);letter-spacing:.03em}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="nav">
+    <img src="data:image/svg+xml;base64,{{LOGO_B64}}" alt="TODA">
+    <div class="right">
+      <div class="lang">{{LANG_HTML}}</div>
+      <span class="cta">Loslegen</span>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="crumbs"><span>Blog</span>{{CRUMB_HTML}}</div>
+    {{PILL_HTML}}
+    <h1>{{TITEL}}</h1>
+    <div class="meta"><span>{{META}}</span>{{TAGS_HTML}}</div>
+    <div class="cover"><img src="data:image/jpeg;base64,{{COVER_B64}}" alt=""></div>
+  </div>
+
+  <div class="fade"></div>
+
+  <div class="cue">
+    <div class="line">{{CUE}}</div>
+    <svg width="56" height="66" viewBox="0 0 70 86" aria-hidden="true">
+      <path d="M35 6 L35 60" stroke="#e8b73d" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <path d="M13 46 L35 74 L57 46" stroke="#e8b73d" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+</div>
+</body>
+</html>

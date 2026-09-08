@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- Kontroll-Render für Story-Assets (Lauf 5/6): legt IG-Chrome (oben/unten 250 px), die Sticker-Zone y 1500–1670
+     und einen Mock-Link-Sticker über das PNG. Platzhalter: {{STORY_PNG}} (Pfad/file-URL), {{STICKER_TEXT}}.
+     Wird von build-story-artikel.py gefüllt und ins Scratchpad gerendert — nie in den Deliverable-Ordner. -->
+<html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{font-family:-apple-system,"Inter",sans-serif;color:#fff}
+.stage{position:relative;width:1080px;height:1920px}
+.stage>img.story{position:absolute;inset:0;width:1080px;height:1920px}
+.top{position:absolute;top:0;left:0;right:0;height:250px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0))}
+.bar{position:absolute;top:60px;left:28px;right:28px;height:8px;border-radius:4px;background:rgba(255,255,255,.35)}
+.bar i{display:block;width:45%;height:100%;border-radius:4px;background:#fff}
+.who{position:absolute;top:96px;left:28px;display:flex;align-items:center;gap:22px;font-size:34px;font-weight:600}
+.who b{width:88px;height:88px;border-radius:50%;background:#e8b73d;display:block}
+.who span.t{font-weight:400;opacity:.75;margin-left:8px}
+.x{position:absolute;top:104px;right:44px;font-size:60px;font-weight:300}
+.bot{position:absolute;bottom:0;left:0;right:0;height:250px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.55))}
+.reply{position:absolute;bottom:70px;left:36px;width:800px;height:110px;border:3px solid rgba(255,255,255,.6);border-radius:55px;display:flex;align-items:center;padding-left:40px;font-size:34px;color:rgba(255,255,255,.7)}
+.ic{position:absolute;bottom:88px;font-size:56px}.h{right:150px}.s{right:44px}
+.zone{position:absolute;top:1500px;height:170px;left:0;right:0;border-top:3px dashed rgba(255,60,60,.8);border-bottom:3px dashed rgba(255,60,60,.8);background:rgba(255,60,60,.06)}
+.zone small{position:absolute;right:16px;top:6px;font-size:22px;color:#ff5c5c}
+.sticker{position:absolute;top:1535px;left:50%;transform:translateX(-50%);height:100px;padding:0 44px;border-radius:26px;background:#fff;color:#1a1a1a;display:flex;align-items:center;gap:18px;font-size:36px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.sticker em{font-style:normal;color:#1a73e8;font-size:40px}
+.top2{position:absolute;top:250px;height:0;left:0;right:0;border-top:3px dashed rgba(255,60,60,.5)}
+.bot2{position:absolute;top:1670px;height:0;left:0;right:0;border-top:3px dashed rgba(255,60,60,.5)}
+</style></head><body><div class="stage">
+<img class="story" src="{{STORY_PNG}}">
+<div class="top"><div class="bar"><i></i></div><div class="who"><b></b>toda.tattoosolutions<span class="t">2 Std.</span></div><div class="x">×</div></div>
+<div class="bot"><div class="reply">Nachricht senden…</div><div class="ic h">♡</div><div class="ic s">➤</div></div>
+<div class="top2"></div><div class="zone"><small>Sticker-Zone y 1500–1670</small></div>
+<div class="sticker"><em>🔗</em>{{STICKER_TEXT}}</div>
+</div></body></html>
