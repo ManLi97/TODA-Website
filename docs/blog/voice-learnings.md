@@ -167,6 +167,17 @@ Schluss-Signatur einsetzen.
 
 ## Auswertungs-Log
 
+**Rückstand (Stand DB 08.09.2026, vor dem nächsten Lauf 0 abzuarbeiten):** in der DB
+existiert kein Draft mehr. Veröffentlicht und noch nicht ausgewertet:
+`tattoo-nachsorge-heilphase-kommunizieren` (04.09.), `du-erziehst-dir-deine-kunden-wenn-der-
+rabatt-teurer-wird-als-die-absage` (04.09., = Draft `tattoo-preise-rabatte-unter-wert-
+verkaufen` unter neuem Slug/Titel), `taetowierer-burnout-kundenkommunikation` (publiziert
+18.06., Update 04.09.), `von-krieg-und-musik-zum-tattoo-artist` (06.09., = Draft `von-der-
+musik-zum-tattoo-artist` unter neuem Slug/Titel), `vom-dachdecker-zum-tattoo-artist`
+(leichter Edit). Verschwunden (gelöscht, Themen-Feedback): `tattoo-anzahlung-no-shows-recht`,
+`reach-taetowierfarben-erklaert`. Die Zeilen unten sind bis zur Auswertung historisch.
+
+
 | Artikel | Original-Snapshot | Ausgewertet am | Ergebnis |
 |---|---|---|---|
 | copycat-tattoo-urteil-urheberrecht (→ veröffentlicht als `screenshot-roulette-…`) | ✅ | 16.06.2026 | **ausgewertet** → R1–R10. DE 994→607 W (−39 %), retitelt, Tabelle + Miturheber-Sektion gestrichen, 1 TODA-Mention, ✅/🤓. |

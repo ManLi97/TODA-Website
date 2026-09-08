@@ -120,7 +120,7 @@ Drei Ströme:
   liefert Kandidaten, keine Freifahrt. Liste abgearbeitet → Strom C ruht
   bis zur nächsten Recherche.
 
-### Strom C — Ziel-Liste (Erhebungsstand 07/2026)
+### Strom C — Ziel-Liste (Erhebungsstand 07/2026, Status-Abgleich gegen DB 08.09.2026)
 
 Status pflegt der Skill beim Lauf (offen → in Arbeit → Draft `<slug>` /
 verworfen mit Grund). EN-Cluster ruhen, bis EN-Läufe existieren (v1 = de).
@@ -128,14 +128,14 @@ verworfen mit Grund). EN-Cluster ruhen, bis EN-Läufe existieren (v1 = de).
 | # | Cluster | Sprache | Status |
 |---|---|---|---|
 | C1 | Tattoo-Anfragen beantworten / Instagram-DM-Chaos organisieren | DE | **offen — höchste Prio: Produkt-Wedge, SERP leer** |
-| C2 | Anzahlung vs. Terminkaution rechtssicher | DE | offen (Dedup gegen Draft `tattoo-anzahlung-no-shows-recht` prüfen — ggf. neuer Winkel) |
+| C2 | Anzahlung vs. Terminkaution rechtssicher | DE | offen — der Draft `tattoo-anzahlung-no-shows-recht` wurde gelöscht (Stand DB 08.09.2026; Lauf 0 wertet das als Themen-Feedback aus, bevor C2 neu angegangen wird) |
 | C3 | Tattoo-Software / Terminverwaltung (Head-Term) | DE | offen (dünne SERP) |
 | C4 | Digitale Einverständniserklärung | DE | offen |
 | C5 | Managing booking requests as a solo artist | EN | ruht (v1 = de) |
 | C6 | Selbstständig als Tätowierer (Hub-Artikel) | DE | offen |
-| C7 | Nachsorge-Vorlage / Aftercare-PDF | DE | offen — Vorlagen-Format; Dedup gegen `tattoo-nachsorge-heilphase-kommunizieren` (Vorlage als neuer Winkel) |
+| C7 | Nachsorge-Vorlage / Aftercare-PDF | DE | offen — Vorlagen-Format; `tattoo-nachsorge-heilphase-kommunizieren` ist seit 04.09.2026 **veröffentlicht** → Vorlage als neuer Winkel, intern darauf verlinken |
 | C8 | Deposit-Policy-Templates + No-Show-Scripts | EN | ruht (v1 = de) |
-| C9 | Tattoo-Preise / Stundensatz-Rechner | DE | offen (Suchinteresse validieren) |
+| C9 | Tattoo-Preise / Stundensatz-Rechner | DE | offen — Nachbar-Artikel `du-erziehst-dir-deine-kunden…` (Rabatte, veröffentlicht 04.09.2026) und Cluster `pricing` = Nr. 1 in W36 (102 Signale): Rechner/Preisaufbau als eigener Winkel, nicht Rabatte |
 | C10 | No-Shows vermeiden / Ausfallhonorar | DE | offen (validieren; Vorlagen-Format-Kandidat) |
 
 Scoring pro Themen-Cluster (Strom A, Formel v2):

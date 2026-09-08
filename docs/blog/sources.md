@@ -9,8 +9,14 @@ herausstellen, fliegen raus (mit Notiz warum).
 ## Regeln
 
 1. **Tier 1–2 stützen Fakten.** Jede Rechts-/Zahlen-/Faktenaussage im
-   Artikel braucht eine Tier-1- oder Tier-2-Quelle, per WebFetch im
+   Artikel braucht eine Tier-1- oder Tier-2-Quelle, per DeepAPI
+   (`POST /v1/scrape/website`, PDFs `/v1/scrape/pdf`; `skill:deepapi`) im
    selben Lauf verifiziert — nie aus dem Gedächtnis, nie aus Tier 3.
+   WebFetch nur als Fallback bei DeepAPI-Ausfall, mit benannter
+   Abdeckungslücke. **Lesehilfe für die Tabellen:** „WebFetch ✅/❌" in der
+   Spalte *Zugriff* ist der historische Befund (vor 08/2026); heute gilt
+   der Zugriffsweg DeepAPI, ❌-Quellen (403/CAPTCHA) mit DeepAPI erneut
+   probieren und den Befund datiert aktualisieren.
 2. **Tier 3 ist nur Stimmung.** Community-Quellen liefern Themen und
    Stimmungsbilder. Im Artikel erscheinen sie ausschließlich als lose
    Community-Voice („Man hört gerade oft von Artists, dass …") — nie
@@ -24,8 +30,9 @@ herausstellen, fliegen raus (mit Notiz warum).
    namentlich verwendete Tier-1/2-Faktenquelle bekommt einen Inline-Link
    `[Text](URL)` auf genau die hier hinterlegte, im selben Lauf geprüfte
    URL. Linkziel muss **öffentlich lesbar** sein (kein Login/CAPTCHA) —
-   z. B. dejure/NRWE statt openJur. Tier 3 wird nie verlinkt. (Pipeline
-   öffnet externe Links automatisch in neuem Tab.)
+   z. B. dejure/NRWE statt openJur; Lesbarkeit im selben Lauf per DeepAPI
+   belegt. Tier 3 wird nie verlinkt. (Pipeline öffnet externe Links
+   automatisch in neuem Tab.)
 
 ## Tier 1 — Primär- & Behördenquellen (Fakten-Anker)
 
@@ -101,10 +108,10 @@ und sind scorebar; Web/SERP/Reviews bleiben qualitativ (`engagement NULL`).
 |---|---|---|---|
 | r/TattooArtists | Schmerzpunkte arbeitender Artists (EN, US-lastig) | Batterie `reddit-broad` (DeepAPI `/v1/scrape/reddit/posts`, top/**week**) | Quantitative Diskussions-Baseline, Label **Hypothese** (EN→DACH-Übertragung). Seit v3 ergänzt durch `reddit-comments/*` (Top-3-Threads der Woche). |
 | Reddit-Suche DE/EN | Deutsche Artist-Signale außerhalb der Artist-Subs + EN-Anker | Batterie `reddit-search/de` („Tätowierer", „Tattoo Studio", „tätowieren lernen") und `reddit-search/en` (DeepAPI `/v1/scrape/reddit/search`, `since: week`, `sort: new`) | Neu in v3 (06.09.2026). Wert im Testlauf-Loop messen. |
-| YouTube-Suche DE | Klick-Nachfrage DE, Kandidaten für Kommentar-Scrapes | Batterie `yt-search/*` (5 feste Queries, `since: week`, `sort: date`) | Seit v3 mit `engagement = views` scorebar (Peer-Group = Query). |
+| YouTube-Suche DE | Klick-Nachfrage DE, Kandidaten für Kommentar-Scrapes | Batterie `yt-search/*` (5 feste Queries, `since: week`, `sort: relevance` — seit Lauf 2 am 06.09.2026; `date` lieferte Rausch) | Seit v3 mit `engagement = views` scorebar (Peer-Group = Query). |
 | YouTube-Referenzkanäle | x-Ratio-Basis (Kanalmedian) | Batterie `yt-channels` (@inkarea, @honesttattooerpodcast, `since: month`) | Snapshot-Slot (Wiederholung Absicht). |
 | YouTube-Kommentare | Insider-Stimmung arbeitender Artists (DACH) | Batterie `yt-comments/*` (YouTube Data API v3 `commentThreads`, `order=relevance`, kostenlos; **Ziele dynamisch:** Top 5 DE-Videos der Woche nach Kommentaren, Referenzkanäle raus) + on demand via `lib/mining/youtube.ts` | Nie die Data-API-`search` benutzen (100 Einheiten/Call) — Video-IDs kommen aus `yt-search`. `engagement = likes + 2·replies`. |
-| TikTok-Suche + Kommentare | Trend-Früherkennung (Endkunden-lastig) + echte DACH-Stimmen | Batterie `tiktok-search/*` (2 DE-Queries, `since: week`, `sort: latest`) + `tiktok-comments/*` (**dynamisch:** Top 5 DE-Videos der Woche nach Kommentaren; feste Video-Liste seit v3 entfallen) | Gemessen 29.08.: Kommentare bestes DACH-Signal. Seit v3 scorebar. |
+| TikTok-Suche + Kommentare | Trend-Früherkennung (Endkunden-lastig) + echte DACH-Stimmen | Batterie `tiktok-search/*` (2 DE-Queries, `since: week`, `sort: relevance` — seit 06.09.2026) + `tiktok-comments/*` (**dynamisch:** Top 5 DE-Videos der Woche nach Kommentaren; feste Video-Liste seit v3 entfallen) | Gemessen 29.08.: Kommentare bestes DACH-Signal. Seit v3 scorebar. |
 | Instagram-Hashtags + kuratierte Accounts | Angebotsseite, Szene-Optik; Verbands-/Kampagnen-/Podcast-Posts | Batterie `ig-hashtags/*` (3 DACH-Hashtags, Frische ≤ 14 Tage client-seitig) + `ig-accounts` (12 kuratierte DACH-Accounts, `since: week`; Liste in `config.ts`) + `ig-comments/*` (Top 5 DE-Posts der Woche, Lead-Magnet-Captions ausgeschlossen) | IG-Accounts neu in v3 (Recherche 06.09.: 37 geprüft, 18 gescrapt, ~5 liefern Diskussion). Kommentare: nur erste Seite (≈ 9) erreichbar — kleiner Slot. |
 | Öffentliche Facebook-Gruppen | Job-/Guest-Spot-/Marktplatz-Posts + vereinzelte Meinungsposts (DE/EN) | Batterie `fb-groups/*` (5 öffentliche Gruppen, DeepAPI `/v1/scrape/facebook/groups`, Text-Hash-Dedupe, Posts ohne Text verworfen) | Neu in v3 (Recherche 06.09.: 19 Gruppen geprüft, 13 lesbar; alle deutschen „nur für Tätowierer"-Gruppen privat). Wert im Loop messen, Slots ohne Nutzen streichen; zwei Läufe `no_results` = privat geworden. |
 | Mitbewerber-Reviews | Schmerzpunkte mit Booking-/Kalender-/Payment-Software (Feature-Ebene) | Batterie `reviews/apple/{appId}/{sf}` (Apple-RSS, frei, de/at/ch/gb/us), `reviews/play/{pkg}` (`google-play-scraper`, frei), `reviews/trustpilot/tattoodo` (DeepAPI extract) — nur inckd, Tattoodo, Taddoo, STYNG (MyInkConnect: keine App) | Neu in v3. **Nur unattribuiert verwenden** (`toda-context.md` Regel 9): `source` = Mitbewerber-Slug bleibt in der DB, der Digest aggregiert je `feature` ohne Namen. Wochen-Delta klein (Nischen-Apps). |

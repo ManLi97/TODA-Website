@@ -17,6 +17,7 @@
     "mining:sync": "tsx --conditions=react-server scripts/mining-sync.ts",
     "pulse:quality": "tsx --conditions=react-server scripts/pulse-quality.ts",
     "pulse:report": "tsx --conditions=react-server scripts/pulse-report.ts",
+    "pulse:override": "tsx --conditions=react-server scripts/pulse-override.ts",
     "blog:draft-insert": "tsx --conditions=react-server scripts/blog-draft-insert.ts"
   },
   "dependencies": {

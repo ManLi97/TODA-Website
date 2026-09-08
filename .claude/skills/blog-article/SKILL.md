@@ -1,6 +1,6 @@
 ---
 name: blog-article
-description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS. Use when asked to write a TODA blog post (/blog-article <thema>) or to run topic mining (/blog-article mining). Covers data-based topic selection (Community-Puls (DB) + DACH-Radar + SEO-Gap-Liste), sourced research via the Quellen-Library, writing in TODA voice (Formate: Fall & Recht, Ratgeber, Vorlagen), and draft insert for review in /admin.
+description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS. Use when asked to write a TODA blog post (/blog-article <thema>) or to run topic mining (/blog-article mining). Covers data-based topic selection (Community-Puls weekly digests from the DB with a quality gate + DACH-Radar + SEO-Gap-Liste), sourced research via the Quellen-Library (verified via DeepAPI), writing in TODA voice (Formate: Fall & Recht, Ratgeber, Vorlagen), and draft insert for review in /admin.
 ---
 
 # /blog-article — TODA-Blogartikel datenbasiert erzeugen
@@ -38,7 +38,15 @@ Bevor irgendetwas anderes passiert:
    SKILL.md bzw. `sources.md` / `toda-context.md` direkt anpassen.
    Der Skill schreibt sich selbst fort; Änderungen an SKILL.md im
    Report an Tomek ausweisen.
-5. Gibt es nichts Neues auszuwerten: weiter, ohne Zeit zu verbrennen.
+5. **Anwenden, nicht nur notieren:** Ergibt der Vergleich ein Delta, gelten
+   die daraus destillierten Regeln **im selben Lauf** für den neuen Artikel —
+   nie erst beim nächsten. Ein Lauf schreibt keinen Text, solange ein
+   unausgewertetes Delta existiert.
+6. **Log gegen DB abgleichen:** Jede Zeile des Auswertungs-Logs muss der DB
+   entsprechen — umbenannte Slugs (Publish unter neuem Slug ist Feedback zum
+   Titel), gelöschte Drafts (Feedback zum Thema), Status. Abweichungen im Log
+   korrigieren, nie fortschreiben.
+7. Gibt es nichts Neues auszuwerten: weiter, ohne Zeit zu verbrennen.
 
 ## Lauf 1 — Topic-Mining (`/blog-article mining` oder wenn kein Thema gegeben)
 
@@ -63,10 +71,24 @@ Ablauf:
      result`) und die Kette nachlaufen lassen (`pnpm mining:sync`, `--comments`,
      `--enrich`, `--digest`; Recovery `--request <deepapiRequestId> --source
      <key>`), bevor es weitergeht — oder dokumentierter degradierter Fallback.
-   - **Digest lesen:** `digest_md` + `digest` (jsonb) der jüngsten Woche —
+   - **Qualitäts-Gate (Pflicht, seit 2026-09-08):** je Digest-Woche
+     `pnpm pulse:quality --week <iso>` (oder `select
+     pulse_quality_report('<iso>')->'totals'` via Service-Role-Skript) lesen.
+     Eine Woche ist als **Shortlist-Basis** nur tragfähig mit `useful_de ≥ 300`
+     und `questions_de ≥ 40` (Rubrik `.claude/plans/community-pulse-v3/
+     quality-rubrik.md`). Dünne Wochen (Beispiel 2026-W37: 455 Signale,
+     useful_de 19 — Dedupe-Schatten der Testläufe) liefern nur Δ-Kontext, nie
+     die Themenwahl. Ist die jüngste Woche dünn: die letzten 2–4 Digests
+     zusammen lesen und Cluster-Verläufe aus `pulse_cluster_weekly` über diese
+     Wochen ziehen (`n_signals`, `score`, `trend_gate`, `n_questions`). Im
+     Lauf-Eintrag steht, welche Wochen die Shortlist getragen haben.
+   - **Digest lesen:** `digest_md` + `digest` (jsonb) der tragenden Woche(n) —
      `top_topics` (mit Δ zu den 4 Vorwochen), `questions`, `complaints`/`wishes`/
      `praise`, `videos` (x-Ratio), `competitor_feedback` (unattribuiert),
-     `first_party`, `quotes`, `candidates`, `gaps`. Das ist die Themen-Shortlist.
+     `first_party`, `quotes`, `candidates`, `gaps`. Shortlist = `candidates`
+     mit `format in ('blog', 'faq')` zuerst (Reel/Carousel/Clip gehören
+     `/community-voices` bzw. Social), dann `top_topics` ohne Kandidat; `gaps`
+     ist die Liste dessen, was diese Woche NICHT behauptet werden darf.
    - **Zeilen zum Belegen:** je Kandidat die `evidence_ids` (`run_id|external_id`)
      gegen `topic_signals` + `topic_classifications` auflösen (Titel, Quelle,
      `posted_at`, `quote`, `engagement`); Cluster-Verlauf aus
@@ -84,10 +106,16 @@ Ablauf:
    - Der Cron schreibt jede Zeile mit `classified_by = 'llm'` (`model`,
      `prompt_version`) und überschreibt nie. Widerspricht ein Verdikt der
      Registry-Logik (falscher Cluster, falsche `audience`, Zitat nicht anonym),
-     darf der Skill die Zeile **bewusst** überschreiben: `update
-     topic_classifications set … where run_id = … and external_id = … and
-     classified_by = 'llm'` — als kleines Repo-Skript (Service-Role, CLI-Regime,
-     kein Write-MCP) nach Pre-Action-Report, im Lauf-Eintrag dokumentiert.
+     darf der Skill die Zeile **bewusst** überschreiben — über
+     `pnpm pulse:override <override.json>` (`scripts/pulse-override.ts`:
+     Service-Role, CLI-Regime, nur UPDATE je Zeile, Cluster nur aus der
+     Registry, `classified_by` → `skill`, Grund landet in `note`, Vorher/
+     Nachher als Read-back) nach Pre-Action-Report, im Lauf-Eintrag
+     dokumentiert. Wofür: eine falsche Zeile verfälscht Score und Digest
+     der Woche (Cluster-Summen, x-Ratio-Liste, Zitat-Pool) — typische
+     Fälle: Video fälschlich als Diskussion gezählt, Zitat nicht anonym,
+     Endkunden-Signal als Artist gelabelt. Selten nötig; nie in Masse
+     (dafür `pnpm mining:sync --reclassify <version>`).
    - **Cluster nur aus der Registry** (`lib/mining/config.ts`
      `CLUSTER_REGISTRY` = `topic-radar.md`): `cluster_proposal` mit ≥ 5 Treffern
      in 2 Wochen ist ein Aufnahme-Kandidat — Entscheidung im Lauf-Eintrag, dann
@@ -97,24 +125,33 @@ Ablauf:
      konsistent (`is_discussion = true`, `cluster NULL` außer bei thematischem
      Video) — sonst kippt der Kanalmedian der View.
    - **Scores lesen:** `topic_cluster_scores` je `run_id` und
-     `pulse_cluster_weekly` je Woche rechnen deterministisch in SQL.
-     **Zielgruppen-Gate, Trend-Gate (≥ 3 Zeilen über ≥ 2 Quellen) und
-     Cross-Source** wendet der Skill weiterhin selbst an (Zielgruppen-Gate →
-     `toda-context.md`, „Für wen wir schreiben").
+     `pulse_cluster_weekly` je Woche rechnen deterministisch in SQL — inklusive
+     `trend_gate` (≥ 3 Zeilen über ≥ 2 Quellen) und `n_sources`/`n_platforms`
+     (Cross-Source). Der Skill wendet nur noch das **Zielgruppen-Gate** selbst
+     an (`toda-context.md`, „Für wen wir schreiben": `n_artist`/`n_mixed`
+     gegen `n_endkunde` je Cluster).
 3. **Strom B checken:** tattoo-recht.de (+ ggf. weitere Tier-1/2-News)
-   per WebFetch auf neue Urteile/Updates prüfen.
+   per DeepAPI `POST /v1/scrape/website` (`skill:deepapi` vor dem ersten
+   Call laden) auf neue Urteile/Updates prüfen; WebFetch nur als Fallback
+   und nie als „die Seite" (Abdeckungslücken benennen).
 4. **Strom C ziehen:** nächster offener Eintrag der Ziel-Liste in
    `topic-radar.md` (höchste Prio zuerst, max. **ein** C-Slot pro Lauf);
    Listen-Status im selben Lauf pflegen.
 5. **Dedup-Check:** `select t.title, t.slug, t.tags, t.status from
    blog_post_translations t` — behandelte Themen scheiden aus oder
    brauchen einen neuen Winkel.
-6. **Such-Validierung:** Top-Kandidaten mit SerpApi-Suchvolumen prüfen
-   (google.de, `SERPAPI_API_KEY`) + DeepAPI `seo.rank`/`seo.audit` als
-   SERP-Read (wer rankt zum Thema, wie stark?). DeepAPI `seo.keyword` ist
-   für DE tot (gemessen 29.08.) — nicht verwenden. Die DACH-Kontext-Zeilen
-   aus Strom A (TikTok-/YT-Kommentare, Web) sind qualitatives
-   Entscheidungssignal neben den Scores — nie selbst gescored.
+6. **Such-Validierung — erst die eigenen SERP-Zeilen, dann SerpApi:**
+   Die Batterie speichert jede Woche Google-Trends-Rising/Top (`serp/
+   trends/*`) und People-also-ask (`serp/paa/*`) in `topic_signals`
+   (`platform = 'serp'`, Werte in `metrics`, Digest-Block `serp`). Diese
+   Zeilen zuerst lesen (kostenlos, schon DACH-gefiltert). Nur für
+   Kandidaten ohne Treffer dort: SerpApi-Suchvolumen (google.de,
+   `SERPAPI_API_KEY`, Free-Plan 250/Monat — die Batterie braucht ~8/Woche)
+   + DeepAPI `seo.rank`/`seo.audit` als SERP-Read (wer rankt zum Thema, wie
+   stark?). DeepAPI `seo.keyword` ist für DE tot (gemessen 29.08.) — nicht
+   verwenden. Die DACH-Kontext-Zeilen aus Strom A (TikTok-/YT-Kommentare,
+   Web) sind qualitatives Entscheidungssignal neben den Scores — nie selbst
+   gescored.
 7. **Quellen-Check:** Trägt eine Tier-1/2-Quelle das Thema? Ohne
    Faktenbasis kein eigener Artikel.
 8. **Radar-Eintrag anhängen** (datiert): referenzierte `run_id`s (statt
@@ -139,7 +176,10 @@ gibt). Ist die C-Liste abgearbeitet: zurück zu 2× Strom A.
 ### 2.1 Recherche — Quellen-Library zuerst
 
 - Start in `sources.md`: passende Tier-1/2-Quellen ziehen und per
-  WebFetch **im selben Lauf** verifizieren — nie aus dem Gedächtnis.
+  DeepAPI (`POST /v1/scrape/website`, PDFs `POST /v1/scrape/pdf`;
+  `skill:deepapi` laden) **im selben Lauf** verifizieren — nie aus dem
+  Gedächtnis. WebFetch nur, wenn DeepAPI nicht erreichbar ist, und dann
+  mit benannter Abdeckungslücke.
 - Reicht die Library nicht: gezielt neue Primär-/Fachquellen suchen,
   verifizieren, und **nur die tatsächlich verwendeten** als neuen
   Eintrag in `sources.md` aufnehmen (Tier, Zugriffsweg, Notizen).
@@ -176,7 +216,7 @@ Format (Konvention der bestehenden Posts):
   Post-Sanitize-Transform in `lib/blog/markdown.ts`):
   - **Quellen (extern):** Jede namentliche Fakten-/Rechtsaussage (Urteil, §,
     Studie, Zahl, Verordnung) bekommt einen Inline-Link `[Text](https://…)`
-    auf die **verifizierte Tier-1/2-Quelle** — im selben Lauf per WebFetch
+    auf die **verifizierte Tier-1/2-Quelle** — im selben Lauf per DeepAPI
     geprüft, Linkziel öffentlich lesbar (kein CAPTCHA/Login), URL fix in
     `sources.md`. Tier-3-Community wird **nie** verlinkt (bleibt Stimmung).
   - **Intern (Artikel ↔ Artikel):** Nur auf **veröffentlichte** Geschwister
@@ -247,7 +287,7 @@ Auswertungs-Log von `voice-learnings.md` registrieren.
 2. Wissensdokumente nachziehen: neue Quellen → `sources.md`;
    Mining-Lauf → `topic-radar.md`-Eintrag.
 3. Report an Tomek: Titel, Review-Link
-   `https://<vercel-domain>/admin/posts/<post_id>`, gewähltes
+   `https://www.todasolutions.com/admin/posts/<post_id>`, gewähltes
    Artikel-Format (mit Begründung), **vollständige Quellenliste mit Tier
    und URL**, wo die TODA-Erwähnung sitzt, und (bei Mining) der
    Daten-Trail Thema ← Score ← Scrape.

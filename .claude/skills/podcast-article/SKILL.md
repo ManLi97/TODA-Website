@@ -121,7 +121,7 @@ zuletzt veröffentlichten Artikel mit `originals/`-Snapshot (Stil-Referenz).
    supply-getriebener Auswahl **besonders scharf** — kein Interesse → Winkel auf
    einen gesuchten Teilaspekt drehen oder Folge zurückstellen.
 3. **Quellen-Check / Recherche:** wie `/blog-article` 2.1 — Fakten aus
-   `sources.md` Tier-1/2, per WebFetch **im selben Lauf** verifiziert, inline
+   `sources.md` Tier-1/2, per DeepAPI (`/v1/scrape/website`) **im selben Lauf** verifiziert, inline
    verlinkt. **Die Folge ist O-Ton, kein Faktenbeleg:** Host-Aussagen sind
    Haltung/Anekdote; jede Rechts-/Zahlen-/Faktenaussage braucht Tier-1/2.
 
