@@ -128,7 +128,7 @@ verworfen mit Grund). EN-Cluster ruhen, bis EN-Läufe existieren (v1 = de).
 | # | Cluster | Sprache | Status |
 |---|---|---|---|
 | C1 | Tattoo-Anfragen beantworten / Instagram-DM-Chaos organisieren | DE | **offen — höchste Prio: Produkt-Wedge, SERP leer** |
-| C2 | Anzahlung vs. Terminkaution rechtssicher | DE | offen — der Draft `tattoo-anzahlung-no-shows-recht` wurde gelöscht, weil er mit veraltetem Skill-/Puls-Stand entstand (Tomek, 08.09.2026; kein Themen-Feedback). Der Puls trägt das Thema: W36 `faq`-Kandidat „Anzahlung und Termingebühr", W37 `blog`-Kandidat „Termingebühr statt Terminchaos" → Strom A und C konvergieren, Tier-1-Anker AG Dresden 116 C 5571/25 |
+| C2 | Anzahlung vs. Terminkaution rechtssicher | DE | **Draft 08.09.2026** `tattoo-anzahlung-widerrufsrecht-online-buchung` (Fernabsatz/Widerruf/§ 356a; Strom A+B+C-Konvergenz, Lauf 2026-09-08). Der Vorgänger-Draft war eine Prozess-Löschung (veralteter Stand, Tomek 08.09.). Terminkaution-Winkel (kkp.law) nur als Listenpunkt — Folgeartikel möglich |
 | C3 | Tattoo-Software / Terminverwaltung (Head-Term) | DE | offen (dünne SERP) |
 | C4 | Digitale Einverständniserklärung | DE | offen |
 | C5 | Managing booking requests as a solo artist | EN | ruht (v1 = de) |
@@ -783,3 +783,63 @@ deutsch-erkannten Ziele", 0 Signale; TikTok/IG/Reddit-Replays in dieselben Run-Z
 weiter 455 Signale, 0 doppelte IDs, 0 offene Zeilen, Enrich 0 Calls.
 Beobachtung für W38: erste Woche ohne Test-Schatten — erwartet wieder ≈ 1000+ neue Zeilen.
 Rubrik: `.claude/plans/community-pulse-v3/quality-2026-W37-cron.json`.
+
+
+## Lauf 2026-09-08 — erster `/blog-article mining` auf Community-Puls v3 (Testlauf des neu ausgerichteten Skills)
+
+**Lauf 0 (zwei Sub-Agenten, Formate getrennt):** fünf publizierte Artikel ausgewertet →
+`voice-learnings.md` R11–R13 neu, R2/R5/R8 präzisiert, Artist-Story-Signal 08.09. (Details dort).
+Tomeks Entscheidungen vom 08.09.: kein Rechts-Disclaimer; die drei gelöschten Drafts (DSGVO,
+Anzahlung, REACH) waren Prozess-Löschungen (veralteter Stand), kein Themen-Feedback → C2 wieder offen.
+
+**Freshness-Gate:** jüngster Digest 2026-W37 (07.09.) ✓. **Qualitäts-Gate:** W36 useful_de 791 /
+questions_de 105 → trägt die Shortlist; W37 useful_de 19 → nur Δ-Kontext (Rubrik-Totals via
+`pnpm pulse:quality`).
+
+**Strom A (W36, Δ W37):** `pulse_cluster_weekly` W36: pricing 102 Signale / Score 2945 (aber 65
+Endkunde / 8 Artist), regulation-hygiene 78/281, technique-equipment 92/219 (82 Artist, 43 Fragen),
+business-studio 48/216 (41 Artist), career-entry 74/215 (72 Artist, 20 Fragen), expectation-vs-
+result 73/209 (61 Endkunde). Produktnahe Cluster dünn (deposits-anzahlung 6, cancellations 8,
+no-shows 3) — Digest-Gap: „Bedarf über SERP-Fragen sichtbar, nicht über Community-Stimmen belegt".
+Blog/FAQ-Kandidaten W36: Preisaufbau (blog), **Anzahlung & Termingebühr (faq)**, Einstieg ohne
+Lehrstelle (blog), Motiv-Erwartungen schriftlich (faq); W37: Termingebühr statt Terminchaos (blog).
+Belegzeilen Anzahlung/Absage: `c5c4c0be-1ab4-4bc1-ab93-d7b75d33f17b` (serp/paa/tattoo-anzahlung:
+„Ist eine Anzahlung bei Tattoos normal?", „Kann ich eine Anzahlung … zurückfordern?"),
+`3f1bc92b-cd87-4eeb-b22e-137b574777b3` (serp/paa/tattoo-termin-absagen, 4 Fragen), W37
+`5071e8b4-a39e-45e8-b35d-b1aee59bb55d` (2 weitere), `9389ee1b-d629-4bdc-92c1-c6696a206129|
+fb:893daaadf242009a` (Schweizer Fachgruppe, Artist, de: „extra hohe Anzahlung verlangen"),
+`4e26f523-6244-4cda-a4da-36eae758d897` (web: Reddit-DE-Thread No-Shows/Anzahlung, Artist).
+**Zielgruppen-Gate:** Cluster-Zählung ist endkundenlastig, aber der Schmerzpunkt ist ICP-Kern
+(`positioning.md`: „genervt von No-Shows … vergisst, Anzahlungen zu prüfen") und die Endkunden-
+Fragen sind exakt das Artist-Risiko → bestanden. career-entry scheidet trotz 72 Artist-Zeilen aus
+(Azubi-Nische, Anti-ICP „nebenbei"); technique-equipment ist Craft ohne Tier-1-Anker und ohne
+Produktnähe → Toddcast-Kandidat, kein Blog-Slot; pricing/Preisaufbau bleibt nächster Strom-A-Slot
+(Nachbar-Artikel Rabatte 04.09. publiziert → neuer Winkel nötig, Tier-1-Kompass `sources.md` Regel 5).
+
+**Strom B:** feelfarbig-RSS seit 15.08. nichts Business/Recht. tattoo-recht.de: alle Unterseiten
+404 (auch `/tag/anzahlung/`, `/feed/`, `/wp-json/`), Startseite ohne Urteile → **degradiert**.
+Neu: **@recht_bunt** (RA Urban Slamal, von Tomek benannt) — 33 Posts gescrapt; Reel 22.04.2026
+„Onlinedienste zur Terminvereinbarung = Fernabsatzverträge, Widerrufsbelehrung Pflicht"
+(`/p/DXbsT37t5D6/`), No-Show-Reel 12.05. (`/p/DYP_DfDtb9F/`, 481 Likes), AGB-Reel 10.06.
+Gesetzes-News: **§ 356a BGB (Widerrufsbutton) gilt seit 19.06.2026** (Richtlinie (EU) 2023/2673
+Art. 2, EUR-Lex verifiziert) — in der Szene unbesetzt.
+**Strom C:** C2 (Anzahlung vs. Terminkaution) → konvergiert mit A und B. **Dedup:** Rabatte-Artikel
+(04.09.) behandelt Absage/Preis, nicht Widerruf; gelöschter Anzahlung-Draft (06/2026) hatte den
+Widerruf, aber ohne § 356a und ohne Quellen-Links → neuer Winkel = Widerrufsbutton + Fernabsatz.
+**Such-Validierung:** eigene SERP-Zeilen genügen (7 PAA-Fragen Anzahlung/Absage in W36+W37, Trends
+„tätowierer werden" +60 %); kein SerpApi-Call.
+
+**Quellen-Check:** Tier 1 gesetze-im-internet §§ 312c, 312g, 355, 356, 356a + EUR-Lex 2023/2673
+(alle per DeepAPI im Lauf gelesen); Tier 2 recht_bunt-Reel, kkp.law (Anzahlung vs. Terminkaution),
+academy.7erink (AG-Dresden-Bericht). **Lücke:** AG Dresden Az. 116 C 5571/25 / 310 € (Library-Eintrag
+06/2026 via tattoo-recht.de) in diesem Lauf nirgends lesbar (dejure ohne Treffer, tattoo-recht 404,
+lawthek nicht lieferbar, LinkedIn-Post von Dr. Rieck außerhalb der letzten 15) → Urteil im Artikel
+ohne Az./Betrag, Kernzahl stattdessen aus Tier 1 (12 Monate + 14 Tage).
+
+**Entscheidung — 1 Artikel (A+B+C-Konvergenz), Format Fall & Recht:** Draft
+`tattoo-anzahlung-widerrufsrecht-online-buchung` (post_id `ff04a7ca-983f-4c1e-96fd-c7bfbb342d7b`,
+558 W). Nicht geschrieben (Backlog, Reihenfolge): (1) Preisaufbau/„Wofür zahlt man" — Strom-A-Top,
+braucht Tier-1-Zahlen; (2) Motiv-Erwartungen schriftlich (Vorlagen-Format, OLG Hamm als Anker,
+Nachbar „Lächeln im Studio"); (3) Widerrufsbutton als eigenes Stück für Website-Bucher, falls der
+Anzahlung-Artikel trägt. Kosten Lauf: DeepAPI ≈ 0,9 $ (27,01 → 26,3 $), Anthropic Sub-Agenten
+≈ 165k Tokens.

@@ -154,6 +154,11 @@ Ablauf:
      Urteile **degradiert** und der Lauf-Eintrag sagt das. Urteils-Volltexte
      kommen dann direkt aus Tier 1 (NRWE, dejure — beide per DeepAPI lesbar,
      geprüft 08.09.2026).
+   - **@recht_bunt** (Instagram, RA Urban Slamal — Tomeks benannte
+     Vertrauensquelle, `sources.md` Tier 2): DeepAPI `POST /v1/scrape/
+     instagram/posts` `{ "usernames": ["recht_bunt"] }` — Posts mit `postedAt`
+     seit dem letzten Radar-Eintrag sind Trigger; ein Reel ist als Permalink
+     verlinkbar („Anwalt X sagt …"), Zahlen/§§ weiter gegen Tier 1.
    - Weitere Tier-1/2-Seiten per DeepAPI `POST /v1/scrape/website`
      (`skill:deepapi` vor dem ersten Call laden); WebFetch nur als Fallback
      und nie als „die Seite" (Abdeckungslücken benennen).

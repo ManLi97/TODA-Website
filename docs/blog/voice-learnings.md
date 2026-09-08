@@ -55,11 +55,13 @@ bleibt davon getrennt keyword-optimiert.
   „Wenn …"-Stakes, gern ein echtes Zitat) und separat den nüchternen
   keyword-`seo_title`.
 
-### R2 — Radikal kürzen: Zielmarke ~600–650 Wörter (Struktur → SKILL.md)
-Beide Artikel wurden um ~35–40 % gekürzt auf **~600–650 Wörter**. Das liegt
-**unter** der bisherigen SKILL.md-Vorgabe „900–1500 Wörter". → In SKILL.md
-eskaliert (Längen-Vorgabe ist explizit ein Struktur-Parameter). Schreib von
-vornherein straffer: lieber 650 dichte Wörter als 1000 mit Hedging.
+### R2 — Straff schreiben: Zielmarke 550–700 Wörter (Struktur → SKILL.md)
+Die ersten beiden Artikel wurden um ~35–40 % auf **~600–650 Wörter** gekürzt
+(unter der alten SKILL.md-Vorgabe „900–1500"; eskaliert). **Relativiert
+08.09.2026:** die drei Artikel vom 04.09. wurden mit −7 % / ±0 / −6 %
+publiziert (562 / 697 / 537 W) — Kürzung ist nicht mehr das Hauptsignal,
+sobald der Draft schon straff ist. Zielkorridor **550–700 Wörter**, lieber
+650 dichte Wörter als 1000 mit Hedging.
 
 ### R3 — Sektions-Überschriften: Label + Witz/Klammer-Aside + Metapher
 Nüchterne Überschriften werden zu griffigen Labels mit Klammer-Aside,
@@ -76,11 +78,13 @@ Tomek streicht sekundäre Rechts-Stränge und Detail-Tabellen ersatzlos.
 - Gestrichen: die Schadens-**Tabelle** (175 €/h × 5 Std., § 13 UrhG, 185,10 € Abmahnkosten) → ersetzt durch eine Prosa-Zeile + Merkformel **„Kein Credit = doppelter Schaden."**
 - → Eine Leitentscheidung, eine Kernzahl. Keine zweite Aktenzeichen-Zitierung, keine Cent-genauen Kostenaufstellungen.
 
-### R5 — Listen: Spiegelstriche mit kurzem fettem Substantiv-Label, ~4 Punkte
+### R5 — Listen: Spiegelstriche mit kurzem fettem Label, ~4 Punkte
 Lange nummerierte Prozesse (5–6 Punkte, je 2–3 Sätze) werden zu
 Spiegelstrich-Listen mit knappem **Label:**-Einstieg, gedeckelt bei ~4.
+Label = Substantiv **oder** Imperativ — nie ein Meta-Abstraktum (08.09.2026).
 - „1. **Briefing schriftlich, immer.** …" → „- **Alles schriftlich:** …"
 - „Sag laut, dass Nein nichts kostet" → „- **Mut zur Lücke:** …"
+- „**Die Klammer:** Beides ist …" → „**Stark bleiben:** Wenn Rabatt, dann …" (Rabatte-Artikel)
 - 6-Punkte-Schutzroutine → 4 Spiegelstriche.
 
 ### R6 — Emphase: ALL-CAPS-Einzelwörter + gefettete Ein-Zeilen-Formeln
@@ -107,7 +111,12 @@ Tomek konsolidiert auf **eine** Stelle und rahmt sie augenzwinkernd.
   über die eigene Produkterwähnung auf einer gewerblichen Seite zu schreiben, ist
   unnötig angreifbar. Der Zwinker trägt genauso. Erstanwendung: Rabatte-Artikel.
 - explizit „TODA-Anfrage-Widget" → softer „(wie das von uns entwickelte Widget)"
-- → Im Zweifel **eine** Erwähnung, lieber zu dezent als zu werblich. (TODA-Mention-Dichte → auch SKILL.md-relevant.)
+- **Präzisiert 08.09.2026 (drei Artikel):** 0 / 1 / 1 Mentions publiziert. Die
+  Mention bekommt einen **eigenen Absatz** („**Kurzer Hint: TODA hat dabei
+  geholfen 🤓**" + drei Sätze Produktfluss), der Name steht vorn statt als
+  Coy-Reveal („Heißt zufällig TODA" raus). Nur mit echtem Feature (R11) —
+  sonst fliegt die Zeile ersatzlos.
+- → Im Zweifel **höchstens eine** Erwähnung, lieber zu dezent als zu werblich. (TODA-Mention-Dichte → auch SKILL.md-relevant.)
 
 ### R9 — Emojis: sparsam (0–2), nur an Aufheller-/Zwinker-Beats
 Screenshot-Artikel: **✅** (positive Wendung „anders rum gilt das genauso ✅")
@@ -118,7 +127,47 @@ ernsten Rechts-/Schmerz-Passagen sprenkeln.
 ### R10 — Signatur-Schluss „… was wirklich zählt: Deine Kunst."
 Beide Artikel enden (von Tomek beibehalten) auf die Wendung „So bleibt mehr
 Zeit für das, was wirklich zählt: **Deine Kunst.**" → als wiederkehrende
-Schluss-Signatur einsetzen.
+Schluss-Signatur einsetzen. Bestätigt 08.09.2026 (3/3), immer mit großem
+„**Deine**". Tomek schreibt „Du/Dein" in Überschriften groß („Deine Kunst,
+Dein Preis"), im Fließtext klein.
+
+*Zweite Auswertung 08.09.2026 — drei Artikel vom 04.09. (Nachsorge, Rabatte/
+Toddcast #2, Burnout/Toddcast #1). R1, R3, R4, R6, R7, R9, R10 bestätigt;
+R2, R5, R8 präzisiert; drei neue Regeln:*
+
+### R11 — TODA nur entlang des echten Produktflusses; keine erfundenen Features
+Anfrage-Formular (Körperstelle, Größe, Referenzen) → Angebot aus der App →
+Termin aus dem Kalender. Ein Feature, das so nicht existiert, wird gestrichen,
+nicht umformuliert — das stärkste Negativ-Signal dieser Auswertung.
+- *Original:* „Genau dafür gibt's bei TODA Vorlagen und automatische
+  Erinnerungen … 🤓" (Nachsorge) → *Korrektur:* **Zeile ersatzlos raus**, 0 Mentions.
+- *Original:* „Stil, Größe, Körperstelle und Budget … Heißt zufällig TODA."
+  → *Korrektur:* „Kurzer Hint: TODA hat dabei geholfen 🤓" + Anfrage → Angebot →
+  Buchung in drei Sätzen, eigener Absatz.
+- → Vor jeder Mention den Baustein in `toda-context.md` gegenlesen; nur
+  beschreiben, was dort steht.
+
+### R12 — Klartext schlägt Cleverness: Branchenwort statt Metapher/Wortspiel
+Tomek ersetzt bildhafte Nomen und Wortspiele durch das schlichte Wort.
+Colloquialismen (R7: „Fuffi", „fertig macht") bleiben — Literarisches geht.
+- „Die besten Heiler" → „Die besten Tattoo Artists"; „Publikumsproblem" →
+  „Kundenproblem"; „den niemand auf der Rechnung hat" → „den niemand
+  erwartet"; „Die Heilung stichst nicht du" → „Die Heilung kannst du nicht
+  mit tätowieren"; „derweil" → gestrichen.
+- Claude-eigene Klammer-Asides fliegen („(ja, auch Powernaps — …)"); die
+  Eskalation wird realistisch („gleich hundert runter" → „fünfzig aus Angst runter").
+- **Kein Gender-Doppelpunkt:** „Kund:innen" → „Kunden"; „Leute/Kundschaft" →
+  „Kunden/Community".
+
+### R13 — Podcast-Meta-Erzählung raus, Aussage direkt setzen (`/podcast-article`)
+Keine Erzähler-Brücken über die Folge; Zitat oder These direkt. Der Podcast
+heißt einmal „Toddcast" als Link auf den YouTube-Kanal, nie „erste Folge".
+- „Danach rechnet er die Spirale vor, und sie läuft immer gleich." → „Es läuft
+  bei jedem gleich:"
+- „Ein Detail aus dem Gespräch, das leicht untergeht:" → eigene H2 „Deine
+  Kunst, Dein Preis" mit direkter These; Zitat-H2 + erstes H3 im Bestand.
+- „im Toddcast" → „im [Toddcast](https://www.youtube.com/@TODATattooSolutions)";
+  „In unserer ersten Toddcast-Folge" → „In unserem Podcast".
 
 ## Sonstige Feedback-Signale
 
@@ -148,6 +197,25 @@ Schluss-Signatur einsetzen.
   transkribieren, Satzlänge am Sprechrhythmus messen; das Ereignis mit den
   höchsten Stakes trägt den Lede.** Die Artistin hat Fassung 2 ohne
   Änderungswunsch freigegeben.
+- **08.09.2026 — Artist-Story, Lauf 0 über beide publizierten Stories:** Vossi
+  (29.08.) wurde byte-identisch publiziert (5030→5065 Zeichen = nur CRLF des
+  Admin-Editors — bei Zeichen-Deltas künftig erst Zeilenenden normalisieren).
+  CATO (06.09.) hat exakt drei Edits, alle in Richtung „mehr Stakes, mehr
+  O-Ton": (1) H2 „Vorher habe ich Musik gemacht" → „Musik, Krieg und endlich
+  kam die Kunst" + Slug/SEO-Title `von-krieg-und-musik-…` — das Ereignis mit
+  den höchsten Stakes gehört nicht nur in den Lede, sondern auch in die erste
+  Zwischenüberschrift und die URL (H1 blieb bei ihrem Zitat); (2) Lede:
+  Aussprache-Erklärung („gesprochen „Kato"") gestrichen, Artist-Name im ersten
+  Satz direkt auf sein Profil verlinkt — Erklärungen für Leser, die der Artist
+  selbst nie sagen würde, raus; (3) Reel-Zeile „entschuldige mich ganz
+  herzlich" → „ganz viel" — bei Nicht-Muttersprachlern die eigene Wortwahl
+  NICHT glätten; leicht schiefes Deutsch ist Voice, kein Fehler. Muster:
+  **Überschriften/Slug tragen die Stakes, der Name trägt den Link, der O-Ton
+  bleibt ungeglättet.** (Format-Label Artist-Story — keine R-Regel.)
+- **08.09.2026 — Disclaimer-Differenzierung:** Der *medizinische* Hinweis im
+  Nachsorge-Artikel blieb stehen, der *Rechts*-Disclaimer wurde in allen
+  Rechtsartikeln gestrichen. „Kein Disclaimer" gilt für Rechtsthemen; bei
+  Gesundheitsthemen bleibt der kurze Arzt-Hinweis.
 - **29.08.2026 — Artist-Korrektur (`/artist-story` Lauf 1):** Einzige
   Korrektur von Markus Vossi an seiner Story: Der Text hatte „nach der
   Ausbildung sofort weg" verdichtet — real hat er noch ~1 Jahr als
@@ -166,16 +234,8 @@ Schluss-Signatur einsetzen.
 
 ## Auswertungs-Log
 
-**Rückstand (Stand DB 08.09.2026, vor dem nächsten Lauf 0 abzuarbeiten):** in der DB
-existiert kein Draft mehr. Veröffentlicht und noch nicht ausgewertet:
-`tattoo-nachsorge-heilphase-kommunizieren` (04.09.), `du-erziehst-dir-deine-kunden-wenn-der-
-rabatt-teurer-wird-als-die-absage` (04.09., = Draft `tattoo-preise-rabatte-unter-wert-
-verkaufen` unter neuem Slug/Titel), `taetowierer-burnout-kundenkommunikation` (publiziert
-18.06., Update 04.09.), `von-krieg-und-musik-zum-tattoo-artist` (06.09., = Draft `von-der-
-musik-zum-tattoo-artist` unter neuem Slug/Titel), `vom-dachdecker-zum-tattoo-artist`
-(leichter Edit). Gelöscht (veralteter Stand, kein Themen-Feedback — s. Feedback-Signale):
-`tattoo-anzahlung-no-shows-recht`, `reach-taetowierfarben-erklaert`. Die Zeilen unten sind
-bis zur Auswertung historisch.
+**Stand 08.09.2026:** Rückstand abgearbeitet (Lauf 0 des Mining-Laufs 08.09.2026, zwei
+Sub-Agenten: Blog/Podcast und Artist-Story getrennt). Kein Draft mehr in der DB.
 
 
 | Artikel | Original-Snapshot | Ausgewertet am | Ergebnis |
@@ -183,12 +243,13 @@ bis zur Auswertung historisch.
 | copycat-tattoo-urteil-urheberrecht (→ veröffentlicht als `screenshot-roulette-…`) | ✅ | 16.06.2026 | **ausgewertet** → R1–R10. DE 994→607 W (−39 %), retitelt, Tabelle + Miturheber-Sektion gestrichen, 1 TODA-Mention, ✅/🤓. |
 | erwartungsmanagement-tattoo-kunden (→ veröffentlicht als `…laecheln-im-studio…`) | ✅ | 16.06.2026 | **ausgewertet** → R1–R10. DE 958→636 W (−34 %), retitelt, „Wenn es knallt"-Sektion gestrichen, TODA-Mention entschärft. |
 | screenshot-roulette EN/ES + studio-lächeln EN/ES | ✅ | 16.06.2026 | **unverändert veröffentlicht** — kein Korrektursignal (Übersetzungen 1:1 übernommen). |
-| tattoo-nachsorge-heilphase-kommunizieren | ✅ | — | **neuer Draft 16.06.2026** (Lauf K2/Aftercare, R1–R10 angewandt, 603 W), wartet auf Publish |
+| tattoo-nachsorge-heilphase-kommunizieren | ✅ | 08.09.2026 | **ausgewertet** → R11, R12. Publiziert 04.09.2026, 603→562 W: TODA-Zeile (erfundenes Feature) ersatzlos raus, „Kund:innen" → „Kunden", Wortspiele → Klartext, medizinischer Hinweis behalten. |
 | tattoo-anzahlung-no-shows-recht | ✅ | 08.09.2026 | **gelöscht** (veralteter Skill-/Puls-Stand, kein Themen-Feedback) — Snapshot bleibt, Thema offen (C2) |
 | reach-taetowierfarben-erklaert | ✅ | 08.09.2026 | **gelöscht** (veralteter Stand, kein Themen-Feedback) — Snapshot bleibt, Thema offen |
 | dsgvo-tattoo-studio-kundendaten | ✅ (rekonstruiert) | 08.09.2026 | **gelöscht** (veralteter Stand, kein Themen-Feedback) — Thema offen |
-| taetowierer-burnout-kundenkommunikation (Toddcast #1 Recycling) | ✅ | — | **neuer Draft 18.06.2026** — erster `/podcast-article`-Lauf. R1–R10 angewandt, ~610 W, 1 TODA-Mention (zwinkernd), Signatur-Schluss, Embed `rdOlY1-Bp5E`@1236s. Wartet auf Publish. |
-| vom-dachdecker-zum-tattoo-artist (Artist-Story, Toddcast #1) | ✅ | — | **Draft 29.08.2026, noch am selben Tag von Tomek publiziert** (mit leichtem Edit: 5030→5065 Zeichen — beim nächsten Lauf 0 diffen). Erster `/artist-story`-Insert nach dokumentiertem Artist-Go (Markus Vossi); Artist-Korrektur eingearbeitet (s. Feedback-Signale). Eigener Autor-Datensatz + Avatar/Cover in Storage; Kategorie nachträglich auf `artist-stories` umgezogen. |
+| taetowierer-burnout-kundenkommunikation (Toddcast #1 Recycling) | ✅ | 08.09.2026 | **ausgewertet** → R8, R11, R12, R13. Publiziert 18.06., Update 04.09.2026, 571→537 W: TODA-Absatz auf echten Produktfluss umgebaut („Kurzer Hint"), Metaphern/Asides gestrichen, „erste Toddcast-Folge" → „unser Podcast". |
+| vom-dachdecker-zum-tattoo-artist (Artist-Story, Toddcast #1) | ✅ | 08.09.2026 | **ausgewertet — kein Korrektursignal:** byte-identisch publiziert (5030→5065 Zeichen = 35× CRLF des Admin-Editors). Erster `/artist-story`-Insert nach dokumentiertem Artist-Go (Markus Vossi); Artist-Korrektur eingearbeitet (s. Feedback-Signale). |
 | from-roofer-to-tattoo-artist EN + de-techador-a-tatuador ES | ✅ | — | **29.08.2026 direkt published** (explizite Anweisung Tomek) — 1:1-Übersetzungen der freigegebenen DE-Fassung, Ton unverändert; ES-Terminologie „tatuador" analog Bestand. |
-| tattoo-preise-rabatte-unter-wert-verkaufen (Toddcast-Recycling #2, Rabatte & Preisspirale) | ✅ | — | **neuer Draft 29.08.2026** — zweiter `/podcast-article`-Lauf, R1–R10 geprüft (634 W, 1 Emoji, 0 Ausrufezeichen, 1 TODA-Mention, 2 interne Links), Embed `_zy3a1RIaWE`@3899s, Kategorie `law-money`. Insert über Repo-Script + Service-Role (Plugin-MCP-Schreibweg retired). **Erster `/podcast-article`-Artikel, den Tomek liest** — seine Korrekturen sind das Lernsignal für Lauf 0 des nächsten Laufs. Wartet auf Publish. |
-| von-der-musik-zum-tattoo-artist (Artist-Story, Rita „CATO“ — ohne Podcast-Folge) | ✅ | — | **Draft 06.09.2026 nach dokumentiertem Artist-Go** — zweiter `/artist-story`-Lauf, erster ohne gemeinsamen Dreh (Material: ihr eigener Text + 3 selbst transkribierte Reels + Feed-Scrape). 793 W, 0 Emojis, 0 Ausrufezeichen, Ø 9,5 W/Satz. Eigener Autor-Datensatz `rita-cato` + Avatar/Cover in Storage, Kategorie `artist-stories`. Fassung 1 → 2 vor der Freigabe auf Tomeks Voice-Korrektur (s. Feedback-Signale 06.09.2026). Wartet auf Publish. |
+| tattoo-preise-rabatte-unter-wert-verkaufen (→ publiziert als `du-erziehst-dir-deine-kunden-wenn-der-rabatt-teurer-wird-als-die-absage`) | ✅ | 08.09.2026 | **ausgewertet** → R1 (Retitel), R5, R12, R13. Publiziert 04.09.2026, 687→697 W: Zitat-Titel nach R1, Podcast-Meta-Sätze → direkte Thesen, „Fuffi"/ENTWEDER, Zitat-H2 + erstes H3, Toddcast verlinkt, „Kurze Eigenwerbung" wörtlich behalten. |
+| tattoo-anzahlung-widerrufsrecht-online-buchung (Fall & Recht, Anzahlung/Widerruf/§ 356a) | ✅ | — | **neuer Draft 08.09.2026** — erster Lauf nach der Neuausrichtung des Skills auf Community-Puls v3. R1–R13 angewandt (558 W, 1 Emoji, 0 Ausrufezeichen, 1 TODA-Absatz nach R8/R11 ohne erfundenes Feature, kein Rechts-Disclaimer, 1 interner Link, 9 Quell-Links). Fakten-Audit im Report. **Erster Artikel, den Tomek nach R11–R13 liest** — Korrekturen sind das Lernsignal für Lauf 0 des nächsten Laufs. Wartet auf Publish. |
+| von-der-musik-zum-tattoo-artist (→ publiziert als `von-krieg-und-musik-zum-tattoo-artist`; Artist-Story, Rita „CATO“) | ✅ | 08.09.2026 | **ausgewertet** (Artist-Story-Signal, s. Feedback-Signale 08.09.2026). Publiziert 06.09.2026 20 min nach Insert, 793→793 W, genau drei Edits: Krieg in H2 + Slug/SEO-Title, Aussprache-Erklärung raus + Name verlinkt, O-Ton „herzlich" → „viel" ungeglättet. |
