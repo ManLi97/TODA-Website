@@ -122,21 +122,18 @@ Schluss-Signatur einsetzen.
 
 ## Sonstige Feedback-Signale
 
-- **16.06.2026 — DE-Disclaimer entfernt, EN/ES behalten (KLÄREN):** Beide
-  veröffentlichten **DE**-Fassungen haben den kursiven „keine
-  Rechtsberatung"-Schluss **verloren**; die (unverändert übernommenen)
-  EN/ES-Fassungen haben ihn. Das widerspricht harter Redaktionsregel #4
-  (`toda-context.md`: Rechtsthemen *immer* mit Disclaimer). Zwei Lesarten:
-  (a) bewusst — DE-Publikum braucht ihn nicht / wirkt als Klotz; (b)
-  versehentlich beim Kürzen rausgefallen (in beiden DE). **Bis zur Klärung:
-  Disclaimer in DE-Rechtsartikeln vorsichtshalber drinlassen** (harte Regel
-  schlägt unklares Signal), aber kurz halten. Tomek fragen.
-- **16.06.2026 — „Rubrik"-Tag + Tippfehler:** Screenshot-Artikel bekam einen
-  4., kebab-case Serien-/Rubrik-Tag: `Rech-und-Kohle` (DE) / `law-and-money`
+- **16.06.2026 — DE-Disclaimer entfernt, EN/ES behalten → GEKLÄRT
+  08.09.2026: kein Disclaimer.** Beide veröffentlichten **DE**-Fassungen
+  hatten den kursiven „keine Rechtsberatung"-Schluss verloren; Tomek hat am
+  08.09.2026 bestätigt, dass das Absicht ist. Regel 4 in `toda-context.md`
+  und SKILL.md 2.2 entsprechend geändert; die Korrektheit trägt seitdem der
+  Fakten-Audit im Report.
+- **16.06.2026 — „Rubrik"-Tag:** Screenshot-Artikel bekam einen 4.,
+  kebab-case Serien-/Rubrik-Tag: `Recht-und-Kohle` (DE) / `law-and-money`
   (EN) / `derecho-y-dinero` (ES). Sieht nach einer Kolumnen-Rubrik aus →
-  künftig bei Rechts-/Geld-Themen einen solchen Rubrik-Tag mitliefern. **DE
-  hat einen Tippfehler: `Rech-und-Kohle` → soll `Recht-und-Kohle`.** Tomek
-  beim Publish-Review nennen (Skill ändert keine bestehenden Posts).
+  künftig bei Rechts-/Geld-Themen einen solchen Rubrik-Tag mitliefern.
+  (Der ursprüngliche Tippfehler `Rech-und-Kohle` ist in der DB korrigiert,
+  geprüft 08.09.2026.)
 - **06.09.2026 — Artist-Stimme = GESPROCHENE Stimme (`/artist-story` Lauf 2,
   Rita „CATO“):** Fassung 1 war sauber belegt, aber in „unserer" Schreibstimme
   (Ø 13,3 W/Satz, Nebensatzketten) und begann mit einer Kindheits-Anekdote
@@ -158,12 +155,14 @@ Schluss-Signatur einsetzen.
   das erklärt die Winter-Arbeitslosigkeit). Muster: **Zeitachsen aus dem
   O-Ton nicht dramaturgisch verdichten** — die unglatte Realität ist das
   Authentizitätssignal des Formats, nicht der Feind der Story.
-- **11.06.2026 — Artikel gelöscht statt korrigiert:**
-  `dsgvo-tattoo-studio-kundendaten` (DSGVO, Lauf 1) wurde zusammen mit
-  den 3 Seed-Posts aus der DB gelöscht. Grund noch unbestätigt
-  (Versehen beim Seeds-Aufräumen vs. bewusste Ablehnung). Beim
-  nächsten Austausch mit Tomek klären — falls bewusst: Warum? Das
-  wäre das stärkste Negativ-Signal, das wir bisher haben.
+- **Gelöschte Drafts sind kein Themen-Feedback (Tomek, 08.09.2026):**
+  `dsgvo-tattoo-studio-kundendaten` (11.06.), `tattoo-anzahlung-no-shows-recht`
+  und `reach-taetowierfarben-erklaert` (beide vor dem 08.09.) wurden gelöscht,
+  weil sie mit einem veralteten Stand von Skill und Community-Puls entstanden
+  waren — aus keinem anderen Grund. Die Themen bleiben offen (DSGVO, Anzahlung
+  → C2, REACH) und dürfen mit dem neuen Setup neu angegangen werden. Muster:
+  eine Löschung ohne genannten Grund wird nachgefragt, nie gedeutet (SKILL.md,
+  Lauf 0, Punkt 6).
 
 ## Auswertungs-Log
 
@@ -174,8 +173,9 @@ rabatt-teurer-wird-als-die-absage` (04.09., = Draft `tattoo-preise-rabatte-unter
 verkaufen` unter neuem Slug/Titel), `taetowierer-burnout-kundenkommunikation` (publiziert
 18.06., Update 04.09.), `von-krieg-und-musik-zum-tattoo-artist` (06.09., = Draft `von-der-
 musik-zum-tattoo-artist` unter neuem Slug/Titel), `vom-dachdecker-zum-tattoo-artist`
-(leichter Edit). Verschwunden (gelöscht, Themen-Feedback): `tattoo-anzahlung-no-shows-recht`,
-`reach-taetowierfarben-erklaert`. Die Zeilen unten sind bis zur Auswertung historisch.
+(leichter Edit). Gelöscht (veralteter Stand, kein Themen-Feedback — s. Feedback-Signale):
+`tattoo-anzahlung-no-shows-recht`, `reach-taetowierfarben-erklaert`. Die Zeilen unten sind
+bis zur Auswertung historisch.
 
 
 | Artikel | Original-Snapshot | Ausgewertet am | Ergebnis |
@@ -184,9 +184,9 @@ musik-zum-tattoo-artist` unter neuem Slug/Titel), `vom-dachdecker-zum-tattoo-art
 | erwartungsmanagement-tattoo-kunden (→ veröffentlicht als `…laecheln-im-studio…`) | ✅ | 16.06.2026 | **ausgewertet** → R1–R10. DE 958→636 W (−34 %), retitelt, „Wenn es knallt"-Sektion gestrichen, TODA-Mention entschärft. |
 | screenshot-roulette EN/ES + studio-lächeln EN/ES | ✅ | 16.06.2026 | **unverändert veröffentlicht** — kein Korrektursignal (Übersetzungen 1:1 übernommen). |
 | tattoo-nachsorge-heilphase-kommunizieren | ✅ | — | **neuer Draft 16.06.2026** (Lauf K2/Aftercare, R1–R10 angewandt, 603 W), wartet auf Publish |
-| tattoo-anzahlung-no-shows-recht | ✅ | — | Draft, wartet auf Publish |
-| reach-taetowierfarben-erklaert | ✅ | — | Draft, wartet auf Publish |
-| dsgvo-tattoo-studio-kundendaten | ✅ (rekonstruiert) | — | gelöscht, siehe oben |
+| tattoo-anzahlung-no-shows-recht | ✅ | 08.09.2026 | **gelöscht** (veralteter Skill-/Puls-Stand, kein Themen-Feedback) — Snapshot bleibt, Thema offen (C2) |
+| reach-taetowierfarben-erklaert | ✅ | 08.09.2026 | **gelöscht** (veralteter Stand, kein Themen-Feedback) — Snapshot bleibt, Thema offen |
+| dsgvo-tattoo-studio-kundendaten | ✅ (rekonstruiert) | 08.09.2026 | **gelöscht** (veralteter Stand, kein Themen-Feedback) — Thema offen |
 | taetowierer-burnout-kundenkommunikation (Toddcast #1 Recycling) | ✅ | — | **neuer Draft 18.06.2026** — erster `/podcast-article`-Lauf. R1–R10 angewandt, ~610 W, 1 TODA-Mention (zwinkernd), Signatur-Schluss, Embed `rdOlY1-Bp5E`@1236s. Wartet auf Publish. |
 | vom-dachdecker-zum-tattoo-artist (Artist-Story, Toddcast #1) | ✅ | — | **Draft 29.08.2026, noch am selben Tag von Tomek publiziert** (mit leichtem Edit: 5030→5065 Zeichen — beim nächsten Lauf 0 diffen). Erster `/artist-story`-Insert nach dokumentiertem Artist-Go (Markus Vossi); Artist-Korrektur eingearbeitet (s. Feedback-Signale). Eigener Autor-Datensatz + Avatar/Cover in Storage; Kategorie nachträglich auf `artist-stories` umgezogen. |
 | from-roofer-to-tattoo-artist EN + de-techador-a-tatuador ES | ✅ | — | **29.08.2026 direkt published** (explizite Anweisung Tomek) — 1:1-Übersetzungen der freigegebenen DE-Fassung, Ton unverändert; ES-Terminologie „tatuador" analog Bestand. |

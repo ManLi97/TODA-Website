@@ -44,9 +44,17 @@ Bevor irgendetwas anderes passiert:
    unausgewertetes Delta existiert.
 6. **Log gegen DB abgleichen:** Jede Zeile des Auswertungs-Logs muss der DB
    entsprechen — umbenannte Slugs (Publish unter neuem Slug ist Feedback zum
-   Titel), gelöschte Drafts (Feedback zum Thema), Status. Abweichungen im Log
-   korrigieren, nie fortschreiben.
-7. Gibt es nichts Neues auszuwerten: weiter, ohne Zeit zu verbrennen.
+   Titel), gelöschte Drafts, Status. Abweichungen im Log korrigieren, nie
+   fortschreiben. **Eine Löschung ist erst dann Themen-Feedback, wenn Tomek
+   den Grund genannt hat** — bis dahin im Report nachfragen, nicht deuten
+   (08.09.2026: drei Drafts waren gelöscht, weil sie mit veraltetem Skill-
+   und Puls-Stand entstanden waren, nicht wegen des Themas).
+7. **Deltas nach Format trennen:** R-Regeln für die Blog-Stimme entstehen nur
+   aus `/blog-article`- und `/podcast-article`-Artikeln. Korrekturen an
+   Artist Stories (Kategorie `artist-stories`, Ich-Form des Artists) wandern
+   in die Rubrik „Sonstige Feedback-Signale" mit Format-Label und in den
+   `/artist-story`-Skill — nie in R1–R10.
+8. Gibt es nichts Neues auszuwerten: weiter, ohne Zeit zu verbrennen.
 
 ## Lauf 1 — Topic-Mining (`/blog-article mining` oder wenn kein Thema gegeben)
 
@@ -96,6 +104,10 @@ Ablauf:
    - Endkunden-Signale (`audience = 'endkunde'`) sind Kontext, nie
      Discovery-Beleg; Reddit-EN bleibt Label **Hypothese**; `is_seeded`-Zeilen
      bleiben Recall-Kontext.
+   - **Digest-`quotes` sind Tier 3.** Die anonymisierten O-Töne des Digests
+     (und die `quote`-Spalte der Klassifikation) gehören in den Report und
+     in die Social-Ausleitung — im Artikeltext erscheinen sie nie wörtlich,
+     nur als lose Stimmung (`sources.md`, Regel 2).
    - **YouTube-Kommentare on demand** (aktuelle Business-Episoden der
      Podcast-Kanäle, nur qualitativ): Data-API-Helper `lib/mining/youtube.ts`
      (`commentThreads`, `order=relevance` — nie die teure Data-API-`search`);
@@ -130,10 +142,21 @@ Ablauf:
      (Cross-Source). Der Skill wendet nur noch das **Zielgruppen-Gate** selbst
      an (`toda-context.md`, „Für wen wir schreiben": `n_artist`/`n_mixed`
      gegen `n_endkunde` je Cluster).
-3. **Strom B checken:** tattoo-recht.de (+ ggf. weitere Tier-1/2-News)
-   per DeepAPI `POST /v1/scrape/website` (`skill:deepapi` vor dem ersten
-   Call laden) auf neue Urteile/Updates prüfen; WebFetch nur als Fallback
-   und nie als „die Seite" (Abdeckungslücken benennen).
+3. **Strom B checken (datiert, nicht „mal draufschauen"):**
+   - **feelfarbig** über den RSS-Feed `https://feelfarbig.com/feed/`
+     (`curl`, kostenlos, `pubDate` je Beitrag) — nur Beiträge seit dem
+     letzten Radar-Eintrag zählen als neu.
+   - **tattoo-recht.de:** Stand 08.09.2026 liefert die Startseite keine
+     Urteile mehr und **jede Unterseite antwortet 404** (Menü-Ziele
+     `/sample-page/wichtige-urteile/`, `/home/court-decisions/…`, auch
+     `/feed/` und `/wp-json/`; per DeepAPI und `curl` geprüft). Pro Lauf
+     genau diese Pfade erneut probieren; bleibt es 404, ist Strom B für
+     Urteile **degradiert** und der Lauf-Eintrag sagt das. Urteils-Volltexte
+     kommen dann direkt aus Tier 1 (NRWE, dejure — beide per DeepAPI lesbar,
+     geprüft 08.09.2026).
+   - Weitere Tier-1/2-Seiten per DeepAPI `POST /v1/scrape/website`
+     (`skill:deepapi` vor dem ersten Call laden); WebFetch nur als Fallback
+     und nie als „die Seite" (Abdeckungslücken benennen).
 4. **Strom C ziehen:** nächster offener Eintrag der Ziel-Liste in
    `topic-radar.md` (höchste Prio zuerst, max. **ein** C-Slot pro Lauf);
    Listen-Status im selben Lauf pflegen.
@@ -169,9 +192,13 @@ gibt). Ist die C-Liste abgearbeitet: zurück zu 2× Strom A.
 2. `docs/blog/voice-learnings.md` — gelernte Stilregeln anwenden.
 3. **Stil-Referenz:** die 1–2 zuletzt veröffentlichten Artikel aus der
    DB lesen — aber nur solche mit Original-Snapshot in
-   `docs/blog/originals/` (= durch Tomeks Korrektur gegangen). Sie
-   definieren Grammatik und Tonalität verbindlicher als jede Regel.
-   Gibt es noch keine: Schicht 1 + 2 reichen.
+   `docs/blog/originals/` (= durch Tomeks Korrektur gegangen) und **nicht**
+   aus der Kategorie `artist-stories` (Ich-Form des Artists, fremde Stimme;
+   `select t.slug from blog_post_translations t join blog_posts p on p.id =
+   t.post_id join blog_categories c on c.id = p.category_id where t.locale =
+   'de' and t.status = 'published' and c.slug <> 'artist-stories' order by
+   t.published_at desc limit 2`). Sie definieren Grammatik und Tonalität
+   verbindlicher als jede Regel. Gibt es noch keine: Schicht 1 + 2 reichen.
 
 ### 2.1 Recherche — Quellen-Library zuerst
 
@@ -228,8 +255,9 @@ Format (Konvention der bestehenden Posts):
     (Tomek setzt sie beim Publish).
 - TODA-Erwähnung: max. 1–2 Stellen, organisch dort, wo das Produkt den
   konkreten Schmerzpunkt löst. Kein Werbeblock, kein „Jetzt registrieren".
-- Rechtsthemen: kursiver Disclaimer als letzter Absatz
-  (*keine Rechtsberatung, im Zweifel Anwält:in fragen*).
+- Rechtsthemen: **kein Disclaimer** (Tomeks Entscheidung 08.09.2026 — er
+  hatte ihn in beiden DE-Rechtsartikeln gestrichen). Korrektheit trägt der
+  Fakten-Audit (2.4), nicht ein Schlussabsatz.
 - Felder:
   - `title` — klickstark, ehrlich, ≤ ~70 Zeichen.
   - `slug` — Regeln aus `lib/blog/slugify.ts`: lowercase, `ä→ae ö→oe
@@ -291,6 +319,12 @@ Auswertungs-Log von `voice-learnings.md` registrieren.
    Artikel-Format (mit Begründung), **vollständige Quellenliste mit Tier
    und URL**, wo die TODA-Erwähnung sitzt, und (bei Mining) der
    Daten-Trail Thema ← Score ← Scrape.
+   **Fakten-Audit (Pflichtteil, seit 08.09.2026):** eine Tabelle
+   *Behauptung im Artikel | Quelle (Tier, URL) | wörtliche Belegpassage aus
+   dem DeepAPI-Scrape dieses Laufs*. Jede Zahl, jedes Aktenzeichen, jeder
+   Paragraf, jede Frist ist eine Zeile. Eine Behauptung ohne Belegpassage
+   fliegt aus dem Artikel, bevor der Draft geschrieben wird. Das ist Tomeks
+   Prüfmethode — er liest die Tabelle, nicht die Quellen.
 4. **Distribution-Ausweis** (Pflichtteil des Reports; nur Ausweis — die
    Umsetzung bleibt außerhalb dieses Skills):
    - **Recycling:** 2–3 fertige Social-Hook-Zeilen aus Titel-Hook und

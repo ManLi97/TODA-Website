@@ -137,7 +137,7 @@ Felder `title`/`slug`/`excerpt`/`tags`/`seo_*`). **Podcast-spezifisch:**
   Text doppelt sie nicht nach.
 - **Showname:** immer **„Toddcast"**. Das in den Captions hörbare In-Episode-Wort
   (z. B. „Stechstunde") **nie** übernehmen.
-- Rechtsthemen: kursiver Disclaimer als letzter Absatz wie `/blog-article`.
+- Rechtsthemen: kein Disclaimer (wie `/blog-article`, Tomek 08.09.2026).
 
 ### 2.3 Draft in die DB + Embed-Felder
 Insert wie `/blog-article` 2.3 (CLI-Regime: Draft-JSON → Pre-Action-Report →

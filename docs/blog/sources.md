@@ -26,7 +26,20 @@ herausstellen, fliegen raus (mit Notiz warum).
    Tier-1-Quelle gegenchecken, wo möglich.
 4. **Neue Quelle = neuer Eintrag im selben Lauf**, inkl. Zugriffsweg und
    wofür sie taugt. Nicht verwendete Fundstellen kommen NICHT rein.
-5. **Verifizierte Quellen werden im Artikel inline verlinkt.** Jede
+5. **Tier-1-Kompass für Nicht-Rechtsthemen.** Der Puls schiebt Business-,
+   Einstiegs- und Handwerksthemen nach vorn (`pricing`, `career-entry`,
+   `business-studio`, `technique-equipment`), für die die Library keine
+   Anker hat. Was dort als Tier 1 zählt: amtliche Statistik (Destatis,
+   Bundesagentur für Arbeit), Gesetzestexte (gesetze-im-internet: GewO,
+   UStG § 19, HwO, IfSG § 36), Bundes-/Landesbehörden (BfR, RKI-Hygiene-
+   empfehlungen, Gesundheitsämter, Hygieneverordnungen der Länder),
+   Kammern (IHK, Handwerkskammer), Berufsverbände (DOT, Bundesverband
+   Tattoo). Tier 2: Fachmagazine (feelfarbig), Steuerberater-/Kanzlei-
+   Fachbeiträge, Hersteller-Leitfäden. Gibt es für eine Kernaussage keinen
+   Anker dieser Art, ist es eine Stimmung, kein Fakt — dann trägt sie den
+   Artikel nicht (SKILL.md, Lauf 1, Schritt 7). Keine Vorbefüllung: Einträge
+   entstehen weiter nur aus echten Läufen (Regel 4).
+6. **Verifizierte Quellen werden im Artikel inline verlinkt.** Jede
    namentlich verwendete Tier-1/2-Faktenquelle bekommt einen Inline-Link
    `[Text](URL)` auf genau die hier hinterlegte, im selben Lauf geprüfte
    URL. Linkziel muss **öffentlich lesbar** sein (kein Login/CAPTCHA) —
@@ -38,20 +51,20 @@ herausstellen, fliegen raus (mit Notiz warum).
 
 | Quelle | Themengebiet | Zugriff | Notizen |
 |---|---|---|---|
-| EUR-Lex, VO (EU) 2020/2081 (`eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32020R2081`) | REACH / Tätowierfarben (Anhang XVII Nr. 75) | WebFetch ✅ | Volltext der Verordnung; Grenzwerte, Kennzeichnungspflichten, Fristen. Verifiziert Juni 2026. |
-| gesetze-im-internet.de | BGB (§§ 312 ff. Fernabsatz, Widerruf), DSGVO-Begleitrecht | WebFetch ✅ | Amtliche Gesetzestexte; immer Originalparagraf zitieren. |
+| EUR-Lex, VO (EU) 2020/2081 (`eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32020R2081`) | REACH / Tätowierfarben (Anhang XVII Nr. 75) | WebFetch ✅ · DeepAPI ✅ (08.09.2026) | Volltext der Verordnung; Grenzwerte, Kennzeichnungspflichten, Fristen. Verifiziert Juni 2026. |
+| gesetze-im-internet.de | BGB (§§ 312 ff. Fernabsatz, Widerruf), DSGVO-Begleitrecht | WebFetch ✅ · DeepAPI ✅ (08.09.2026, Einzelnorm-URL) | Amtliche Gesetzestexte; immer Originalparagraf zitieren. |
 | BMUV — Safer Tattoo (`bundesumweltministerium.de`) | Tattoo-Sicherheit, Farben | WebFetch ✅ | Eher Einstiegs-/Verbraucherseite, wenig harte Fakten — für Zahlen auf EUR-Lex/BfR ausweichen. |
 | ECHA — Tattoo inks (`echa.europa.eu`) | REACH-Hintergrund | WebFetch ❌ (403, Juni 2026) | Blockt Fetcher. Inhalte stattdessen über EUR-Lex oder BfR beziehen. |
-| NRWE — Rechtsprechungsdatenbank NRW (`nrwe.justiz.nrw.de`) | Amtliche Urteilsvolltexte (NRW-Gerichte) | WebFetch ✅ | Goldstandard für Urteile: Tenor, Begründung, zitierte Paragrafen im Original. Verwendet für AG Köln 137 C 162/25 (Copycat-Tattoo). URL-Schema: `/ag_koeln/j<jahr>/<az>_Urteil_<datum>.html`. |
-| dejure.org (`dejure.org/dienste/vernetzung/rechtsprechung?Gericht=…&Datum=…&Aktenzeichen=…`) | Rechtsprechung: Aktenzeichen-Nachweis, Fundstellen (NJW-RR, MDR …), Volltext-Verweise (DACH) | WebFetch ✅ | **Öffentlich lesbar — kein CAPTCHA** (anders als openJur, das Fetcher/Leser per CAPTCHA blockt). Standard-**Linkziel** für Urteils-Zitate. Verwendet & verifiziert 16.06.2026 für OLG Hamm, Beschluss 05.03.2014, Az. 12 U 151/13 (mangelhaftes Tattoo). |
-| Ärztekammer Nordrhein — Rheinisches Ärzteblatt (`aekno.de/aerzte/rheinisches-aerzteblatt/…`) | Tattoo-Gesundheit: Wundheilung, Risiken, Nebenwirkungen (DACH) | WebFetch ✅ | Amtliche Ärztekammer-Publikation (Tier 1, zitiert BfR-Experten). Verwendet & verifiziert 16.06.2026 für Aftercare-Artikel: Wundheilung **~6 Wochen** oberflächlich (tiefere Schichten Monate), allergische Reaktionen häufigste Nebenwirkung (rote Pigmente), 1–6 % Komplikationen. Ausgabe 4/2026, 24.03.2026 (Autorin J. Naujoks). |
+| NRWE — Rechtsprechungsdatenbank NRW (`nrwe.justiz.nrw.de`) | Amtliche Urteilsvolltexte (NRW-Gerichte) | WebFetch ✅ · DeepAPI ✅ (08.09.2026, Volltext 137 C 162/25 vollständig) | Goldstandard für Urteile: Tenor, Begründung, zitierte Paragrafen im Original. Verwendet für AG Köln 137 C 162/25 (Copycat-Tattoo). URL-Schema: `/ag_koeln/j<jahr>/<az>_Urteil_<datum>.html`. |
+| dejure.org (`dejure.org/dienste/vernetzung/rechtsprechung?Gericht=…&Datum=…&Aktenzeichen=…`) | Rechtsprechung: Aktenzeichen-Nachweis, Fundstellen (NJW-RR, MDR …), Volltext-Verweise (DACH) | WebFetch ✅ · DeepAPI ✅ (08.09.2026) | **Öffentlich lesbar — kein CAPTCHA** (anders als openJur, das Fetcher/Leser per CAPTCHA blockt). Standard-**Linkziel** für Urteils-Zitate. Verwendet & verifiziert 16.06.2026 für OLG Hamm, Beschluss 05.03.2014, Az. 12 U 151/13 (mangelhaftes Tattoo). |
+| Ärztekammer Nordrhein — Rheinisches Ärzteblatt (`aekno.de/aerzte/rheinisches-aerzteblatt/…`) | Tattoo-Gesundheit: Wundheilung, Risiken, Nebenwirkungen (DACH) | WebFetch ✅ · DeepAPI ✅ (08.09.2026) | Amtliche Ärztekammer-Publikation (Tier 1, zitiert BfR-Experten). Verwendet & verifiziert 16.06.2026 für Aftercare-Artikel: Wundheilung **~6 Wochen** oberflächlich (tiefere Schichten Monate), allergische Reaktionen häufigste Nebenwirkung (rote Pigmente), 1–6 % Komplikationen. Ausgabe 4/2026, 24.03.2026 (Autorin J. Naujoks). |
 
 ## Tier 2 — Fachquellen (geprüft, mit Vorsicht)
 
 | Quelle | Themengebiet | Zugriff | Notizen |
 |---|---|---|---|
-| tattoo-recht.de | Tattoo-spezifische Urteile & Rechtsfragen (DACH) | WebFetch ✅ | Anwaltsbetriebene Fachseite; Quelle für AG Dresden Az. 116 C 5571/25 (Anzahlung/Widerruf) und AG Köln 137 C 162/25 (Copycat). Doppelrolle: auch **Strom-B-Radar** — neue Beiträge = Themen-Trigger. |
-| feelfarbig.com | Deutsches Tattoo-Magazin: Branche, Business, Recht (DACH) | WebFetch ✅ | Etabliertes Online-Magazin, aktiv (Stand Juni 2026), redaktionelles Profil. Zweite **Strom-B-Radar**-Quelle. Offene Themen dort notiert: Befähigungsnachweis-Debatte (Jan 2026), Instagram-Musik-Abmahnungen. Fakten trotzdem gegen Tier 1 checken. |
+| tattoo-recht.de | Tattoo-spezifische Urteile & Rechtsfragen (DACH) | WebFetch ✅ (06/2026) · **08.09.2026: nur Startseite lesbar (DeepAPI + curl), alle Unterseiten 404** — Urteilslisten, `/feed/`, `/wp-json/` | Anwaltsbetriebene Fachseite (Rieck & Partner); Quelle für AG Dresden Az. 116 C 5571/25 (Anzahlung/Widerruf) und AG Köln 137 C 162/25 (Copycat). Doppelrolle: **Strom-B-Radar** — aktuell degradiert, Pfade je Lauf erneut probieren (SKILL.md, Lauf 1, Schritt 3). Fakten laufen unabhängig davon über NRWE/dejure. |
+| feelfarbig.com | Deutsches Tattoo-Magazin: Branche, Business, Recht (DACH) | DeepAPI ✅ + **RSS `https://feelfarbig.com/feed/`** (datiert, `pubDate`; geprüft 08.09.2026, jüngster Beitrag 15.08.2026) | Etabliertes Online-Magazin, aktiv, redaktionelles Profil. Zweite **Strom-B-Radar**-Quelle — der Feed ist der Radar-Weg (nur Beiträge seit dem letzten Radar-Eintrag = neu). Offene Themen dort notiert: Befähigungsnachweis-Debatte (Jan 2026), Instagram-Musik-Abmahnungen. Fakten trotzdem gegen Tier 1 checken. |
 | mystudioflow.io/blog | DSGVO/Studio-Organisation | WebFetch ✅ | Kommerzieller SaaS-Blog (Wettbewerbsumfeld!) — nur als Sekundärquelle, Kernfakten gegen Tier 1 gegenchecken. |
 | juraexamen.info | Urteilsbesprechungen (juristische Ausbildungsseite) | WebFetch ✅ | Fundierte, paragrafengenaue Fallbesprechungen. Verwendet für OLG Hamm 12 U 151/13 (mangelhaftes Tattoo: Werkvertrag § 631 BGB, Unzumutbarkeit der Nachbesserung, Schmerzensgeld). |
 | DRACO / Dr. Ausbüttel (`draco.de/tattoo-wunden`) | Wundversorgung frischer Tattoos: Heilungsphasen, Infektions-Warnsignale (DACH) | WebFetch ✅ | Professioneller Apotheken-/Wundversorgungs-Leitfaden (Hersteller Dr. Ausbüttel GmbH & Co. KG). Verwendet & verifiziert 16.06.2026: Phasen-Timeline (Tag 1–3 / Woche 2–3 / Woche 3–6, tiefere Schichten Monate), Infektionszeichen (Rötung, Bläschen, Eiter, Fieber → Arzt). Deckt sich mit Ärztekammer-Tier-1 bei ~6 Wochen (Tier-2-gegen-Tier-1-Check bestanden). |

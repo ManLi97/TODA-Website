@@ -128,7 +128,7 @@ verworfen mit Grund). EN-Cluster ruhen, bis EN-Läufe existieren (v1 = de).
 | # | Cluster | Sprache | Status |
 |---|---|---|---|
 | C1 | Tattoo-Anfragen beantworten / Instagram-DM-Chaos organisieren | DE | **offen — höchste Prio: Produkt-Wedge, SERP leer** |
-| C2 | Anzahlung vs. Terminkaution rechtssicher | DE | offen — der Draft `tattoo-anzahlung-no-shows-recht` wurde gelöscht (Stand DB 08.09.2026; Lauf 0 wertet das als Themen-Feedback aus, bevor C2 neu angegangen wird) |
+| C2 | Anzahlung vs. Terminkaution rechtssicher | DE | offen — der Draft `tattoo-anzahlung-no-shows-recht` wurde gelöscht, weil er mit veraltetem Skill-/Puls-Stand entstand (Tomek, 08.09.2026; kein Themen-Feedback). Der Puls trägt das Thema: W36 `faq`-Kandidat „Anzahlung und Termingebühr", W37 `blog`-Kandidat „Termingebühr statt Terminchaos" → Strom A und C konvergieren, Tier-1-Anker AG Dresden 116 C 5571/25 |
 | C3 | Tattoo-Software / Terminverwaltung (Head-Term) | DE | offen (dünne SERP) |
 | C4 | Digitale Einverständniserklärung | DE | offen |
 | C5 | Managing booking requests as a solo artist | EN | ruht (v1 = de) |

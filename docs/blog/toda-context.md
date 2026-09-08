@@ -119,7 +119,7 @@ Folge gecrediteten Sprecher:innen.)*
 Die Formatwahl gehört begründet in den Report. Palette:
 
 1. **Fall & Recht** — Default bei Rechtsthemen: eine Leitentscheidung,
-   eine Kernzahl (R4), Disclaimer (Regel 4).
+   eine Kernzahl (R4), kein Disclaimer (Regel 4).
 2. **Ratgeber** — Schmerzpunkt → Handhabe; knappe Listen (R5).
 3. **Vorlagen (Lead-Magnet-Format)** — der Kern des Artikels ist eine
    sofort nutzbare Vorlage direkt im Text (kopierbarer Textbaustein /
@@ -145,9 +145,10 @@ Die Formatwahl gehört begründet in den Report. Palette:
    Kein Werbeblock, kein „Jetzt registrieren!"-Absatz.
 3. **Wir präsentieren uns als Helfer**, nicht als Produkt. News und
    Einordnung zuerst.
-4. **Rechtsthemen** (DSGVO, REACH, Verträge, Auflagen): immer mit
-   Disclaimer — „Das ist keine Rechtsberatung. Im Zweifel: Anwält:in
-   fragen." Ton bleibt locker, Inhalt bleibt korrekt.
+4. **Rechtsthemen** (DSGVO, REACH, Verträge, Auflagen): **ohne**
+   Disclaimer-Absatz (Tomek, 08.09.2026 — in beiden veröffentlichten DE-
+   Rechtsartikeln gestrichen). Ton bleibt locker, Inhalt bleibt korrekt;
+   die Korrektheit belegt der Fakten-Audit im Report, nicht ein Schlusssatz.
 5. **Faktenbasiert.** Behauptungen zu Gesetzen/Verordnungen brauchen eine
    verifizierte Tier-1/2-Quelle aus `docs/blog/sources.md`. Community-
    Material (egal von welcher Plattform — Reddit, TikTok-/YouTube-
