@@ -101,6 +101,13 @@ bildhafter Brancheninsider-Vergleich.
 - ergänzt: „die Miete zahlt sich nicht von selbst"
 - ergänzt: **gefettete** Konsequenz + „Autsch. Das ist fast so schmerzhaft wie ein Blackout-Piece auf dem Kehlkopf, nur ohne das coole Ergebnis."
 - Auch eingeschoben: earthy Asides wie „Ja ich weiß, PAPIERKRAM — … kann dir echt den Arsch retten." Register: eine Stufe lockerer/derber als Claudes Default.
+- **Präzisiert 09.09.2026 (Anzahlung/Widerruf):** Tomeks Asides sind **Einzelstücke,
+  keine Vorlage.** Die nachgebaute Variante seiner Juni-Zeile („Autsch. Das tut mehr
+  weh als eine Rippen-Session, nur ohne das schöne Ergebnis.") war die **einzige
+  Streichung** des Artikels. Sinnlichkeit und Suspense im Lede bleiben (der Freitag-
+  22:10-Einstieg und die DM-Szene wurden unverändert publiziert); ein wiedererkennbar
+  recyceltes Witz-Schema („Autsch. … nur ohne das … Ergebnis") fliegt. Neue Bilder
+  oder gar keins — nie ein Tomek-Zitat aus einem früheren Artikel umlackieren.
 
 ### R8 — TODA: genau EINE Erwähnung, selbst-ironisch/zwinkernd
 Tomek konsolidiert auf **eine** Stelle und rahmt sie augenzwinkernd.
@@ -169,6 +176,27 @@ heißt einmal „Toddcast" als Link auf den YouTube-Kanal, nie „erste Folge".
 - „im Toddcast" → „im [Toddcast](https://www.youtube.com/@TODATattooSolutions)";
   „In unserer ersten Toddcast-Folge" → „In unserem Podcast".
 
+*Dritte Auswertung 09.09.2026 — ein Artikel (Anzahlung/Widerruf, erster Draft nach
+R11–R13). Genau EIN Edit: 25 Wörter Nachklapp im Lede raus (558→533 W); Titel, Slug,
+Excerpt, Tags, SEO-Felder, alle fünf H2, alle 10 Links, TODA-Absatz, Emoji und
+Schluss-Signatur unverändert. R1, R2, R3, R5, R6, R8, R9, R10, R11, R12 bestätigt —
+erstmals ein Zitat-Titel und ein TODA-Absatz ohne jede Korrektur; R7 präzisiert;
+eine neue Regel:*
+
+### R14 — Lede endet auf der gefetteten Punchline; die Stakes stehen einmal
+Nach dem gefetteten Kernsatz kommt **kein Nachklapp** — keine Worst-Case-Steigerung,
+kein „Autsch", kein Schmerz-Vergleich. Der Titel trägt die Stakes („… ein Jahr später
+zurückwandert"), der Fach-Abschnitt trägt die Zahl (**„Keine Belehrung = ein Jahr
+Rückgaberecht"**); der Lede darf sie nicht ein drittes Mal ansagen.
+- *Original:* „**Blöd nur: Wenn der Termin komplett im Chat entstanden ist, hat der
+  Kunde ziemlich sicher recht.** Und im schlimmsten Fall kommt er damit noch ein Jahr
+  später an. Autsch. Das tut mehr weh als eine Rippen-Session, nur ohne das schöne
+  Ergebnis." → *Korrektur:* Absatz endet nach „… **ziemlich sicher recht.**"
+- → Beim Schreiben den Lede-Absatz nach dem Fettsatz beenden; jede Zahl/Konsequenz,
+  die schon im Titel oder in einer Formel (R6) steht, im Lede nicht wiederholen.
+  Einzelkorrektur, aber eindeutig (einzige Änderung des Artikels; deckt sich mit R4
+  „eine Kernzahl" und R12 „Claude-eigene Asides fliegen").
+
 ## Sonstige Feedback-Signale
 
 - **16.06.2026 — DE-Disclaimer entfernt, EN/ES behalten → GEKLÄRT
@@ -234,8 +262,8 @@ heißt einmal „Toddcast" als Link auf den YouTube-Kanal, nie „erste Folge".
 
 ## Auswertungs-Log
 
-**Stand 08.09.2026:** Rückstand abgearbeitet (Lauf 0 des Mining-Laufs 08.09.2026, zwei
-Sub-Agenten: Blog/Podcast und Artist-Story getrennt). Kein Draft mehr in der DB.
+**Stand 09.09.2026:** Rückstand abgearbeitet; Anzahlung/Widerruf (publiziert 08.09.)
+am 09.09. ausgewertet → R7 präzisiert, R14 neu. Kein Draft mehr in der DB.
 
 
 | Artikel | Original-Snapshot | Ausgewertet am | Ergebnis |
@@ -251,5 +279,6 @@ Sub-Agenten: Blog/Podcast und Artist-Story getrennt). Kein Draft mehr in der DB.
 | vom-dachdecker-zum-tattoo-artist (Artist-Story, Toddcast #1) | ✅ | 08.09.2026 | **ausgewertet — kein Korrektursignal:** byte-identisch publiziert (5030→5065 Zeichen = 35× CRLF des Admin-Editors). Erster `/artist-story`-Insert nach dokumentiertem Artist-Go (Markus Vossi); Artist-Korrektur eingearbeitet (s. Feedback-Signale). |
 | from-roofer-to-tattoo-artist EN + de-techador-a-tatuador ES | ✅ | — | **29.08.2026 direkt published** (explizite Anweisung Tomek) — 1:1-Übersetzungen der freigegebenen DE-Fassung, Ton unverändert; ES-Terminologie „tatuador" analog Bestand. |
 | tattoo-preise-rabatte-unter-wert-verkaufen (→ publiziert als `du-erziehst-dir-deine-kunden-wenn-der-rabatt-teurer-wird-als-die-absage`) | ✅ | 08.09.2026 | **ausgewertet** → R1 (Retitel), R5, R12, R13. Publiziert 04.09.2026, 687→697 W: Zitat-Titel nach R1, Podcast-Meta-Sätze → direkte Thesen, „Fuffi"/ENTWEDER, Zitat-H2 + erstes H3, Toddcast verlinkt, „Kurze Eigenwerbung" wörtlich behalten. |
-| tattoo-anzahlung-widerrufsrecht-online-buchung (Fall & Recht, Anzahlung/Widerruf/§ 356a) | ✅ | — | **neuer Draft 08.09.2026** — erster Lauf nach der Neuausrichtung des Skills auf Community-Puls v3. R1–R13 angewandt (558 W, 1 Emoji, 0 Ausrufezeichen, 1 TODA-Absatz nach R8/R11 ohne erfundenes Feature, kein Rechts-Disclaimer, 1 interner Link, 9 Quell-Links). Fakten-Audit im Report. **Erster Artikel, den Tomek nach R11–R13 liest** — Korrekturen sind das Lernsignal für Lauf 0 des nächsten Laufs. Wartet auf Publish. |
+| tattoo-anzahlung-widerrufsrecht-online-buchung (Fall & Recht, Anzahlung/Widerruf/§ 356a) | ✅ | 09.09.2026 | **ausgewertet** → R7 präzisiert, R14 neu; R1, R2, R3, R5, R6, R8–R12 bestätigt. Publiziert 08.09.2026 07:03 UTC (23 min nach Insert, zunächst unverändert), Lede-Edit 07:39 UTC. 558→533 W (−4,5 %): **genau ein Edit** — der Lede-Nachklapp nach dem Fettsatz („Und im schlimmsten Fall … ein Jahr später an. Autsch. … Rippen-Session, nur ohne das schöne Ergebnis.") ersatzlos raus. Titel/Slug/Excerpt/Tags/SEO-Felder, 5 H2, 10 Links (1 intern, 9 Quellen), TODA-Absatz („Kurzer Hint 🤓", AGB-PDF + TODA Pay), 1 Emoji, Schluss-Signatur und Rubrik-Tag `Recht-und-Kohle` unverändert (Rest byte-identisch bis auf CRLF). Erster Artikel, dessen Zitat-Titel (R1) und TODA-Absatz (R8/R11) ohne Korrektur durchgingen. Autor „Dein TODA Team" beim Publish gesetzt. |
 | von-der-musik-zum-tattoo-artist (→ publiziert als `von-krieg-und-musik-zum-tattoo-artist`; Artist-Story, Rita „CATO“) | ✅ | 08.09.2026 | **ausgewertet** (Artist-Story-Signal, s. Feedback-Signale 08.09.2026). Publiziert 06.09.2026 20 min nach Insert, 793→793 W, genau drei Edits: Krieg in H2 + Slug/SEO-Title, Aussprache-Erklärung raus + Name verlinkt, O-Ton „herzlich" → „viel" ungeglättet. |
+| vollzeit-taetowierer-werden-10-dinge (Ratgeber-Listicle, Kooperation VYVE) | ✅ | — | **neuer Draft 09.09.2026** — post_id `5e73387b-6dbf-4c11-80c9-507d1afd34c1`. Erster Artikel mit R14 (Lede endet auf der Fett-Punchline) und erster mit **Partner-Links** (vyve Shop in Punkt 1, vyve-Artikel im Fazit; Tomeks Vorgabe). Bewusste R2-Ausnahme: ~1.000 W für 10 Punkte (Tomek, 09.09.). 1 Emoji, 0 Ausrufezeichen, 1 TODA-Absatz nach R8/R11 — Produktfluss gegen das App-Repo `toda-v2` verifiziert (kein Budget-Feld, Erinnerungen = Zusatzpaket → „auf Wunsch"), 3 interne Links, 9 Quell-Links (7× gesetze-im-internet, NRWE FG Düsseldorf). Cover per kie.ai gesetzt (Ausnahme zur „Cover leer lassen"-Regel, Tomeks Auftrag). Wartet auf Review. |

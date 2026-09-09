@@ -843,3 +843,31 @@ braucht Tier-1-Zahlen; (2) Motiv-Erwartungen schriftlich (Vorlagen-Format, OLG H
 Nachbar „Lächeln im Studio"); (3) Widerrufsbutton als eigenes Stück für Website-Bucher, falls der
 Anzahlung-Artikel trägt. Kosten Lauf: DeepAPI ≈ 0,9 $ (27,01 → 26,3 $), Anthropic Sub-Agenten
 ≈ 165k Tokens.
+
+## 2026-09-09 — Kooperationsartikel VYVE: „Ab Montag mach ich das Vollzeit" (Strom A, business-studio)
+
+**Anlass:** Backlink-Tausch mit vyve supply (Dennis/Fabian). Deren Artikel (Erstausstattung,
+`vyve-supply.com/de/wissenswertes/blog/blogeintrag1/`, DE+EN, ~2.400 W) ist live, erwähnt TODA als
+Text ohne Link. Unser Gegenstück verlinkt Shop (Punkt 1) + Artikel (Fazit). Thema von Tomek gesetzt,
+gegen den Puls geprüft — kein Mining-Lauf.
+
+**Strom A:** `pulse_digests` 2026-W36 (tragende Woche) + W37 (Δ-Kontext, dünn: useful_de 19).
+W36 `business-studio` n=48, 18 Quellen, 7 Plattformen, Score 215 („Selbstständigen-Alltag: Sparen,
+Buchhaltung, Studioeröffnung"); DE-Zeilen aus `topic_classifications`: „Ist Tätowieren freiberuflich
+oder ein Gewerbe?", „Welche Voraussetzungen … Tattoostudio zu eröffnen?", „Buchhaltung … darf nicht
+fehlen als Selbstständige", Sommerloch-Post, „frugale Tätowiererin". `career-entry` (n=74) bleibt
+Anti-ICP-gesperrt — der Artikel adressiert den **Übergang** nebenbei → Vollzeit (Anti-ICP → ICP),
+nicht den Einstieg; VYVE deckt den Schritt davor. W37: business-studio n=3 (EN), keine neue Lage.
+**Dedup:** kein Bestandsartikel zu Gewerbe/Steuer/Hygiene; interne Links auf Anzahlung/Widerruf,
+Rabatte, Burnout. **Such-Validierung:** SERP-PAA W36 („Ist Tätowieren freiberuflich oder Gewerbe",
+„Voraussetzungen Tattoostudio") genügt; kein SerpApi-Call.
+
+**Quellen-Check:** Tier 1 gesetze-im-internet (GewO § 14, UStG §§ 12/19, EStG § 37, AO § 147, IfSG
+§ 36, TätoV) + NRWE FG Düsseldorf 4 K 1875/23 G,AO (DeepAPI-Suche fand es, `/v1/scrape/website`
+antwortete den ganzen Tag 500 → Volltexte per `curl`, Abdeckung: Einzelnormen komplett). BFH-Revision:
+keine Entscheidung auffindbar (5 Suchen) → „Revision zugelassen, nicht rechtskräftig". Community nur als
+Stimmung (Buchhaltung, Sommerloch).
+
+**Entscheidung:** 1 Artikel, Format Ratgeber-Listicle (10 Punkte, Tomek: ~1.000 W als bewusste
+R2-Ausnahme), Kategorie `studio-management`. Partner-Links sind eine neue Link-Klasse (weder Quelle
+noch intern) — Regel: nur nach expliziter Kooperations-Freigabe durch Tomek, dofollow, max. 2 Stellen.
