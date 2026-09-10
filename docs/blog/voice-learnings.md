@@ -260,10 +260,21 @@ Rückgaberecht"**); der Lede darf sie nicht ein drittes Mal ansagen.
   eine Löschung ohne genannten Grund wird nachgefragt, nie gedeutet (SKILL.md,
   Lauf 0, Punkt 6).
 
+- **10.09.2026 — Partner-Kooperation (Vollzeit/VYVE):** Tomeks drei Edits betrafen
+  ausschließlich den Partner: Name in der **Schreibweise des Partners** („VYVE",
+  nicht „vyve"), und die Sortiments-Beschreibung durch die Formulierung ersetzt, die
+  der Partner selbst verwendet („Equipment für jeden Stil" statt Claudes Deutung
+  „sortiert nach dem Ablauf einer Session"). Muster: **Partnername und Partner-
+  Produktbeschreibung kommen wörtlich aus dem Partner-Material, nie aus eigener
+  Interpretation der Partner-Website.** Dritter Edit = R3 in Reinform: das flache
+  Wortspiel „darf klingeln" wurde zum konkreten Bild „kommt nicht für Café & Kuchen".
+  Nachweis, dass die Vollzeit-Sonderregel (R2-Ausnahme ~1.000 W) trug: 0 Kürzungen.
+
 ## Auswertungs-Log
 
-**Stand 09.09.2026:** Rückstand abgearbeitet; Anzahlung/Widerruf (publiziert 08.09.)
-am 09.09. ausgewertet → R7 präzisiert, R14 neu. Kein Draft mehr in der DB.
+**Stand 10.09.2026:** Vollzeit/VYVE (publiziert 09.09.) am 10.09. ausgewertet → R3 bestätigt,
+Partner-Signal notiert, keine neue R-Regel. Ein Draft in der DB
+(`tattoo-preisanfrage-beantworten-vorlage`, 10.09.).
 
 
 | Artikel | Original-Snapshot | Ausgewertet am | Ergebnis |
@@ -281,4 +292,5 @@ am 09.09. ausgewertet → R7 präzisiert, R14 neu. Kein Draft mehr in der DB.
 | tattoo-preise-rabatte-unter-wert-verkaufen (→ publiziert als `du-erziehst-dir-deine-kunden-wenn-der-rabatt-teurer-wird-als-die-absage`) | ✅ | 08.09.2026 | **ausgewertet** → R1 (Retitel), R5, R12, R13. Publiziert 04.09.2026, 687→697 W: Zitat-Titel nach R1, Podcast-Meta-Sätze → direkte Thesen, „Fuffi"/ENTWEDER, Zitat-H2 + erstes H3, Toddcast verlinkt, „Kurze Eigenwerbung" wörtlich behalten. |
 | tattoo-anzahlung-widerrufsrecht-online-buchung (Fall & Recht, Anzahlung/Widerruf/§ 356a) | ✅ | 09.09.2026 | **ausgewertet** → R7 präzisiert, R14 neu; R1, R2, R3, R5, R6, R8–R12 bestätigt. Publiziert 08.09.2026 07:03 UTC (23 min nach Insert, zunächst unverändert), Lede-Edit 07:39 UTC. 558→533 W (−4,5 %): **genau ein Edit** — der Lede-Nachklapp nach dem Fettsatz („Und im schlimmsten Fall … ein Jahr später an. Autsch. … Rippen-Session, nur ohne das schöne Ergebnis.") ersatzlos raus. Titel/Slug/Excerpt/Tags/SEO-Felder, 5 H2, 10 Links (1 intern, 9 Quellen), TODA-Absatz („Kurzer Hint 🤓", AGB-PDF + TODA Pay), 1 Emoji, Schluss-Signatur und Rubrik-Tag `Recht-und-Kohle` unverändert (Rest byte-identisch bis auf CRLF). Erster Artikel, dessen Zitat-Titel (R1) und TODA-Absatz (R8/R11) ohne Korrektur durchgingen. Autor „Dein TODA Team" beim Publish gesetzt. |
 | von-der-musik-zum-tattoo-artist (→ publiziert als `von-krieg-und-musik-zum-tattoo-artist`; Artist-Story, Rita „CATO“) | ✅ | 08.09.2026 | **ausgewertet** (Artist-Story-Signal, s. Feedback-Signale 08.09.2026). Publiziert 06.09.2026 20 min nach Insert, 793→793 W, genau drei Edits: Krieg in H2 + Slug/SEO-Title, Aussprache-Erklärung raus + Name verlinkt, O-Ton „herzlich" → „viel" ungeglättet. |
-| vollzeit-taetowierer-werden-10-dinge (Ratgeber-Listicle, Kooperation VYVE) | ✅ | — | **neuer Draft 09.09.2026** — post_id `5e73387b-6dbf-4c11-80c9-507d1afd34c1`. Erster Artikel mit R14 (Lede endet auf der Fett-Punchline) und erster mit **Partner-Links** (vyve Shop in Punkt 1, vyve-Artikel im Fazit; Tomeks Vorgabe). Bewusste R2-Ausnahme: ~1.000 W für 10 Punkte (Tomek, 09.09.). 1 Emoji, 0 Ausrufezeichen, 1 TODA-Absatz nach R8/R11 — Produktfluss gegen das App-Repo `toda-v2` verifiziert (kein Budget-Feld, Erinnerungen = Zusatzpaket → „auf Wunsch"), 3 interne Links, 9 Quell-Links (7× gesetze-im-internet, NRWE FG Düsseldorf). Cover per kie.ai gesetzt (Ausnahme zur „Cover leer lassen"-Regel, Tomeks Auftrag). Wartet auf Review. |
+| vollzeit-taetowierer-werden-10-dinge (Ratgeber-Listicle, Kooperation VYVE) | ✅ | 10.09.2026 | **ausgewertet** → R3 bestätigt, Partner-Signal (s. Feedback-Signale 10.09.2026). Insert 09.09. 11:12 UTC, publiziert 12:19 UTC, 1.007→1.010 W: **genau drei Edits** — (1) Partnername „vyve" → „VYVE" (2×, Schreibweise des Partners), (2) Sortiments-Beschreibung „sortiert nach dem Ablauf einer Session" → „Equipment für jeden Stil", (3) H2 „Das Gesundheitsamt darf klingeln" → „Das Gesundheitsamt kommt nicht für Café & Kuchen". Lede, R14-Punchline, alle 10 Punkte, TODA-Absatz (inkl. „Stunden und Richtpreis"), 12 Links, Fazit + Signatur unverändert. Erster Artikel, dessen Lede ohne jede Kürzung durchging. |
+| tattoo-preisanfrage-beantworten-vorlage (Vorlagen-Format, Preisfrage-DM; Strom A `pricing` + C1) | ✅ | — | **neuer Draft 10.09.2026** — post_id `c7751e6a-7d30-422d-a3d7-5256f79d8608`, Kategorie `studio-management` (Tomek). **Erster Artikel im Vorlagen-Format:** drei kopierbare DM-Antworten als Blockquotes (Erstantwort / Angebot / Budget-Antwort), TODA-Absatz als Feature-Brücke (Auto-Antwort = Handlung des Artists, Widget-Felder + „geschätzte Arbeitszeit und ca.-Preis" + Buchungslink + Schnellantworten — alles gegen `toda-v2` verifiziert, kein Größen-/Budgetfeld behauptet). 658 W, 1 Emoji, 0 Ausrufezeichen, 1 ALL-CAPS (IMMER), Zitat-Titel nach R1, Lede endet auf der Fett-Punchline (R14), 3 interne + 3 Quell-Links (PAngV §§ 2/3, UStG § 12). Wartet auf Review. |

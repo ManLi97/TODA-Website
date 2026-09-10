@@ -127,7 +127,7 @@ verworfen mit Grund). EN-Cluster ruhen, bis EN-Läufe existieren (v1 = de).
 
 | # | Cluster | Sprache | Status |
 |---|---|---|---|
-| C1 | Tattoo-Anfragen beantworten / Instagram-DM-Chaos organisieren | DE | **offen — höchste Prio: Produkt-Wedge, SERP leer** |
+| C1 | Tattoo-Anfragen beantworten / Instagram-DM-Chaos organisieren | DE | **Draft 10.09.2026** `tattoo-preisanfrage-beantworten-vorlage` (Preisfrage-DM als Einstieg in den Wedge: Vorlagen-Format, Strom A `pricing` + C1 + Erstanbieter-Signal, Lauf 2026-09-10). SERP-Befund bestätigt (Websuche 10.09.: nur Studio-Reels/-FAQs, kein Artist-Ratgeber). DM-Chaos als Ganzes (Kanäle, Priorisierung) bleibt Folge-Winkel |
 | C2 | Anzahlung vs. Terminkaution rechtssicher | DE | **Draft 08.09.2026** `tattoo-anzahlung-widerrufsrecht-online-buchung` (Fernabsatz/Widerruf/§ 356a; Strom A+B+C-Konvergenz, Lauf 2026-09-08). Der Vorgänger-Draft war eine Prozess-Löschung (veralteter Stand, Tomek 08.09.). Terminkaution-Winkel (kkp.law) nur als Listenpunkt — Folgeartikel möglich |
 | C3 | Tattoo-Software / Terminverwaltung (Head-Term) | DE | offen (dünne SERP) |
 | C4 | Digitale Einverständniserklärung | DE | offen |
@@ -871,3 +871,61 @@ Stimmung (Buchhaltung, Sommerloch).
 **Entscheidung:** 1 Artikel, Format Ratgeber-Listicle (10 Punkte, Tomek: ~1.000 W als bewusste
 R2-Ausnahme), Kategorie `studio-management`. Partner-Links sind eine neue Link-Klasse (weder Quelle
 noch intern) — Regel: nur nach expliziter Kooperations-Freigabe durch Tomek, dofollow, max. 2 Stellen.
+
+## 2026-09-10 — Preisfrage-DM: „Was kostet ein Tattoo bei dir?" (Strom A `pricing` + C1, Vorlagen-Format)
+
+**Anlass:** Tomeks Frage nach dem nächsten Artikel aus Community-Puls + W37-Report. Thema per
+Puls-Analyse gesetzt, Plan `.claude/plans/blog-preisfrage-dm-vorlagen.md`, kein neuer Mining-Lauf.
+**Lauf 0:** Vollzeit/VYVE ausgewertet (drei Edits, Partner-Signal → `voice-learnings.md`).
+
+**Strom A:** `pulse_cluster_weekly` — `pricing` W36 n=102 / 17 Quellen / 6 Plattformen / Score
+2945 (8 Artist, 65 Endkunde, 29 mixed, 18 Fragen, 38 Lob) und W37 n=14 / 4 Quellen / Score 41
+(Spitze der dünnen Woche, useful_de 19): der einzige Cluster, der in beiden Wochen vorn liegt.
+Nachbarn: `communication-overload` W36 n=14 / Score 40 (8 Beschwerden), `booking-flow` W36 n=37 /
+Score 3,9, W37 n=5. **Erstanbieter:** IG-Post `instagram.com/p/DcvhZ_UjLLN/` („Keine ‚Was kostet
+ein Tattoo?'-Nachrichten mehr") W37: 2.678 Reach, 90 Likes, 19 Shares, 9 Saves = bestes
+Engagement-Verhältnis der Woche (W36: 2.634 Reach). **SERP-PAA** (`topic_signals` platform `serp`,
+source „Tattoo Preise", 06./07.09.): „Wie groß ist ein Tattoo für 150 €?", „Was für ein Tattoo
+bekommt man für 100 / 200 / 300 €?", „Wie groß ist ein 500 € Tattoo?" — Endkunden fragen in Budget.
+DE-Stimmung W36 (`quotes`, Tier 3, nur lose verwendet): YT-Lob „Viele vergessen ganz gerne welche
+Fixkosten man als selbstständiger hat", „nicht nur die Zeit zum Stechen", Schweizer FB-Fachgruppe
+„hauptsächlich nach dem günstigsten Preis gesucht … unzuverlässige Kunden" (Artist, complaint),
+YT „Wie rechnet sich der Preis? Wie stelle ich eine Anfrage" (02.09., Engagement 35.638).
+**Zielgruppen-Gate:** endkundenlastiger Cluster, aber die DM ist der ICP-Schmerz (`positioning.md`:
+„Was kostet ein Tattoo?" als Value-Prop-Beispiel, „schreibfaul", „unseriöse Anfragen") → bestanden.
+
+**Strom C:** C1 gezogen (Preisfrage = Einstieg in den DM-Wedge). **Dedup:** Rabatte (04.09.) =
+Rabatt-Spirale/Sechs-Stunden-Rechnung, Anzahlung (08.09.) = Fernabsatz, Vollzeit (09.09.) =
+Gewerbe/Steuer → neuer Winkel: die Antwort auf die Preis-DM + Gesamtpreis-Pflicht; die drei sind
+interne Links. **Strom B:** nicht gezogen (kein Rechts-News-Thema).
+
+**Such-Validierung:** eigene PAA-Zeilen (oben) + DeepAPI `/v1/search/web` ×5 („tattoo preisanfrage
+beantworten vorlage", „was kostet ein tattoo antwort vorlage für tätowierer instagram", „tätowierer
+auf preisanfrage antworten dm", „tattoo preis erklären kunden anfrage", „tattoo anfrage was kostet
+das antworten text"; requestIds `20a30aba…`, `7c573ab3…`, `8eb05211…`, `f132205e…`, `9a7aa9f1…`):
+SERP besteht aus Studio-Reels/-Posts („Was kostet ein Tattoo? Die Frage hören wir jeden Tag"),
+Studio-FAQs, feelfarbig 2020 (Endkunden-Erklärstück), Reddit-Endkundenfragen, EN-Preisrechnern und
+einem inksearch-Business-Blog — **kein deutscher Ratgeber für Artists mit Antwort-Vorlagen** →
+C1-Befund „SERP leer" bestätigt. SerpApi nicht genutzt: `SERPAPI_API_KEY` liegt nur in Vercel
+Production, lokal nicht in `.env.local` (Env-Pull = 🔴, nicht angefragt).
+
+**Quellen-Check (Tier 1, DeepAPI im Lauf, `urlOutcomes` alle `returned`, requestIds
+`ebc4a8a4…`, `7222e128…`):** PAngV § 1 (Anwendungsbereich, Ausnahme nur mündliche Angebote ohne
+Preis; „Preisklarheit und Preiswahrheit"), § 2 Nr. 3 (Gesamtpreis inkl. USt), § 3 Abs. 1 (Pflicht
+zur Angabe des Gesamtpreises), UStG § 12 Abs. 1 (19 %), § 19 Abs. 1 (Kleinunternehmer, nur verlinkt
+über den Vollzeit-Artikel). § 9 PAngV gelesen, nicht verwendet (R4). Keine Marktpreise, kein
+Stundensatz behauptet (kein Tier-1-Anker).
+
+**Produkt-Check (`toda-v2`, Sub-Agent read-only):** Widget = 6 Schritte (Körperstelle, 2 Fotos +
+Platzierung auf dem Foto, Stil optional, Farbe/Schwarz-Grau, Beschreibung + ≤ 3 Referenzen, Kontakt
+18+); kein Größen-/Budgetfeld; keine Auto-Antwort-Texte in der App (nur Link kopieren); Angebot =
+Stunden + ca.-Preis (Einzelwert), E-Mail „Geschätzte Arbeitszeit … ca. …" + Buchungslink; Anzahlung
+fester €-Betrag je Artist; Quick-Action-Vorlagen ≤ 3 mit `{{vorname}}`/`{{nachname}}`. TODA-Absatz
+hält sich exakt daran.
+
+**Entscheidung — 1 Artikel, erstes Vorlagen-Format:** Draft `tattoo-preisanfrage-beantworten-vorlage`
+(post_id `c7751e6a-7d30-422d-a3d7-5256f79d8608`, 658 W, Kategorie `studio-management`, Titel A —
+beides Tomeks Wahl 10.09.). Zweitverwertung: Karussell (7 Slides, Typo-Stage + Chat-Bubbles + Todd,
+`~/Desktop/toda/TODA-Karussell-Preisfrage/`) und 3 kie.ai-Cover (`~/Desktop/toda/blog-preisfrage-cover/`).
+Backlog unverändert: Preisaufbau/C9, Motiv-Erwartungen als Vorlage, Widerrufsbutton-Stück.
+Kosten Lauf: DeepAPI ≈ 0,04 $ (25,63 → 25,60 $), kie.ai ≈ 0,27 $, Sub-Agenten ≈ 180k Tokens.
