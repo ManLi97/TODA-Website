@@ -80,6 +80,7 @@ pnpm lint         # ESLint via next lint
 pnpm format       # Prettier write
 pnpm format:check # Prettier check (CI)
 pnpm gsc:inspect  # GSC URL-Inspection of every sitemap URL + sitemap status (readonly evidence)
+pnpm gsc:submit   # (re-)submit the live sitemap to GSC via API; prints lastSubmitted before/after (needs SA as Full user)
 pnpm pulse:report --week 2026-W38  # "Community Pulse Report" = this: standalone HTML of that week's digest → reports/ (gitignored); send the file to Tomek
 pnpm pulse:override <override.json>  # deliberate correction of one LLM verdict in topic_classifications (skill write path, pre-action report first)
 ```
@@ -157,7 +158,9 @@ middleware.ts         # next-intl locale routing, every locale redirect rewritte
 
 - **Data model:** `blog_posts` (shell: category, cover, **author**) ← `blog_post_translations`
   (per-locale slug/title/content_md/tags/status — **per-locale publish**) +
-  `blog_categories` (jsonb i18n names, admin-managed) + `blog_authors`
+  `blog_categories` (jsonb i18n names, admin-managed; `tattoo-wissen` = the **Endkunden-Strang**,
+  a Google-SEO special rule for end-customer articles fed only by the community-pulse end-customer
+  shortlist — definition in `docs/blog/toda-context.md`, not a positioning change) + `blog_authors`
   (admin-managed people; nullable `author_id` on the shell, one author per post
   across locales → renders the article signature footer). RLS: anon reads
   published only (author rows readable for the footer), **zero write policies** —
@@ -207,11 +210,16 @@ a time-series source in the shared **toda-company** DB (`znocynswpsfckyfumema`).
   (daily-salted hash → per-day identity only). Bounce / session-duration / finish-rate are computed
   at query time, not stored.
 - **Google Search Console** → `gsc_performance_daily` (long-format snapshot). `lib/gsc/*` calls the
-  Search Analytics API with a service-account JWT; `app/api/cron/gsc-sync/route.ts` (daily Vercel cron
+  Search Analytics API with a service-account JWT (full `webmasters` scope since 2026-09-12 — reads
+  unchanged, plus `sitemaps.submit`); `app/api/cron/gsc-sync/route.ts` (daily Vercel cron
   in `vercel.json`) UPSERTs a 7-day trailing window (`dataState=all`, restatement-safe);
   `scripts/gsc-backfill.ts` (`pnpm gsc:backfill`, off-Vercel) does the one-time ~16-month backfill
   (`dataState=final`). The `dimension='total'` rows carry the authoritative daily totals (per-dimension
-  sums are lower — GSC drops anonymized queries).
+  sums are lower — GSC drops anonymized queries). **Sitemap submit after publish:** every admin
+  publish (`upsertTranslation`, status `published`) calls `submitSitemapAfterPublish()` in `after()`
+  (`lib/gsc/submit-after-publish.ts`, never throws — warn/error logs prefixed `[gsc]`); manual
+  re-submit via `pnpm gsc:submit`. Pure URL builders live in `lib/gsc/urls.ts` (server-only-free,
+  unit-tested).
 - **Community-pulse pipeline v3** (Strom A of `/blog-article` + consumed by the marketing repo's
   `/community-voices` and the clip selection — NOT the dashboard). Three layers in the shared DB:
   **Erhebung** `mining_runs` / `topic_signals` → **Verdichtung** `topic_classifications` (per-row LLM
@@ -296,9 +304,12 @@ Required in `.env.local`:
 - `ADMIN_SESSION_SECRET` — HMAC key for the admin session cookie (32+ random bytes)
 - `ANALYTICS_SALT` — daily-rotating salt for the anonymous visitor hash (server-only)
 - `GSC_SITE_URL` — Search Console property (`sc-domain:todasolutions.com` or `https://www.todasolutions.com/`)
-- `GSC_SA_KEY` — GSC service-account JSON key as a string (Vercel Production)
+- `GSC_SA_KEY` — GSC service-account JSON key as a string (Vercel Production). Since 2026-09-12 the SA
+  is `gsc-sync@toda-gsc-2026.iam.gserviceaccount.com` (Cloud project `toda-gsc-2026` under the TODA
+  Gmail, created by `scripts/gcloud-gsc-setup.sh`; rotate on Vercel with `scripts/rotate-gsc-key.sh`)
 - `GSC_SA_KEY_FILE` — path to the GSC service-account JSON key file (local dev; on Tomek's machine
-  `~/.toda-secrets/gsc-sa-toda-gsc-snap.json`, passed as an env prefix — `.env.local` holds no `GSC_*`)
+  `~/.toda-secrets/gsc-sa-toda-gsc-v2.json`, passed as an env prefix — `.env.local` holds no `GSC_*`;
+  `gsc-sa-toda-gsc-snap.json` is the old private-account SA, kept until plan A3.7 cleanup)
 - `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync`, `/api/cron/mining-sync` and
   `/api/cron/pulse-worker` (the chain sends it to itself)
 - `DEEPAPI_API_BASE_URL` / `DEEPAPI_API_KEY` — DeepAPI for the community-pulse battery (server-only;

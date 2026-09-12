@@ -269,3 +269,23 @@ Nicht lesbar für den Agenten: Google-Cloud-Console-API-Bibliothek (Login), Verc
 - Kategorie-Slug `tattoo-wissen`; en/es-Namen sind Richtwert.
 - Endkunden-Artikel bleiben bei „Tattoo Artist" im Fließtext (Regel 8), Suchsprache nur in SEO-Feldern.
 - `positioning.md` unberührt; die Sonderregel lebt in `toda-context.md` + Skill.
+
+## Abweichungen im Lauf (Begleitsession 2026-09-12, Evidence beats plan)
+
+- **A2 (DNS):** `vercel domains add` antwortete `domain_not_owned` (403); der wirksame Weg war
+  Dashboard → Team-Domains → **„Connect External"** (Plan nannte „Enable Vercel DNS" als Fallback, das ist
+  der *zweite* Klick auf der Domain-Seite). Netlify-Export enthielt zwei live Netlify-Subdomain-Sites
+  (`platzsichern`, `dasisttoda`) → Tomek: **droppen**. Export ließ MX-Prioritäten weg (aus Live-DNS
+  10/20/50) und kannte die nach dem Export entstandenen Tokens nicht (dritter
+  `google-site-verification`, dritter `_vercel`) → Script liest Live-TXT (Apex + `_vercel`) vom alten
+  Nameserver dazu. **Nameserver-Wechsel blockiert:** Domain ist über Netlify registriert (Name.com nur
+  Partner-Registrar, kein eigenes Konto), Netlify-UI bietet keinen Nameserver-Edit, nur „Transfer
+  domain". Tomeks Entscheidung: **Option A** — Transfer in eigenes Name.com-Konto (Netlify-Support), dann
+  A2.3–A2.5; späteres Ziel Registrar Vercel. Vercel-Zone ist vollständig + verifiziert (`verify` grün).
+- **A3.1/A3.2:** Tomek hat die Property selbst per DNS-TXT in Netlify verifiziert (Token `Ir84GE…`), der
+  Agent-Schritt „Token ins Vercel-DNS" entfiel; Migration nimmt den Token mit.
+- **A3.3:** Projekt-ID `toda-gsc` global vergeben → `toda-gsc-2026` (Nr. 1075787569793); SA
+  `gsc-sync@toda-gsc-2026.iam.gserviceaccount.com`.
+- **Classifier:** externe Schreibzugriffe (GSC-Submit, Vercel-Domain/DNS, gcloud create) laufen im
+  Auto-Mode nicht vom Agenten, sondern per `!`-Zeile von Tomek; Read-Belege (dig, `vercel domains
+  inspect`, `dns ls`, `gsc:inspect`) zieht der Agent selbst.

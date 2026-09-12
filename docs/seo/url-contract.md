@@ -76,3 +76,15 @@ Sitemap-Status (`lastDownloaded`, submitted/indexed).
   – currently not indexed" (`/en/blog/category/artist-stories`); Google-Canonical der DE-Duplikate =
   präfixlose URL. Sitemap zuletzt geladen 2026-07-08 (30 URLs). Zielbild nach ≥ 7 Tagen: 0 Duplikate,
   `googleCanonical == url` für alle `/de/…`.
+- 2026-09-06 — Deploy live (308er, Canonicals, Sitemap 37 URLs — geprüft 08.09.).
+- 2026-09-12 — Inspection (`pnpm gsc:inspect`, 40 Sitemap-URLs): 30 indexed / 4 discovered /
+  2 duplicate / 2 alternate / 1 unknown / 1 crawled-not-indexed; DE-Artikel 7/11 indexiert (2 weitere per
+  UI „Indexierung beantragt"). Sitemap `lastDownloaded` 08.07. → **Submit per API 12.09. 12:16 UTC**
+  (`pnpm gsc:submit`), Google hat sie noch am selben Tag geladen (40 URLs, 0 Fehler). Ab jetzt
+  Submit nach jedem Admin-Publish (`lib/gsc/submit-after-publish.ts`). GSC-Property zusätzlich unter
+  `toda.tattoo.solutions@gmail.com` verifiziert (dritter `google-site-verification`-TXT), neuer SA
+  `gsc-sync@toda-gsc-2026` als Vollnutzer belegt.
+- 2026-09-12 — DNS: Zone bei Vercel DNS vollständig angelegt und gegen `ns1.vercel-dns.com`
+  verifiziert (MX/SPF/DKIM/3× Google-Token/2× `_vercel`/DMARC `p=none` neu). Nameserver-Wechsel
+  **offen**: Domain ist über Netlify registriert (Name.com-Partner), Nameserver dort nicht editierbar →
+  erst Transfer in ein eigenes Name.com-Konto (Netlify-Support), dann NS-Umstellung + Mail-Test.
