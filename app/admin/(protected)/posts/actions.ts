@@ -5,11 +5,13 @@
 // has no write path (RLS has zero write policies).
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { requireAdmin } from "@/lib/admin/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidateBlogPaths } from "@/lib/admin/revalidate";
 import { slugify } from "@/lib/blog/slugify";
 import { parseYouTubeInput } from "@/lib/blog/youtube";
+import { submitSitemapAfterPublish } from "@/lib/gsc/submit-after-publish";
 import { routing } from "@/i18n/routing";
 
 const COVER_TYPES: Record<string, string> = {
@@ -104,6 +106,8 @@ async function upsertTranslation(
   revalidateBlogPaths();
   revalidatePath(`/admin/posts/${row.post_id}`);
   revalidatePath("/admin/posts");
+  // Ping Google with the (just revalidated) sitemap — after the response, never blocking.
+  if (status === "published") after(() => submitSitemapAfterPublish());
 }
 
 export async function saveTranslation(formData: FormData): Promise<void> {
