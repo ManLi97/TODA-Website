@@ -55,7 +55,7 @@ def main():
     ap.add_argument("ordner", help="Ausgabe-Ordner (Desktop-Deliverable-Ordner)")
     ap.add_argument("--sticker", help="Sticker-Text für den Kontroll-Render (Standard je Sprache)")
     a = ap.parse_args()
-    url, out, sticker = a.url, pathlib.Path(a.ordner).expanduser(), a.sticker
+    url, out, sticker = a.url, pathlib.Path(a.ordner).expanduser().resolve(), a.sticker  # absolut: Chrome braucht file:///<voller Pfad>
     if not LOGO.exists():
         die(f"Logo fehlt: {LOGO}")
     out.mkdir(parents=True, exist_ok=True)
