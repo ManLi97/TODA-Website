@@ -197,6 +197,16 @@ Rückgaberecht"**); der Lede darf sie nicht ein drittes Mal ansagen.
   Einzelkorrektur, aber eindeutig (einzige Änderung des Artikels; deckt sich mit R4
   „eine Kernzahl" und R12 „Claude-eigene Asides fliegen").
 
+## E-Regeln — Endkunden-Strang (gemessen, seit 2026-09-12)
+
+Eigener Regelraum für Artikel der Kategorie `tattoo-wissen` (Endkunden-Strang,
+Sonderregel Google-SEO — Definition in `toda-context.md`). Leer bis zum ersten
+ausgewerteten Endkunden-Artikel. Bis dahin sind R1–R14 der Startpunkt; E-Regeln
+überschreiben R-Regeln **nur** für Endkunden-Artikel und wandern nie in R1–R14.
+Im Auswertungs-Log tragen Endkunden-Artikel den Präfix `(E)`.
+
+_(noch keine E-Regel — Pilot steht aus)_
+
 ## Sonstige Feedback-Signale
 
 - **16.06.2026 — DE-Disclaimer entfernt, EN/ES behalten → GEKLÄRT
@@ -278,7 +288,7 @@ Partner-Signal notiert, keine neue R-Regel. Drafts in der DB:
 `zwischen-tattoo-nadel-knochen-und-algorithmus` (Artist-Story Joelle, 12.09., inzwischen publiziert, Diff offen).
 
 
-| Artikel | Original-Snapshot | Ausgewertet am | Ergebnis |
+| Artikel (`(E)` = Endkunden-Strang) | Original-Snapshot | Ausgewertet am | Ergebnis |
 |---|---|---|---|
 | copycat-tattoo-urteil-urheberrecht (→ veröffentlicht als `screenshot-roulette-…`) | ✅ | 16.06.2026 | **ausgewertet** → R1–R10. DE 994→607 W (−39 %), retitelt, Tabelle + Miturheber-Sektion gestrichen, 1 TODA-Mention, ✅/🤓. |
 | erwartungsmanagement-tattoo-kunden (→ veröffentlicht als `…laecheln-im-studio…`) | ✅ | 16.06.2026 | **ausgewertet** → R1–R10. DE 958→636 W (−34 %), retitelt, „Wenn es knallt"-Sektion gestrichen, TODA-Mention entschärft. |

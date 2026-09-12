@@ -7,6 +7,18 @@ Eintrag, alte Einträge werden nie umgeschrieben.
 
 ## Methode v3 (Stand 2026-09) — drei Schichten, eine DB
 
+**Zwei Stränge seit 2026-09-12.** Neben dem Artist-Strang (ICP, wie bisher)
+gibt es den **Endkunden-Strang** als Sonderregel für Google-SEO
+(`toda-context.md`, Abschnitt „Endkunden-Strang"; Kategorie `tattoo-wissen`).
+Seine Shortlist kommt zu 100 % aus dem Puls: Cluster aus `pulse_cluster_weekly`
+mit `n_endkunde > n_artist + n_mixed`, `trend_gate = true`, blog-beantwortbar
+(nicht lokal „tätowierer <stadt>", nicht Motiv-Inspiration, nicht `off_topic`),
+plus die Digest-`questions` mit `audience in ('endkunde','mixed')` je Cluster.
+Serp-Zeilen (`platform = 'serp'`, PAA-Fragen) sind für diesen Strang
+**Discovery-Beleg**, weil sie die Google-Nachfrage direkt zeigen. Jeder
+Lauf-Eintrag führt beide Shortlists getrennt und das Feld „Strang". Nie ein
+Endkunden-Thema aus einem Artist-Kandidaten oder -Artikel ableiten.
+
 Pipeline v3 (gebaut 2026-09-06, Plan `.claude/plans/community-pulse-v3.md`)
 ersetzt v2 an drei Stellen, die v2 nie geliefert hat: **Wochen-Delta**
 (v2: 2–50 % neue Zeilen je Slot, Re-Scrape fester Listen), **Verdichtung**
@@ -206,7 +218,9 @@ im Lauf-Eintrag mitdokumentiert, damit sie überprüfbar bleibt.
 **Zielgruppen-Gate (vor der Detail-Prüfung):** Cluster, deren Kernpublikum
 Anti-ICP ist (Studio-/Ketten-Management, Walk-in, Hobby-Nische), scheiden
 aus — egal wie hoch der Score. Definition: `toda-context.md`, „Für wen wir
-schreiben".
+schreiben". Das Gate gilt **je Strang**: Artist-Strang wie beschrieben; der
+Endkunden-Strang besteht es, wenn der Cluster endkundenlastig und
+blog-beantwortbar ist (Shortlist-Regel oben).
 
 Danach, vor der finalen Wahl:
 

@@ -1,6 +1,6 @@
 ---
 name: blog-article
-description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS. Use when asked to write a TODA blog post (/blog-article <thema>) or to run topic mining (/blog-article mining). Covers data-based topic selection (Community-Puls weekly digests from the DB with a quality gate + DACH-Radar + SEO-Gap-Liste), sourced research via the Quellen-Library (verified via DeepAPI), writing in TODA voice (Formate: Fall & Recht, Ratgeber, Vorlagen), and draft insert for review in /admin.
+description: Erstellt deutsche TODA-Blogartikel als Drafts im Supabase-Blog-CMS. Use when asked to write a TODA blog post (/blog-article <thema>) or to run topic mining (/blog-article mining). Covers data-based topic selection (Community-Puls weekly digests from the DB with a quality gate + DACH-Radar + SEO-Gap-Liste), sourced research via the Quellen-Library (verified via DeepAPI), writing in TODA voice (Formate: Fall & Recht, Ratgeber, Vorlagen), zwei Stränge (Artist / Endkunde — Sonderregel Google-SEO, Kategorie tattoo-wissen), and draft insert for review in /admin.
 ---
 
 # /blog-article — TODA-Blogartikel datenbasiert erzeugen
@@ -53,7 +53,11 @@ Bevor irgendetwas anderes passiert:
    aus `/blog-article`- und `/podcast-article`-Artikeln. Korrekturen an
    Artist Stories (Kategorie `artist-stories`, Ich-Form des Artists) wandern
    in die Rubrik „Sonstige Feedback-Signale" mit Format-Label und in den
-   `/artist-story`-Skill — nie in R1–R10.
+   `/artist-story`-Skill — nie in R1–R10. Korrekturen an
+   **Endkunden-Artikeln** (Kategorie `tattoo-wissen`) werden als
+   **E-Regeln** destilliert (`voice-learnings.md`, eigener Abschnitt),
+   **nie** in R1–R14; umgekehrt gelten R-Regeln für Endkunden-Artikel nur
+   als Startpunkt, solange keine E-Regel widerspricht.
 8. Gibt es nichts Neues auszuwerten: weiter, ohne Zeit zu verbrennen.
 
 ## Lauf 1 — Topic-Mining (`/blog-article mining` oder wenn kein Thema gegeben)
@@ -101,9 +105,21 @@ Ablauf:
      gegen `topic_signals` + `topic_classifications` auflösen (Titel, Quelle,
      `posted_at`, `quote`, `engagement`); Cluster-Verlauf aus
      `pulse_cluster_weekly`, Ausreißer je Run aus `topic_cluster_scores`.
-   - Endkunden-Signale (`audience = 'endkunde'`) sind Kontext, nie
-     Discovery-Beleg; Reddit-EN bleibt Label **Hypothese**; `is_seeded`-Zeilen
-     bleiben Recall-Kontext.
+   - Endkunden-Signale (`audience = 'endkunde'`) sind für den
+     **Artist-Strang** Kontext, nie Discovery-Beleg; Reddit-EN bleibt Label
+     **Hypothese**; `is_seeded`-Zeilen bleiben Recall-Kontext. Für den
+     **Endkunden-Strang** (Sonderregel, `toda-context.md`) gilt die eigene
+     Shortlist:
+   - **Endkunden-Shortlist:** aus `pulse_cluster_weekly` der tragenden
+     Woche(n) die Cluster mit `n_endkunde > n_artist + n_mixed`,
+     `trend_gate = true`, die **blog-beantwortbar** sind (nicht lokal
+     „tätowierer <stadt>", nicht Motiv-Inspiration, nicht `off_topic`) —
+     plus die Digest-`questions` mit `audience in ('endkunde','mixed')` je
+     Cluster. Serp-Zeilen (`platform = 'serp'`, PAA-Fragen) sind hier
+     **Discovery-Beleg**, weil sie die Google-Nachfrage direkt zeigen.
+     Beide Shortlists (Artist / Endkunde) stehen getrennt im Radar-Eintrag.
+     **Nie** ein Endkunden-Thema aus einem Artist-Kandidaten oder -Artikel
+     ableiten.
    - **Digest-`quotes` sind Tier 3.** Die anonymisierten O-Töne des Digests
      (und die `quote`-Spalte der Klassifikation) gehören in den Report und
      in die Social-Ausleitung — im Artikeltext erscheinen sie nie wörtlich,
@@ -141,7 +157,9 @@ Ablauf:
      `trend_gate` (≥ 3 Zeilen über ≥ 2 Quellen) und `n_sources`/`n_platforms`
      (Cross-Source). Der Skill wendet nur noch das **Zielgruppen-Gate** selbst
      an (`toda-context.md`, „Für wen wir schreiben": `n_artist`/`n_mixed`
-     gegen `n_endkunde` je Cluster).
+     gegen `n_endkunde` je Cluster). Das Gate gilt **je Strang**:
+     Artist-Strang wie bisher; der Endkunden-Strang besteht es, wenn der
+     Cluster endkundenlastig und blog-beantwortbar ist.
 3. **Strom B checken (datiert, nicht „mal draufschauen"):**
    - **feelfarbig** über den RSS-Feed `https://feelfarbig.com/feed/`
      (`curl`, kostenlos, `pubDate` je Beitrag) — nur Beiträge seit dem
@@ -167,7 +185,9 @@ Ablauf:
    Listen-Status im selben Lauf pflegen.
 5. **Dedup-Check:** `select t.title, t.slug, t.tags, t.status from
    blog_post_translations t` — behandelte Themen scheiden aus oder
-   brauchen einen neuen Winkel.
+   brauchen einen neuen Winkel. Zusätzlich für den Endkunden-Strang: das
+   Thema darf keinen Themen-Zwilling eines Artist-Artikels bilden
+   (Slug/Titel/Tags beider Stränge vergleichen).
 6. **Such-Validierung — erst die eigenen SERP-Zeilen, dann SerpApi:**
    Die Batterie speichert jede Woche Google-Trends-Rising/Top (`serp/
    trends/*`) und People-also-ask (`serp/paa/*`) in `topic_signals`
@@ -184,7 +204,8 @@ Ablauf:
    Faktenbasis kein eigener Artikel.
 8. **Radar-Eintrag anhängen** (datiert): referenzierte `run_id`s (statt
    Scrape-Parameter-Prosa), Klassifikations-/Cluster-Tabelle, Scores aus
-   der View, Dedup-Ergebnis, gewählte Topics mit Begründung.
+   der View, Dedup-Ergebnis, gewählte Topics mit Begründung, Feld
+   „Strang: artist | endkunde" + beide Shortlists.
 
 Default-Wochenmix: 1× Strom A + 1× Strom C + 1× Strom B (wenn es News
 gibt). Ist die C-Liste abgearbeitet: zurück zu 2× Strom A.
@@ -204,6 +225,10 @@ gibt). Ist die C-Liste abgearbeitet: zurück zu 2× Strom A.
    'de' and t.status = 'published' and c.slug <> 'artist-stories' order by
    t.published_at desc limit 2`). Sie definieren Grammatik und Tonalität
    verbindlicher als jede Regel. Gibt es noch keine: Schicht 1 + 2 reichen.
+   **Endkunden-Artikel:** die 1–2 zuletzt veröffentlichten Artikel der
+   Kategorie `tattoo-wissen` mit Snapshot (gleiches SQL mit `c.slug =
+   'tattoo-wissen'`); gibt es keine (Pilot): Schicht 1 + 2 + der
+   E-Regeln-Abschnitt in `voice-learnings.md`, auch wenn er leer ist.
 
 ### 2.1 Recherche — Quellen-Library zuerst
 
@@ -260,6 +285,11 @@ Format (Konvention der bestehenden Posts):
     (Tomek setzt sie beim Publish).
 - TODA-Erwähnung: max. 1–2 Stellen, organisch dort, wo das Produkt den
   konkreten Schmerzpunkt löst. Kein Werbeblock, kein „Jetzt registrieren".
+- **Endkunden-Artikel** (Strang Endkunde): R-Regeln gelten als Start (R2
+  Länge, R5 Listen, R8 genau eine Mention); Mention-Frame „geführte
+  Anfrage" und Haltung (immer zugunsten des Artists) aus dem
+  Endkunden-Abschnitt in `toda-context.md`; im Report steht
+  „Strang: Endkunde".
 - Rechtsthemen: **kein Disclaimer** (Tomeks Entscheidung 08.09.2026 — er
   hatte ihn in beiden DE-Rechtsartikeln gestrichen). Korrektheit trägt der
   Fakten-Audit (2.4), nicht ein Schlussabsatz.
@@ -287,7 +317,7 @@ Ausgabe `post_id`, `id`, `slug`, `content_length` (= Read-back-Beleg).
 
 ```json
 {
-  "category_slug": "<blog_categories.slug>",
+  "category_slug": "<blog_categories.slug — Endkunden-Strang: tattoo-wissen>",
   "locale": "de",
   "slug": "<slug>",
   "title": "<title>",
@@ -346,6 +376,8 @@ Auswertungs-Log von `voice-learnings.md` registrieren.
 ## Harte Regeln
 
 - Niemals publizieren, niemals bestehende Posts ändern oder löschen.
+- Endkunden-Thema kommt nur aus der Endkunden-Shortlist des Pulses — nie
+  als Zwilling eines Artist-Artikels.
 - Tier 3 belegt keine Fakten; keine Community-Zitate (Reddit, TikTok-/
   YT-Kommentare, FB) als Faktenbeleg — Tier 3 bleibt Stimmung; keine
   unbelegten Rechtsaussagen.

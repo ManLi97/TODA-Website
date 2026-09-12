@@ -20,7 +20,9 @@ herausstellen, fliegen raus (mit Notiz warum).
 2. **Tier 3 ist nur Stimmung.** Community-Quellen liefern Themen und
    Stimmungsbilder. Im Artikel erscheinen sie ausschließlich als lose
    Community-Voice („Man hört gerade oft von Artists, dass …") — nie
-   als Faktenbeleg, nie als wörtliches Zitat.
+   als Faktenbeleg, nie als wörtliches Zitat. **Endkunden-Strang:** für
+   Endkunden-Fragen gilt dieselbe Tier-Hierarchie; PAA-Fragen (Serp) sind
+   Themen-, nie Faktenbeleg.
 3. **Tier 2 gegen Tier 1 prüfen.** Kommerzielle Blogs/Fachseiten können
    Fehler oder Eigeninteresse haben — zentrale Behauptungen gegen eine
    Tier-1-Quelle gegenchecken, wo möglich.

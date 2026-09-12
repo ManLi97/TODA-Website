@@ -36,6 +36,40 @@ Konsequenz: Themen und Ansprache richten sich an den ICP. Themen-Cluster,
 deren Kernpublikum Anti-ICP ist, scheiden im Mining aus (Gate in
 `topic-radar.md`).
 
+## Endkunden-Strang — Sonderregel für Google-SEO (seit 2026-09-12)
+
+**Was es ist:** ein zweiter Artikel-Strang **nur im Blog**. Grund: die
+Google-Nachfrage der Branche kommt zu über 75 % vom Endkunden (Community-
+Puls, Serp-Zeilen W36/W37; Google Trends DE „tattoo preise" / „was kostet
+ein tattoo" gegen ≤ 1,2 für alle Artist-Begriffe). **Keine**
+Positionierungsänderung, kein zweiter ICP — `positioning.md` gilt
+unverändert. Wer für Social oder Brand schreibt, ignoriert diesen
+Abschnitt.
+
+- **Leser:** Menschen, die ein Tattoo wollen oder haben (DACH, Deutsch).
+  Ansprache per Du, gleiche Tonalität wie sonst (frech, substanziell,
+  Insider-Perspektive **aus Artist-Sicht erklärt**). Haltung: immer
+  zugunsten des Artists — der Artikel erklärt dem Endkunden, wie die
+  Branche tickt und wie er einem Artist gut gegenübertritt (qualifizierte
+  Anfrage, Anzahlung verstehen, Absage-Etikette, realistische
+  Preis-Erwartung).
+- **Themenquelle:** **ausschließlich Community-Puls** (Endkunden-Shortlist,
+  siehe `SKILL.md` Lauf 1). Nie ein bestehender Artist-Artikel als
+  Ausgangspunkt, nie ein Themen-Zwilling.
+- **TODA-Mention:** genau eine, im Frame „geführte Anfrage" aus
+  `positioning.md` („Ein geführtes Environment statt Selbst-Moderation"):
+  *Viele Artists arbeiten heute mit einem Anfrage-Formular — hat deiner
+  eins, nutz es, das ist für beide Seiten leichter.* Kein Kauf-CTA (der
+  Endkunde kauft nichts), keine Claims außerhalb `strategy/claims.md`.
+- **Terminologie:** Fließtext „Tattoo Artist" bleibt (Regel 8);
+  Suchwörter „Tätowierer", „Tattoo Studio" nur in `slug`, `seo_title`,
+  `seo_description`.
+- **Kategorie:** `tattoo-wissen`. **Formate:** Ratgeber und FAQ-artige
+  Ratgeber; Fall & Recht nur, wenn eine Tier-1-Quelle die Endkunden-Frage
+  trägt.
+- **Lernen:** Korrekturen an Endkunden-Artikeln werden als E-Regeln
+  destilliert (`voice-learnings.md`, eigener Abschnitt), nie in R1–R14.
+
 ## Die Bausteine (für gezielte Erwähnungen)
 
 - **Anfrage-Widget** — 6-Schritte-Wizard (Körperstelle, Fotos mit
@@ -156,7 +190,8 @@ Die Formatwahl gehört begründet in den Report. Palette:
    lose Stimmung („Man hört gerade oft von Artists, dass …"), nie als
    wörtliches Zitat, nie mit Username/Link.
 6. **Zielgruppe:** Solo Tattoo Artists im DACH-Raum (v1 nur Deutsch) —
-   präzise Definition oben unter „Für wen wir schreiben".
+   präzise Definition oben unter „Für wen wir schreiben". Ausnahme: der
+   Endkunden-Strang (Abschnitt oben) — eigener Regelraum, eigene Shortlist.
 7. **Wenn der Artikel über TODA selbst spricht: Claims-Leitplanken.**
    Ein-Satz-Kern: Nichts behaupten, was nicht absolut, datiert und
    selbstbezogen belegbar ist — Superlative sind gesperrt. Vollständige
