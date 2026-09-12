@@ -308,8 +308,7 @@ Required in `.env.local`:
   is `gsc-sync@toda-gsc-2026.iam.gserviceaccount.com` (Cloud project `toda-gsc-2026` under the TODA
   Gmail, created by `scripts/gcloud-gsc-setup.sh`; rotate on Vercel with `scripts/rotate-gsc-key.sh`)
 - `GSC_SA_KEY_FILE` — path to the GSC service-account JSON key file (local dev; on Tomek's machine
-  `~/.toda-secrets/gsc-sa-toda-gsc-v2.json`, passed as an env prefix — `.env.local` holds no `GSC_*`;
-  `gsc-sa-toda-gsc-snap.json` is the old private-account SA, kept until plan A3.7 cleanup)
+  `~/.toda-secrets/gsc-sa-toda-gsc-v2.json`, passed as an env prefix — `.env.local` holds no `GSC_*`)
 - `CRON_SECRET` — Bearer token authenticating `/api/cron/gsc-sync`, `/api/cron/mining-sync` and
   `/api/cron/pulse-worker` (the chain sends it to itself)
 - `DEEPAPI_API_BASE_URL` / `DEEPAPI_API_KEY` — DeepAPI for the community-pulse battery (server-only;

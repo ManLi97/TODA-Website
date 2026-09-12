@@ -289,3 +289,12 @@ Nicht lesbar für den Agenten: Google-Cloud-Console-API-Bibliothek (Login), Verc
 - **Classifier:** externe Schreibzugriffe (GSC-Submit, Vercel-Domain/DNS, gcloud create) laufen im
   Auto-Mode nicht vom Agenten, sondern per `!`-Zeile von Tomek; Read-Belege (dig, `vercel domains
   inspect`, `dns ls`, `gsc:inspect`) zieht der Agent selbst.
+- **A3.7:** alter SA aus der Property entfernt (403 mit altem Schlüssel belegt; dabei war kurz auch der
+  neue SA raus — wieder eingetragen, jetzt als *Owner* statt „Full"), alte Schlüsseldateien gelöscht.
+  **Offen:** `symantzyktom@gmail.com` bleibt dritter Inhaber — die zwei alten DNS-Tokens
+  (`c6yLeN…`, `C9tmlo…`) lassen sich keinem Konto zuordnen (der „Add property"-Dialog erzeugt
+  neue Tokens), ohne Zuordnung wird keiner gelöscht. Weg später: Site-Verification-API `getToken`
+  je Konto. Cloud-Projekt `toda-gsc-snap` löschen bleibt Tomeks Klick.
+- **§6.5:** Cron `gsc-sync` 13:44 UTC mit neuem Schlüssel (200, 107 Zeilen), Publish-Submit 13:52 UTC
+  (Sitemap `lastSubmitted`/`lastDownloaded` 7 s später); `vercel logs` tailt nur ab Aufruf, die
+  `[gsc]`-Zeile wurde nicht eingesehen.
