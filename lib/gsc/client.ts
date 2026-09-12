@@ -1,7 +1,7 @@
 // Google Search Console API client (server-only). Uses a service-account JWT to
-// call the raw "Search Analytics: query" REST endpoint — no heavyweight googleapis
-// package. Credentials come from GSC_SA_KEY (prod: the JSON key as a string) or
-// GSC_SA_KEY_FILE (local: a path to the JSON key written by the setup script).
+// call the raw webmasters-v3 / urlInspection REST endpoints — no heavyweight
+// googleapis package. Credentials come from GSC_SA_KEY (prod: the JSON key as a
+// string) or GSC_SA_KEY_FILE (local: a path to the JSON key).
 import "server-only";
 
 import { readFileSync } from "node:fs";
@@ -13,8 +13,10 @@ import type {
   UrlInspectionResponse,
   UrlInspectionResult,
 } from "./types";
+import { sitemapSubmitUrl } from "./urls";
 
-const SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
+// Full scope: read endpoints work unchanged, and sitemaps.submit needs it.
+const SCOPE = "https://www.googleapis.com/auth/webmasters";
 
 function loadCredentials(): { client_email: string; private_key: string } {
   let json = process.env.GSC_SA_KEY;
@@ -62,9 +64,9 @@ export async function searchAnalyticsQuery(
   return res.data;
 }
 
-// Inspect one URL's status in the Google index (URL Inspection API). The
-// readonly scope is sufficient. `siteUrl` is the property (sc-domain:… or
-// URL-prefix with trailing slash); `inspectionUrl` must belong to it.
+// Inspect one URL's status in the Google index (URL Inspection API). `siteUrl`
+// is the property (sc-domain:… or URL-prefix with trailing slash);
+// `inspectionUrl` must belong to it.
 export async function inspectUrl(
   siteUrl: string,
   inspectionUrl: string
@@ -84,4 +86,11 @@ export async function listSitemaps(siteUrl: string): Promise<SitemapsListRespons
   )}/sitemaps`;
   const res = await getClient().request<SitemapsListResponse>({ url, method: "GET" });
   return res.data;
+}
+
+// Submit (or re-submit) a sitemap for a property. Needs the full webmasters
+// scope and the SA as Full user/Owner of the property. Idempotent: PUT without
+// body, empty response; `request()` throws on non-2xx.
+export async function submitSitemap(siteUrl: string, feedpath: string): Promise<void> {
+  await getClient().request({ url: sitemapSubmitUrl(siteUrl, feedpath), method: "PUT" });
 }
