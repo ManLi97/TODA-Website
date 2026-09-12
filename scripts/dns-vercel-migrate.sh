@@ -50,14 +50,16 @@ mx_priority() {
 
 # Desired records as TSV lines: name<TAB>type<TAB>value<TAB>priority
 # (name relative to the zone, "@" for apex; CSV values keep their quoting-safe
-# commas thanks to the csv module). Live apex TXT strings missing from the
-# export are appended so post-export additions migrate too.
+# commas thanks to the csv module). Live TXT strings at the apex and at
+# _vercel that are missing from the export are appended so post-export
+# additions (GSC / Vercel verification tokens) migrate too.
 desired() {
-  local live_txt
+  local live_txt live_vercel
   live_txt="$(dig +short @"$OLD_NS" "$DOMAIN" TXT | sed -E 's/" "//g; s/^"//; s/"$//')"
-  python3 - "$CSV" "$DOMAIN" "$live_txt" <<'PY'
+  live_vercel="$(dig +short @"$OLD_NS" "_vercel.$DOMAIN" TXT | sed -E 's/" "//g; s/^"//; s/"$//')"
+  python3 - "$CSV" "$DOMAIN" "$live_txt" "$live_vercel" <<'PY'
 import csv, sys
-path, domain, live_txt = sys.argv[1], sys.argv[2], sys.argv[3]
+path, domain, live_txt, live_vercel = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 seen = set()
 with open(path, newline="") as fh:
     for row in csv.DictReader(fh):
@@ -71,9 +73,10 @@ with open(path, newline="") as fh:
             value = value.rstrip(".")
         seen.add((name, rtype, value))
         print(f"{name}\t{rtype}\t{value}\t")
-for value in filter(None, live_txt.splitlines()):
-    if ("@", "TXT", value) not in seen:
-        print(f"@\tTXT\t{value}\t")
+for name, live in (("@", live_txt), ("_vercel", live_vercel)):
+    for value in filter(None, live.splitlines()):
+        if (name, "TXT", value) not in seen:
+            print(f"{name}\tTXT\t{value}\t")
 PY
   printf '_dmarc\tTXT\t%s\t\n' "$DMARC_VALUE"
 }
